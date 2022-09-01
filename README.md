@@ -11,3 +11,6 @@
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.14
 
+![输入图片说明](1.png)
+
+![输入图片说明](2.png)
