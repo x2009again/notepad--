@@ -9,7 +9,7 @@
 
 您可以在这个项目提交bug或反馈问题。
 
-最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.14
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.15
 
 ![输入图片说明](1.png)
 
