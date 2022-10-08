@@ -7,13 +7,11 @@
 
  **鉴于Notepad++作者的错误言论，Notepad--的意义在于：减少一点错误言论，减少一点自以为是。** 
 
- **严重声明，台湾是中国的一部分。** 
+ **严正声明，台湾是中国的一部分。** 
 
 您可以在这个项目提交bug或反馈问题。
 
-最新预览版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.16
-
-最新发布版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.15
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.16
 
 ![输入图片说明](1.png)
 
