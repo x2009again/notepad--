@@ -11,9 +11,7 @@
 
 您可以在这个项目提交bug或反馈问题。
 
-最新稳定版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.15
-
-最新开发预览版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.16
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.16
 
 
 ![输入图片说明](ntscreenshot_20221008_103827.png)
