@@ -13,7 +13,7 @@ HEADERS	+= *.h \
         cceditor/filemanager.h
 
 		
-SOURCES	+= *.cpp *.cc \
+SOURCES	+= *.cpp \
                 cceditor/ccnotepad.cpp \
                 cceditor/filemanager.cpp
 
@@ -32,20 +32,19 @@ INCLUDEPATH += cceditor
 DEFINES +=  QSCINTILLA_DLL
 
 TRANSLATIONS += realcompare_zh.ts
-	
+
 win32 {
-   if(contains(QMAKE_HOST.arch, x86_64)){
-    CONFIG(Debug, Debug|Release){
+    CONFIG(debug, debug|release) {
         DESTDIR = x64/Debug
 		LIBS	+= -Lx64/Debug
 		LIBS += -lqmyedit_qt5d
     }else{
         DESTDIR = x64/Release
-		LIBS	+= -Lx64/Release
-		LIBS += -lqmyedit_qt5
+                LIBS += -Lx64/Release
+                LIBS += -lqmyedit_qt5
                 QMAKE_CXXFLAGS += /openmp
     }
-   }
+
 }
 unix{
 if(CONFIG(debug, debug|release)){
@@ -82,3 +81,4 @@ DEPENDPATH += $$PWD/x64/Release
 
 unix:!macx: PRE_TARGETDEPS += $$PWD/x64/Release/libqmyedit_qt5.a
 }
+
