@@ -31,16 +31,6 @@ enum RC_ITEM_STATUS
 	RC_EXPANDED,
 };
 
-enum BLOCKSTATUS {
-	UNKNOWN_BLOCK = 0,
-	EQUAL_BLOCK = 1,
-	UNEQUAL_BLOCK,
-	PAD_BLOCK,
-	//EMPTY_BLOCK,
-	LAST_PAD_EMPTY_BLOCK, // 最后一个用于对齐的空行
-	TEMP_INSERT_BLOCK
-};
-
 /* 是放置在block中的userState，-1是保留行，因为-1是默认没有时的值，标识新插入行 */
 enum RC_LINE_FORM
 {
@@ -52,35 +42,6 @@ enum RC_LINE_FORM
 	MAC_LINE,
 };
 
-typedef struct equalLineInfo_ {
-	int index;//相等行序号，左右值
-	int leftLineNums;
-	int rightLineNums;
-}EqualLineInfo;
-
-
-typedef struct noequalblock_ {
-
-	int startBlockNums; //开始的块号。左右两边都是一样的
-	int blockLens;//左右长度。理论上二者是相等的,故只需要一个
-	bool isDeleted; //是否已经被同步。即被删除过了，下次跳过这个
-	int type; //
-	noequalblock_()
-	{
-		type = UNKNOWN_BLOCK;
-	}
-	noequalblock_(int start, int lens)
-	{
-		startBlockNums = start;
-		blockLens = lens;
-		isDeleted = false;
-		type = UNKNOWN_BLOCK;
-	}
-	bool operator==(const noequalblock_& other)
-	{
-		return (startBlockNums == other.startBlockNums);
-	}
-}NoEqualBlock;
 
 enum CODE_ID {
 	UNKOWN = -2,//其实应该是ANSI中的非GBK编码。暂时不考虑其它国家语言编码，则直接按照ASCII进行字节处理
@@ -99,91 +60,6 @@ enum CODE_ID {
 	TIS_620,//泰文
 	CODE_END //最后一个标志,在UI上是显示一个UNKNOWN，这是一个特殊
 };
-
-/*作用：这个类主要统计左右不同的块，给界面上的“上一部分”和“下一部分”来使用。
-*/
-typedef struct BlocksInfo_ {
-
-public:
-	BlocksInfo_()
-	{
-		startLine = 0;
-		endLine = 0;
-	}
-
-	BlocksInfo_(bool equal_, int startLine_, int endLine_, int actualNums_)
-	{
-		equal = equal_;
-		actualNums = actualNums_;
-		startLine = startLine_;
-		endLine = endLine_;
-	}
-
-public:
-	bool equal;//相同true，不同false
-	int actualNums;//实际数据行数
-	int startLine; //起点块的行号码
-	int endLine;//终点块，不包含此块
-}BlocksInfo;
-
-
-
-//每一小段的字符，主要是将相等和不等的字符段分开
-typedef struct SectionNode_ {
-	bool equal; //是否相等
-	QString text;
-	//QByteArray text;
-}SectionNode;
-
-
-//每一小段的二进制字节，主要是将相等和不等的二进制字符段分开
-typedef struct BinSectionNode_ {
-	bool equal; //是否相等
-	QVector<uchar> bytes;
-}BinSectionNode;
-
-typedef struct BinUnequalPos_ {
-	int start;
-	int end;
-}BinUnequalPos;
-
-//每一行的数据结构。每一行包含许多相等或不相等的小段
-typedef struct LineNode_ {
-	int lineNums;//行的号码
-	bool totalEqual;//是否完全相等
-	QVector<SectionNode> lineText;
-	LineNode_()
-	{
-		totalEqual = false;
-	}
-	void clear()
-	{
-		totalEqual = false;
-		lineText.clear();
-	}
-}LineNode;
-
-extern RC_LINE_FORM getLineEndType(QString line);
-
-extern RC_LINE_FORM getLineEndType(const LineNode& lines);
-
-
-#ifdef Q_OS_UNIX
-extern QString loadFontFromFile(QString path,int code=0);
-#endif
-
-typedef struct ModifyRecords_ {
-	int position;//当前修改位置
-	int modificationType;//1：增加 2 删除
-	int length;//修改的长度
-	int linesAdded;//增加多少行。正为增加，负数为减少
-	bool isInPaste;//是否在拷贝中，在的话前面一个删除不能做处理，要等到后续添加消息
-	ModifyRecords_(int position_, int type_, int length_, int linesAdded_) :position(position_), modificationType(type_), length(length_), linesAdded(linesAdded_)
-	{
-		isInPaste = false;
-	}
-}ModifyRecords;
-
 
 
 typedef struct fileAttriNode_ {
@@ -208,15 +84,6 @@ typedef struct fileAttriNode_ {
 
 }fileAttriNode;
 
-struct WalkFileInfo {
-	int direction;
-	QTreeWidgetItem* root;
-	QString path;
-	WalkFileInfo(int dire_, QTreeWidgetItem* root_, QString path_) :direction(dire_), root(root_), path(path_)
-	{
-
-	}
-};
 
 
 const int MARGIN_NONE = 0;
@@ -242,22 +109,17 @@ enum WORK_STATUS
 
 class BlockUserData;
 
-struct OperatorInfo {
-	int startLineNums; //开始行号
-	int lineLens;//左右长度。理论上二者是相等的,故只需要一个
-	int type;
-	QList<int> lineLength; //每一行的长度
-	QList<char*> lineContents;// 每一行的内容
-	QList<BlockUserData*> lineExternInfo; //每一行的额外信息
-	NoEqualBlock noEqualBlockInfo;
-	int noEqualindex;
+
+struct WalkFileInfo {
+	int direction;
+	QTreeWidgetItem* root;
+	QString path;
+	WalkFileInfo(int dire_, QTreeWidgetItem* root_, QString path_) :direction(dire_), root(root_), path(path_)
+	{
+
+	}
 };
 
-
-enum OperRecordStatus {
-	RC_OPER_SYNC = 1,//同步导致
-	RC_OPER_EDIT,//编辑导致
-};
 const int Item_RelativePath = Qt::ToolTipRole;
 const int Item_Index = Qt::UserRole + 1;
 const int DIR_ITEM_MAXSIZE_FILE = Qt::UserRole + 2;

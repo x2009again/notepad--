@@ -14,7 +14,6 @@
 #include "hexfilegoto.h"
 #include "qscilexertext.h"
 #include "styleset.h"
-#include "userregister.h"
 #include "qtlangset.h"
 #include "columnedit.h"
 
@@ -5443,11 +5442,7 @@ void CCNotePad::slot_toMistyRose()
 //获取注册码
 void CCNotePad::slot_register()
 {
-	UserRegister* pWin = new UserRegister(this);
-	pWin->setAttribute(Qt::WA_DeleteOnClose);
-	connect(pWin, &UserRegister::signSendRegisterKey, this, &CCNotePad::signSendRegisterKey);
-	connect(this, &CCNotePad::signRegisterReplay, pWin, &UserRegister::slot_registerReplay);
-	pWin->exec();
+
 }
 
 void CCNotePad::slot_langFormat()

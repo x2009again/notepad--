@@ -1,5 +1,4 @@
 ﻿#include "jsondeploy.h"
-#include "netregister.h"
 #include <QObject>
 #include <QJsonObject>
 #include <QtDebug>
@@ -13,7 +12,7 @@
 
 //替换JsonDeploy.h的类。不使用数据库，直接写一个文件就行。
 
-
+static int version_num = 24;
 
 //数据库文件是否存在。如果初始化失败，则不存在
 bool JsonDeploy::s_isExistDb = false;
@@ -261,28 +260,17 @@ void JsonDeploy::init()
 #endif
 #endif
 		QString str;
-		addKeyValueToLongSets("recentdir", str);
-		addKeyValueToLongSets("recentfile", str);
+
 		addKeyValueToLongSets("recentopenfile", str);
 
-		//是否对比隐藏文件
-		addKeyValueToNumSets("cmphidefile", 0);
-		//对比所有类型文件1; 2 只对比已知支持的文件类型
-		addKeyValueToNumSets("cmpallfile", 1);
 		//tab的长度，默认为4
 		addKeyValueToNumSets("tablens", 4);
 		//space replace tab空格替换tab，默认1为true,0为false
 		addKeyValueToNumSets("tabnouse", 1);
 
-		//网络回复回来的消息id
-		addKeyValueToNumSets("msgid", 1);
-		addKeyValueToSets("url", "0");
 		addKeyValueToSets("mac", "0");
 		addKeyValueToNumSets("padtimes", 0);
 		addKeyValueToNumSets("serverip", 0);
-
-		//hex下lcs和一对一对比模式
-		addKeyValueToNumSets("hexmode", 1);
 
 		//是否高亮不同处背景
 		addKeyValueToNumSets("hexhigh", 1);
@@ -290,20 +278,6 @@ void JsonDeploy::init()
 		//是否高亮不同处背景
 		addKeyValueToNumSets("version", version_num);
 
-		//目录对比模式，0慢1快。默认慢速
-		addKeyValueToNumSets("dirmode", 0);
-
-		//跳过目录。默认不跳过0 不跳过 1 跳过
-		addKeyValueToNumSets("isskipdir", 0);
-		addKeyValueToSets("skipdir", ".svn:.vs");
-
-		//跳过文件后缀。默认不跳过0 不跳过 1 跳过
-		addKeyValueToNumSets("isskipext", 0);
-		addKeyValueToSets("skipext", ".sln:.vcxproj");
-
-		//跳过文件后缀。默认不跳过0 不跳过 1 跳过
-		addKeyValueToNumSets("isskipprefix", 0);
-		addKeyValueToSets("skipprefix", "ui_");
 
 		//皮肤id
 		addKeyValueToNumSets(SKIN_KEY, 1);

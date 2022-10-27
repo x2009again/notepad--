@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 	shared.create(32);
 #elif defined (Q_OS_MAC)
 {
-       //mac下面不需要，有他自身的机制保证。当程序已经在✅时，再打开程序，系统会自动调用已经存在的程序出现
+       //mac下面不需要，有他自身的机制保证。当程序已经在线时，再打开程序，系统会自动调用已经存在的程序出现
         //不需要使用类似linux下面的机制。
      shared.create(32);
      nppShared.create(32);
@@ -292,13 +292,17 @@ drop_old:
 	pMainNotepad->setShareMem(&shared);
 	pMainNotepad->show();
 
-
-
 	pMainNotepad->syncCurSkinToMenu(id);
 
-
-	//这里不能给parent，否则会导致父子对象不在同一个线程的错误
-	NetRegister *pNetReg = new NetRegister(nullptr);
+#ifdef uos
+	QFont font("Noto Sans CJK JP,9,-1,5,50,0,0,0,0,0,Regular", 9);
+	QApplication::setFont(font);
+#endif
+#ifdef Q_OS_MAC
+	//这里的字体大小，务必要和查找结果框的高度匹配，否则会结构字体拥挤
+	QFont font("Courier New,11,-1,5,50,0,0,0,0,0,Regular", 11);
+	QApplication::setFont(font);
+#endif
 
 #ifdef Q_OS_WIN
 	//HWND hwnd = ::FindWindowA("Qt5QWindowIcon", "CCNotebook");
