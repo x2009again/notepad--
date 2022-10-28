@@ -36,11 +36,11 @@ TRANSLATIONS += realcompare_zh.ts
 win32 {
     CONFIG(debug, debug|release) {
         DESTDIR = x64/Debug
-		LIBS	+= -Lx64/Debug
+                LIBS	+= -L$$PWDx64/Debug
 		LIBS += -lqmyedit_qt5d
     }else{
         DESTDIR = x64/Release
-                LIBS += -Lx64/Release
+                LIBS += -L$$PWD/x64/Release
                 LIBS += -lqmyedit_qt5
                 QMAKE_CXXFLAGS += /openmp
     }
