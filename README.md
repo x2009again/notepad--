@@ -13,6 +13,8 @@
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.16
 
+最新开发版下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.17
+
 ### 编译说明：
 
 1）使用qtcreator 或 vs  先打开qscint/src/qscintilla.pro 。先编译出这个qscintlla的依赖库。
