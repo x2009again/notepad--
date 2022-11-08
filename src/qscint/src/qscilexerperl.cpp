@@ -1,4 +1,4 @@
-// This module implements the QsciLexerPerl class.
+﻿// This module implements the QsciLexerPerl class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -276,7 +276,7 @@ QFont QsciLexerPerl::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerPerl::keywords(int set) const
+const char *QsciLexerPerl::keywords(int set)
 {
     if (set == 1)
         return

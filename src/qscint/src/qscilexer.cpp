@@ -1,4 +1,4 @@
-// This module implements the QsciLexer class.
+﻿// This module implements the QsciLexer class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -42,7 +42,7 @@ QFont QsciLexer::s_defaultLangFont("Bitstream Vera Sans", 9);
 // The ctor.
 QsciLexer::QsciLexer(QObject *parent)
     : QObject(parent),
-      autoIndStyle(-1), apiSet(0), attached_editor(0), m_lexerId(QsciScintillaBase::SCLEX_CONTAINER)
+      autoIndStyle(-1), apiSet(0), attached_editor(0), m_lexerId(QsciScintillaBase::SCLEX_CONTAINER), m_isUserDefineKeyword(false)
 {
 #if 0
 #if defined(Q_OS_WIN)
@@ -136,6 +136,14 @@ void QsciLexer::setStyleDefaults() const
 
         style_map->style_data_set = true;
     }
+}
+
+//恢复到默认lexer状态
+void QsciLexer::resetStyleDefaults()
+{
+	style_map->style_data_set = false;
+	style_map->style_data.clear();
+	setStyleDefaults();
 }
 
 
@@ -283,8 +291,14 @@ bool QsciLexer::eolFill(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexer::keywords(int) const
+const char *QsciLexer::keywords(int)
 {
+	if (m_isUserDefineKeyword)
+	{
+		//如果是自定义用户关键字，则根据语言tag获取
+		return getUserDefineKeywords();
+	}
+
     return 0;
 }
 
@@ -772,4 +786,34 @@ void QsciLexer::setPaper(const QColor &c, int style)
 
         emit paperChanged(c, QsciScintillaBase::STYLE_DEFAULT);
     }
+}
+
+void  QsciLexer::setIsUserDefineKeywords(bool isUserDefine)
+{
+	m_isUserDefineKeyword = isUserDefine;
+}
+
+
+const char* QsciLexer::getUserDefineKeywords()
+{
+
+	QString userLangFile = QString("notepad/userlang/%1").arg(m_tagName);//自定义语言中不能有.字符，否则可能有错，后续要检查
+	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+	qs.setIniCodec("UTF-8");
+
+	if (!qs.contains("mz"))
+	{
+		return nullptr;
+	}
+
+	//自定义语言格式。
+	//mz:ndd
+	//name:xxx
+	//mother:xxx none/cpp/html 就三种
+	//ext:xx xx xx 文件关联后缀名
+	//keword:xxx
+	m_userDefineKeyword = qs.value("keyword").toString().toUtf8();
+
+	return m_userDefineKeyword.data();
+
 }

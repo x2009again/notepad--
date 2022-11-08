@@ -17,9 +17,12 @@
 #include "rcglobal.h"
 #include "ui_ccnotepad.h"
 #include "common.h"
+#include "extlexermanager.h"
+#include "scintillaeditview.h"
+#include "findwin.h"
 
 
-class ScintillaEditView;
+//class ScintillaEditView;
 class ScintillaHexEditView;
 class FindRecords;
 class FindResultWin;
@@ -46,6 +49,24 @@ enum OpenAttr {
 	TextReadOnly
 };
 
+enum SpaceTab {
+	Tab2Space = 0,
+	Space2TabLeading,
+	Space2TabAll,
+};
+
+enum LINE_SORT_TYPE {
+	SORTLINES_LEXICOGRAPHIC_ASCENDING,
+	SORTLINES_LEXICOGRAPHIC_DESCENDING,
+
+	SORTLINES_LEXICO_CASE_INSENS_ASCENDING,
+	SORTLINES_LEXICO_CASE_INSENS_DESCENDING,
+
+	SORTLINES_REVERSE_ORDER,
+};
+
+
+
 //打开模式。1 文本 2 二进制 3 大文本只读 4 文本只读
 //const char* Open_Attr = "openid";
 
@@ -63,7 +84,7 @@ public:
 
     void initLexerNameToIndex();
 	
-	static LangType getLangLexerIdByFileExt(QString filePath);
+	static LexerInfo getLangLexerIdByFileExt(QString filePath);
 #if 0
 	static QFont & getTxtFont()
 	{
@@ -98,6 +119,9 @@ public:
 	void syncCurSkinToMenu(int id);
 
 	int restoreLastFiles();
+
+	ScintillaEditView * getCurEditView();
+
 signals:
 	void signSendRegisterKey(QString key);
 	void signRegisterReplay(int code);
@@ -121,7 +145,9 @@ public slots:
 	void slot_options();
 	void slot_donate();
 	void slot_registerCmd(int cmd, int code);
-
+	void slot_viewStyleChange(QString tag, int styleId, QColor & fgColor, QColor & bkColor, QFont & font, bool fontChange);
+	void slot_viewLexerChange(QString tag);
+	void slot_findInDir();
 protected:
 	void closeEvent(QCloseEvent *event) override;
 	void dragEnterEvent(QDragEnterEvent* event) override;
@@ -156,6 +182,8 @@ private slots:
 	void slot_allWhite(bool checked);
 	void slot_indentGuide(bool checked);
 	void slot_find();
+
+
 	void slot_replace();
 	void slot_markHighlight();
 	void slot_clearMark();
@@ -217,11 +245,43 @@ private slots:
 	void slot_saveFile(QString fileName, ScintillaEditView * pEdit);
 	void slot_skinStyleGroup(QAction * action);
 	void slot_langFormat();
-	void slot_viewStyleChange(int lexerId, int styleId, QColor & fgColor, QColor & bkColor, QFont & font, bool fontChange);
+
 	void slot_removeHeadBlank();
 	void slot_removeEndBlank();
 	void slot_removeHeadEndBlank();
 	void slot_columnBlockEdit();
+	void slot_defineLangs();
+
+	void slot_uppercase();
+	void slot_lowercase();
+	void slot_properCase();
+	void slot_properCaseBlend();
+	void slot_sentenceCase();
+	void slot_sentenceCaseBlend();
+	void slot_invertCase();
+	void slot_randomCase();
+	void slot_removeEmptyLineCbc();
+	void slot_removeEmptyLine();
+	void slot_column_mode();
+	void slot_tabToSpace();
+	void slot_spaceToTabAll();
+	void slot_spaceToTabLeading();
+
+
+	void slot_dupCurLine();
+	void slot_removeDupLine();
+	void slot_splitLines();
+	void slot_joinLines();
+	void slot_moveUpCurLine();
+	void slot_moveDownCurLine();
+	void slot_insertBlankAbvCur();
+	void slot_insertBlankBelCur();
+	
+	void slot_reverseLineOrder();
+	void slot_sortLexAsc();
+	void slot_sortLexAscIgnCase();
+	void slot_sortLexDesc();
+	void slot_sortLexDescIngCase();
 
 
 private:
@@ -293,7 +353,12 @@ private:
 	
 	ScintillaEditView* newTxtFile(QString Name, int index, QString contentPath="");
 	void setLangsDescLable(QString &langDesc);
+	void transCurUpperOrLower(TextCaseType type);
+	void removeEmptyLine(bool isBlankContained);
+	void spaceTabConvert(SpaceTab type);
+	void dealLineSort(LINE_SORT_TYPE type);
 
+	void find(FindTabIndex findType);
 private:
 	Ui::CCNotePad ui;
 
@@ -397,6 +462,9 @@ private:
 	QTranslator* m_translator;
 
 	QTimer * m_timerAutoSave;
+
+	int m_initWidth;
+	int m_initHeight;
 
 public:
 		static QString s_lastOpenDirPath;

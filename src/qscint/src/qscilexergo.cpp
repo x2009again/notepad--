@@ -1,4 +1,4 @@
-// This module implements the QsciLexerGO class.
+﻿// This module implements the QsciLexerGO class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -81,7 +81,7 @@ QFont QsciLexerGO::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerGO::keywords(int set) const
+const char *QsciLexerGO::keywords(int set)
 {
 	if (set != 1)
 		return 0;

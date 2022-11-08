@@ -1,4 +1,4 @@
-// This module implements the QsciLexerMatlab class.
+﻿// This module implements the QsciLexerMatlab class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -113,7 +113,7 @@ QFont QsciLexerMatlab::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerMatlab::keywords(int set) const
+const char *QsciLexerMatlab::keywords(int set)
 {
     if (set == 1)
         return

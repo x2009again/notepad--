@@ -8,7 +8,7 @@ class OptionsView : public QWidget
 	Q_OBJECT
 
 public:
-	OptionsView(QWidget *parent = Q_NULLPTR);
+	OptionsView(QWidget* pNotepadWin, QWidget *parent = Q_NULLPTR);
 	~OptionsView();
 
 signals:
@@ -22,4 +22,6 @@ private slots:
 
 private:
 	Ui::OptionsView ui;
+
+	QWidget* m_pNotepadWin;
 };

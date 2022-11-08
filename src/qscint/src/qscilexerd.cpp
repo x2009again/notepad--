@@ -1,4 +1,4 @@
-// This module implements the QsciLexerD class.
+﻿// This module implements the QsciLexerD class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -225,7 +225,7 @@ QFont QsciLexerD::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerD::keywords(int set) const
+const char *QsciLexerD::keywords(int set)
 {
     if (set == 1)
         return

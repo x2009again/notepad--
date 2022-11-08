@@ -1,4 +1,4 @@
-﻿// This module implements the "official" high-level API of the Qt port of
+// This module implements the "official" high-level API of the Qt port of
 // Scintilla.  It is modelled on QTextEdit - a method of the same name should
 // behave in the same way.
 //
@@ -41,6 +41,7 @@
 #include "Qsci/qscistyle.h"
 #include "Qsci/qscistyledtext.h"
 #include "xmlMatchedTagsHighlighter.h"
+#include "BoostRegexSearch.h"
 
 
 // Make sure these match the values in Scintilla.h.  We don't #include that
@@ -1721,7 +1722,7 @@ FindState& QsciScintilla::getLastFindState()
 
 // Find the first occurrence of a string.
 bool QsciScintilla::findFirst(const QString &expr, bool re, bool cs, bool wo,
-        bool wrap, bool forward, int line, int index, bool show, bool posix,
+        bool wrap, bool forward, FindNextType findNextType, int line, int index, bool show, bool posix,
         bool cxx11)
 {
     if (expr.isEmpty())
@@ -1741,6 +1742,21 @@ bool QsciScintilla::findFirst(const QString &expr, bool re, bool cs, bool wo,
         (re ? SCFIND_REGEXP : 0) |
         (posix ? SCFIND_POSIX : 0) |
         (cxx11 ? SCFIND_CXX11REGEX : 0);
+
+	switch (findNextType)
+	{
+	case FINDNEXTTYPE_FINDNEXT:
+		findState.flags |= SCFIND_REGEXP_EMPTYMATCH_ALL | SCFIND_REGEXP_SKIPCRLFASONE;
+		break;
+
+	case FINDNEXTTYPE_REPLACENEXT:
+		findState.flags |= SCFIND_REGEXP_EMPTYMATCH_NOTAFTERMATCH | SCFIND_REGEXP_SKIPCRLFASONE;
+		break;
+
+	case FINDNEXTTYPE_FINDNEXTFORREPLACE:
+		findState.flags |= SCFIND_REGEXP_EMPTYMATCH_ALL | SCFIND_REGEXP_EMPTYMATCH_ALLOWATSTART | SCFIND_REGEXP_SKIPCRLFASONE;
+		break;
+	}
 
     if (line < 0 || index < 0)
         findState.startpos = SendScintilla(SCI_GETCURRENTPOS);

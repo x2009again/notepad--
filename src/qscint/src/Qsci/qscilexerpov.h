@@ -1,4 +1,4 @@
-// This defines the interface to the QsciLexerPOV class.
+﻿// This defines the interface to the QsciLexerPOV class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -129,7 +129,7 @@ public:
 
     //! Returns the set of keywords for the keyword set \a set recognised
     //! by the lexer as a space separated string.
-    const char *keywords(int set) const;
+    const char *keywords(int set);
 
     //! Returns the descriptive name for style number \a style.  If the
     //! style is invalid for this language then an empty QString is returned.

@@ -1,4 +1,4 @@
-// This module implements the QsciLexerRuby class.
+﻿// This module implements the QsciLexerRuby class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -225,7 +225,7 @@ QFont QsciLexerRuby::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerRuby::keywords(int set) const
+const char *QsciLexerRuby::keywords(int set)
 {
     if (set == 1)
         return

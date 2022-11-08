@@ -29,7 +29,7 @@ const ULONG_PTR OPEN_NOTEPAD_TYPE = 10001;
 bool s_isAdminAuth = false;
 #endif
 
-const QString c_strTitle = "notepad--";
+const QString c_strTitle = "notepad-- v1.17.1";
 
 
 #ifdef Q_OS_UNIX

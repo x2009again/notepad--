@@ -4,7 +4,9 @@
 #include <SciLexer.h>
 #include <QMouseEvent>
 #include <QMimeData>
+#include <unordered_set>
 #include "common.h"
+#include "Sorters.h"
 
 
 typedef sptr_t(*SCINTILLA_FUNC) (sptr_t ptr, unsigned int, uptr_t, sptr_t);
@@ -33,6 +35,19 @@ struct PosInfo {
 	}
 };
 
+enum TextCaseType
+{
+	UPPERCASE,
+	LOWERCASE,
+	TITLECASE_FORCE,
+	TITLECASE_BLEND,
+	SENTENCECASE_FORCE,
+	SENTENCECASE_BLEND,
+	INVERTCASE,
+	RANDOMCASE
+};
+
+
 class FindRecords;
 
 class ScintillaEditView : public QsciScintilla
@@ -47,7 +62,7 @@ public:
 	//void resetDefaultFontStyle();
 	sptr_t execute(quint32 Msg, uptr_t wParam = 0, sptr_t lParam = 0) const;
 
-	static QsciLexer * createLexer(int lexerId);
+	static QsciLexer * createLexer(int lexerId, QString tag="");
 	
 	void appendMarkRecord(FindRecords *r);
 	void releaseAllMark();
@@ -56,15 +71,49 @@ public:
 	bool gotoPrePos();
 	bool gotoNextPos();
 
+
 	void adjuctSkinStyle();
 
 	//设置文档的缩进参考线
 	void setIndentGuide(bool willBeShowed);
 
-	//virtual void setLexer(QsciLexer *lexer = 0) override;
+	void convertSelectedTextTo(const TextCaseType & caseToConvert);
+
+	void removeAnyDuplicateLines();
+
+	void insertCharsFrom(size_t position, const QByteArray & text2insert) const;
+
+
+	std::pair<size_t, size_t> getSelectionLinesRange(intptr_t selectionNumber = -1) const;
+
+	void insertNewLineAboveCurrentLine(bool check = true);
+
+	void insertNewLineBelowCurrentLine(bool check = true);
+
+	void sortLines(size_t fromLine, size_t toLine, ISorter * pSort);
+
+	intptr_t lastZeroBasedLineNumber() const {
+		auto endPos = execute(SCI_GETLENGTH);
+		return execute(SCI_LINEFROMPOSITION, endPos);
+	};
+
+	intptr_t getCurrentLineNumber()const {
+		return execute(SCI_LINEFROMPOSITION, execute(SCI_GETCURRENTPOS));
+	};
 
 signals:
 	void delayWork();
+
+private:
+
+	void getText(char * dest, size_t start, size_t end) const;
+
+	QString getGenericTextAsQString(size_t start, size_t end) const;
+
+	QString getEOLString();
+	intptr_t replaceTarget(QByteArray & str2replace, intptr_t fromTargetPos, intptr_t toTargetPos) const;
+	void appandGenericText(const QByteArray & text2Append) const;
+
 
 public:
 	static const int _SC_MARGE_LINENUMBER;
@@ -83,16 +132,23 @@ protected:
 public slots:
 	void updateLineNumberWidth(int lineNumberMarginDynamicWidth=0);
 	void slot_linePosChanged(int line, int pos);
+
 private:
 	void updateLineNumbersMargin(bool forcedToHide);
 	void autoAdjustLineWidth(int xScrollValue);
 	void showMargin(int whichMarge, bool willBeShowed);
 	void init();
+	void changeCase(const TextCaseType & caseToConvert, QString & strToConvert) const;
+	void clearIndicator(int indicatorNumber);
+
+	void highlightViewWithWord(QString & word2Hilite);
+
+	
 
 private slots:
 	void slot_delayWork();
 	void slot_scrollXValueChange(int value);
-	
+	void slot_clearHightWord();
 
 private:
 
@@ -115,4 +171,6 @@ public:
 	static int s_tabLens;
 	static bool s_noUseTab;
 	static int s_bigTextSize;
+
+	bool m_hasHighlight;
 };

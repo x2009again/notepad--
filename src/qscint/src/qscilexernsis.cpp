@@ -1,4 +1,4 @@
-﻿#include "Qsci/QsciLexerNsis.h"
+﻿#include "Qsci/qscilexernsis.h"
 #include "Qsci/qsciscintillabase.h"
 
 #include <qcolor.h>
@@ -97,7 +97,7 @@ QFont QsciLexerNsis::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char* QsciLexerNsis::keywords(int set) const
+const char* QsciLexerNsis::keywords(int set)
 {
 	return "Functions Variables Lables UserDefined "
 		"Abort AddBrandingImage AddSize AllowRootDirInstall AllowSkipFiles AutoCloseWindow "

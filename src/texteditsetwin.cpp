@@ -1,11 +1,11 @@
 ﻿#include "texteditsetwin.h"
 #include "scintillaeditview.h"
 #include "ccnotepad.h"
-
+#include "qtlangset.h"
 #include <QFontDialog>
 
 TextEditSetWin::TextEditSetWin(QWidget *parent)
-	: QWidget(parent)
+	: QWidget(parent), m_notepadWin(nullptr)
 {
 	ui.setupUi(this);
 
@@ -24,6 +24,11 @@ TextEditSetWin::TextEditSetWin(QWidget *parent)
 TextEditSetWin::~TextEditSetWin()
 {
 	save();
+}
+
+void TextEditSetWin::setNotePadWin(QWidget *w)
+{
+	m_notepadWin = w;
 }
 
 #if 0
@@ -84,6 +89,23 @@ void TextEditSetWin::save()
 }
 }
 
+void TextEditSetWin::slot_txtFontSet()
+{
+	CCNotePad* pMainWin = dynamic_cast<CCNotePad*>(m_notepadWin);
+	if (pMainWin == nullptr)
+	{
+		//是从对比规则里面弹出来的，不进行文本的设置
+		return;
+	}
+
+	QtLangSet* pWin = new QtLangSet(QString("txt"), this);
+	pWin->setAttribute(Qt::WA_DeleteOnClose);
+
+	connect(pWin, &QtLangSet::viewStyleChange, pMainWin, &CCNotePad::slot_viewStyleChange);
+	connect(pWin, &QtLangSet::viewLexerChange, pMainWin, &CCNotePad::slot_viewLexerChange);
+	pWin->show();
+	pWin->selectInitLangTag("txt");
+}
 #if 0
 void TextEditSetWin::slot_selectFont()
 {

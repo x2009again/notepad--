@@ -8,7 +8,7 @@
 #include "ui_findwin.h"
 
 enum FindTabIndex {
-	FIND_TAB,
+	FIND_TAB =0,
 	REPLACE_TAB,
 	DIR_FIND_TAB,
 	MARK_TAB,
@@ -63,13 +63,14 @@ public:
 	void markAllWord(QString& word);
 	void removeLineHeadEndBlank(int mode);
 	static void showCallTip(QsciScintilla * pEdit, int pos);
-
+	void removeEmptyLine(bool isBlankContained);
 	
 
 protected:
 	
 	virtual void focusInEvent(QFocusEvent *ev);
 	virtual void focusOutEvent(QFocusEvent *ev);
+	virtual bool eventFilter(QObject * obj, QEvent * event);
 
 	//bool eventFilter(QObject *, QEvent *);    //注意这里
 signals:

@@ -280,7 +280,7 @@ void JsonDeploy::init()
 
 
 		//皮肤id
-		addKeyValueToNumSets(SKIN_KEY, 1);
+        addKeyValueToNumSets(SKIN_KEY, 0);
 
 		//语言index 0:自动选择 1:中文 2 英文
 		addKeyValueToNumSets(LANGS_KEY, 0);
@@ -300,6 +300,8 @@ void JsonDeploy::init()
 		addKeyValueToSets(SOFT_KEY, "0");
 
 		addKeyValueToSets(RESTORE_CLOSE_FILE, "1");
+
+		addKeyValueToSets(RESTORE_SIZE, "1585:789");
 		
 	};
 
@@ -398,6 +400,11 @@ void JsonDeploy::init()
 					QJsonValue v(1);
 					checkNoExistAdd(RESTORE_CLOSE_FILE, v);
 			}
+
+				{
+					QJsonValue v("1585:789");
+					checkNoExistAdd(RESTORE_SIZE, v);
+				}
 				
 			}
 			else

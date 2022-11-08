@@ -263,6 +263,7 @@ int FileManager::loadFileDataInText(ScintillaEditView* editView, QString filePat
 
 	if (maxLineSize > 0)
 	{
+		//int textWidth = editView->execute(SCI_TEXTWIDTH, STYLE_DEFAULT, reinterpret_cast<sptr_t>("P"));
 		editView->execute(SCI_SETSCROLLWIDTH, maxLineSize*10);
 	}
 
@@ -292,6 +293,17 @@ int FileManager::loadFileDataInText(ScintillaEditView* editView, QString filePat
 
 	file.close();
 
+
+	//优先根据文件后缀来确定其语法风格
+	LexerInfo lxdata = CCNotePad::getLangLexerIdByFileExt(filePath);
+
+	if (lxdata.lexerId != L_TXT)
+	{
+		QsciLexer* lexer = editView->createLexer(lxdata.lexerId, lxdata.tagName);
+		editView->setLexer(lexer);
+	}
+	else
+	{
 	//利用前面5行，进行一个编程语言的判断
 	QString headContens;
 
@@ -300,15 +312,16 @@ int FileManager::loadFileDataInText(ScintillaEditView* editView, QString filePat
 		headContens.append(outputLineInfoVec.at(i).unicodeStr);
 	}
 
+
 	std::string headstr = headContens.toStdString();
 
 	LangType _language = detectLanguageFromTextBegining((const unsigned char *)headstr.data(), headstr.length());
 
-	if (_language>= 0 && _language < L_EXTERNAL)
+		if (_language >= 0 && _language < L_EXTERNAL)
 	{
-		//editView->execute(SCI_SETLEXER, ScintillaEditView::langNames[_language].lexerID);
 		QsciLexer* lexer = editView->createLexer(_language);
 		editView->setLexer(lexer);
+	}
 	}
 	
 	//如果检测到时16进制文件，但是强行以二进制打开，则有限走setUtf8Text。

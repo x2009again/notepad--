@@ -1,4 +1,4 @@
-// This module implements the QsciLexerLua class.
+﻿// This module implements the QsciLexerLua class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -158,7 +158,7 @@ QFont QsciLexerLua::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerLua::keywords(int set) const
+const char *QsciLexerLua::keywords(int set)
 {
     if (set == 1)
         // Keywords.

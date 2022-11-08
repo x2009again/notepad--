@@ -854,6 +854,19 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Zoom out")
         },
+		{
+		   QsciCommand::MoveLineUp,
+		   Qt::Key_Up | Qt::CTRL | Qt::SHIFT,
+		   0,
+		   QT_TRANSLATE_NOOP("QsciCommand", "Move Line up")
+		}, 
+
+		{
+		   QsciCommand::MovdLineDown,
+		   Qt::Key_Down | Qt::CTRL | Qt::SHIFT,
+		   0,
+		   QT_TRANSLATE_NOOP("QsciCommand", "Move Line down")
+		},
     };
 
     // Clear the default map.

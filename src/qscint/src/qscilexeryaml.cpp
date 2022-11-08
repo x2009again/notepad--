@@ -1,4 +1,4 @@
-// This module implements the QsciLexerYAML class.
+﻿// This module implements the QsciLexerYAML class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -152,7 +152,7 @@ QFont QsciLexerYAML::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerYAML::keywords(int set) const
+const char *QsciLexerYAML::keywords(int set)
 {
     if (set == 1)
         return "true false yes no";

@@ -267,6 +267,7 @@
 
 #define SCE_TXT_DEFAULT 0
 #define SCE_TXT_ASCII 1
+#define SCE_TXT_KEYWORD 2
 
 #define SCE_P_DEFAULT 0
 #define SCE_P_COMMENTLINE 1

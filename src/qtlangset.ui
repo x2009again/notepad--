@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>749</width>
-    <height>589</height>
+    <width>983</width>
+    <height>728</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,10 +18,8 @@
     <normaloff>:/Resources/edit/global/ndd.ico</normaloff>:/Resources/edit/global/ndd.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <layout class="QHBoxLayout" name="horizontalLayout_5">
+   <layout class="QHBoxLayout" name="horizontalLayout_9">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <widget class="QLabel" name="label">
@@ -40,8 +38,31 @@
           </property>
           <property name="maximumSize">
            <size>
-            <width>200</width>
+          <width>220</width>
             <height>16777215</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>User Define Language</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="userLangListWidget">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+          <width>220</width>
+            <height>150</height>
            </size>
           </property>
          </widget>
@@ -75,13 +96,9 @@
         </item>
        </layout>
       </item>
-     </layout>
-    </item>
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="title">
            <string>Color</string>
@@ -123,6 +140,13 @@
               </widget>
              </item>
              <item>
+            <widget class="QCheckBox" name="modiryAllColor">
+             <property name="text">
+              <string>All Style</string>
+             </property>
+            </widget>
+           </item>
+           <item>
               <spacer name="horizontalSpacer">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
@@ -188,22 +212,24 @@
           <property name="title">
            <string>Font</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_2">
-           <item row="1" column="1">
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <layout class="QVBoxLayout" name="verticalLayout_8">
              <item>
-              <widget class="QLabel" name="label_8">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_7">
                <property name="text">
-                <string>Font Size:</string>
+              <string>Name:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="fontSpinBox"/>
+            <widget class="QFontComboBox" name="fontComboBox"/>
              </item>
             </layout>
            </item>
-           <item row="1" column="0">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
               <widget class="QCheckBox" name="boldCheckBox">
@@ -228,40 +254,107 @@
              </item>
             </layout>
            </item>
-           <item row="0" column="0" colspan="2">
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
-              <widget class="QLabel" name="label_7">
+            <layout class="QVBoxLayout" name="verticalLayout_7">
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <widget class="QLabel" name="label_8">
                <property name="text">
-                <string>Name:</string>
+                  <string>Font Size:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QFontComboBox" name="fontComboBox"/>
+                <widget class="QSpinBox" name="fontSpinBox"/>
              </item>
             </layout>
            </item>
+             <item>
+              <widget class="QCheckBox" name="modifyAllFont">
+               <property name="text">
+                <string>All Style</string>
+               </property>
+              </widget>
+             </item>
           </layout>
+           </item>
+          </layout>
+         </item>
+        </layout>
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Keyword And Mother </string>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QPlainTextEdit" name="keywordTe">
+           <property name="readOnly">
+            <bool>true</bool>
           </property>
-         </spacer>
+          </widget>
         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="label_6">
+             <property name="text">
+              <string>Mother Language:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="motherLangCb">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <item>
+              <property name="text">
+               <string>None</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Cpp</string>
+              </property>
+             </item>
+            </widget>
+           </item>
        </layout>
       </item>
       <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLabel" name="label_9">
+             <property name="text">
+              <string>Ext File Type:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="extFileType">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item>
+         <widget class="QPushButton" name="reset">
+          <property name="text">
+           <string>reset</string>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QPushButton" name="saveBt">
           <property name="text">
@@ -287,7 +380,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>749</width>
+     <width>983</width>
      <height>23</height>
     </rect>
    </property>
@@ -314,8 +407,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>696</x>
-     <y>547</y>
+     <x>1068</x>
+     <y>694</y>
     </hint>
     <hint type="destinationlabel">
      <x>709</x>
@@ -330,8 +423,8 @@
    <slot>slot_saveClick()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>560</x>
-     <y>547</y>
+     <x>951</x>
+     <y>694</y>
     </hint>
     <hint type="destinationlabel">
      <x>575</x>
@@ -346,12 +439,28 @@
    <slot>slot_changeFgColor()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>647</x>
-     <y>87</y>
+     <x>919</x>
+     <y>92</y>
     </hint>
     <hint type="destinationlabel">
      <x>462</x>
      <y>561</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>reset</sender>
+   <signal>clicked()</signal>
+   <receiver>QtLangSetClass</receiver>
+   <slot>slot_reset()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>777</x>
+     <y>685</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>814</x>
+     <y>697</y>
     </hint>
    </hints>
   </connection>
@@ -360,5 +469,6 @@
   <slot>slot_saveClick()</slot>
   <slot>slot_changeFgColor()</slot>
   <slot>slot_changeBkColor()</slot>
+  <slot>slot_reset()</slot>
  </slots>
 </ui>

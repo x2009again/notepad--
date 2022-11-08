@@ -255,7 +255,10 @@ static void ColouriseAU3Doc(Sci_PositionU startPos,
 				if (sc.atLineEnd) {
 					ci=0;
 					if (strcmp(s, "#ce")== 0 || strcmp(s, "#comments-end")== 0) {
+						if (sc.atLineEnd)
 						sc.SetState(SCE_AU3_DEFAULT);
+						else
+							sc.SetState(SCE_AU3_COMMENTBLOCK);
 					}
 					break;
 				}

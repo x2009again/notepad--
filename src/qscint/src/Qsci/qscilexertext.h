@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <QObject>
 #include <Qsci/qsciglobal.h>
 #include <Qsci/qscilexer.h>
@@ -11,6 +11,7 @@ public:
 	enum {
 		Default = 0,//中文
 		Ascii = 1,//英文
+		Keyword = 2, //关键字，只有以TXT为母版的自定义语言才有，默认txt是没有关键字说法的
 	};
 	QsciLexerText(QObject *parent=0);
 	virtual ~QsciLexerText();
@@ -42,7 +43,7 @@ public:
 
 	//! Returns the set of keywords for the keyword set \a set recognised
 	//! by the lexer as a space separated string.
-	const char* keywords(int set) const;
+	const char* keywords(int set);
 
 	//! Returns the descriptive name for style number \a style.  If the
 	//! style is invalid for this language then an empty QString is returned.

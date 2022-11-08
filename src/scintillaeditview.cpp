@@ -54,6 +54,7 @@
 #include <Qsci/qscilexertext.h>
 #include <Qsci/qscilexernsis.h>
 #include <QScrollBar>
+#include <unordered_set>
 #include <QDebug>
 
 #include <stdexcept>
@@ -185,7 +186,7 @@ LanguageName ScintillaEditView::langNames[L_EXTERNAL + 1] = {
 #endif
 
 ScintillaEditView::ScintillaEditView(QWidget *parent)
-	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0)
+	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false)
 {
 	init();
 }
@@ -294,7 +295,8 @@ sptr_t ScintillaEditView::execute(quint32 Msg, uptr_t wParam, sptr_t lParam) con
 };
 
 //status : true 表示存在， false 表示不存在
-QsciLexer* ScintillaEditView::createLexer(int lexerId)
+//tag，只有在用户自定义语法是，才需要给出。内部自带的语法不需要给出
+QsciLexer* ScintillaEditView::createLexer(int lexerId,QString tag)
 {
 	QsciLexer* ret = nullptr;
 
@@ -534,6 +536,17 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId)
 		ret = new QsciLexerText();
 		ret->setLexerTag("txt");
 		break;
+	case L_USER_TXT:
+		//使用txt的语法解析器，但是自定义关键字，自定义tag语言标签。下同
+		ret = new QsciLexerText();
+		ret->setLexerTag(tag);
+		ret->setIsUserDefineKeywords(true);
+		break;
+	case L_USER_CPP:
+		ret = new QsciLexerCPP();
+		ret->setLexerTag(tag);
+		ret->setIsUserDefineKeywords(true);
+		break;
 	default:
 		break;
 	}
@@ -584,22 +597,6 @@ void ScintillaEditView::setIndentGuide(bool willBeShowed)
 
 	QsciScintilla::setIndentGuide(willBeShowed);
 }
-
-#if 0
-void ScintillaEditView::setLexer(QsciLexer * lexer)
-{
-	//加个保护，只有文本模式下，才能加lexer
-	if (lexer != nullptr)
-	{
-		OpenAttr openType = (OpenAttr)this->property(Open_Attr).toInt();
-		if (Text != openType)
-		{
-			return;
-		}
-	}
-	QsciScintilla::setLexer(lexer);
-}
-#endif
 
 void ScintillaEditView::init()
 {
@@ -680,10 +677,15 @@ void ScintillaEditView::init()
 	execute(SCI_SETUSETABS, !ScintillaEditView::s_noUseTab);
 
 	//这个无比要设置false，否则双击后高亮单词，拷贝时会拷贝多个选择。
-	execute(SCI_SETMULTIPLESELECTION, false);
+	execute(SCI_SETMULTIPLESELECTION, true);
+	execute(SCI_SETADDITIONALSELECTIONTYPING, true);
+	
 	//execute(SCI_SETADDITIONALSELALPHA, 100);
-	execute(SCI_SETMULTIPASTE, 1);
-	execute(SCI_SETADDITIONALCARETSVISIBLE, false);
+	execute(SCI_SETMULTIPASTE, SC_MULTIPASTE_EACH);
+	execute(SCI_SETADDITIONALCARETSVISIBLE, true);
+
+	execute(SCI_SETVIRTUALSPACEOPTIONS, SCVS_RECTANGULARSELECTION);
+
 	//execute(SCI_SETADDITIONALSELFORE, 0);
 	//execute(SCI_SETADDITIONALSELBACK, 0x98ff98);
 	execute(SCI_SETSELFORE, true, 0x0);
@@ -707,19 +709,39 @@ void ScintillaEditView::init()
 	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_TAGATTR, false);
 	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_TAGATTR, 0x00ffff);
 
+	//双击后同样的字段进行高亮
+	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE_SMART, INDIC_ROUNDBOX);
+	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE_SMART, 100);
+	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_SMART, false);
+	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_SMART, 0x00ff00);
 
 	setCaretLineVisible(true);
 	setCaretLineBackgroundColor(QColor(0xe8e8ff));
 
 	//记住position变化。不能使用cursorPositionChanged，因为他的列考虑uft8字符，中文一个也算1个，每次列不一定相等。
-	//要使用自定义的cursorPosChange，跟踪的是SCI_GETCURRENTPOS 的值
+	//要使用自定义的cursorPosChange，跟踪的是SCI_GETCURRENTPOS 的值。换行才会触发这个cursorPosChange。自定义的信号
 	connect(this,&QsciScintilla::cursorPosChange,this,&ScintillaEditView::slot_linePosChanged, Qt::QueuedConnection);
+
+	connect(this, &QsciScintilla::selectionChanged, this, &ScintillaEditView::slot_clearHightWord, Qt::QueuedConnection);
 
 	execute(SCI_SETSCROLLWIDTH, 1);
 
 	//20220226发现高亮全选如果范围过大，会导致卡死。借鉴notepad的只高亮可视化区域。但是滚动时也必须生效
 	connect(this->verticalScrollBar(), &QScrollBar::valueChanged, this, &ScintillaEditView::slot_scrollXValueChange);
 	connect(this, &ScintillaEditView::delayWork, this,&ScintillaEditView::slot_delayWork, Qt::QueuedConnection);
+
+	//设置换行符号的格式
+#if defined(Q_OS_WIN)
+	execute(SCI_SETEOLMODE, SC_EOL_CRLF);
+#elif !defined(Q_OS_MAC)
+	execute(SCI_SETEOLMODE, SC_EOL_CR);
+#elif !defined(Q_OS_UNIX)
+	execute(SCI_SETEOLMODE, SC_EOL_LF);
+#endif
+
+	//开启后可以保证长行在滚动条下完整显示
+	execute(SCI_SETSCROLLWIDTHTRACKING, true);
+
 }
 
 //X方向滚动条值变化后的槽函数。一旦滚动则会出发这里，发送消息给中介，让中介去同步另外一方
@@ -787,6 +809,110 @@ bool ScintillaEditView::gotoNextPos()
 
 const int MAXLINEHIGHLIGHT = 400;
 
+void ScintillaEditView::clearIndicator(int indicatorNumber) {
+	size_t docStart = 0;
+	size_t docEnd = length();
+	execute(SCI_SETINDICATORCURRENT, indicatorNumber);
+	execute(SCI_INDICATORCLEARRANGE, docStart, docEnd - docStart);
+};
+
+void ScintillaEditView::slot_clearHightWord()
+{
+	if (m_hasHighlight)
+	{
+		m_hasHighlight = false;
+		clearIndicator(SCE_UNIVERSAL_FOUND_STYLE_SMART);
+	}
+}
+
+
+void ScintillaEditView::highlightViewWithWord(QString & word2Hilite)
+{
+	int originalStartPos = execute(SCI_GETTARGETSTART);
+	int originalEndPos = execute(SCI_GETTARGETEND);
+
+	int firstLine = static_cast<int>(this->execute(SCI_GETFIRSTVISIBLELINE));
+	int nbLineOnScreen = this->execute(SCI_LINESONSCREEN);
+	int nbLines = std::min(nbLineOnScreen, MAXLINEHIGHLIGHT) + 1;
+	int lastLine = firstLine + nbLines;
+	int startPos = 0;
+	int endPos = 0;
+	auto currentLine = firstLine;
+	int prevDocLineChecked = -1;	//invalid start
+
+
+	auto searchMark = [this](int &startPos, int &endPos, QByteArray &word2Mark){
+
+		int targetStart = 0;
+		int targetEnd = 0;
+
+		long lens = word2Mark.length();
+
+		while (targetStart >= 0)
+		{
+			execute(SCI_SETTARGETRANGE, startPos, endPos);
+
+			targetStart = SendScintilla(SCI_SEARCHINTARGET, lens, word2Mark.data());
+
+			if (targetStart == -1 || targetStart == -2)
+				break;
+
+			targetEnd = int(this->execute(SCI_GETTARGETEND));
+
+			if (targetEnd > endPos)
+			{
+				//we found a result but outside our range, therefore do not process it
+				break;
+			}
+
+			int foundTextLen = targetEnd - targetStart;
+
+			if (foundTextLen > 0)
+			{
+				this->execute(SCI_SETINDICATORCURRENT, SCE_UNIVERSAL_FOUND_STYLE_SMART);
+				this->execute(SCI_INDICATORFILLRANGE, targetStart, foundTextLen);
+			}
+
+			if (targetStart + foundTextLen == endPos)
+				break;
+
+			startPos = targetStart + foundTextLen;
+
+		}
+	};
+
+
+	QByteArray whatMark = word2Hilite.toUtf8();
+
+	SendScintilla(SCI_SETSEARCHFLAGS, SCFIND_REGEXP | SCFIND_MATCHCASE | SCFIND_WHOLEWORD | SCFIND_REGEXP_SKIPCRLFASONE);
+
+	for (; currentLine < lastLine; ++currentLine)
+	{
+		int docLine = static_cast<int>(this->execute(SCI_DOCLINEFROMVISIBLE, currentLine));
+		if (docLine == prevDocLineChecked)
+			continue;	//still on same line (wordwrap)
+		prevDocLineChecked = docLine;
+		startPos = static_cast<int>(this->execute(SCI_POSITIONFROMLINE, docLine));
+		endPos = static_cast<int>(this->execute(SCI_POSITIONFROMLINE, docLine + 1));
+
+		if (endPos == -1)
+		{	//past EOF
+			endPos = this->length() - 1;
+			searchMark(startPos, endPos, whatMark);
+			break;
+		}
+		else
+		{
+			searchMark(startPos, endPos, whatMark);
+		}
+	}
+
+	m_hasHighlight = true;
+
+	// restore the original targets to avoid conflicts with the search/replace functions
+	this->execute(SCI_SETTARGETRANGE, originalStartPos, originalEndPos);
+}
+
 void ScintillaEditView::slot_delayWork()
 {
 	if (!hasSelectedText())
@@ -797,7 +923,8 @@ void ScintillaEditView::slot_delayWork()
 	QString word = selectedText();
 	if (!word.isEmpty())
 	{
-
+		highlightViewWithWord(word);
+#if 0
 		QVector<int>resultPos;
 		resultPos.reserve(50);
 
@@ -858,14 +985,24 @@ void ScintillaEditView::slot_delayWork()
 
 		for (int i = 0, size = resultPos.size(); i < size; ++i)
 		{
-			//execute(SCI_ADDSELECTION, resultPos.at(i), resultPos.at(i) + word.size());
-			execute(SCI_ADDSELECTION, resultPos.at(i) + lens, resultPos.at(i) );
+			//execute(SCI_ADDSELECTION, resultPos.at(i) + lens, resultPos.at(i) );
+
+			execute(SCI_SETINDICATORCURRENT, SCE_UNIVERSAL_FOUND_STYLE_SMART);
+
+			execute(SCI_INDICATORFILLRANGE, resultPos.at(i), lens);
 		}
 
-		if (!resultPos.isEmpty())
+		//当前有高亮的字段
+		if (resultPos.size() > 0)
+		{
+			m_hasHighlight = true;
+		}
+
+		/*if (!resultPos.isEmpty())
 		{
 			execute(SCI_SETMAINSELECTION, mainSelect - 1);
-		}
+		}*/
+#endif
 	}
 }
 
@@ -895,6 +1032,8 @@ void ScintillaEditView::dropEvent(QDropEvent* e)
 	//qDebug() << ui.leftSrc->geometry() << ui.rightSrc->geometry() << QCursor::pos() << this->mapFromGlobal(QCursor::pos());
 }
 
+
+
 void ScintillaEditView::mouseDoubleClickEvent(QMouseEvent * e)
 {
 	QsciScintilla::mouseDoubleClickEvent(e);
@@ -902,5 +1041,414 @@ void ScintillaEditView::mouseDoubleClickEvent(QMouseEvent * e)
 	if (hasSelectedText())
 	{
 		emit delayWork();
+	}
+}
+
+void ScintillaEditView::changeCase(const TextCaseType & caseToConvert, QString& strToConvert) const
+{
+	if (strToConvert.isEmpty())
+		return;
+
+	int nbChars = strToConvert.size();
+
+	switch (caseToConvert)
+	{
+	case UPPERCASE:
+	{
+		strToConvert = strToConvert.toUpper();
+		break;
+	}
+	case LOWERCASE:
+	{
+		strToConvert = strToConvert.toLower();
+		break;
+	} 
+	case TITLECASE_FORCE:
+	case TITLECASE_BLEND:
+	{
+		for (int i = 0; i < nbChars; ++i)
+		{
+			if (strToConvert[i].isLetter())
+			{
+				if ((i < 1) ? true : !strToConvert[i - 1].isLetterOrNumber())
+					strToConvert[i] = strToConvert[i].toUpper();
+				else if (caseToConvert == TITLECASE_FORCE)
+					strToConvert[i] = strToConvert[i].toLower();
+				//An exception
+				if ((i < 2) ? false : (strToConvert[i - 1] == L'\'' && (strToConvert[i - 2].isLetter())))
+					strToConvert[i] = strToConvert[i].toLower();
+			}
+		}
+		break;
+	} //case TITLECASE
+	case SENTENCECASE_FORCE:
+	case SENTENCECASE_BLEND:
+	{
+		bool isNewSentence = true;
+		bool wasEolR = false;
+		bool wasEolN = false;
+		for (int i = 0; i < nbChars; ++i)
+		{
+			if (strToConvert[i].isLetter())
+			{
+				if (isNewSentence)
+				{
+					strToConvert[i] = strToConvert[i].toUpper();
+					isNewSentence = false;
+				}
+				else if (caseToConvert == SENTENCECASE_FORCE)
+				{
+					strToConvert[i] = strToConvert[i].toLower();
+				}
+				wasEolR = false;
+				wasEolN = false;
+				//An exception
+				if (strToConvert[i] == L'i' &&
+					((i < 1) ? false : (strToConvert[i - 1].isSpace() || strToConvert[i - 1] == '(' || strToConvert[i - 1] == '"')) && \
+					((i + 1 == nbChars) ? false : (strToConvert[i + 1].isSpace() || strToConvert[i + 1] == '\'')))
+				{
+					strToConvert[i] = L'I';
+				}
+			}
+			else if (strToConvert[i] == '.' || strToConvert[i] == '!' || strToConvert[i] == '?')
+			{
+				if ((i + 1 == nbChars) ? true : strToConvert[i + 1].isLetterOrNumber())
+					isNewSentence = false;
+				else
+					isNewSentence = true;
+			}
+			else if (strToConvert[i] == '\r')
+			{
+				if (wasEolR)
+					isNewSentence = true;
+				else
+					wasEolR = true;
+			}
+			else if (strToConvert[i] == '\n')
+			{
+				if (wasEolN)
+					isNewSentence = true;
+				else
+					wasEolN = true;
+			}
+		}
+		break;
+	} //case SENTENCECASE
+	case INVERTCASE:
+	{
+		for (int i = 0; i < nbChars; ++i)
+		{
+			if (strToConvert[i].isLower())
+				strToConvert[i] = strToConvert[i].toUpper();
+			else
+				strToConvert[i] = strToConvert[i].toLower();
+		}
+		break;
+	} //case INVERTCASE
+	case RANDOMCASE:
+	{
+		for (int i = 0; i < nbChars; ++i)
+		{
+			if (strToConvert[i].isLetter())
+			{
+				if (std::rand() & true)
+					strToConvert[i] = strToConvert[i].toUpper();
+				else
+					strToConvert[i] = strToConvert[i].toLower();
+			}
+		}
+		break;
+	}
+	} //switch (caseToConvert)
+}
+
+void ScintillaEditView::convertSelectedTextTo(const TextCaseType & caseToConvert)
+{
+	int selectionStart = execute(SCI_GETSELECTIONSTART);
+	int selectionEnd = execute(SCI_GETSELECTIONEND);
+
+	int strLen = (selectionEnd - selectionStart);
+	if (strLen != 0)
+	{
+		int strSize = strLen + 1;
+
+		char *selectedStr = new char[strSize];
+
+		execute(SCI_GETSELTEXT, 0, reinterpret_cast<sptr_t>(selectedStr));
+
+		QString utf8Str(selectedStr);
+		changeCase(caseToConvert, utf8Str);
+
+		QByteArray bytes = utf8Str.toUtf8();
+
+		execute(SCI_SETTARGETRANGE, selectionStart, selectionEnd);
+
+		execute(SCI_BEGINUNDOACTION);
+		execute(SCI_REPLACETARGET, strLen, reinterpret_cast<sptr_t>(bytes.data()));
+		execute(SCI_ENDUNDOACTION);
+		execute(SCI_SETSEL, selectionStart, selectionEnd);
+		delete[] selectedStr;
+	}
+}
+
+//获取当前选择的行范围
+std::pair<size_t, size_t> ScintillaEditView::getSelectionLinesRange(intptr_t selectionNumber /* = -1 */) const
+{
+	size_t numSelections = execute(SCI_GETSELECTIONS);
+
+	size_t start_pos, end_pos;
+
+	if ((selectionNumber < 0) || (static_cast<size_t>(selectionNumber) >= numSelections))
+	{
+		start_pos = execute(SCI_GETSELECTIONSTART);
+		end_pos = execute(SCI_GETSELECTIONEND);
+	}
+	else
+	{
+		start_pos = execute(SCI_GETSELECTIONNSTART, selectionNumber);
+		end_pos = execute(SCI_GETSELECTIONNEND, selectionNumber);
+	}
+
+	size_t line1 = execute(SCI_LINEFROMPOSITION, start_pos);
+	size_t line2 = execute(SCI_LINEFROMPOSITION, end_pos);
+
+	if ((line1 != line2) && (static_cast<size_t>(execute(SCI_POSITIONFROMLINE, line2)) == end_pos))
+	{
+		// if the end of the selection includes the line-ending, 
+		// then don't include the following line in the range
+		--line2;
+	}
+
+	return std::pair<size_t, size_t>(line1, line2);
+}
+
+//获取内容。是uft8格式的。所有字符都以utf8编码
+void ScintillaEditView::getText(char *dest, size_t start, size_t end) const
+{
+	Sci_TextRange tr;
+	tr.chrg.cpMin = static_cast<Sci_PositionCR>(start);
+	tr.chrg.cpMax = static_cast<Sci_PositionCR>(end);
+	tr.lpstrText = dest;
+
+	this->SendScintilla(SCI_GETTEXTRANGE, 0, &tr);
+}
+
+QString ScintillaEditView::getGenericTextAsQString(size_t start, size_t end) const
+{
+	assert(end > start);
+	const size_t bufSize = end - start + 1;
+
+	QByteArray bytes;
+	bytes.resize(bufSize);
+	getText(bytes.data(), start, end);
+
+	return QString(bytes);
+}
+
+QString ScintillaEditView::getEOLString()
+{
+	intptr_t eol_mode = execute(SCI_GETEOLMODE);
+	if (eol_mode == SC_EOL_CRLF)
+	{
+		return QString("\r\n");
+	}
+	else if (eol_mode == SC_EOL_LF)
+	{
+		return QString("\n");
+	}
+	else
+	{
+		return QString("\r");
+	}
+}
+
+
+
+//替换fromTargetPos 到 toTargetPos的内容为str2replace。
+
+intptr_t ScintillaEditView::replaceTarget(QByteArray& str2replace, intptr_t fromTargetPos, intptr_t toTargetPos) const
+{
+	if (fromTargetPos != -1 || toTargetPos != -1)
+	{
+		execute(SCI_SETTARGETRANGE, fromTargetPos, toTargetPos);
+	}
+
+	return execute(SCI_REPLACETARGET, str2replace.size(), reinterpret_cast<sptr_t>(str2replace.data()));
+}
+
+size_t vecRemoveDuplicates(QList<QString>& vec)
+{
+
+	std::unordered_set<std::string> seen;
+	auto newEnd = std::remove_if(vec.begin(), vec.end(), [&seen](const QString& value)
+	{
+		return !seen.insert(value.toStdString()).second;
+	});
+
+	vec.erase(newEnd, vec.end());
+
+	return vec.size();
+}
+
+
+void ScintillaEditView::removeAnyDuplicateLines()
+{
+	size_t fromLine = 0, toLine = 0;
+	bool hasLineSelection = false;
+
+	auto selStart = execute(SCI_GETSELECTIONSTART);
+	auto selEnd = execute(SCI_GETSELECTIONEND);
+	hasLineSelection = selStart != selEnd;
+
+	if (hasLineSelection)
+	{
+		const std::pair<size_t, size_t> lineRange = getSelectionLinesRange();
+		// One single line selection is not allowed.
+		if (lineRange.first == lineRange.second)
+		{
+			return;
+		}
+		fromLine = lineRange.first;
+		toLine = lineRange.second;
+	}
+	else
+	{
+		// No selection.
+		fromLine = 0;
+		toLine = execute(SCI_GETLINECOUNT) - 1;
+	}
+
+	if (fromLine >= toLine)
+	{
+		return;
+	}
+
+	const auto startPos = execute(SCI_POSITIONFROMLINE, fromLine);
+	const auto endPos = execute(SCI_POSITIONFROMLINE, toLine) + execute(SCI_LINELENGTH, toLine);
+	const QString text = getGenericTextAsQString(startPos, endPos);
+
+	QStringList linesVect = text.split(getEOLString());
+
+	const size_t lineCount = execute(SCI_GETLINECOUNT);
+
+	const bool doingEntireDocument = (toLine == (lineCount - 1));
+	if (!doingEntireDocument)
+	{
+		if (linesVect.rbegin()->isEmpty())
+		{
+			linesVect.pop_back();
+		}
+	}
+
+	size_t origSize = linesVect.size();
+
+
+	size_t newSize = vecRemoveDuplicates(linesVect);
+
+	if (origSize != newSize)
+	{
+		QString joined = linesVect.join(getEOLString());
+
+		if (!doingEntireDocument)
+		{
+			joined += getEOLString();
+		}
+		if (text != joined)
+		{
+			QByteArray str2replace;
+			str2replace = joined.toUtf8();
+
+			replaceTarget(str2replace, startPos, endPos);
+		}
+	}
+}
+
+void ScintillaEditView::insertCharsFrom(size_t position, const QByteArray & text2insert) const
+{
+	this->SendScintilla(SCI_INSERTTEXT, position, text2insert.data());
+}
+
+void ScintillaEditView::appandGenericText(const QByteArray &text2Append) const
+{
+	this->SendScintilla(SCI_APPENDTEXT, text2Append.size(), text2Append.data());
+}
+
+void ScintillaEditView::insertNewLineAboveCurrentLine(bool)
+{
+	QString newline = getEOLString();
+	const auto current_line = getCurrentLineNumber();
+	if (current_line == 0)
+	{
+		// Special handling if caret is at first line.
+		insertCharsFrom(0, newline.toUtf8());
+	}
+	else
+	{
+		const auto eol_length = newline.length();
+		const auto position = execute(SCI_POSITIONFROMLINE, current_line) - eol_length;
+		insertCharsFrom(position, newline.toUtf8());
+	}
+	execute(SCI_SETEMPTYSELECTION, execute(SCI_POSITIONFROMLINE, current_line));
+}
+
+void ScintillaEditView::insertNewLineBelowCurrentLine(bool)
+{
+	QString newline = getEOLString();
+	const auto line_count = execute(SCI_GETLINECOUNT);
+	const auto current_line = getCurrentLineNumber();
+	if (current_line == line_count - 1)
+	{
+		// Special handling if caret is at last line.
+		appandGenericText(newline.toUtf8());
+	}
+	else
+	{
+		const auto eol_length = newline.length();
+		const auto position = eol_length + execute(SCI_GETLINEENDPOSITION, current_line);
+		insertCharsFrom(position, newline.toUtf8());
+	}
+	execute(SCI_SETEMPTYSELECTION, execute(SCI_POSITIONFROMLINE, current_line + 1));
+}
+
+void ScintillaEditView::sortLines(size_t fromLine, size_t toLine, ISorter* pSort)
+{
+	if (fromLine >= toLine)
+	{
+		return;
+	}
+
+	const auto startPos = execute(SCI_POSITIONFROMLINE, fromLine);
+	const auto endPos = execute(SCI_POSITIONFROMLINE, toLine) + execute(SCI_LINELENGTH, toLine);
+
+	const QString text = getGenericTextAsQString(startPos, endPos);
+	QStringList splitText = text.split(getEOLString());
+
+
+	const size_t lineCount = execute(SCI_GETLINECOUNT);
+	const bool sortEntireDocument = toLine == lineCount - 1;
+	if (!sortEntireDocument)
+	{
+		if (splitText.rbegin()->isEmpty())
+		{
+			splitText.pop_back();
+		}
+	}
+	assert(toLine - fromLine + 1 == splitText.size());
+	const QList<QString> sortedText = pSort->sort(splitText);
+
+	QString joined = sortedText.join(getEOLString());
+	if (sortEntireDocument)
+	{
+		assert(joined.length() == text.length());
+	}
+	else
+	{
+		assert(joined.length() + getEOLString().length() == text.length());
+		joined += getEOLString();
+	}
+	if (text != joined)
+	{
+		QByteArray bytes = joined.toUtf8();
+		replaceTarget(bytes, startPos, endPos);
 	}
 }

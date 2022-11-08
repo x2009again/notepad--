@@ -1,4 +1,4 @@
-// This module implements the QsciLexerVHDL class.
+﻿// This module implements the QsciLexerVHDL class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -146,7 +146,7 @@ QFont QsciLexerVHDL::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerVHDL::keywords(int set) const
+const char *QsciLexerVHDL::keywords(int set)
 {
     if (set == 1)
         return

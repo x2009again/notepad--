@@ -1,4 +1,4 @@
-#include "Qsci/qscilexerjavascript.h"
+﻿#include "Qsci/qscilexerjavascript.h"
 // This module implements the QsciLexerJavaScript class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
@@ -92,7 +92,7 @@ QFont QsciLexerJavaScript::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerJavaScript::keywords(int set) const
+const char *QsciLexerJavaScript::keywords(int set)
 {
     if (set != 1)
         return 0;

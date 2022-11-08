@@ -1,4 +1,4 @@
-// This module implements the QsciLexerXML class.
+﻿// This module implements the QsciLexerXML class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -162,7 +162,7 @@ QFont QsciLexerXML::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerXML::keywords(int set) const
+const char *QsciLexerXML::keywords(int set)
 {
     if (set == 6)
         return QsciLexerHTML::keywords(set);

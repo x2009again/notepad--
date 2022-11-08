@@ -42,6 +42,8 @@ FindWin::FindWin(QWidget *parent):QMainWindow(parent), m_editTabWidget(nullptr),
 	setFocus();
 
 	ui.findinfilesTab->setAttribute(Qt::WA_StyledBackground);
+
+	ui.findComboBox->installEventFilter(this);
 }
 
 FindWin::~FindWin()
@@ -87,10 +89,11 @@ void FindWin::setCurrentTab(FindTabIndex index)
 	{
 		ui.findComboBox->setFocus();
 	}
-	else
+	else if(REPLACE_TAB == index)
 	{
 		ui.replaceTextBox->setFocus();
 	}
+
     raise();
 }
 
@@ -200,27 +203,29 @@ void FindWin::focusOutEvent(QFocusEvent * ev)
 }
 
 
-#if 0
 bool FindWin::eventFilter(QObject* watched, QEvent *event)
 {
-	if (event->type() == QEvent::FocusIn)
+	if (watched == ui.findComboBox)
 	{
-		setWindowOpacity(1.0);
-
-		static int j = 0;
-		qDebug() << "get" << ++j;
+		if (event->type() == QEvent::KeyPress)
+		{
+			QKeyEvent *ke = static_cast<QKeyEvent*>(event);
+			if (ke->key() == Qt::Key_Enter || ke->key() == Qt::Key_Return)
+			{
+				emit ui.findTextNext->click();
+				return true;        //该事件已经被处理
 	}
-	else if (event->type() == QEvent::FocusOut)
+			return false;
+		}
+		else
 	{
-		setWindowOpacity(0.6);
-		static int i = 0;
-		qDebug() << "out" << ++i;
+			return false;   
 	}
-
+	}
 
 	return QWidget::eventFilter(watched, event);     // 最后将事件交给上层对话框
 }
-#endif
+
 
 //从ui读取参数配置到成员变量
 void FindWin::updateParameterFromUI()
@@ -642,6 +647,41 @@ void FindWin::showCallTip(QsciScintilla* pEdit, int pos)
 	/*delete[]newStr;*/
 }
 
+//删除空白行
+void FindWin::removeEmptyLine(bool isBlankContained)
+{
+	QWidget* pw = autoAdjustCurrentEditWin();
+	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+	if (pEdit != nullptr)
+	{
+		if (pEdit->isReadOnly())
+		{
+			ui.statusbar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			QApplication::beep();
+			return;
+		}
+		ui.findinfilesTab->setCurrentIndex(1);
+
+		if (isBlankContained)
+		{
+			ui.replaceTextBox->setCurrentText("^[\\t ]*$(\\r\\n|\\r|\\n)");
+		}
+		else 
+		{
+			ui.replaceTextBox->setCurrentText("^$(\\r\\n|\\r|\\n)");
+		}
+		ui.replaceWithBox->setCurrentText("");
+
+		ui.replaceModeRegularBt->setChecked(true);
+
+		m_isStatic = true;
+
+		slot_replaceAll();
+
+		m_isStatic = false;
+	}
+}
+
 /*处理查找时零长的问题。一定要处理，否则会死循环，因为每次都在原地查找。
 * 就是把下次查找的startpos往前一个，否则每次都从这个startpos找到自己
 */
@@ -715,7 +755,7 @@ void FindWin::slot_findNext()
 				whatFind = extendFind;
 			}
 
-			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, m_wrap, m_forward,-1,-1,true,false,false))
+			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, m_wrap, m_forward, FINDNEXTTYPE_FINDNEXT, -1,-1,true,false,false))
 			{
 				ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr),8000);
 				QApplication::beep();
@@ -736,6 +776,7 @@ void FindWin::slot_findNext()
 			if (!pEdit->findNext())
 			{
 				ui.statusbar->showMessage(tr("no more find text \'%1\'").arg(m_expr),8000);
+				m_isFindFirst = true;
 				QApplication::beep();
 			}
 			else
@@ -746,9 +787,82 @@ void FindWin::slot_findNext()
 	}
 }
 
+//查找计数
 void FindWin::slot_findCount()
 {
+	if (ui.findComboBox->currentText().isEmpty())
+	{
+		ui.statusbar->showMessage(tr("what find is null !"), 8000);
+		QApplication::beep();
+		return;
+}
 
+	QWidget* pw = autoAdjustCurrentEditWin();
+	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+	if (pEdit != nullptr)
+	{
+		if (pEdit->isReadOnly())
+		{
+			ui.statusbar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			QApplication::beep();
+			return;
+		}
+
+		updateParameterFromUI();
+
+		int srcPostion = pEdit->execute(SCI_GETCURRENTPOS);
+		int firstDisLineNum = pEdit->execute(SCI_GETFIRSTVISIBLELINE);
+
+		int countNums = 0;
+		//无条件进行第一次查找，从0行0列开始查找，而且不回环。如果没有找到，则替换完毕
+		QString whatFind = ui.findComboBox->currentText();
+
+		//这里不能直接修改results.findText的值，该值在外部显示还需要。如果修改则会显示紊乱
+		if (m_extend)
+		{
+			QString extendFind;
+			convertExtendedToString(whatFind, extendFind);
+			whatFind = extendFind;
+		}
+
+		//这里的forward一定要是true。回环一定是false
+		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
+		{
+			ui.statusbar->showMessage(tr("count %1 times with \'%2\'").arg(countNums).arg(m_expr), 8000);
+			QApplication::beep();
+
+			m_isFindFirst = true;
+
+			return;
+		}
+		else
+		{
+			dealWithZeroFound(pEdit);
+		}
+
+		++countNums;
+
+		//找到了,增加计数
+		while (pEdit->findNext())
+		{
+			++countNums;
+
+			dealWithZeroFound(pEdit);
+		}
+
+		pEdit->execute(SCI_GOTOPOS, srcPostion);
+		pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
+		pEdit->execute(SCI_SETXOFFSET, 0);
+
+		//全部替换后，下次查找，必须算第一次查找
+		m_isFindFirst = true;
+		ui.statusbar->showMessage(tr("count %1 times with \'%2\'").arg(countNums).arg(m_expr), 8000);
+	}
+	else
+	{
+		ui.statusbar->showMessage(tr("The mode of the current document does not allow this operation."), 8000);
+		QApplication::beep();
+	}
 }
 
 //去掉行尾的\n\r符号
@@ -856,7 +970,7 @@ void FindWin::slot_findAllInCurDoc()
 		}
 		
 		//这里的forward一定要是true。回环一定是false
-		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, 0, 0))
+		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
 		{
 			ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
 			QApplication::beep();
@@ -945,7 +1059,7 @@ void FindWin::slot_findAllInOpenDoc()
 			//无条件进行第一次查找，从0行0列开始查找，而且不回环。如果没有找到，则替换完毕
 			//results->findText要是有原来的值，因为扩展模式下\r\n不会转义，直接输出会换行显示
 			results->findText = originWhatFine;
-			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, 0, 0))
+			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
 			{
 				delete results;
 				continue;
@@ -1008,7 +1122,7 @@ bool FindWin::replaceFindNext(QsciScintilla* pEdit, bool showZeroFindTip)
 				whatFind = extendFind;
 			}
 
-			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, m_wrap, m_forward))
+			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, m_wrap, m_forward, FINDNEXTTYPE_REPLACENEXT))
 			{
 				ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
 				QApplication::beep();
@@ -1030,6 +1144,7 @@ bool FindWin::replaceFindNext(QsciScintilla* pEdit, bool showZeroFindTip)
 			if (!pEdit->findNext())
 			{
 				ui.statusbar->showMessage(tr("no more find text \'%1\'").arg(m_expr), 8000);
+				m_isFindFirst = true;
 				QApplication::beep();
 			}
 			else
@@ -1277,7 +1392,7 @@ void FindWin::slot_replaceAll()
 #endif
 		
 
-		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true,0,0))
+		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_REPLACENEXT, 0,0))
 		{
 			ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
 			QApplication::beep();
@@ -1388,7 +1503,7 @@ void FindWin::slot_replaceAllInOpenDoc()
 
 
 			//无条件进行第一次查找，从0行0列开始查找，而且不回环。如果没有找到，则替换完毕
-			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, 0, 0))
+			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_REPLACENEXT,0, 0))
 			{
 				continue;
 			}
@@ -1452,7 +1567,7 @@ void FindWin::slot_markAll()
 		int srcPostion = pEdit->execute(SCI_GETCURRENTPOS);
 		int firstDisLineNum = pEdit->execute(SCI_GETFIRSTVISIBLELINE);
 
-		if (!pEdit->findFirst(whatMark, m_re, m_cs, m_wo, false, true, 0, 0))
+		if (!pEdit->findFirst(whatMark, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
 		{
 			ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
 			QApplication::beep();
@@ -1567,7 +1682,7 @@ bool FindWin::findTextInFile(QString &filePath, int &findNums, QVector<FindRecor
 		whatFind = extendFind;
 	}
 
-	if (!pEditTemp->findFirst(whatFind, m_re, m_cs, m_wo, false, m_forward, 0, 0))
+	if (!pEditTemp->findFirst(whatFind, m_re, m_cs, m_wo, false, m_forward, FINDNEXTTYPE_FINDNEXT, 0, 0))
 	{
 		delete results;
 		return false;
@@ -1617,7 +1732,7 @@ bool FindWin::replaceTextInFile(QString &filePath, int &replaceNums, QVector<Fin
 		replace = extendReplace;
 	}
 
-	if (!pEditTemp->findFirst(find, m_re, m_cs, m_wo, false, m_forward, 0, 0))
+	if (!pEditTemp->findFirst(find, m_re, m_cs, m_wo, false, m_forward, FINDNEXTTYPE_REPLACENEXT,0, 0))
 	{
 		return false;
 	}

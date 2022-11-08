@@ -260,27 +260,5 @@ void StyleSet::setLavenderBlushStyle()
 //MistyRose
 void StyleSet::setMistyRoseStyle()
 {
-#if 0
-	foldfgColor = QColor(0xff, 0xe4, 0xe1, 100);
-	foldbgColor = QColor(0xFFE4E1);
-	marginsBackgroundColor = QColor(0xFFE4E1);
-
-	QFile file(":/qss/lightbluestyle.qss"); //qssÎÄ¼þÂ·¾¶:/lightblue.qss
-	QString styleSheet;
-	if (file.open(QIODevice::Text | QIODevice::ReadOnly))
-	{
-		styleSheet = file.readAll();
-		QPalette palette;
-		palette.setColor(QPalette::Window, QColor(0xff, 0xe4, 0xe1));
-		palette.setColor(QPalette::Base, QColor(0xff, 0xe4, 0xe1));
-		palette.setColor(QPalette::Button, QColor(0xff, 0xe4, 0xe1));
-		qApp->setPalette(palette);
-
-		styleSheet.replace("#EAF7FF", "#FFE4E1");
-
-		qApp->setStyleSheet(styleSheet);
-	}
-	file.close();
-#endif
 	setCommonStyle(QColor(0xff, 0xe4, 0xe1, 100), QColor(0xFFE4E1), QColor(0xFFE4E1), "#FFE4E1");
 }

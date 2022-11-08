@@ -1,4 +1,4 @@
-// This module implements the QsciLexerSpice class.
+﻿// This module implements the QsciLexerSpice class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -59,7 +59,7 @@ int QsciLexerSpice::braceStyle() const
 
 
 // Returns the set of keywords.
-const char *QsciLexerSpice::keywords(int set) const
+const char *QsciLexerSpice::keywords(int set)
 {
     if (set == 1)
         return

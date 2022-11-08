@@ -1,4 +1,4 @@
-// This module implements the QsciLexerCoffeeScript class.
+﻿// This module implements the QsciLexerCoffeeScript class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -235,7 +235,7 @@ QFont QsciLexerCoffeeScript::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerCoffeeScript::keywords(int set) const
+const char *QsciLexerCoffeeScript::keywords(int set)
 {
     if (set == 1)
         return

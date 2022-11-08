@@ -13,6 +13,7 @@ static QString RESTORE_CLOSE_FILE = "restore"; //恢复关闭时打开的文件
 //static QString TXT_FONT = "txtfont";
 //static QString PRO_LANG_FONT = "langfont";
 static QString PRO_DIR = "prodir";//放置配置文件的路径
+static QString RESTORE_SIZE = "rsize";//保存关闭是的大小
 
 class JsonDeploy 
 {

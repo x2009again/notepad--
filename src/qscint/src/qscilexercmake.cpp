@@ -1,4 +1,4 @@
-// This module implements the QsciLexerCMake class.
+﻿// This module implements the QsciLexerCMake class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -126,7 +126,7 @@ QFont QsciLexerCMake::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerCMake::keywords(int set) const
+const char *QsciLexerCMake::keywords(int set)
 {
     if (set == 1)
         return

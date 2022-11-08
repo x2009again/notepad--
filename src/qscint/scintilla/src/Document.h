@@ -100,7 +100,7 @@ public:
 };
 
 /// Factory function for RegexSearchBase
-extern RegexSearchBase *CreateRegexSearch(CharClassify *charClassTable);
+extern RegexSearchBase *CreateRegexSearch();
 
 struct StyledText {
 	size_t length;
@@ -406,6 +406,9 @@ public:
 	Sci_Position SCI_METHOD LineStart(Sci_Position line) const override;
 	bool IsLineStartPosition(Sci::Position position) const;
 	Sci_Position SCI_METHOD LineEnd(Sci_Position line) const override;
+#ifdef REGEX_EXTERN
+	Sci_Position SCI_METHOD LineEnd(Sci_Position line, int &lineTail) const;
+#endif
 	Sci::Position LineEndPosition(Sci::Position position) const;
 	bool IsLineEndPosition(Sci::Position position) const;
 	bool IsPositionInLineEnd(Sci::Position position) const;

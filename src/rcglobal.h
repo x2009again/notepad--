@@ -3,6 +3,7 @@
 #include <QString>
 #include <QVector>
 #include <QTreeWidgetItem>
+#include <qscilexer.h>
 
 #define CMP_CODE_NOEQUAL
 
@@ -125,4 +126,11 @@ const int Item_Index = Qt::UserRole + 1;
 const int DIR_ITEM_MAXSIZE_FILE = Qt::UserRole + 2;
 #endif
 
+//两种母版。一种是txt可自定义关键字。一种是CPP，可自定义关键字。
+enum UserLangMother
+{
+	MOTHER_NONE = LangType::L_USER_TXT,
+	MOTHER_CPP,
+};
 
+QString getUserLangDirPath();

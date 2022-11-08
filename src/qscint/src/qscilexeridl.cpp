@@ -1,4 +1,4 @@
-#include "Qsci/qscilexeridl.h"
+﻿#include "Qsci/qscilexeridl.h"
 // This module implements the QsciLexerIDL class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
@@ -56,7 +56,7 @@ QColor QsciLexerIDL::defaultColor(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerIDL::keywords(int set) const
+const char *QsciLexerIDL::keywords(int set)
 {
     if (set != 1)
         return 0;

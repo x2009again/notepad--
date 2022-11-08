@@ -1,4 +1,4 @@
-// This defines the interface to the QsciLexerSpice class.
+﻿// This defines the interface to the QsciLexerSpice class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -83,7 +83,7 @@ public:
 
     //! Returns the set of keywords for the keyword set \a set recognised
     //! by the lexer as a space separated string.
-    const char *keywords(int set) const;
+    const char *keywords(int set);
 
     //! Returns the foreground colour of the text for style number \a style.
     //!

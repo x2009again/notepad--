@@ -1,4 +1,4 @@
-// This module implements the QsciLexerCPP class.
+﻿// This module implements the QsciLexerCPP class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -320,8 +320,21 @@ QFont QsciLexerCPP::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerCPP::keywords(int set) const
+const char *QsciLexerCPP::keywords(int set)
 {
+	if (m_isUserDefineKeyword)
+	{
+		//如果是自定义用户关键字，则根据语言tag获取。只实现set=1的一组
+		if (set == 1)
+		{
+			return getUserDefineKeywords();
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
     if (set == 1)
         return
             "and and_eq asm auto bitand bitor bool break case "

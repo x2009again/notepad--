@@ -56,7 +56,7 @@ enum LangType {
 	L_EDIFACT, L_MARKDOWN, L_OCTAVE, L_PO, L_POV, L_IDL, L_GO, L_TXT, \
 	// Don't use L_JS, use L_JAVASCRIPT instead
 	// The end of enumated language type, so it should be always at the end
-	L_EXTERNAL = 100,
+	L_EXTERNAL = 100, L_USER_DEFINE=200,L_USER_TXT,L_USER_CPP //用户自定义顺序与UserLangMother保存一致
 };
 
 //! \brief The QsciLexer class is an abstract class used as a base for language
@@ -191,7 +191,11 @@ public:
     //! Returns the set of keywords for the keyword set \a set recognised
     //! by the lexer as a space separated string.  Keyword sets are numbered
     //! from 1.  0 is returned if there is no such set.
-    virtual const char *keywords(int set) const;
+    virtual const char *keywords(int set);
+
+	void setIsUserDefineKeywords(bool isUserDefine=false); //使用用户自定义的关键字
+
+	const char* getUserDefineKeywords();//获取用户自定义关键字
 
     //! Returns the number of the style used for whitespace.  The default
     //! implementation returns 0 which is the convention adopted by most
@@ -299,6 +303,8 @@ public:
 
 	StyleData &styleData(int style) const;
 
+	void resetStyleDefaults();
+
 public slots:
     //! The auto-indentation style is set to \a autoindentstyle.
     //!
@@ -356,6 +362,9 @@ protected:
     //!
     virtual bool writeProperties(QSettings &qs,const QString &prefix) const;
 
+	bool m_isUserDefineKeyword; //是否使用用户自定义关键字。默认false
+
+	QByteArray m_userDefineKeyword;//用户自定义的关键字
 private:
 
 

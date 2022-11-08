@@ -5,6 +5,7 @@
 #include <qscilexer.h>
 #include <QCloseEvent>
 #include "ui_qtlangset.h"
+#include "rcglobal.h"
 
 class QsciLexer;
 
@@ -18,6 +19,9 @@ public:
 
 	void startSignSlot();
 
+	void selectInitLangTag(QString initLangTag);
+
+
 	static 	bool readLangSettings(QsciLexer * lexer, QString tag);
 
 #if 0
@@ -25,17 +29,23 @@ public:
 #endif
 
 signals:
-	void viewStyleChange(int lexerId, int styleId, QColor & fgColor, QColor & bkColor, QFont & font, bool fontChange);
+	void viewStyleChange(QString tagName, int styleId, QColor & fgColor, QColor & bkColor, QFont & font, bool fontChange);
+
+	//整个lexer发生了大改变
+	void viewLexerChange(QString tagName);
 
 protected:
 	void closeEvent(QCloseEvent *e);
 
+	void syncShowStyleItemToUI(QListWidgetItem * item);
+
 private slots:
 
-	void slot_itemSelect(QListWidgetItem * item, QListWidgetItem * previous);
+	void slot_itemSelect(QListWidgetItem * item);
 	void slot_styleItemSelect(QListWidgetItem * item, QListWidgetItem *previous);
 	void slot_saveClick();
 
+	void slot_reset();
 	void slot_changeFgColor();
 	void slot_changeBkColor();
 
@@ -44,13 +54,19 @@ private slots:
 	void slot_fontUnderlineChange(int state);
 	void slot_fontSizeChange(int v);
 	void slot_fontChange(const QFont & font);
+	
+	void slot_userLangItemSelect(QListWidgetItem * item);
 private:
 	void initLangList();
+	bool readLangSetFile(QString langName, QString & keyword, QString & motherLang, QString & extTypes);
+	void initUserDefineLangList();
 	void setStyleShow(QFont & font, QColor& fcColor, QColor &bkColor);
 	bool saveCurLangSettings();
 	void fillForegroundColor(QColor & fcColor);
 	void fillBackgroundColor(QColor & bkColor);
+	void displayUserMotherLangsStyle(QString langTagName, UserLangMother motherLang);
 	void getCurUiFont(QFont & font);
+
 
 private:
 	Ui::QtLangSetClass ui;
@@ -69,5 +85,5 @@ private:
 	//第一次以当前edit语法为准
 	QString m_initShowLexerTag;
 
-	bool m_first;
+	QListWidgetItem * m_previousSysLangItem;
 };

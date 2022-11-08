@@ -213,7 +213,8 @@ HEADERS = \
     ../scintilla/src/UniConversion.h \
     ../scintilla/src/UniqueString.h \
     ../scintilla/src/ViewStyle.h \
-    ../scintilla/src/XPM.h
+    ../scintilla/src/XPM.h \
+    ../scintilla/boostregex/*.h 
 
 !ios:HEADERS += ./Qsci/qsciprinter.h
 
@@ -429,7 +430,10 @@ SOURCES = \
     ../scintilla/src/Style.cpp \
     ../scintilla/src/UniConversion.cpp \
     ../scintilla/src/ViewStyle.cpp \
-    ../scintilla/src/XPM.cpp
+    ../scintilla/src/XPM.cpp \
+    ../scintilla/boostregex/*.cpp
+    
+INCLUDEPATH += ../scintilla/boostregex
 
 !ios:SOURCES += qsciprinter.cpp
 

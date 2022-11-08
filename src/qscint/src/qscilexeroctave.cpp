@@ -1,4 +1,4 @@
-// This module implements the QsciLexerOctave class.
+﻿// This module implements the QsciLexerOctave class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -52,7 +52,7 @@ const char *QsciLexerOctave::lexer() const
 
 
 // Returns the set of keywords.
-const char *QsciLexerOctave::keywords(int set) const
+const char *QsciLexerOctave::keywords(int set)
 {
     if (set == 1)
         return

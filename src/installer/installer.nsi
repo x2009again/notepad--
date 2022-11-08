@@ -75,6 +75,7 @@ SetCompressor /SOLID lzma
 
 # Language stuff
 !insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "SimpChinese"
 !insertmacro MULTIUSER_LANGUAGE_INIT
 
 
@@ -132,7 +133,7 @@ Section "Notepad--"
 
     File ..\x64\Release\Notepad--.exe
 
-    IfFileExists C:\Windows\SysWOW64\vcomp140.dll +2 0
+    #IfFileExists C:\Windows\SysWOW64\vcomp140.dll +2 0
         File ..\x64\Release\vcomp140.dll
 
 

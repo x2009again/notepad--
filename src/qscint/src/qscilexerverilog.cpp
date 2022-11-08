@@ -1,4 +1,4 @@
-// This module implements the QsciLexerVerilog class.
+﻿// This module implements the QsciLexerVerilog class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -62,7 +62,7 @@ int QsciLexerVerilog::braceStyle() const
 
 
 // Returns the set of keywords.
-const char *QsciLexerVerilog::keywords(int set) const
+const char *QsciLexerVerilog::keywords(int set)
 {
     if (set == 1)
         return

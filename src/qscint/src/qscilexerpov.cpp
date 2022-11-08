@@ -1,4 +1,4 @@
-// This module implements the QsciLexerPOV class.
+﻿// This module implements the QsciLexerPOV class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -162,7 +162,7 @@ QFont QsciLexerPOV::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerPOV::keywords(int set) const
+const char *QsciLexerPOV::keywords(int set)
 {
     if (set == 1)
         return

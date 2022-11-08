@@ -1,4 +1,4 @@
-#include "Qsci/qscilexercsharp.h"
+﻿#include "Qsci/qscilexercsharp.h"
 // This module implements the QsciLexerCSharp class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
@@ -82,7 +82,7 @@ QFont QsciLexerCSharp::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerCSharp::keywords(int set) const
+const char *QsciLexerCSharp::keywords(int set)
 {
     if (set != 1)
         return 0;

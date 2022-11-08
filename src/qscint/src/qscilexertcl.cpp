@@ -1,4 +1,4 @@
-// This module implements the QsciLexerTCL class.
+﻿// This module implements the QsciLexerTCL class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -167,7 +167,7 @@ QFont QsciLexerTCL::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerTCL::keywords(int set) const
+const char *QsciLexerTCL::keywords(int set)
 {
     if (set == 1)
         return

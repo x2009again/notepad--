@@ -197,7 +197,20 @@
              </size>
             </property>
             <property name="text">
-             <string>Find Next</string>
+             <string>Find Next(F3)</string>
+            </property>
+            <property name="shortcut">
+             <string>F3</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="countBt">
+            <property name="text">
+             <string>Counter(T)</string>
+            </property>
+            <property name="shortcut">
+             <string>Ctrl+T</string>
             </property>
            </widget>
           </item>
@@ -1214,7 +1227,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>572</x>
-     <y>193</y>
+     <y>222</y>
     </hint>
     <hint type="destinationlabel">
      <x>169</x>
@@ -1229,8 +1242,8 @@
    <slot>slot_findAllInOpenDoc()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>426</x>
-     <y>124</y>
+     <x>572</x>
+     <y>164</y>
     </hint>
     <hint type="destinationlabel">
      <x>322</x>
@@ -1443,6 +1456,22 @@
     <hint type="destinationlabel">
      <x>333</x>
      <y>337</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>countBt</sender>
+   <signal>clicked()</signal>
+   <receiver>FindWin</receiver>
+   <slot>slot_findCount()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>502</x>
+     <y>72</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>377</x>
+     <y>366</y>
     </hint>
    </hints>
   </connection>

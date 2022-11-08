@@ -1,4 +1,4 @@
-// This module implements the QsciLexerJSON class.
+﻿// This module implements the QsciLexerJSON class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -137,7 +137,7 @@ QFont QsciLexerJSON::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerJSON::keywords(int set) const
+const char *QsciLexerJSON::keywords(int set)
 {
     if (set == 1)
         return "false true null";

@@ -16,6 +16,8 @@
 #include "styleset.h"
 #include "qtlangset.h"
 #include "columnedit.h"
+#include "langstyledefine.h"
+#include "extlexermanager.h"
 
 
 #include <QFileDialog>
@@ -35,6 +37,7 @@
 #include <QSharedMemory>
 #include <QMimeDatabase>
 #include <QDateTime>
+#include "Sorters.h"
 
 #ifdef Q_OS_WIN
 #include <qt_windows.h>
@@ -313,9 +316,9 @@ const char *TabNoNeedSave = ":/notepad/noneedsave.png";
 #endif
 
 QString watchFilePath;
-//文件后缀与语言关联,与在ScintillaEditView::langNames中的序号为关联
 
-static QMap<QString, int> s_fileTypeToLangMap;
+//文件后缀与语言关联,与在ScintillaEditView::langNames中的序号为关联
+//static QMap<QString, int> s_fileTypeToLangMap; //使用ExtLexerManager进行了替换
 
 QList<QString> CCNotePad::s_findHistroy;
 
@@ -333,6 +336,7 @@ struct FileExtLexer
 
 const int FileExtMapLexerIdLen = L_EXTERNAL;
 
+//这里是静态的默认文件后缀类型与词法类型。还有一个动态的，用来管理用户新增语言的部分
 FileExtLexer s_fileExtMapLexerId[FileExtMapLexerIdLen] = {
 {QString("h"), L_C},
 {QString("c"), L_C},
@@ -372,8 +376,9 @@ FileExtLexer s_fileExtMapLexerId[FileExtMapLexerIdLen] = {
 //根据文件的后缀来确定文件的编程语言，进而设置默认的LEXER
 void initFileTypeLangMap()
 {
-	if (s_fileTypeToLangMap.isEmpty())
+	if (0 == ExtLexerManager::getInstance()->size())
 	{
+		//先加载静态的关联文件后缀
 		for (int i = 0; i < FileExtMapLexerIdLen; ++i)
 		{
 			if (s_fileExtMapLexerId[i].id == L_EXTERNAL)
@@ -382,8 +387,40 @@ void initFileTypeLangMap()
 			}
 			else
 			{
-				s_fileTypeToLangMap.insert(s_fileExtMapLexerId[i].ext, s_fileExtMapLexerId[i].id);
+				FileExtLexer& v = s_fileExtMapLexerId[i];
+
+				//标准的定义可以忽略后面的tag,因为标准lexer的tag都是存在的。
+				ExtLexerManager::getInstance()->addNewExtType(v.ext, v.id);
+				//s_fileTypeToLangMap.insert(s_fileExtMapLexerId[i].ext, s_fileExtMapLexerId[i].id);
 			}
+		}
+		//在加载动态的关联部分，这部分是用户自定义的类型。这里最好不要放在多个文件，否则会慢，单独放一个文件即可。
+		//把新语言tagName,和关联ext单独存放起来ext_tag.ini。只读取一个文件就能获取所有，避免遍历慢
+		QString extsFile = QString("notepad/userlang/ext_tag");//ext_tag是存在所有tag ext的文件
+		QSettings qs(QSettings::IniFormat, QSettings::UserScope, extsFile);
+		qs.setIniCodec("UTF-8");
+
+		QStringList keys = qs.allKeys();
+		//LangType lexId = L_USER_TXT;
+		bool ok = true;
+		QString tagName;
+		LangType lexerId;
+
+		for (int i = 0, s = keys.size(); i < s; ++i)
+		{
+			const QString& tagName = keys.at(i);
+
+			QStringList exts = qs.value(tagName).toStringList();
+			lexerId = (LangType)exts.takeLast().toInt(&ok);
+			QString ext;
+			if (ok)
+			{
+				foreach(ext, exts)
+				{
+
+					ExtLexerManager::getInstance()->addNewExtType(ext, lexerId, tagName);
+	}
+}
 		}
 	}
 }
@@ -750,6 +787,15 @@ void  CCNotePad::initLexerNameToIndex()
 		m_lexerNameToIndex.insert("txt", pNodes[i]);
 		++i;
 
+		pNodes[i].pAct = ui.actionUserDefine;
+		pNodes[i].index = L_USER_DEFINE;
+		data.setValue(int(L_USER_DEFINE));
+		ui.actionUserDefine->setData(data);
+		m_lexerNameToIndex.insert("UserDefine", pNodes[i]);
+		++i;
+
+		
+
 		delete[]pNodes;
 
 #if 0 //以下是目前不支持的
@@ -878,17 +924,19 @@ int CCNotePad::runAsAdmin(const QString& filePath)
 #endif
 
 //根据文件类型给出语言id
-LangType CCNotePad::getLangLexerIdByFileExt(QString filePath)
+LexerInfo CCNotePad::getLangLexerIdByFileExt(QString filePath)
 {
 	QFileInfo fi(filePath);
 	QString ext = fi.suffix();
 
-	if (s_fileTypeToLangMap.contains(ext))
+	LexerInfo lexer(L_TXT,"txt");
+
+	if(ExtLexerManager::getInstance()->getLexerTypeByExt(ext, lexer))
 	{
-		return static_cast<LangType>(s_fileTypeToLangMap.value(ext));
+		return lexer;
 	}
 
-	return L_TXT;
+	return lexer;
 }
 
 CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
@@ -946,40 +994,6 @@ CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
 	DocTypeListView::initSupportFileTypes();
 
 	ui.editTabWidget->setTabsClosable(true);
-#if 0
-	QString tabQss = "QTabBar::tab{ \
-		background-color:#EAF7FF;\
-		margin-top:1px; \
-		margin-right:1px; \
-		margin-left:1px; \
-		margin-bottom:2px; \
-		padding:0px;\
-		}\
-		QTabBar::tab:selected{ \
-		background-color:rgb(255,255,255);\
-		border-top:3px solid;\
-		border-top-color:#FAAA3C;\
-		margin-top:1px; \
-		margin-right:1px; \
-		margin-left:1px; \
-		margin-bottom:2px; \
-		padding:0px;\
-		}\
-		QTabBar::close-button{ \
-		image: url(\":/notepad/closeTabButton.png\");\
-		}\
-		QTabBar::close-button:hover{ \
-		image: url(\":/notepad/closeTabButton_hover.png\");\
-		}\
-		QTabBar{\
-		qproperty-expanding:false;\
-		qproperty-usesScrollButtons:true;\
-		qproperty-documentMode:true;\
-		}\
-		";
-
-	//ui.editTabWidget->setStyleSheet(tabQss);
-#endif
 
 
 	QTabBar* pBar = ui.editTabWidget->tabBar();
@@ -1032,9 +1046,23 @@ CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
 	{
 		initNotePadSqlOptions();
 	}
+	QString initSize = JsonDeploy::getKeyValueFromSets(RESTORE_SIZE);
 
-	setToFileRightMenu();
+	m_initWidth = 1585;
+	m_initHeight = 789;
+
+	if (!initSize.isEmpty())
+	{
+		QStringList size = initSize.split(":");
+		if (size.size() == 2)
+		{
+			m_initWidth = size.at(0).toInt();
+			m_initHeight = size.at(1).toInt();
 	}
+	}
+	
+	this->resize(m_initWidth, m_initHeight);
+}
 
 CCNotePad::~CCNotePad()
 {
@@ -1162,11 +1190,9 @@ void CCNotePad::savePadUseTimes()
 
 void CCNotePad::slot_searchResultShow()
 {
-	if (m_dockSelectTreeWin != nullptr)
-	{
+	initFindResultDockWin();
 		m_dockSelectTreeWin->show();
 	}
-}
 
 //读取Sql的全局配置
 void CCNotePad::initNotePadSqlOptions()
@@ -1488,9 +1514,9 @@ void CCNotePad::autoSetDocLexer(ScintillaEditView* pEdit)
 		return;
 	}
 
-	LangType type = getLangLexerIdByFileExt(filePath);
+	LexerInfo lxdata = getLangLexerIdByFileExt(filePath);
 
-	QsciLexer* lexer = pEdit->createLexer(type);
+	QsciLexer* lexer = pEdit->createLexer(lxdata.lexerId, lxdata.tagName);
 
 	if (lexer != nullptr)
 	{
@@ -1927,6 +1953,7 @@ void CCNotePad::initToolBar()
 	m_pLexerActGroup->addAction(ui.actionIntel_HEX); 
 	m_pLexerActGroup->addAction(ui.actionGo);
 	m_pLexerActGroup->addAction(ui.actionTxt);
+	m_pLexerActGroup->addAction(ui.actionUserDefine);
 
 	QActionGroup* skinStyleGroup = new QActionGroup(this);
 	skinStyleGroup->addAction(ui.actionDefaultStyle);
@@ -2019,8 +2046,8 @@ void CCNotePad::slot_lexerActTrig(QAction *action)
 			}
 			else
 			{
-				//tag必须在其中
-				assert(false);
+				//用户自定义的不在其中。不能设置为用户自定义的语法，不明确。
+				return;
 			}
 
 			delete curLexer;
@@ -4008,6 +4035,12 @@ void CCNotePad::closeEvent(QCloseEvent * event)
 	}
 	}
 
+	//保存大小
+
+	QSize size = this->size();
+	QString saveSize = QString("%1:%2").arg(size.width()).arg(size.height());
+	JsonDeploy::updataKeyValueFromSets(RESTORE_SIZE, saveSize);
+
 	event->accept();
 }
 
@@ -4197,6 +4230,27 @@ void CCNotePad::slot_indentGuide(bool willBeShowed)
 
 	s_indent = (willBeShowed) ? 1 : 0;
 	JsonDeploy::updataKeyValueFromNumSets(INDENT_KEY, s_indent);
+}
+
+void CCNotePad::find(FindTabIndex findType)
+{
+	initFindWindow();
+	FindWin* pFind = dynamic_cast<FindWin*>(m_pFindWin.data());
+#ifdef uos
+	pFind->activateWindow();
+#endif
+	pFind->showNormal();
+#ifdef uos
+	adjustWInPos(pFind);
+#endif
+
+	pFind->setFocus();
+	pFind->setCurrentTab(findType);
+}
+
+void CCNotePad::slot_findInDir()
+{
+	find(DIR_FIND_TAB);
 }
 
 void CCNotePad::slot_find()
@@ -4893,6 +4947,10 @@ void CCNotePad::syncCurDocLexerToMenu(QWidget* pw)
 		{
 			m_lexerNameToIndex.value(lexerName).pAct->setChecked(true);
 		}
+		else
+		{
+			m_lexerNameToIndex.value("UserDefine").pAct->setChecked(true);
+		}
 		setLangsDescLable(lexerName);
 	}
 	else
@@ -5109,9 +5167,9 @@ void CCNotePad::slot_about()
 	QMessageBox msgBox(this);
 #if defined (Q_OS_MAC)
 	msgBox.setText(tr("bugfix: https://github.com/cxasm/notepad-- \nchina: https://gitee.com/cxasm/notepad--"));
-    msgBox.setDetailedText("Notepad-- v1.16.2");
+    msgBox.setDetailedText("Notepad-- v1.17.1");
 #else
-	msgBox.setWindowTitle(QString("Notepad-- v1.16.2"));
+	msgBox.setWindowTitle(QString("Notepad-- v1.17.1"));
 	msgBox.setText(tr("bugfix: https://github.com/cxasm/notepad-- \nchina: https://gitee.com/cxasm/notepad--"));
 #endif
 	msgBox.setTextInteractionFlags(Qt::TextSelectableByMouse);
@@ -5248,9 +5306,9 @@ void CCNotePad::slot_batch_rename()
 
 void CCNotePad::slot_options()
 {
-	OptionsView* p = new OptionsView();
+	OptionsView* p = new OptionsView(this,nullptr);
 	p->setAttribute(Qt::WA_DeleteOnClose);
-	p->setWindowModality(Qt::ApplicationModal);
+	//p->setWindowModality(Qt::ApplicationModal);
 	connect(p, &OptionsView::sendTabFormatChange, this, &CCNotePad::slot_tabFormatChange);
 	//connect(p, &OptionsView::signTxtFontChange, this, &CCNotePad::slot_txtFontChange);
 	//connect(p, &OptionsView::signProLangFontChange, this, &CCNotePad::slot_proLangFontChange);
@@ -5442,7 +5500,6 @@ void CCNotePad::slot_toMistyRose()
 //获取注册码
 void CCNotePad::slot_register()
 {
-
 }
 
 void CCNotePad::slot_langFormat()
@@ -5459,10 +5516,15 @@ void CCNotePad::slot_langFormat()
 	QtLangSet* pWin = new QtLangSet(initTag,this);
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
 	connect(pWin, &QtLangSet::viewStyleChange, this, &CCNotePad::slot_viewStyleChange);
+	connect(pWin, &QtLangSet::viewLexerChange, this, &CCNotePad::slot_viewLexerChange);
 	pWin->show();
+#ifdef uos
+    adjustWInPos(pWin);
+#endif
+	pWin->selectInitLangTag(initTag);
 }
 
-void CCNotePad::slot_viewStyleChange(int lexerId, int styleId, QColor& fgColor, QColor& bkColor, QFont& font, bool fontChange)
+void CCNotePad::slot_viewStyleChange(QString tag, int styleId, QColor& fgColor, QColor& bkColor, QFont& font, bool fontChange)
 {
 	for (int i = ui.editTabWidget->count() - 1; i >= 0; --i)
 	{
@@ -5472,7 +5534,7 @@ void CCNotePad::slot_viewStyleChange(int lexerId, int styleId, QColor& fgColor, 
 		{
 			QsciLexer* lexer = pEdit->lexer();
 
-			if (lexer->lexerId() == lexerId)
+			if (lexer->lexerTag() == tag)
 			{
 				if (fgColor.isValid())
 				{
@@ -5487,6 +5549,25 @@ void CCNotePad::slot_viewStyleChange(int lexerId, int styleId, QColor& fgColor, 
 				{
 					lexer->setFont(font, styleId);
 				}
+			}
+		}
+	}
+}
+
+void CCNotePad::slot_viewLexerChange(QString tag)
+{
+	for (int i = ui.editTabWidget->count() - 1; i >= 0; --i)
+	{
+		QWidget* pw = ui.editTabWidget->widget(i);
+		ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+		if (pEdit != nullptr && (pEdit->lexer() != nullptr))
+		{
+			QsciLexer* lexer = pEdit->lexer();
+
+			if (lexer != nullptr && lexer->lexerTag() == tag)
+			{
+				delete lexer;
+				autoSetDocLexer(pEdit);
 			}
 		}
 	}
@@ -5754,4 +5835,568 @@ void CCNotePad::slot_columnBlockEdit()
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
 	pWin->setTabWidget(ui.editTabWidget);
 	pWin->show();
+#ifdef uos
+    adjustWInPos(pWin);
+#endif
+}
+
+void CCNotePad::slot_defineLangs()
+{
+	LangStyleDefine* pWin = new LangStyleDefine(this);
+	pWin->setAttribute(Qt::WA_DeleteOnClose);
+	pWin->show();
+#ifdef uos
+    adjustWInPos(pWin);
+#endif
+}
+
+void CCNotePad::transCurUpperOrLower(TextCaseType type)
+{
+	QWidget* pw = ui.editTabWidget->currentWidget();
+	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+	if (pEdit != nullptr)
+	{
+		if (pEdit->isReadOnly())
+		{
+			ui.statusBar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			QApplication::beep();
+			return;
+		}
+		pEdit->convertSelectedTextTo(type);
+	}
+}
+
+void CCNotePad::slot_uppercase()
+{
+	transCurUpperOrLower(UPPERCASE);
+}
+void CCNotePad::slot_lowercase()
+{
+	transCurUpperOrLower(LOWERCASE);
+}
+void CCNotePad::slot_properCase()
+{
+	transCurUpperOrLower(TITLECASE_FORCE);
+}
+void CCNotePad::slot_properCaseBlend()
+{
+	transCurUpperOrLower(TITLECASE_BLEND);
+}
+void CCNotePad::slot_sentenceCase()
+{
+	transCurUpperOrLower(SENTENCECASE_FORCE);
+}
+void CCNotePad::slot_sentenceCaseBlend()
+{
+	transCurUpperOrLower(SENTENCECASE_BLEND);
+}
+void CCNotePad::slot_invertCase()
+{
+	transCurUpperOrLower(INVERTCASE);
+}
+void CCNotePad::slot_randomCase()
+{
+	transCurUpperOrLower(RANDOMCASE);
+}
+
+void CCNotePad::slot_removeEmptyLine()
+{
+	removeEmptyLine(false);
+}
+
+
+void CCNotePad::slot_removeEmptyLineCbc()
+{
+	removeEmptyLine(true);
+}
+
+void CCNotePad::removeEmptyLine(bool isBlankContained)
+{
+	initFindWindow();
+	FindWin* pFind = dynamic_cast<FindWin*>(m_pFindWin.data());
+	//静默调用
+	pFind->removeEmptyLine(isBlankContained);
+}
+
+void CCNotePad::slot_column_mode()
+{
+	QMessageBox::about(this, tr("Column Edit Mode Tips"), tr("\"ALT+Mouse Click\" or \"Alt+Shift+Arrow keys\" Switch to mode!"));
+}
+
+void CCNotePad::slot_tabToSpace()
+{
+	spaceTabConvert(Tab2Space);
+}
+
+void CCNotePad::slot_spaceToTabAll()
+{
+	spaceTabConvert(Space2TabAll);
+}
+
+void CCNotePad::slot_spaceToTabLeading()
+{
+	spaceTabConvert(Space2TabLeading);
+}
+
+ScintillaEditView* CCNotePad::getCurEditView()
+{
+	QWidget* pw = ui.editTabWidget->currentWidget();
+	ScintillaEditView* _pEditView = dynamic_cast<ScintillaEditView*>(pw);
+	if (_pEditView != nullptr)
+	{
+		if (_pEditView->isReadOnly())
+		{
+			ui.statusBar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			QApplication::beep();
+			return nullptr;
+		}
+		return _pEditView;
+	}
+	return nullptr;
+}
+
+//tab space 互转
+void CCNotePad::spaceTabConvert(SpaceTab type)
+{
+
+	QWidget* pw = ui.editTabWidget->currentWidget();
+	ScintillaEditView* _pEditView = dynamic_cast<ScintillaEditView*>(pw);
+	if (_pEditView != nullptr)
+	{
+		if (_pEditView->isReadOnly())
+		{
+			ui.statusBar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			QApplication::beep();
+			return;
+		}
+
+		intptr_t tabWidth = _pEditView->execute(SCI_GETTABWIDTH);
+		intptr_t currentPos = _pEditView->execute(SCI_GETCURRENTPOS);
+		intptr_t docLength = _pEditView->execute(SCI_GETLENGTH) + 1;
+		if (docLength < 2)
+			return;
+
+		intptr_t count = 0;
+		intptr_t column = 0;
+		intptr_t newCurrentPos = 0;
+		intptr_t tabStop = tabWidth - 1;   // remember, counting from zero !
+		bool onlyLeading = false;
+
+		char * source = new char[docLength];
+		if (source == NULL)
+			return;
+		_pEditView->execute(SCI_GETTEXT, docLength, reinterpret_cast<sptr_t>(source));
+
+		if (type == Tab2Space)
+		{
+			// count how many tabs are there
+			for (const char * ch = source; *ch; ++ch)
+			{
+				if (*ch == '\t')
+					++count;
+			}
+			if (count == 0)
+			{
+				delete[] source;
+				return;
+			}
+		}
+		// allocate tabwidth-1 chars extra per tab, just to be safe
+		size_t newlen = docLength + count * (tabWidth - 1) + 1;
+		char * destination = new char[newlen];
+		if (destination == NULL)
+		{
+			delete[] source;
+			return;
+		}
+		char * dest = destination;
+
+		switch (type)
+		{
+		case Tab2Space:
+		{
+			// rip through each line of the file
+			for (int i = 0; source[i] != '\0'; ++i)
+			{
+				if (source[i] == '\t')
+				{
+					intptr_t insertTabs = tabWidth - (column % tabWidth);
+					for (int j = 0; j < insertTabs; ++j)
+					{
+						*dest++ = ' ';
+						if (i <= currentPos)
+							++newCurrentPos;
+					}
+					column += insertTabs;
+				}
+				else
+				{
+					*dest++ = source[i];
+					if (i <= currentPos)
+						++newCurrentPos;
+					if ((source[i] == '\n') || (source[i] == '\r'))
+						column = 0;
+					else if ((source[i] & 0xC0) != 0x80)  // UTF_8 support: count only bytes that don't start with 10......
+						++column;
+				}
+			}
+			*dest = '\0';
+			break;
+		}
+		case Space2TabLeading:
+		{
+			onlyLeading = true;
+		}
+		case Space2TabAll:
+		{
+			bool nextChar = false;
+			int counter = 0;
+			bool nonSpaceFound = false;
+			for (int i = 0; source[i] != '\0'; ++i)
+			{
+				if (nonSpaceFound == false)
+				{
+					while (source[i + counter] == ' ')
+					{
+						if ((column + counter) == tabStop)
+						{
+							tabStop += tabWidth;
+							if (counter >= 1)        // counter is counted from 0, so counter >= max-1
+							{
+								*dest++ = '\t';
+								i += counter;
+								column += counter + 1;
+								counter = 0;
+								nextChar = true;
+								if (i <= currentPos)
+									++newCurrentPos;
+								break;
+							}
+							else if (source[i + 1] == ' ' || source[i + 1] == '\t')  // if followed by space or TAB, convert even a single space to TAB
+							{
+								*dest++ = '\t';
+								i++;
+								column += 1;
+								counter = 0;
+								if (i <= currentPos)
+									++newCurrentPos;
+							}
+							else       // single space, don't convert it to TAB
+							{
+								*dest++ = source[i];
+								column += 1;
+								counter = 0;
+								nextChar = true;
+								if (i <= currentPos)
+									++newCurrentPos;
+								break;
+							}
+						}
+						else
+							++counter;
+					}
+
+					if (nextChar == true)
+					{
+						nextChar = false;
+						continue;
+					}
+
+					if (source[i] == ' ' && source[i + counter] == '\t') // spaces "absorbed" by a TAB on the right
+					{
+						*dest++ = '\t';
+						i += counter;
+						column = tabStop + 1;
+						tabStop += tabWidth;
+						counter = 0;
+						if (i <= currentPos)
+							++newCurrentPos;
+						continue;
+					}
+				}
+
+				if (onlyLeading == true && nonSpaceFound == false)
+					nonSpaceFound = true;
+
+				if (source[i] == '\n' || source[i] == '\r')
+				{
+					*dest++ = source[i];
+					column = 0;
+					tabStop = tabWidth - 1;
+					nonSpaceFound = false;
+				}
+				else if (source[i] == '\t')
+				{
+					*dest++ = source[i];
+					column = tabStop + 1;
+					tabStop += tabWidth;
+					counter = 0;
+				}
+				else
+				{
+					*dest++ = source[i];
+					counter = 0;
+					if ((source[i] & 0xC0) != 0x80)   // UTF_8 support: count only bytes that don't start with 10......
+					{
+						++column;
+
+						if (column > 0 && column % tabWidth == 0)
+							tabStop += tabWidth;
+					}
+				}
+
+				if (i <= currentPos)
+					++newCurrentPos;
+			}
+			*dest = '\0';
+			break;
+		}
+		}
+
+		_pEditView->execute(SCI_BEGINUNDOACTION);
+		_pEditView->execute(SCI_SETTEXT, 0, reinterpret_cast<sptr_t>(destination));
+		_pEditView->execute(SCI_GOTOPOS, newCurrentPos);
+
+		_pEditView->execute(SCI_ENDUNDOACTION);
+
+		// clean up
+		delete[] source;
+		delete[] destination;
+	}
+}
+
+
+void CCNotePad::slot_dupCurLine()
+{
+	qDebug() << "dup atcion called";
+
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		_pEditView->execute(SCI_LINEDUPLICATE);
+	}
+}
+
+void CCNotePad::slot_removeDupLine()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		_pEditView->execute(SCI_BEGINUNDOACTION);
+		_pEditView->removeAnyDuplicateLines();
+		_pEditView->execute(SCI_ENDUNDOACTION);
+	}
+}
+
+void CCNotePad::slot_splitLines()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		if (_pEditView->execute(SCI_GETSELECTIONS) == 1)
+		{
+			std::pair<size_t, size_t> lineRange = _pEditView->getSelectionLinesRange();
+			auto anchorPos = _pEditView->execute(SCI_POSITIONFROMLINE, lineRange.first);
+			auto caretPos = _pEditView->execute(SCI_GETLINEENDPOSITION, lineRange.second);
+			_pEditView->execute(SCI_SETSELECTION, caretPos, anchorPos);
+			_pEditView->execute(SCI_TARGETFROMSELECTION);
+			size_t edgeMode = _pEditView->execute(SCI_GETEDGEMODE);
+			if (edgeMode == EDGE_NONE)
+			{
+				_pEditView->execute(SCI_LINESSPLIT, 0);
+			}
+			else
+			{
+				auto textWidth = _pEditView->execute(SCI_TEXTWIDTH, STYLE_DEFAULT, reinterpret_cast<sptr_t>("P"));
+				auto edgeCol = _pEditView->execute(SCI_GETEDGECOLUMN); // will work for edgeMode == EDGE_BACKGROUND
+				if (edgeMode == EDGE_MULTILINE)
+				{
+					//暂时这样。后续有问题再说
+				}
+				++edgeCol;  // compensate for zero-based column number
+				_pEditView->execute(SCI_LINESSPLIT, textWidth * edgeCol);
+			}
+		}
+	}
+}
+void CCNotePad::slot_joinLines()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		const std::pair<size_t, size_t> lineRange = _pEditView->getSelectionLinesRange();
+		if (lineRange.first != lineRange.second)
+		{
+			auto anchorPos = _pEditView->execute(SCI_POSITIONFROMLINE, lineRange.first);
+			auto caretPos = _pEditView->execute(SCI_GETLINEENDPOSITION, lineRange.second);
+			_pEditView->execute(SCI_SETSELECTION, caretPos, anchorPos);
+			_pEditView->execute(SCI_TARGETFROMSELECTION);
+			_pEditView->execute(SCI_LINESJOIN);
+		}
+	}
+}
+
+void CCNotePad::slot_moveUpCurLine()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		_pEditView->execute(SCI_MOVESELECTEDLINESUP);
+	}
+}
+
+void CCNotePad::slot_moveDownCurLine()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		_pEditView->execute(SCI_MOVESELECTEDLINESDOWN);
+
+		// Ensure the selection is within view
+		_pEditView->execute(SCI_SCROLLRANGE, _pEditView->execute(SCI_GETSELECTIONEND), _pEditView->execute(SCI_GETSELECTIONSTART));
+	}
+}
+
+void CCNotePad::slot_insertBlankAbvCur()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		_pEditView->insertNewLineAboveCurrentLine();
+}
+}
+void CCNotePad::slot_insertBlankBelCur()
+{
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView != nullptr)
+	{
+		_pEditView->insertNewLineBelowCurrentLine();
+}
+}
+
+
+
+
+void CCNotePad::dealLineSort(LINE_SORT_TYPE type)
+{
+
+	ScintillaEditView* _pEditView = getCurEditView();
+	if (_pEditView == nullptr)
+	{
+		return;
+}
+
+	size_t fromLine = 0, toLine = 0;
+	size_t fromColumn = 0, toColumn = 0;
+
+	bool hasLineSelection = false;
+	if (_pEditView->execute(SCI_GETSELECTIONS) > 1)
+{
+		if (_pEditView->execute(SCI_SELECTIONISRECTANGLE))
+		{
+			size_t rectSelAnchor = _pEditView->execute(SCI_GETRECTANGULARSELECTIONANCHOR);
+			size_t rectSelCaret = _pEditView->execute(SCI_GETRECTANGULARSELECTIONCARET);
+			size_t anchorLine = _pEditView->execute(SCI_LINEFROMPOSITION, rectSelAnchor);
+			size_t caretLine = _pEditView->execute(SCI_LINEFROMPOSITION, rectSelCaret);
+			fromLine = std::min(anchorLine, caretLine);
+			toLine = std::max(anchorLine, caretLine);
+			size_t anchorLineOffset = rectSelAnchor - _pEditView->execute(SCI_POSITIONFROMLINE, anchorLine) + _pEditView->execute(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE);
+			size_t caretLineOffset = rectSelCaret - _pEditView->execute(SCI_POSITIONFROMLINE, caretLine) + _pEditView->execute(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE);
+			fromColumn = std::min(anchorLineOffset, caretLineOffset);
+			toColumn = std::max(anchorLineOffset, caretLineOffset);
+}
+		else
+{
+			return;
+}
+	}
+	else
+{
+		auto selStart = _pEditView->execute(SCI_GETSELECTIONSTART);
+		auto selEnd = _pEditView->execute(SCI_GETSELECTIONEND);
+		hasLineSelection = selStart != selEnd;
+		if (hasLineSelection)
+		{
+			const  std::pair<size_t, size_t> lineRange = _pEditView->getSelectionLinesRange();
+			// One single line selection is not allowed.
+			if (lineRange.first == lineRange.second)
+			{
+				return;
+}
+			fromLine = lineRange.first;
+			toLine = lineRange.second;
+		}
+		else
+{
+			// No selection.
+			fromLine = 0;
+			toLine = _pEditView->execute(SCI_GETLINECOUNT) - 1;
+}
+	}
+
+	LINE_SORT_TYPE id = type;
+
+	bool isDescending = ((id == SORTLINES_LEXICOGRAPHIC_DESCENDING) || (id == SORTLINES_LEXICO_CASE_INSENS_DESCENDING));
+
+	_pEditView->execute(SCI_BEGINUNDOACTION);
+	std::unique_ptr<ISorter> pSorter;
+
+	if (id == SORTLINES_LEXICOGRAPHIC_DESCENDING || id == SORTLINES_LEXICOGRAPHIC_ASCENDING)
+{
+		pSorter = std::unique_ptr<ISorter>(new LexicographicSorter(isDescending, fromColumn, toColumn));
+}
+	else if (id == SORTLINES_LEXICO_CASE_INSENS_DESCENDING || id == SORTLINES_LEXICO_CASE_INSENS_ASCENDING)
+{
+		pSorter = std::unique_ptr<ISorter>(new LexicographicCaseInsensitiveSorter(isDescending, fromColumn, toColumn));
+}
+	else if (id == SORTLINES_REVERSE_ORDER)
+{
+		pSorter = std::unique_ptr<ISorter>(new ReverseSorter(isDescending, fromColumn, toColumn));
+}
+
+	try
+{
+		_pEditView->sortLines(fromLine, toLine, pSorter.get());
+}
+	catch (size_t& failedLineIndex)
+{
+		size_t lineNo = 1 + fromLine + failedLineIndex;
+
+		QMessageBox::warning(this, tr("SortingError"), tr("Unable to perform numeric sorting due to line %1.").arg(lineNo));
+}
+
+	_pEditView->execute(SCI_ENDUNDOACTION);
+
+	if (hasLineSelection) // there was 1 selection, so we restore it
+{
+		auto posStart = _pEditView->execute(SCI_POSITIONFROMLINE, fromLine);
+		auto posEnd = _pEditView->execute(SCI_GETLINEENDPOSITION, toLine);
+		_pEditView->execute(SCI_SETSELECTIONSTART, posStart);
+		_pEditView->execute(SCI_SETSELECTIONEND, posEnd);
+}
+}
+
+void CCNotePad::slot_reverseLineOrder()
+{
+	dealLineSort(SORTLINES_REVERSE_ORDER);
+}
+
+void CCNotePad::slot_sortLexAsc()
+{
+	dealLineSort(SORTLINES_LEXICOGRAPHIC_ASCENDING);
+}
+
+void CCNotePad::slot_sortLexAscIgnCase()
+{
+	dealLineSort(SORTLINES_LEXICO_CASE_INSENS_ASCENDING);
+}
+
+void CCNotePad::slot_sortLexDesc()
+{
+	dealLineSort(SORTLINES_LEXICOGRAPHIC_DESCENDING);
+}
+
+void CCNotePad::slot_sortLexDescIngCase()
+{
+	dealLineSort(SORTLINES_LEXICO_CASE_INSENS_DESCENDING);
 }

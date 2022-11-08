@@ -1,4 +1,4 @@
-// This module implements the QsciLexerFortran77 class.
+﻿// This module implements the QsciLexerFortran77 class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -148,7 +148,7 @@ QFont QsciLexerFortran77::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerFortran77::keywords(int set) const
+const char *QsciLexerFortran77::keywords(int set)
 {
     if (set == 1)
         return

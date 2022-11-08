@@ -1,4 +1,4 @@
-// This defines the interface to the QsciLexerXML class.
+﻿// This defines the interface to the QsciLexerXML class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -65,7 +65,7 @@ public:
 
     //! Returns the set of keywords for the keyword set \a set recognised
     //! by the lexer as a space separated string.
-    const char *keywords(int set) const;
+    const char *keywords(int set);
 
     //! Causes all properties to be refreshed by emitting the
     //! propertyChanged() signal as required.

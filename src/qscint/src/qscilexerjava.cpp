@@ -1,4 +1,4 @@
-// This module implements the QsciLexerJava class.
+﻿// This module implements the QsciLexerJava class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -41,7 +41,7 @@ const char *QsciLexerJava::language() const
 }
 
 // Returns the set of keywords.
-const char *QsciLexerJava::keywords(int set) const
+const char *QsciLexerJava::keywords(int set)
 {
     if (set != 1)
         return 0;

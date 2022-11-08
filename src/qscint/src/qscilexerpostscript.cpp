@@ -1,4 +1,4 @@
-// This module implements the QsciLexerPostScript class.
+﻿// This module implements the QsciLexerPostScript class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -148,7 +148,7 @@ QFont QsciLexerPostScript::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerPostScript::keywords(int set) const
+const char *QsciLexerPostScript::keywords(int set)
 {
     if (set == 1)
         return

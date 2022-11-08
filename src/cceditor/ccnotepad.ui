@@ -87,7 +87,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="title">
-     <string>File</string>
+     <string>File(&amp;F)</string>
     </property>
     <addaction name="actionNewFile"/>
     <addaction name="actionOpenFile"/>
@@ -102,7 +102,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="title">
-     <string>Edit</string>
+     <string>Edit(&amp;E)</string>
     </property>
     <widget class="QMenu" name="menuformat_conversion">
      <property name="title">
@@ -119,6 +119,45 @@
      <addaction name="actionRemove_leading_blank"/>
      <addaction name="actionRemove_eding_blank"/>
      <addaction name="actionRemove_Head_End_Blank"/>
+     <addaction name="separator"/>
+     <addaction name="actionTAB_to_Space"/>
+     <addaction name="actionSpace_to_TAB_All"/>
+     <addaction name="actionSpace_to_TAB_Leading"/>
+    </widget>
+    <widget class="QMenu" name="menuConvert_Case_to">
+     <property name="title">
+      <string>Convert Case to</string>
+     </property>
+     <addaction name="actionUPPERCASE"/>
+     <addaction name="actionlowercase"/>
+     <addaction name="actionProper_Case"/>
+     <addaction name="actionProper_Case_blend"/>
+     <addaction name="actionSentence_case"/>
+     <addaction name="actionSentence_case_blend"/>
+     <addaction name="actionInvertCase"/>
+     <addaction name="actionRandomCase"/>
+    </widget>
+    <widget class="QMenu" name="menuLine_Operations">
+     <property name="title">
+      <string>Line Operations</string>
+     </property>
+     <addaction name="actionDuplicate_Current_Line"/>
+     <addaction name="actionRemove_Duplicate_Lines"/>
+     <addaction name="actionRemove_Consecutive_Duplicate_Lines"/>
+     <addaction name="actionSplit_Lines"/>
+     <addaction name="actionJoin_Lines"/>
+     <addaction name="actionMove_Up_Current_Line"/>
+     <addaction name="actionMove_Down_Current_Line"/>
+     <addaction name="actionRemove_Empty_Lines"/>
+     <addaction name="actionRemove_Empty_Lines_Cbc"/>
+     <addaction name="actionInsert_Blank_Line_Above_Current"/>
+     <addaction name="actionInsert_Blank_Line_Below_Current"/>
+     <addaction name="actionReverse_Line_Order"/>
+     <addaction name="separator"/>
+     <addaction name="actionSort_Lines_Lexicographically_Ascending"/>
+     <addaction name="actionSort_Lines_Lex_Ascending_Ignoring_Case"/>
+     <addaction name="actionSort_Lines_Lexicographically_Descending"/>
+     <addaction name="actionSort_Lines_Lex_Descending_Ignoring_Case"/>
     </widget>
     <addaction name="actionundo"/>
     <addaction name="actionredo"/>
@@ -133,19 +172,24 @@
     <addaction name="actionOpen_In_Text"/>
     <addaction name="actionOpen_In_Bin"/>
     <addaction name="menuBlank_CharOperate"/>
+    <addaction name="menuConvert_Case_to"/>
+    <addaction name="menuLine_Operations"/>
+    <addaction name="separator"/>
+    <addaction name="actionColumn_Edit_Mode"/>
     <addaction name="actionColumn_Block_Editing"/>
    </widget>
    <widget class="QMenu" name="menuSearch">
     <property name="title">
-     <string>Search</string>
+     <string>Search(&amp;S)</string>
     </property>
     <addaction name="actionFind"/>
+    <addaction name="actionFind_In_Dir"/>
     <addaction name="actionReplace"/>
     <addaction name="actionGoline"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>View(&amp;V)</string>
     </property>
     <widget class="QMenu" name="menudisplay_symbols">
      <property name="title">
@@ -161,7 +205,7 @@
    </widget>
    <widget class="QMenu" name="menuCode">
     <property name="title">
-     <string>Encoding</string>
+     <string>Encoding(&amp;N)</string>
     </property>
     <addaction name="actionencode_in_GBK"/>
     <addaction name="actionencode_in_uft8"/>
@@ -178,7 +222,7 @@
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
-     <string>Language</string>
+     <string>Language(&amp;L)</string>
     </property>
     <widget class="QMenu" name="menuP">
      <property name="title">
@@ -377,10 +421,11 @@
     <addaction name="actionXML"/>
     <addaction name="actionYAML"/>
     <addaction name="actionTxt"/>
+    <addaction name="actionUserDefine"/>
    </widget>
    <widget class="QMenu" name="menuSet">
     <property name="title">
-     <string>Set</string>
+     <string>Set(&amp;T)</string>
     </property>
     <widget class="QMenu" name="menuStyle">
      <property name="title">
@@ -406,6 +451,7 @@
     <addaction name="menuStyle"/>
     <addaction name="menuLanguage_2"/>
     <addaction name="actionLanguage_Format"/>
+    <addaction name="actionDefine_Language"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -1534,6 +1580,211 @@
     <string>Wrap</string>
    </property>
   </action>
+  <action name="actionDefine_Language">
+   <property name="text">
+    <string>Define Language</string>
+   </property>
+  </action>
+  <action name="actionUPPERCASE">
+   <property name="text">
+    <string>UPPERCASE</string>
+   </property>
+  </action>
+  <action name="actionlowercase">
+   <property name="text">
+    <string>lowercase</string>
+   </property>
+  </action>
+  <action name="actionProper_Case">
+   <property name="text">
+    <string>Proper Case</string>
+   </property>
+  </action>
+  <action name="actionProper_Case_blend">
+   <property name="text">
+    <string>Proper Case (blend)</string>
+   </property>
+  </action>
+  <action name="actionSentence_case">
+   <property name="text">
+    <string>Sentence case</string>
+   </property>
+  </action>
+  <action name="actionSentence_case_blend">
+   <property name="text">
+    <string>Sentence case (blend)</string>
+   </property>
+  </action>
+  <action name="actionInvertCase">
+   <property name="text">
+    <string>Invert Case</string>
+   </property>
+  </action>
+  <action name="actionRandomCase">
+   <property name="text">
+    <string>Random Case</string>
+   </property>
+  </action>
+  <action name="actionRemove_Empty_Lines">
+   <property name="text">
+    <string>Remove Empty Lines</string>
+   </property>
+  </action>
+  <action name="actionRemove_Empty_Lines_Cbc">
+   <property name="text">
+    <string>Remove Empty Lines (Containing Blank characters)</string>
+   </property>
+  </action>
+  <action name="actionUserDefine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>UserDefine</string>
+   </property>
+  </action>
+  <action name="actionColumn_Edit_Mode">
+   <property name="text">
+    <string>Column Block Mode</string>
+   </property>
+  </action>
+  <action name="actionTAB_to_Space">
+   <property name="text">
+    <string>TAB to Space</string>
+   </property>
+  </action>
+  <action name="actionSpace_to_TAB_All">
+   <property name="text">
+    <string>Space to TAB (All)</string>
+   </property>
+  </action>
+  <action name="actionSpace_to_TAB_Leading">
+   <property name="text">
+    <string>Space to TAB (Leading)</string>
+   </property>
+  </action>
+  <action name="actionDuplicate_Current_Line">
+   <property name="text">
+    <string>Duplicate Current Line</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionRemove_Duplicate_Lines">
+   <property name="text">
+    <string>Remove Duplicate Lines</string>
+   </property>
+  </action>
+  <action name="actionRemove_Consecutive_Duplicate_Lines">
+   <property name="text">
+    <string>Remove Consecutive Duplicate Lines</string>
+   </property>
+  </action>
+  <action name="actionSplit_Lines">
+   <property name="text">
+    <string>Split Lines</string>
+   </property>
+  </action>
+  <action name="actionJoin_Lines">
+   <property name="text">
+    <string>Join Lines</string>
+   </property>
+  </action>
+  <action name="actionMove_Up_Current_Line">
+   <property name="text">
+    <string>Move Up Current Line</string>
+   </property>
+  </action>
+  <action name="actionMove_Down_Current_Line">
+   <property name="text">
+    <string>Move Down Current Line</string>
+   </property>
+  </action>
+  <action name="actionInsert_Blank_Line_Above_Current">
+   <property name="text">
+    <string>Insert Blank Line Above Current</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Return</string>
+   </property>
+  </action>
+  <action name="actionInsert_Blank_Line_Below_Current">
+   <property name="text">
+    <string>Insert Blank Line Below Current</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Alt+Shift+Return</string>
+   </property>
+  </action>
+  <action name="actionReverse_Line_Order">
+   <property name="text">
+    <string>Reverse Line Order</string>
+   </property>
+  </action>
+  <action name="actionRandomize_Line_Order">
+   <property name="text">
+    <string>Randomize Line Order</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_Lexicographically_Ascending">
+   <property name="text">
+    <string>Sort Lines Lexicographically Ascending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_Lex_Ascending_Ignoring_Case">
+   <property name="text">
+    <string>Sort Lines Lex. Ascending Ignoring Case</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_As_Integers_Ascending">
+   <property name="text">
+    <string>Sort Lines As Integers Ascending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_As_Decimals_Comma_Ascending">
+   <property name="text">
+    <string>Sort Lines As Decimals (Comma) Ascending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_As_Decimals_Dot_Ascending">
+   <property name="text">
+    <string>Sort Lines As Decimals (Dot) Ascending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_Lexicographically_Descending">
+   <property name="text">
+    <string>Sort Lines Lexicographically Descending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_Lex_Descending_Ignoring_Case">
+   <property name="text">
+    <string>Sort Lines Lex. Descending Ignoring Case</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_As_Integers_Descending">
+   <property name="text">
+    <string>Sort Lines As Integers Descending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_As_Decimals_Comma_Descending">
+   <property name="text">
+    <string>Sort Lines As Decimals (Comma) Descending</string>
+   </property>
+  </action>
+  <action name="actionSort_Lines_As_Decimals_Dot_Descending">
+   <property name="text">
+    <string>Sort Lines As Decimals (Dot) Descending</string>
+   </property>
+  </action>
+  <action name="actionFind_In_Dir">
+   <property name="text">
+    <string>Find In Dir</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+F</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -2452,6 +2703,454 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionDefine_Language</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_defineLangs()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionUPPERCASE</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_uppercase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionlowercase</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_lowercase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionProper_Case</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_properCase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionProper_Case_blend</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_properCaseBlend()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSentence_case</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_sentenceCase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSentence_case_blend</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_sentenceCaseBlend()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionInvertCase</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_invertCase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRandomCase</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_randomCase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_Empty_Lines</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_removeEmptyLine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_Empty_Lines_Cbc</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_removeEmptyLineCbc()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionColumn_Edit_Mode</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_column_mode()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionTAB_to_Space</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_tabToSpace()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSpace_to_TAB_All</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_spaceToTabAll()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSpace_to_TAB_Leading</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_spaceToTabLeading()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDuplicate_Current_Line</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_dupCurLine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionRemove_Duplicate_Lines</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_removeDupLine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSplit_Lines</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_splitLines()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionJoin_Lines</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_joinLines()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionMove_Up_Current_Line</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_moveUpCurLine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionMove_Down_Current_Line</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_moveDownCurLine()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionInsert_Blank_Line_Above_Current</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_insertBlankAbvCur()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionInsert_Blank_Line_Below_Current</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_insertBlankBelCur()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionReverse_Line_Order</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_reverseLineOrder()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSort_Lines_Lexicographically_Ascending</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_sortLexAsc()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSort_Lines_Lex_Ascending_Ignoring_Case</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_sortLexAscIgnCase()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSort_Lines_Lexicographically_Descending</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_sortLexDesc()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFind_In_Dir</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_findInDir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_actionNewFile_toggle(bool)</slot>
@@ -2512,5 +3211,34 @@
   <slot>slot_removeHeadEndBlank()</slot>
   <slot>slot_columnBlockEdit()</slot>
   <slot>slot_wordwrap()</slot>
+  <slot>slot_defineLangs()</slot>
+  <slot>slot_uppercase()</slot>
+  <slot>slot_lowercase()</slot>
+  <slot>slot_properCase()</slot>
+  <slot>slot_properCaseBlend()</slot>
+  <slot>slot_sentenceCase()</slot>
+  <slot>slot_sentenceCaseBlend()</slot>
+  <slot>slot_invertCase()</slot>
+  <slot>slot_randomCase()</slot>
+  <slot>slot_removeEmptyLine()</slot>
+  <slot>slot_removeEmptyLineCbc()</slot>
+  <slot>slot_column_mode()</slot>
+  <slot>slot_tabToSpace()</slot>
+  <slot>slot_spaceToTabAll()</slot>
+  <slot>slot_spaceToTabLeading()</slot>
+  <slot>slot_dupCurLine()</slot>
+  <slot>slot_removeDupLine()</slot>
+  <slot>slot_splitLines()</slot>
+  <slot>slot_joinLines()</slot>
+  <slot>slot_moveUpCurLine()</slot>
+  <slot>slot_moveDownCurLine()</slot>
+  <slot>slot_insertBlankAbvCur()</slot>
+  <slot>slot_insertBlankBelCur()</slot>
+  <slot>slot_reverseLineOrder()</slot>
+  <slot>slot_sortLexAsc()</slot>
+  <slot>slot_sortLexAscIgnCase()</slot>
+  <slot>slot_sortLexDesc()</slot>
+  <slot>slot_sortLexDescIngCase()</slot>
+  <slot>slot_findInDir()</slot>
  </slots>
 </ui>

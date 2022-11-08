@@ -33,12 +33,18 @@ using namespace Scintilla;
 
 const char styleSubable[] = { SCE_P_IDENTIFIER, 0 };
 
+//Default = 0,//中文
+//Ascii = 1,//英文
+//Keyword = 2, //关键字，只有以TXT为母版的
+
 LexicalClass lexicalClasses[] = {
+
+#if 1
 	// Lexer Python SCLEX_PYTHON SCE_P_:
-	0, "SCE_P_DEFAULT", "default", "White space",
-	1, "SCE_P_COMMENTLINE", "comment line", "Comment",
-	2, "SCE_P_NUMBER", "literal numeric", "Number",
-	3, "SCE_P_STRING", "literal string", "String",
+	0, "SCE_TXT_DEFAULT", "default", "utf8 char",
+	1, "SCE_TXT_ASCII", "Ascii", "Ascii",
+	2, "SCE_TXT_KEYWORD", "keyword", "keyword",
+	/*3, "SCE_P_STRING", "literal string", "String",
 	4, "SCE_P_CHARACTER", "literal string", "Single quoted string",
 	5, "SCE_P_WORD", "keyword", "Keyword",
 	6, "SCE_P_TRIPLE", "literal string", "Triple quotes",
@@ -54,7 +60,8 @@ LexicalClass lexicalClasses[] = {
 	16, "SCE_P_FSTRING", "literal string interpolated", "F-String",
 	17, "SCE_P_FCHARACTER", "literal string interpolated", "Single quoted f-string",
 	18, "SCE_P_FTRIPLE", "literal string interpolated", "Triple quoted f-string",
-	19, "SCE_P_FTRIPLEDOUBLE", "literal string interpolated", "Triple double quoted f-string",
+	19, "SCE_P_FTRIPLEDOUBLE", "literal string interpolated", "Triple double quoted f-string",*/
+#endif
 };
 
 enum literalsAllowed { litNone = 0, litU = 1, litB = 2, litF = 4 };
@@ -82,11 +89,9 @@ struct OptionSetTxt : public OptionSet<OptionsTxt> {
 	}
 };
 
-
 class LexTXT :public DefaultLexer
 {
 	WordList keywords;
-	WordList keywords2;
 	SubStyles subStyles;
 	OptionsTxt options;
 	OptionSetTxt osTxt;
@@ -170,10 +175,48 @@ Sci_Position SCI_METHOD LexTXT::PropertySet(const char *key, const char *val) {
 }
 
 Sci_Position SCI_METHOD LexTXT::WordListSet(int n, const char *wl) {
-	return -1;
+
+	WordList *wordListN = 0;
+	switch (n) {
+	case 0:
+		wordListN = &keywords;
+		break;
+}
+	Sci_Position firstModification = -1;
+	if (wordListN) {
+		WordList wlNew;
+		wlNew.Set(wl);
+		if (*wordListN != wlNew) {
+			wordListN->Set(wl);
+			firstModification = 0;
+		}
+	}
+	return firstModification;
 }
 
 const int indicatorWhitespace = 1;
+
+inline bool IsAWordChar(int ch, bool unicodeIdentifiers) {
+	if (ch < 0x80)
+		return (isalnum(ch) || ch == '.' || ch == '_');
+
+	if (!unicodeIdentifiers)
+		return false;
+
+	// Python uses the XID_Continue set from unicode data
+	return IsXidContinue(ch);
+}
+
+inline bool IsAWordStart(int ch, bool unicodeIdentifiers) {
+	if (ch < 0x80)
+		return (isalpha(ch) || ch == '_');
+
+	if (!unicodeIdentifiers)
+		return false;
+
+	// Python uses the XID_Start set from unicode data
+	return IsXidStart(ch);
+}
 
 //只识别中文和英文两种单词的状态
 void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int initStyle, IDocument *pAccess) {
@@ -213,33 +256,52 @@ void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int ini
 
 	Sci_Position startIndicator = sc.currentPos;
 
-	for (; sc.More(); sc.Forward()) {
-		//前一个和现在这个不等
-		if (UTF8IsAscii(sc.chPrev) && !UTF8IsAscii(sc.ch))
+
+	for (; sc.More();) {
+
+		if (sc.state == SCE_P_IDENTIFIER) {
+
+			//txt就三种状态、英文、中文、自定义关键字。默认是中文。
+			//遇到非字符和非数字，开始检测单词,是关键字则识别为关键字;若不是关键字，则肯定是英文字符
+			//关键字是英文，不是中文。
+
+			if ((sc.ch == '.') || (!IsAWordChar(sc.ch, false))) {
+				char s[1000];
+				sc.GetCurrent(s, sizeof(s));
+				int style = SCE_P_IDENTIFIER;
+				if (keywords.InList(s)) 
 		{
-			sc.ChangeState(SCE_TXT_ASCII);
-			sc.SetState(SCE_TXT_ASCII);
+					style = SCE_TXT_KEYWORD;
 		}
-		else if (!UTF8IsAscii(sc.chPrev) && UTF8IsAscii(sc.ch))
+				else
 		{
-			sc.ChangeState(SCE_TXT_DEFAULT);
+					//不是关键字，就是普通的英文单词
+					style = SCE_TXT_ASCII;
+				}
+				sc.ChangeState(style);
+
+				//下面函数运行就已经把关键字或英文给单独设置风格了。此时默认进入中文风格状态
 			sc.SetState(SCE_TXT_DEFAULT);
+
 		}
 	}
-	//最后一组了。可能没有
-	if (UTF8IsAscii(sc.ch))
+
+		// Check for a new state starting character
+		if (sc.state == SCE_TXT_DEFAULT)
 	{
-		sc.ChangeState(SCE_TXT_ASCII);
-		sc.SetState(SCE_TXT_ASCII);
+			//遇到下一个英文字符的时候，进入识别状态
+			if (IsAWordStart(sc.ch, false)) 
+	{
+				sc.SetState(SCE_P_IDENTIFIER);
 	}
-	else if (!UTF8IsAscii(sc.ch))
-	{
-		sc.ChangeState(SCE_TXT_DEFAULT);
-		sc.SetState(SCE_TXT_DEFAULT);
+		}
+		sc.Forward();
 	}
 	
-	styler.IndicatorFill(startIndicator, sc.currentPos, indicatorWhitespace, 0);
+	//这里看起来最后一段中文，会识别不出来。因为上面的循环不能识别最后一段是中文的情况。
+	//不过中文本来默认就是0，就算识别不到，本来就是默认的值。所有是没有问题的。
 
+	styler.IndicatorFill(startIndicator, sc.currentPos, indicatorWhitespace, 0);
 	sc.Complete();
 
 }

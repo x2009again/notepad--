@@ -1,4 +1,4 @@
-// This module implements the QsciLexerTeX class.
+﻿// This module implements the QsciLexerTeX class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -87,7 +87,7 @@ QColor QsciLexerTeX::defaultColor(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerTeX::keywords(int set) const
+const char *QsciLexerTeX::keywords(int set)
 {
     if (set == 1)
         return

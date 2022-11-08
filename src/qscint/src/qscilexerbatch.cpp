@@ -1,4 +1,4 @@
-// This module implements the QsciLexerBatch class.
+﻿// This module implements the QsciLexerBatch class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -144,7 +144,7 @@ QFont QsciLexerBatch::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerBatch::keywords(int set) const
+const char *QsciLexerBatch::keywords(int set)
 {
     if (set == 1)
         return

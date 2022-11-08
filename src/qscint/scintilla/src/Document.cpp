@@ -45,6 +45,9 @@
 #include "RESearch.h"
 #include "UniConversion.h"
 #include "ElapsedPeriod.h"
+#include "BoostRegexSearch.h"
+
+
 
 using namespace Scintilla;
 
@@ -386,6 +389,7 @@ bool Document::IsLineStartPosition(Sci::Position position) const {
 	return LineStart(LineFromPosition(position)) == position;
 }
 
+//注意这里的LineEnd没有统计行位的\r\n。这是不对的，如果不统计，会导致\r\n无法被替换操作。
 Sci_Position SCI_METHOD Document::LineEnd(Sci_Position line) const {
 	if (line >= LinesTotal() - 1) {
 		return LineStart(line + 1);
@@ -412,6 +416,48 @@ Sci_Position SCI_METHOD Document::LineEnd(Sci_Position line) const {
 		return position;
 	}
 }
+
+#ifdef REGEX_EXTERN
+//lineTail: \r\n 返回5 \n 返回1 \r返回2 其它值错误
+Sci_Position SCI_METHOD Document::LineEnd(Sci_Position line, int &lineTail) const {
+	if (line >= LinesTotal() - 1) {
+		return LineStart(line + 1);
+	}
+	else {
+		Sci::Position position = LineStart(line + 1);
+		if (SC_CP_UTF8 == dbcsCodePage) {
+			const unsigned char bytes[] = {
+				cb.UCharAt(position - 3),
+				cb.UCharAt(position - 2),
+				cb.UCharAt(position - 1),
+			};
+			if (UTF8IsSeparator(bytes)) {
+				return position - UTF8SeparatorLength;
+			}
+			if (UTF8IsNEL(bytes + 1)) {
+				return position - UTF8NELLength;
+			}
+		}
+		position--; // Back over CR or LF
+
+		if (cb.CharAt(position) == '\n')
+		{
+			lineTail = 0x1;
+		}
+		else if (cb.CharAt(position) == '\r')
+		{
+			lineTail = 0x2;
+		}
+		// When line terminator is CR+LF, may need to go back one more
+		if ((position > LineStart(line)) && (cb.CharAt(position - 1) == '\r')) {
+			position--;
+			lineTail |= 0x4;
+
+		}
+		return position;
+	}
+}
+#endif
 
 void SCI_METHOD Document::SetErrorStatus(int status) {
 	// Tell the watchers an error has occurred.
@@ -1990,7 +2036,7 @@ Sci::Position Document::FindText(Sci::Position minPos, Sci::Position maxPos, con
 	const bool regExp = (flags & SCFIND_REGEXP) != 0;
 	if (regExp) {
 		if (!regex)
-			regex = std::unique_ptr<RegexSearchBase>(CreateRegexSearch(&charClass));
+			regex = std::unique_ptr<RegexSearchBase>(CreateRegexSearch());
 		return regex->FindText(this, minPos, maxPos, search, caseSensitive, word, wordStart, flags, length);
 	} else {
 
@@ -3109,6 +3155,7 @@ Sci::Position Cxx11RegexFindText(const Document *doc, Sci::Position minPos, Sci:
 
 }
 
+//这个函数不使用了，使用了boost的正则表达式。之前试图修正这里的不足，发现是个大坑。
 Sci::Position BuiltinRegex::FindText(Document *doc, Sci::Position minPos, Sci::Position maxPos, const char *s,
                         bool caseSensitive, bool, bool, int flags,
                         Sci::Position *length) {
@@ -3124,10 +3171,70 @@ Sci::Position BuiltinRegex::FindText(Document *doc, Sci::Position minPos, Sci::P
 
 	const bool posix = (flags & SCFIND_POSIX) != 0;
 
+#ifdef REGEX_EXTERN
+	QByteArray cheakStr(s);
+
+	int cheakLineTail = 0;
+	bool isExistTAIL = false;
+	//检查是否存在\\r \\n等字符
+
+	bool isExistCR = false;
+	bool isExistLF = false;
+	bool isNeedCheckTail = false;
+	int lineTail = 0;
+
+	isExistCR = cheakStr.contains("\\r");
+	isExistLF = cheakStr.contains("\\n");
+
+	//lineTail: \r\n 返回5 \n 返回1 \r返回2 其它值错误
+	if (cheakStr.contains("$"))
+	{
+		isExistTAIL = true;
+
+		if (cheakStr.endsWith("$"))
+		{
+			cheakLineTail = 0;
+		}
+		else if (cheakStr.endsWith("$\\r\\n"))
+		{
+			cheakLineTail = 5;
+			cheakStr.remove(cheakStr.size() - 4,4);
+
+			*length -= 4;
+		}
+		else if (cheakStr.endsWith("$\\n"))
+		{
+			cheakLineTail = 1;
+			cheakStr.remove(cheakStr.size() - 2, 2);
+
+			*length -= 2;
+		}
+		else if (cheakStr.endsWith("$\\r"))
+		{
+			cheakLineTail = 2;
+			cheakStr.remove(cheakStr.size() - 2, 2);
+
+			*length -= 2;
+		}
+		else
+		{
+			//不用查找了，肯定是错误。因为目前不能跨越多行进行查找
+			*length = 0;
+			return -1;
+		}
+	}
+
+
+	//这里原本有问题。如果是^$\r\n这种，不能检测到行尾的\r\n。所有对于行尾的\r\n要单独补全这部分逻辑
+	//因为人们习惯的^$是不包含行尾的\r\n，但是实际中又需要进行对\r\n的处理
+	const char *errmsg = search.Compile(cheakStr.data(), *length, caseSensitive, posix);
+#else
 	const char *errmsg = search.Compile(s, *length, caseSensitive, posix);
+#endif
 	if (errmsg) {
 		return -1;
 	}
+
 	// Find a variable in a property file: \$(\([A-Za-z0-9_.]+\))
 	// Replace first '.' with '-' in each property file variable reference:
 	//     Search: \$(\([A-Za-z0-9_-]+\)\.\([A-Za-z0-9_.]+\))
@@ -3140,7 +3247,37 @@ Sci::Position BuiltinRegex::FindText(Document *doc, Sci::Position minPos, Sci::P
 	const bool searchforLineEnd = (searchEnd == '$') && (searchEndPrev != '\\');
 	for (Sci::Line line = resr.lineRangeStart; line != resr.lineRangeBreak; line += resr.increment) {
 		Sci::Position startOfLine = doc->LineStart(line);
+
+#ifdef REGEX_EXTERN
+		//如果存在\r \n等字符，则不能忽略当前行尾的\r\n等字符，否则查询不到。
+		Sci::Position endOfLine = 0;
+		
+		
+		if (!isExistCR && !isExistLF) //不存在\r\n 不需要检查尾部符号
+		{
+			endOfLine = doc->LineEnd(line);
+		}
+		else if (!isExistTAIL && (isExistCR || isExistLF))//不存在$，但是存在\r\n 。要检查尾巴符号
+		{
+			endOfLine = doc->LineStart(line + 1);
+		}
+		else if (isExistTAIL && (isExistCR || isExistLF)) 
+		{
+			//即存在$，也存在\r\n，此时最麻烦。不能检查尾巴，因为$实际在\r\n的后面
+			//这是当前使用的正则库本身存在的机制。需要在对比完成后，手动检查尾巴后面的字符是不是匹配\r \n
+			//lineTail: \r\n 返回5 \n 返回1 \r返回2 其它值错误
+			//Sci_Position SCI_METHOD Document::LineEnd(Sci_Position line, int &lineTail) const {
+			endOfLine = doc->LineEnd(line, lineTail);
+			isNeedCheckTail = true;
+		}
+		else
+		{
+			endOfLine = doc->LineEnd(line);
+		}
+#else
 		Sci::Position endOfLine = doc->LineEnd(line);
+#endif
+
 		if (resr.increment == 1) {
 			if (line == resr.lineRangeStart) {
 				if ((resr.startPos != startOfLine) && searchforLineStart)
@@ -3191,6 +3328,32 @@ Sci::Position BuiltinRegex::FindText(Document *doc, Sci::Position minPos, Sci::P
 			break;
 		}
 	}
+
+#ifdef REGEX_EXTERN
+	//查找到了，但是需要check尾巴后面两个字符
+	if ((pos != -1) && (isNeedCheckTail))
+	{
+	
+			//lineTail: \r\n 返回5 \n 返回1 \r返回2 其它值错误
+		if (cheakLineTail == lineTail)
+		{
+			if(cheakLineTail == 5)
+				lenRet += 2;
+			else if(cheakLineTail == 1 || cheakLineTail == 2)
+				lenRet += 1;
+		}
+		else if ((lineTail == 5) && (cheakLineTail == 2))
+		{
+			//查找\r，但行实际是\r\n，有一个包含关系
+			lenRet += 1;
+		}
+		else
+		{
+			pos = -1;//如果尾巴不匹配，统一算没有找到
+		}
+	}
+#endif
+
 	*length = lenRet;
 	return pos;
 }
@@ -3249,8 +3412,8 @@ const char *BuiltinRegex::SubstituteByPosition(Document *doc, const char *text, 
 
 #ifndef SCI_OWNREGEX
 
-RegexSearchBase *Scintilla::CreateRegexSearch(CharClassify *charClassTable) {
-	return new BuiltinRegex(charClassTable);
-}
+//RegexSearchBase *Scintilla::CreateRegexSearch(CharClassify *charClassTable) {
+//	return createBoostRegexSearch();
+//}
 
 #endif

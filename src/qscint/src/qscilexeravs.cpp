@@ -1,4 +1,4 @@
-// This module implements the QsciLexerAVS class.
+﻿// This module implements the QsciLexerAVS class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -140,7 +140,7 @@ QFont QsciLexerAVS::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerAVS::keywords(int set) const
+const char *QsciLexerAVS::keywords(int set)
 {
     if (set == 1)
         return "true false return global";

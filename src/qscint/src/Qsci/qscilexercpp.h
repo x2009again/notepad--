@@ -1,4 +1,4 @@
-// This defines the interface to the QsciLexerCPP class.
+﻿// This defines the interface to the QsciLexerCPP class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -215,7 +215,7 @@ public:
     //! keywords and identifiers.  Set 3 is normally used for documentation
     //! comment keywords.  Set 4 is normally used for global classes and
     //! typedefs.
-    const char *keywords(int set) const;
+    const char *keywords(int set);
 
     //! Returns the descriptive name for style number \a style.  If the
     //! style is invalid for this language then an empty QString is returned.

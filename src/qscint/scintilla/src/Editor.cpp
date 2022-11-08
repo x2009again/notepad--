@@ -4203,12 +4203,7 @@ void Editor::CopySelectionRange(SelectionText *ss, bool allowLineCopy) {
 				if (pdoc->eolMode != SC_EOL_CR)
 					text.push_back('\n');
 			}
-			//不允许多选.20211121:添加，如果不允许多选，则只拷贝第一个，后续忽略
-			if (!multipleSelection)
-			{
-				break;
 			}
-		}
 		ss->Copy(text, pdoc->dbcsCodePage,
 			vs.styles[STYLE_DEFAULT].characterSet, sel.IsRectangular(), sel.selType == Selection::selLines);
 	}

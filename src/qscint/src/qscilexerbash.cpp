@@ -1,4 +1,4 @@
-// This module implements the QsciLexerBash class.
+﻿// This module implements the QsciLexerBash class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -160,7 +160,7 @@ QFont QsciLexerBash::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerBash::keywords(int set) const
+const char *QsciLexerBash::keywords(int set)
 {
     if (set == 1)
         return

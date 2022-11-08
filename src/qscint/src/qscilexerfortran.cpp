@@ -1,4 +1,4 @@
-// This module implements the QsciLexerFortran class.
+﻿// This module implements the QsciLexerFortran class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -53,7 +53,7 @@ const char *QsciLexerFortran::lexer() const
 
 
 // Returns the set of keywords.
-const char *QsciLexerFortran::keywords(int set) const
+const char *QsciLexerFortran::keywords(int set)
 {
     if (set == 2)
         return

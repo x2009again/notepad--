@@ -342,6 +342,11 @@ public:
 
         //! Reverse the selected lines.
         ReverseLines = QsciScintillaBase::SCI_LINEREVERSE,
+
+		MoveLineUp	= QsciScintillaBase::SCI_MOVESELECTEDLINESUP,
+
+		MovdLineDown = QsciScintillaBase::SCI_MOVESELECTEDLINESDOWN,
+
     };
 
     //! Return the command that will be executed by this instance.

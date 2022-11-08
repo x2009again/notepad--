@@ -1,4 +1,4 @@
-// This module implements the QsciLexerSQL class.
+﻿// This module implements the QsciLexerSQL class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
@@ -180,7 +180,7 @@ QFont QsciLexerSQL::defaultFont(int style) const
 
 
 // Returns the set of keywords.
-const char *QsciLexerSQL::keywords(int set) const
+const char *QsciLexerSQL::keywords(int set)
 {
     if (set == 1)
         return
