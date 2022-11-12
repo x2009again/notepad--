@@ -11,9 +11,8 @@
 
 您可以在这个项目提交bug或反馈问题。
 
-最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.16
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.17
 
-最新开发版下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.17
 
 ### 编译说明：
 
@@ -31,4 +30,6 @@
 
 ![输入图片说明](2.png)
 
-![输入图片说明](https://foruda.gitee.com/images/1662043666536201252/709f7f20_2138353.png)
+![mac白色背景](3.png)
+
+![mac黄色背景](4.png)
