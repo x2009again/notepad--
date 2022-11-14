@@ -117,7 +117,7 @@ HEADERS = \
     ./Qsci/qscilexeredifact.h \
     ./Qsci/qscilexerfortran.h \
     ./Qsci/qscilexerfortran77.h \
-	./Qsci/qscilexergo.h \
+    ./Qsci/qscilexergo.h \
     ./Qsci/qscilexertext.h \
     ./Qsci/qscilexerhtml.h \
     ./Qsci/qscilexeridl.h \
@@ -214,7 +214,8 @@ HEADERS = \
     ../scintilla/src/UniqueString.h \
     ../scintilla/src/ViewStyle.h \
     ../scintilla/src/XPM.h \
-    ../scintilla/boostregex/*.h 
+    ../scintilla/boostregex/AnsiDocumentIterator.h \
+    ../scintilla/boostregex/UTF8DocumentIterator.h
 
 !ios:HEADERS += ./Qsci/qsciprinter.h
 
@@ -243,7 +244,7 @@ SOURCES = \
     qscilexeredifact.cpp \
     qscilexerfortran.cpp \
     qscilexerfortran77.cpp \
-	qscilexergo.cpp \
+    qscilexergo.cpp \
     qscilexertext.cpp \
     qscilexerhtml.cpp \
     qscilexeridl.cpp \
@@ -431,7 +432,9 @@ SOURCES = \
     ../scintilla/src/UniConversion.cpp \
     ../scintilla/src/ViewStyle.cpp \
     ../scintilla/src/XPM.cpp \
-    ../scintilla/boostregex/*.cpp
+    ../scintilla/boostregex/BoostRegExSearch.cpp \
+    ../scintilla/boostregex/UTF8DocumentIterator.cpp
+
     
 INCLUDEPATH += ../scintilla/boostregex
 
