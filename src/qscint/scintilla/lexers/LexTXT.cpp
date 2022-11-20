@@ -31,37 +31,17 @@
 
 using namespace Scintilla;
 
-const char styleSubable[] = { SCE_P_IDENTIFIER, 0 };
+//const char styleSubable[] = { SCE_P_IDENTIFIER, 0 };
 
 //Default = 0,//中文
 //Ascii = 1,//英文
 //Keyword = 2, //关键字，只有以TXT为母版的
 
 LexicalClass lexicalClasses[] = {
-
-#if 1
 	// Lexer Python SCLEX_PYTHON SCE_P_:
 	0, "SCE_TXT_DEFAULT", "default", "utf8 char",
 	1, "SCE_TXT_ASCII", "Ascii", "Ascii",
 	2, "SCE_TXT_KEYWORD", "keyword", "keyword",
-	/*3, "SCE_P_STRING", "literal string", "String",
-	4, "SCE_P_CHARACTER", "literal string", "Single quoted string",
-	5, "SCE_P_WORD", "keyword", "Keyword",
-	6, "SCE_P_TRIPLE", "literal string", "Triple quotes",
-	7, "SCE_P_TRIPLEDOUBLE", "literal string", "Triple double quotes",
-	8, "SCE_P_CLASSNAME", "identifier", "Class name definition",
-	9, "SCE_P_DEFNAME", "identifier", "Function or method name definition",
-	10, "SCE_P_OPERATOR", "operator", "Operators",
-	11, "SCE_P_IDENTIFIER", "identifier", "Identifiers",
-	12, "SCE_P_COMMENTBLOCK", "comment", "Comment-blocks",
-	13, "SCE_P_STRINGEOL", "error literal string", "End of line where string is not closed",
-	14, "SCE_P_WORD2", "identifier", "Highlighted identifiers",
-	15, "SCE_P_DECORATOR", "preprocessor", "Decorators",
-	16, "SCE_P_FSTRING", "literal string interpolated", "F-String",
-	17, "SCE_P_FCHARACTER", "literal string interpolated", "Single quoted f-string",
-	18, "SCE_P_FTRIPLE", "literal string interpolated", "Triple quoted f-string",
-	19, "SCE_P_FTRIPLEDOUBLE", "literal string interpolated", "Triple double quoted f-string",*/
-#endif
 };
 
 enum literalsAllowed { litNone = 0, litU = 1, litB = 2, litF = 4 };
@@ -92,13 +72,13 @@ struct OptionSetTxt : public OptionSet<OptionsTxt> {
 class LexTXT :public DefaultLexer
 {
 	WordList keywords;
-	SubStyles subStyles;
+	//SubStyles subStyles;
 	OptionsTxt options;
 	OptionSetTxt osTxt;
 public:
 	explicit LexTXT() :
-		DefaultLexer(lexicalClasses, ELEMENTS(lexicalClasses)),
-		subStyles(styleSubable, 0x80, 0x40, 0) {
+		DefaultLexer(lexicalClasses, ELEMENTS(lexicalClasses))/*,
+		subStyles(styleSubable, 0x80, 0x40, 0)*/ {
 	}
 	virtual ~LexTXT() {}
 
@@ -133,34 +113,34 @@ public:
 		return SC_LINE_END_TYPE_UNICODE;
 	}
 
-	int SCI_METHOD AllocateSubStyles(int styleBase, int numberStyles) override {
-		return subStyles.Allocate(styleBase, numberStyles);
-	}
-	int SCI_METHOD SubStylesStart(int styleBase) override {
-		return subStyles.Start(styleBase);
-	}
-	int SCI_METHOD SubStylesLength(int styleBase) override {
-		return subStyles.Length(styleBase);
-	}
-	int SCI_METHOD StyleFromSubStyle(int subStyle) override {
-		const int styleBase = subStyles.BaseStyle(subStyle);
-		return styleBase;
-	}
+	//int SCI_METHOD AllocateSubStyles(int styleBase, int numberStyles) override {
+	//	return subStyles.Allocate(styleBase, numberStyles);
+	//}
+	//int SCI_METHOD SubStylesStart(int styleBase) override {
+	//	return subStyles.Start(styleBase);
+	//}
+	//int SCI_METHOD SubStylesLength(int styleBase) override {
+	//	return subStyles.Length(styleBase);
+	//}
+	//int SCI_METHOD StyleFromSubStyle(int subStyle) override {
+	//	const int styleBase = subStyles.BaseStyle(subStyle);
+	//	return styleBase;
+	//}
 	int SCI_METHOD PrimaryStyleFromStyle(int style) override {
 		return style;
 	}
-	void SCI_METHOD FreeSubStyles() override {
-		subStyles.Free();
-	}
-	void SCI_METHOD SetIdentifiers(int style, const char *identifiers) override {
-		subStyles.SetIdentifiers(style, identifiers);
-	}
+	//void SCI_METHOD FreeSubStyles() override {
+	//	subStyles.Free();
+	//}
+	//void SCI_METHOD SetIdentifiers(int style, const char *identifiers) override {
+	//	subStyles.SetIdentifiers(style, identifiers);
+	//}
 	int SCI_METHOD DistanceToSecondaryStyles() override {
 		return 0;
 	}
-	const char *SCI_METHOD GetSubStyleBases() override {
-		return styleSubable;
-	}
+	//const char *SCI_METHOD GetSubStyleBases() override {
+	//	return styleSubable;
+	//}
 
 	static ILexer *LexerFactoryTxt() {
 		return new LexTXT();
@@ -196,15 +176,19 @@ Sci_Position SCI_METHOD LexTXT::WordListSet(int n, const char *wl) {
 
 const int indicatorWhitespace = 1;
 
-inline bool IsAWordChar(int ch, bool unicodeIdentifiers) {
-	if (ch < 0x80)
-		return (isalnum(ch) || ch == '.' || ch == '_');
+//inline bool IsAWordChar(int ch, bool unicodeIdentifiers) {
+//	if (ch < 0x80)
+//		return (isalnum(ch) || ch == '.' || ch == '_');
+//
+//	if (!unicodeIdentifiers)
+//		return false;
+//
+//	// Python uses the XID_Continue set from unicode data
+//	return IsXidContinue(ch);
+//}
 
-	if (!unicodeIdentifiers)
-		return false;
-
-	// Python uses the XID_Continue set from unicode data
-	return IsXidContinue(ch);
+inline bool IsAAsciiChar(int ch) {
+	return (ch < 0x80);
 }
 
 inline bool IsAWordStart(int ch, bool unicodeIdentifiers) {
@@ -224,33 +208,33 @@ void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int ini
 
 	const Sci_Position endPos = startPos + length;
 
-	// Backtrack to previous line in case need to fix its tab whinging
-	Sci_Position lineCurrent = styler.GetLine(startPos);
-	if (startPos > 0) {
-		if (lineCurrent > 0) {
-			lineCurrent--;
-			// Look for backslash-continued lines
-			while (lineCurrent > 0) {
-				Sci_Position eolPos = styler.LineStart(lineCurrent) - 1;
-				const int eolStyle = styler.StyleAt(eolPos);
-				if (eolStyle == SCE_P_STRING
-					|| eolStyle == SCE_P_CHARACTER
-					|| eolStyle == SCE_P_STRINGEOL) {
-					lineCurrent -= 1;
-				}
-				else {
-					break;
-				}
-			}
-			startPos = styler.LineStart(lineCurrent);
-		}
-		initStyle = (startPos == 0 ? SCE_P_DEFAULT : styler.StyleAt(startPos - 1));
-	}
+	//// Backtrack to previous line in case need to fix its tab whinging
+	//Sci_Position lineCurrent = styler.GetLine(startPos);
+	//if (startPos > 0) {
+	//	if (lineCurrent > 0) {
+	//		lineCurrent--;
+	//		// Look for backslash-continued lines
+	//		while (lineCurrent > 0) {
+	//			Sci_Position eolPos = styler.LineStart(lineCurrent) - 1;
+	//			const int eolStyle = styler.StyleAt(eolPos);
+	//			if (eolStyle == SCE_P_STRING
+	//				|| eolStyle == SCE_P_CHARACTER
+	//				|| eolStyle == SCE_P_STRINGEOL) {
+	//				lineCurrent -= 1;
+	//			}
+	//			else {
+	//				break;
+	//			}
+	//		}
+	//		startPos = styler.LineStart(lineCurrent);
+	//	}
+	//	initStyle = (startPos == 0 ? SCE_P_DEFAULT : styler.StyleAt(startPos - 1));
+	//}
 
-	initStyle = initStyle & 31;
-	if (initStyle == SCE_P_STRINGEOL) {
-		initStyle = SCE_P_DEFAULT;
-	}
+	//initStyle = initStyle & 31;
+	//if (initStyle == SCE_P_STRINGEOL) {
+	//	initStyle = SCE_P_DEFAULT;
+	//}
 
 	StyleContext sc(startPos, endPos - startPos, initStyle, styler);
 
@@ -259,16 +243,34 @@ void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int ini
 
 	for (; sc.More();) {
 
-		if (sc.state == SCE_P_IDENTIFIER) {
+		// Check for a new state starting character
+		if (sc.state == SCE_TXT_DEFAULT)
+		{
+			//遇到下一个ASCII字符的时候，进入识别状态
+			if (IsAAsciiChar(sc.ch))
+			{
+				sc.SetState(SCE_TXT_IDENTIFIER);
+				}
+				}
+		else if (sc.state == SCE_TXT_ASCII)
+		{
+			//遇到下一个非ASCII字符的时候，进入识别状态
+			if (!IsAAsciiChar(sc.ch))
+			{
+				sc.SetState(SCE_TXT_IDENTIFIER);
+			}
+		}
+
+		if (sc.state == SCE_TXT_IDENTIFIER) {
 
 			//txt就三种状态、英文、中文、自定义关键字。默认是中文。
 			//遇到非字符和非数字，开始检测单词,是关键字则识别为关键字;若不是关键字，则肯定是英文字符
-			//关键字是英文，不是中文。
-
-			if ((sc.ch == '.') || (!IsAWordChar(sc.ch, false))) {
+	
+			//如果遇到非ASCII字符，则开始检查
+			if (!IsAAsciiChar(sc.ch)) {
 				char s[1000];
 				sc.GetCurrent(s, sizeof(s));
-				int style = SCE_P_IDENTIFIER;
+				int style = SCE_TXT_IDENTIFIER;
 				if (keywords.InList(s)) 
 		{
 					style = SCE_TXT_KEYWORD;
@@ -286,20 +288,20 @@ void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int ini
 		}
 	}
 
-		// Check for a new state starting character
-		if (sc.state == SCE_TXT_DEFAULT)
-	{
-			//遇到下一个英文字符的时候，进入识别状态
-			if (IsAWordStart(sc.ch, false)) 
-	{
-				sc.SetState(SCE_P_IDENTIFIER);
-	}
-		}
 		sc.Forward();
 	}
 	
-	//这里看起来最后一段中文，会识别不出来。因为上面的循环不能识别最后一段是中文的情况。
-	//不过中文本来默认就是0，就算识别不到，本来就是默认的值。所有是没有问题的。
+	//最后一段不能遗漏，也需要识别
+	if (IsAAsciiChar(sc.ch))
+	{
+		sc.ChangeState(SCE_TXT_ASCII);
+	}
+	else
+	{
+		sc.ChangeState(SCE_TXT_DEFAULT);
+	}
+
+	sc.SetState(SCE_TXT_DEFAULT);
 
 	styler.IndicatorFill(startIndicator, sc.currentPos, indicatorWhitespace, 0);
 	sc.Complete();

@@ -64,7 +64,9 @@ public:
 	void removeLineHeadEndBlank(int mode);
 	static void showCallTip(QsciScintilla * pEdit, int pos);
 	void removeEmptyLine(bool isBlankContained);
-	
+	void findNext();
+	void findPrev();
+	void setFindBackward(bool isBackward);
 
 protected:
 	
@@ -98,11 +100,17 @@ private:
 
 	void dealWithZeroFoundShowTip(QsciScintilla * pEdit, bool isShowTip=true);
 
+	void dofindNext();
+
 	bool replaceFindNext(QsciScintilla* pEdit, bool showZeroFindTip);
 
 	bool replace(ScintillaEditView* pEdit);
+
 private slots:
 	void slot_findNext();
+
+
+	void slot_findPrev();
 
 	void slot_findCount();
 
@@ -179,4 +187,6 @@ private:
 	QWidget* m_curEditWin;
 
 	bool m_isStatic;//是否静默处理，不弹确认对话框
+
+	bool m_isReverseFind; //是否反向查找。只有在查找前一个时才生效true 下一个必须是false
 };

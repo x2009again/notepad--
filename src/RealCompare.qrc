@@ -152,5 +152,6 @@
         <file>mac.icns</file>
         <file>Resources/img/register.png</file>
         <file>notepad/rightClose.png</file>
+        <file>Resources/img/bookmark.png</file>
     </qresource>
 </RCC>

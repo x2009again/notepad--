@@ -1,6 +1,16 @@
 #pragma once
 #include <QColor>
 
+enum StyleId {
+	DEFAULT_SE,
+	LIGHT_SE,
+	THIN_BLUE_SE,
+	THIN_YELLOW_SE,
+	RICE_YELLOW_SE,
+	SILVER_SE,
+	LAVENDER_SE,
+	MISTYROSE_SE
+};
 class StyleSet 
 {
 public:
@@ -11,19 +21,17 @@ public:
 
 	static void setSkin(int id);
 
-	static void setDefaultStyle();
-	static void setLightStyle();
-
-	static void setThinBlueStyle();
-	static void setThinYellowStyle();
-	static void setRiceYellowStyle();
-
-	static void setSilverStyle();
-
-	static void setLavenderBlushStyle();
-	static void setMistyRoseStyle();
-
 	static QColor foldfgColor;
 	static QColor foldbgColor;
 	static QColor marginsBackgroundColor;
+	static QColor bookmarkBkColor;
+	static int m_curStyleId;
+	static void setDefaultStyle();
+	static void setLightStyle();
+	static void setThinBlueStyle();
+	static void setThinYellowStyle();
+	static void setRiceYellowStyle();
+	static void setSilverStyle();
+	static void setLavenderBlushStyle();
+	static void setMistyRoseStyle();
 };

@@ -9,6 +9,9 @@
 #include <QtGlobal>
 #include <qscilexer.h>
 
+FileManager::FileManager():m_lastErrorCode(NONE_ERROR)
+{
+}
 
 FileManager::~FileManager()
 {
@@ -220,6 +223,14 @@ int FileManager::loadFileDataInText(ScintillaEditView* editView, QString filePat
 
 	qint64 fileSize = file.size();
 
+	//如果文件是空的。检查一下，有可能在临时文件损坏情况下出现，外面需要使用
+	if (fileSize == 0)
+	{
+		m_lastErrorCode = ERROR_TYPE::OPEN_EMPTY_FILE;
+		file.close();
+		return 0;
+	}
+
 	qint64 bufferSizeRequested = fileSize + qMin((qint64)(1 << 20), (qint64)(fileSize / 6));
 
 	// As a 32bit application, we cannot allocate 2 buffer of more than INT_MAX size (it takes the whole address space)
@@ -237,6 +248,14 @@ int FileManager::loadFileDataInText(ScintillaEditView* editView, QString filePat
 	bool isHexFile = false;
 
 	fileTextCode = CmpareMode::scanFileOutPut(fileTextCode,filePath, outputLineInfoVec, maxLineSize, charsNums, isHexFile);
+
+	//如果文件是空的。检查一下，有可能在临时文件损坏情况下出现，外面需要使用
+	if (charsNums == 0)
+	{
+		m_lastErrorCode = ERROR_TYPE::OPEN_EMPTY_FILE;
+		file.close();
+		return 0;
+	}
 
 	if (isHexFile && hexAsk)
 	{
@@ -283,6 +302,8 @@ int FileManager::loadFileDataInText(ScintillaEditView* editView, QString filePat
 		lineEnd = UNIX_LINE;
 #endif
 	}
+
+
 	QString text;
 	text.reserve(charsNums + 1);
 

@@ -36,7 +36,7 @@ QFont QsciLexer::s_defaultLangFont("Courier New", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
 QFont QsciLexer::s_defaultLangFont("Menlo", s_defaultFontSize);
 #else
-QFont QsciLexer::s_defaultLangFont("Bitstream Vera Sans", 9);
+QFont QsciLexer::s_defaultLangFont("Courier 10 Pitch", 14);
 #endif
 
 // The ctor.

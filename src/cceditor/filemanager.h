@@ -10,6 +10,11 @@
 class ScintillaEditView;
 class ScintillaHexEditView;
 
+enum ERROR_TYPE {
+	NONE_ERROR=-1,
+	OPEN_EMPTY_FILE=0,
+};
+
 struct NewFileIdMgr {
 	int index;
 	ScintillaEditView* editView;
@@ -131,8 +136,18 @@ public:
 		return instance;
 	};
 
+	ERROR_TYPE getLastErrorCode()
+	{
+		return m_lastErrorCode;
+	}
+
+	void resetLastErrorCode()
+	{
+		m_lastErrorCode = NONE_ERROR;
+	}
+
 private:
-	FileManager() = default;
+	FileManager();
 	~FileManager();
 
 	FileManager(const FileManager&) = delete;
@@ -143,5 +158,7 @@ private:
 	QMap<QString, HexFileMgr*> m_hexFileMgr;
 
 	QMap<QString, TextFileMgr*> m_bigTxtFileMgr;
+
+	ERROR_TYPE m_lastErrorCode;
 };
 

@@ -10,7 +10,7 @@ QFont QsciLexerText::s_defaultTxtFont(u8"宋体", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
     QFont QsciLexerText::s_defaultTxtFont("STSong",18);
 #else
-        QFont QsciLexerText::s_defaultTxtFont(u8"CESI宋体-GB2312",12);
+    QFont QsciLexerText::s_defaultTxtFont("Courier 10 Pitch", 14);
 #endif
 
 
@@ -72,7 +72,7 @@ QFont QsciLexerText::defaultFont(int style) const
 	{
 	case Default:
 #if defined(Q_OS_WIN)
-		return s_defaultTxtFont; // QFont("Microsoft YaHei", QsciLexer::s_defaultFontSize);
+		return s_defaultTxtFont; 
 #elif defined(Q_OS_MAC)
 		//return QFont("Courier", 12);
 		return s_defaultTxtFont;

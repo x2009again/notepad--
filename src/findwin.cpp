@@ -13,7 +13,7 @@
 #include <QDebug>
 
 FindWin::FindWin(QWidget *parent):QMainWindow(parent), m_editTabWidget(nullptr), m_isFindFirst(true), m_findHistory(nullptr), \
-	pEditTemp(nullptr), m_curEditWin(nullptr), m_isStatic(false)
+	pEditTemp(nullptr), m_curEditWin(nullptr), m_isStatic(false), m_isReverseFind(false)
 {
 	ui.setupUi(this);
 
@@ -476,7 +476,11 @@ void FindWin::updateParameterFromUI()
 		m_isFindFirst = true;
 	}
 
+	//本来的m_BackwardDir只控制是否勾选反向
 	m_forward = !m_BackwardDir;
+
+	//m_isReverseFind 控制是否还需要反向一直，只在查找前一个生效
+	m_forward = (m_isReverseFind ? !m_forward : m_forward);
 }
 
 void FindWin::addFindHistory(QString &text)
@@ -682,6 +686,16 @@ void FindWin::removeEmptyLine(bool isBlankContained)
 	}
 }
 
+void FindWin::findNext()
+{
+	slot_findNext();
+}
+
+void FindWin::findPrev()
+{
+	slot_findPrev();
+}
+
 /*处理查找时零长的问题。一定要处理，否则会死循环，因为每次都在原地查找。
 * 就是把下次查找的startpos往前一个，否则每次都从这个startpos找到自己
 */
@@ -721,9 +735,7 @@ void FindWin::dealWithZeroFoundShowTip(QsciScintilla* pEdit, bool isShowTip)
 	}
 }
 
-
-//一旦修改条件发生变化，则认定为第一次查找
-void FindWin::slot_findNext()
+void FindWin::dofindNext()
 {
 	if (ui.findComboBox->currentText().isEmpty())
 	{
@@ -755,9 +767,9 @@ void FindWin::slot_findNext()
 				whatFind = extendFind;
 			}
 
-			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, m_wrap, m_forward, FINDNEXTTYPE_FINDNEXT, -1,-1,true,false,false))
+			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, m_wrap, m_forward, FINDNEXTTYPE_FINDNEXT, -1, -1, true, false, false))
 			{
-				ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr),8000);
+				ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
 				QApplication::beep();
 				m_isFindFirst = true;
 			}
@@ -775,7 +787,7 @@ void FindWin::slot_findNext()
 		{
 			if (!pEdit->findNext())
 			{
-				ui.statusbar->showMessage(tr("no more find text \'%1\'").arg(m_expr),8000);
+				ui.statusbar->showMessage(tr("no more find text \'%1\'").arg(m_expr), 8000);
 				m_isFindFirst = true;
 				QApplication::beep();
 			}
@@ -786,6 +798,37 @@ void FindWin::slot_findNext()
 		}
 	}
 }
+
+//一旦修改条件发生变化，则认定为第一次查找
+void FindWin::slot_findNext()
+{
+	if (m_isReverseFind)
+	{
+		m_isReverseFind = false;
+		m_isFindFirst = true;
+	}
+
+	dofindNext();
+}
+
+void FindWin::setFindBackward(bool isBackward)
+{
+	if (ui.findBackwardBox->isChecked() != isBackward)
+	{
+		ui.findBackwardBox->setChecked(isBackward);
+	}
+}
+
+void FindWin::slot_findPrev()
+{
+	if (!m_isReverseFind)
+	{
+		m_isReverseFind = true;
+		m_isFindFirst = true;
+	}
+	dofindNext();
+}
+
 
 //查找计数
 void FindWin::slot_findCount()
@@ -2152,3 +2195,4 @@ void FindWin::slot_dirReplaceAll()
 	m_isFindFirst = true;
 	ui.statusbar->showMessage(tr("replace finished, total %1 replace in %2 file!").arg(replaceNums).arg(filesNum), 10000);
 }
+

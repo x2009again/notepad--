@@ -2,7 +2,7 @@
 #include "filemanager.h"
 #include "Encode.h"
 #include "findwin.h"
-#include "jsondeploy.h"
+#include "nddsetting.h"
 #include "findresultwin.h"
 #include "scintillaeditview.h"
 #include "scintillahexeditview.h"
@@ -18,6 +18,7 @@
 #include "columnedit.h"
 #include "langstyledefine.h"
 #include "extlexermanager.h"
+#include "aboutndd.h"
 
 
 #include <QFileDialog>
@@ -37,6 +38,7 @@
 #include <QSharedMemory>
 #include <QMimeDatabase>
 #include <QDateTime>
+#include <QShortcut>
 #include "Sorters.h"
 
 #ifdef Q_OS_WIN
@@ -61,8 +63,10 @@ inline std::wstring StringToWString(const std::string& str)
 
 
 int CCNotePad::s_padTimes = 0;
+int CCNotePad::s_zoomValue = 0;
 
 QString CCNotePad::s_lastOpenDirPath = "";
+
 
 //QFont CCNotePad::s_txtFont;
 //QFont CCNotePad::s_proLangFont;
@@ -369,6 +373,7 @@ FileExtLexer s_fileExtMapLexerId[FileExtMapLexerIdLen] = {
 {QString("sql"), L_SQL},
 {QString("yml"), L_YAML},
 {QString("nsi"), L_NSIS},
+{QString("v"), L_VERILOG},
 {QString("NULL"), L_EXTERNAL},
 };
 
@@ -951,11 +956,11 @@ CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
     setWindowIcon(QIcon(":/mac.icns"));
 #endif
 
-	JsonDeploy::init();
+	NddSetting::init();
 
 	m_translator = new QTranslator(this);
 
-		m_curSoftLangs = JsonDeploy::getKeyValueFromNumSets(LANGS_KEY);
+		m_curSoftLangs = NddSetting::getKeyValueFromNumSets(LANGS_KEY);
 
 		switch (m_curSoftLangs)
 		{
@@ -1036,6 +1041,7 @@ CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
 
 	connect(ui.editTabWidget,&QTabWidget::currentChanged,this,&CCNotePad::slot_tabCurrentChanged);
 	connect(ui.editTabWidget, &QTabWidget::tabBarClicked, this, &CCNotePad::slot_tabBarClicked);
+	ui.editTabWidget->installEventFilter(this);
 
 	m_fileWatch = new QFileSystemWatcher(this);
 	connect(m_fileWatch,&QFileSystemWatcher::fileChanged,this, &CCNotePad::slot_fileChange);
@@ -1046,23 +1052,17 @@ CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
 	{
 		initNotePadSqlOptions();
 	}
-	QString initSize = JsonDeploy::getKeyValueFromSets(RESTORE_SIZE);
 
-	m_initWidth = 1585;
-	m_initHeight = 789;
+	slot_loadBookMarkMenu();
 
-	if (!initSize.isEmpty())
+	QByteArray lastGeo = NddSetting::getKeyByteArrayValue(WIN_POS);
+
+	if (!lastGeo.isEmpty())
 	{
-		QStringList size = initSize.split(":");
-		if (size.size() == 2)
-		{
-			m_initWidth = size.at(0).toInt();
-			m_initHeight = size.at(1).toInt();
+		restoreGeometry(lastGeo);
 	}
+
 	}
-	
-	this->resize(m_initWidth, m_initHeight);
-}
 
 CCNotePad::~CCNotePad()
 {
@@ -1073,7 +1073,7 @@ CCNotePad::~CCNotePad()
 		saveNotePadSqlOptions();
 		savePadUseTimes();
 	}
-	JsonDeploy::close();
+	NddSetting::close();
 }
 
 #ifdef Q_OS_WIN
@@ -1090,6 +1090,110 @@ void CCNotePad::checkAppFont()
 	}
 }
 #endif
+
+enum BookMarkActId {
+	SET_REMOVE=1,
+	NEXT_MARK,
+	PREV_MARK,
+	CLEAR_MARK,
+	CUT_MARK_LINE,
+	COPY_MARK_LINE,
+	PASTE_MARK_LINE,
+	DELETE_MARK_LINE,
+	DELETE_UNMARK,
+	CLIP_MARK,
+};
+void CCNotePad::slot_bookMarkAction()
+{
+	QAction* pAct = dynamic_cast<QAction*>(sender());
+	if (pAct != nullptr)
+	{
+		QWidget* pw = ui.editTabWidget->currentWidget();
+		ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+		if (pEdit == nullptr)
+		{
+			return;
+		}
+
+		BookMarkActId id = (BookMarkActId)pAct->data().toInt();
+		switch (id)
+		{
+		case SET_REMOVE:
+			pEdit->bookmarkToggle(-1);
+			break;
+		case NEXT_MARK:
+			pEdit->bookmarkNext(true);
+			break;
+		case PREV_MARK:
+			pEdit->bookmarkNext(false);
+			break;
+		case CLEAR_MARK:
+			pEdit->bookmarkClearAll();
+			break;
+		case CUT_MARK_LINE:
+			pEdit->cutMarkedLines();
+			break;
+		case COPY_MARK_LINE:
+			pEdit->copyMarkedLines();
+			break;
+		case PASTE_MARK_LINE:
+			pEdit->pasteToMarkedLines();
+			break;
+		case DELETE_MARK_LINE:
+			pEdit->deleteMarkedLines(true);
+			break;
+		case DELETE_UNMARK:
+			pEdit->deleteMarkedLines(false);
+			break;
+		case CLIP_MARK:
+			pEdit->inverseMarks();
+			break;
+		default:
+			break;
+		}
+	}
+}
+//动态加载书签的菜单项
+void CCNotePad::slot_loadBookMarkMenu()
+{
+	static bool isInitBookMarkAct = false;
+
+	if (!isInitBookMarkAct)
+	{
+		isInitBookMarkAct = true;
+
+		QAction* pAct = nullptr;
+		pAct = ui.menuBook_Mark->addAction(tr("Set/Remove BookMark"), this, &CCNotePad::slot_bookMarkAction, QKeySequence("Ctrl+F2"));
+		pAct->setData(SET_REMOVE);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Next BookMark"), this, &CCNotePad::slot_bookMarkAction, QKeySequence("F2"));
+		pAct->setData(NEXT_MARK);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Prev BookMark"), this, &CCNotePad::slot_bookMarkAction, QKeySequence("Shift+F2"));
+		pAct->setData(PREV_MARK);
+
+		pAct = ui.menuBook_Mark->addAction(tr("ClearAll BookMark"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(CLEAR_MARK);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Cut BookMark Lines"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(CUT_MARK_LINE);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Copy BookMark Lines"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(COPY_MARK_LINE);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Paste BookMark Lines"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(PASTE_MARK_LINE);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Delete BookMark Lines"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(DELETE_MARK_LINE);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Delete UnBookMark Lines"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(DELETE_UNMARK);
+
+		pAct = ui.menuBook_Mark->addAction(tr("Clip BookMark"), this, &CCNotePad::slot_bookMarkAction);
+		pAct->setData(CLIP_MARK);
+	}
+}
 
 void CCNotePad::syncCurSkinToMenu(int id)
 {
@@ -1135,7 +1239,7 @@ void CCNotePad::slot_changeChinese()
 		if (m_curSoftLangs != 1)
 		{
 			m_curSoftLangs = 1;
-			JsonDeploy::updataKeyValueFromNumSets(LANGS_KEY, m_curSoftLangs);
+			NddSetting::updataKeyValueFromNumSets(LANGS_KEY, m_curSoftLangs);
 	}
 }
 }
@@ -1159,7 +1263,7 @@ void CCNotePad::slot_changeEnglish()
 	if (m_curSoftLangs != 2)
 	{
 		m_curSoftLangs = 2;
-		JsonDeploy::updataKeyValueFromNumSets(LANGS_KEY, m_curSoftLangs);
+		NddSetting::updataKeyValueFromNumSets(LANGS_KEY, m_curSoftLangs);
 }
 }
 #if 0
@@ -1168,13 +1272,13 @@ void CCNotePad::saveDefFont()
 	if (s_txtFont.toString() != m_txtFontStr)
 	{
 		QString newFont = s_txtFont.toString();
-		JsonDeploy::updataKeyValueFromSets(TXT_FONT, newFont);
+		NddSetting::updataKeyValueFromSets(TXT_FONT, newFont);
 	}
 
 	if (s_proLangFont.toString() != m_proLangFontStr)
 	{
 		QString newFont = s_proLangFont.toString();
-		JsonDeploy::updataKeyValueFromSets(PRO_LANG_FONT, newFont);
+		NddSetting::updataKeyValueFromSets(PRO_LANG_FONT, newFont);
 }
 }
 #endif
@@ -1183,9 +1287,9 @@ void CCNotePad::savePadUseTimes()
 {
 	QString key("padtimes");
 
-	int times = JsonDeploy::getKeyValueFromNumSets(key);
+	int times = NddSetting::getKeyValueFromNumSets(key);
 
-	JsonDeploy::updataKeyValueFromNumSets(key, s_padTimes + times);
+	NddSetting::updataKeyValueFromNumSets(key, s_padTimes + times);
 }
 
 void CCNotePad::slot_searchResultShow()
@@ -1199,32 +1303,32 @@ void CCNotePad::initNotePadSqlOptions()
 {
 	//tab的长度，默认为4
 	QString key("tablens");
-	ScintillaEditView::s_tabLens = JsonDeploy::getKeyValueFromNumSets(key);
+	ScintillaEditView::s_tabLens = NddSetting::getKeyValueFromNumSets(key);
 
 	//space replace tab空格替换tab，默认1
 	QString key1("tabnouse");
-	ScintillaEditView::s_noUseTab = (1 == JsonDeploy::getKeyValueFromNumSets(key1)) ? true : false;
+	ScintillaEditView::s_noUseTab = (1 == NddSetting::getKeyValueFromNumSets(key1)) ? true : false;
 
-	ScintillaEditView::s_bigTextSize = JsonDeploy::getKeyValueFromNumSets(MAX_BIG_TEXT);
+	ScintillaEditView::s_bigTextSize = NddSetting::getKeyValueFromNumSets(MAX_BIG_TEXT);
 	if (ScintillaEditView::s_bigTextSize < 50 || ScintillaEditView::s_bigTextSize > 300)
 	{
 		ScintillaEditView::s_bigTextSize = 100;
 }
 
-	s_restoreLastFile = JsonDeploy::getKeyValueFromNumSets(RESTORE_CLOSE_FILE);
+	s_restoreLastFile = NddSetting::getKeyValueFromNumSets(RESTORE_CLOSE_FILE);
 }
 //保存Sql的全局配置
 void CCNotePad::saveNotePadSqlOptions()
 {
 	QString key("tablens");
-	JsonDeploy::updataKeyValueFromNumSets(key, ScintillaEditView::s_tabLens);
+	NddSetting::updataKeyValueFromNumSets(key, ScintillaEditView::s_tabLens);
 
 	QString key1("tabnouse");
-	JsonDeploy::updataKeyValueFromNumSets(key1, ScintillaEditView::s_noUseTab?1:0);
+	NddSetting::updataKeyValueFromNumSets(key1, ScintillaEditView::s_noUseTab?1:0);
 
-	JsonDeploy::updataKeyValueFromNumSets(MAX_BIG_TEXT, ScintillaEditView::s_bigTextSize);
+	NddSetting::updataKeyValueFromNumSets(MAX_BIG_TEXT, ScintillaEditView::s_bigTextSize);
 
-	JsonDeploy::updataKeyValueFromNumSets(RESTORE_CLOSE_FILE, CCNotePad::s_restoreLastFile);
+	NddSetting::updataKeyValueFromNumSets(RESTORE_CLOSE_FILE, CCNotePad::s_restoreLastFile);
 }
 
 //设置程序为文件右键的关联项目
@@ -1282,6 +1386,14 @@ void CCNotePad::slot_fileChange(QString filePath)
 			}
 		}
 
+	}
+}
+
+void CCNotePad::slot_tabBarDoubleClicked(int index)
+{
+	if (-1 == index)
+	{
+		initTabNewOne();
 	}
 }
 
@@ -1376,6 +1488,11 @@ void  CCNotePad::slot_tabBarClicked(int index)
 		m_tabRightClickMenu->move(cursor().pos());
 		m_tabRightClickMenu->show();
 	}
+	else if (Qt::MiddleButton == QGuiApplication::mouseButtons())
+	{
+		//关闭当前文件
+		slot_tabClose(index);
+}
 
 }
 
@@ -1616,13 +1733,34 @@ void CCNotePad::slot_tabCurrentChanged(int index)
 
 void CCNotePad::initToolBar()
 {
-	const int ICON_SIZE = 24;
-
-	s_autoWarp = JsonDeploy::getKeyValueFromNumSets(AUTOWARP_KEY);
-	ui.actionWrap->setChecked((s_autoWarp == 1));
+	int iconIndex = NddSetting::getKeyValueFromNumSets(ICON_SIZE);
 	
+	int ICON_SIZE = 24;
 
-	s_indent = JsonDeploy::getKeyValueFromNumSets(INDENT_KEY);
+	if (iconIndex == 0)
+	{
+		ui.action24->setChecked(true);
+	}
+	else if (iconIndex == 1)
+	{
+		ICON_SIZE = 36;
+		ui.action36->setChecked(true);
+	}
+	else if (iconIndex == 2)
+	{
+		ICON_SIZE = 48;
+		ui.action48->setChecked(true);
+	}
+
+	s_autoWarp = NddSetting::getKeyValueFromNumSets(AUTOWARP_KEY);
+	s_zoomValue = NddSetting::getKeyValueFromNumSets(ZOOMVALUE);
+	if (s_zoomValue > 10 || s_zoomValue < -5)
+	{
+		s_zoomValue = 0;
+		NddSetting::updataKeyValueFromNumSets(ZOOMVALUE, s_zoomValue);
+	}
+
+	s_indent = NddSetting::getKeyValueFromNumSets(INDENT_KEY);
 
 	QToolButton* newFile = new QToolButton(ui.mainToolBar);
 	connect(newFile, &QAbstractButton::clicked, this, &CCNotePad::slot_actionNewFile_toggle);
@@ -1861,6 +1999,7 @@ void CCNotePad::initToolBar()
 	m_pEncodeActGroup->addAction(ui.actionencode_in_UTF8_BOM);
 	m_pEncodeActGroup->addAction(ui.actionencode_in_UCS_BE_BOM);
 	m_pEncodeActGroup->addAction(ui.actionencode_in_UCS_2_LE_BOM);
+	m_pEncodeActGroup->addAction(ui.actionBig5);
 	m_pEncodeActGroup->setExclusive(true);
 
 	m_pLineEndActGroup = new QActionGroup(this);
@@ -1868,6 +2007,14 @@ void CCNotePad::initToolBar()
 	m_pLineEndActGroup->addAction(ui.actionconvert_Unix_LF);
 	m_pLineEndActGroup->addAction(ui.actionconvert_Mac_CR);
 	m_pEncodeActGroup->setExclusive(true);
+
+	m_pIconSize = new QActionGroup(this);
+	m_pIconSize->addAction(ui.action24);
+	m_pIconSize->addAction(ui.action36);
+	m_pIconSize->addAction(ui.action48);
+	m_pIconSize->setExclusive(true);
+	connect(m_pIconSize, &QActionGroup::triggered, this, &CCNotePad::slot_changeIconSize, Qt::QueuedConnection);
+
 
 	m_pLexerActGroup = new QActionGroup(this);
 	m_pLexerActGroup->addAction(ui.actionAVS);
@@ -1987,7 +2134,7 @@ void CCNotePad::initToolBar()
 }
 
 
-void CCNotePad::slot_skinStyleGroup(QAction * /*action*/)
+void CCNotePad::slot_skinStyleGroup(QAction* /*action*/)
 {
 	for (int i = ui.editTabWidget->count() - 1; i >= 0; --i)
 	{
@@ -1999,7 +2146,43 @@ void CCNotePad::slot_skinStyleGroup(QAction * /*action*/)
 			autoSetDocLexer(pEdit);
 		}
 	}
-	//ui.statusBar->showMessage(tr("The window background that has been opened will take effect after it is reopened."),10000);
+}
+
+void CCNotePad::slot_changeIconSize(QAction *action)
+{
+	int size = 24;
+	if (action == ui.action24)
+	{
+		size = 24;
+
+		NddSetting::updataKeyValueFromNumSets(ICON_SIZE,0);
+		ui.action24->setChecked(true);
+	}
+	else if (action == ui.action36)
+	{
+		size = 36;
+		NddSetting::updataKeyValueFromNumSets(ICON_SIZE, 1);
+		ui.action36->setChecked(true);
+	}
+	else if (action == ui.action48)
+	{
+		size = 48;
+		NddSetting::updataKeyValueFromNumSets(ICON_SIZE, 2);
+		ui.action48->setChecked(true);
+	}
+
+	const QObjectList & childs = ui.mainToolBar->children();
+
+	QToolButton* toolBt = nullptr;
+
+	for (int i = 0; i < childs.size(); ++i)
+	{
+		toolBt = dynamic_cast<QToolButton*>(childs.at(i));
+		if (toolBt != nullptr)
+		{
+			toolBt->setFixedSize(size, size);
+		}
+	}
 }
 
 void CCNotePad::setTxtLexer(ScintillaEditView* pEdit)
@@ -2053,7 +2236,7 @@ void CCNotePad::slot_lexerActTrig(QAction *action)
 			delete curLexer;
 		}
 
-		QsciLexer * lexer = ScintillaEditView::createLexer(lexerId);
+		QsciLexer * lexer = ScintillaEditView::createLexer(lexerId,"");
 		if (lexer != nullptr)
 		{
 			pEdit->setLexer(lexer);
@@ -2073,7 +2256,7 @@ void CCNotePad::saveReceneOpenFile()
 
 	const int maxRecord = 15;
 
-	if (JsonDeploy::isDbExist())
+	if (NddSetting::isDbExist())
 	{
 		QStringList fileText;
 
@@ -2093,7 +2276,7 @@ void CCNotePad::saveReceneOpenFile()
 		if (!fileText.isEmpty())
 		{
 			QString fileSaveText = fileText.join('|');
-			JsonDeploy::updataKeyValueFromLongSets(rFile, fileSaveText);
+			NddSetting::updataKeyValueFromSets(rFile, fileSaveText);
 		}
 	}
 }
@@ -2103,9 +2286,9 @@ void CCNotePad::initReceneOpenFileMenu()
 {
 	QString rFile("recentopenfile");
 
-	if (JsonDeploy::isDbExist())
+	if (NddSetting::isDbExist())
 	{
-		QString fileStr = JsonDeploy::getKeyValueFromLongSets(rFile);
+		QString fileStr = NddSetting::getKeyValueFromSets(rFile);
 
 		QStringList fileList = fileStr.split('|');
 
@@ -2173,6 +2356,10 @@ void  CCNotePad::setCodeBarLabel(CODE_ID code)
 	{
 		codeStr = tr("GB18030(Simplified Chinese)");
 	}
+	else if(codeStr == "BIG5-HKSCS")
+	{
+		codeStr = tr("Big5(Traditional Chinese)");
+	}
 	m_codeStatusLabel->setText(codeStr);
 }
 
@@ -2222,7 +2409,7 @@ bool CCNotePad::checkRoladFile(ScintillaEditView* pEdit)
 //这个函数是在paint中调用，所以不要直连，否则调用QMessagebox后崩溃
 void  CCNotePad::slot_LineNumIndexChange(int line, int index)
 {
-	QString lineNums = tr("Ln: %1	Col: %2").arg(line).arg(index);
+	QString lineNums = tr("Ln: %1	Col: %2").arg(line+1).arg(index);
 	m_lineNumLabel->setText(lineNums);
 
 	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(sender());
@@ -2325,9 +2512,8 @@ void CCNotePad::setSaveAllButtonStatus(bool needSave)
 	}*/
 	}
 
-//点击tab上的关闭事件执行槽函数。注意这个index是其在tab中的序号。
-//当中间有删除时，是会动态变化的。所以不能以这个id为一起的固定索引
-void CCNotePad::slot_tabClose(int index)
+//isInQuit::是否在主程序退出状态
+void CCNotePad::tabClose(int index, bool isInQuit)
 {
 	QWidget* pw = ui.editTabWidget->widget(index);
 	QString filePath = pw->property(Edit_View_FilePath).toString();
@@ -2341,8 +2527,12 @@ void CCNotePad::slot_tabClose(int index)
 		pw->deleteLater();
 
 		FileManager::getInstance().closeHexFileHand(filePath);
-		//关闭文件后，不要随意打开一个新的页面
+
+		//关闭文件后，打开一个新的页面
+		if (!isInQuit)
+		{
 		initTabNewOne();
+		}
 
 		return;
 	}
@@ -2352,19 +2542,21 @@ void CCNotePad::slot_tabClose(int index)
 		pw->deleteLater();
 
 		FileManager::getInstance().closeBigTextFileHand(filePath);
-		//关闭文件后，不要随意打开一个新的页面
+		if (!isInQuit)
+		{
 		initTabNewOne();
-
+		}
 		return;
 	}
 
 	//关闭之前，检查是否要保存。如果文档为脏，则询问是否要保存
 	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
-	if ((pEdit != nullptr)&&(pEdit->property(Edit_Text_Change).toBool()))
+	if ((pEdit != nullptr) && (pEdit->property(Edit_Text_Change).toBool()))
 	{
 		QApplication::beep();
-		int ret = QMessageBox::question(this, tr("Save File?"), tr("if save file %1 ?").arg(filePath), tr("Yes"), tr("No"), tr("Cancel"));
 
+		int ret = QMessageBox::question(this, tr("Save File?"), tr("if save file %1 ?").arg(filePath), tr("Yes"), tr("No"), tr("Cancel"));
+	
 		//保存
 		if (ret == 0)
 		{
@@ -2432,7 +2624,7 @@ void CCNotePad::slot_tabClose(int index)
 		}
 
 		m_receneOpenFileList.push_front(filePath);
-		m_receneOpenFile.insert(filePath,topRecentFile);
+		m_receneOpenFile.insert(filePath, topRecentFile);
 
 		//不能无限制变大，及时删除一部分
 		if (m_receneOpenFileList.size() > 15)
@@ -2443,7 +2635,7 @@ void CCNotePad::slot_tabClose(int index)
 				delete m_receneOpenFile.value(k);
 				m_receneOpenFile.remove(k);
 			}
-		
+
 		}
 	}
 
@@ -2465,8 +2657,16 @@ void CCNotePad::slot_tabClose(int index)
 
 	updateCurTabSaveStatus();
 
-	//关闭文件后，不要随意打开一个新的页面
+	if (!isInQuit)
+	{
 	initTabNewOne();
+}
+}
+//点击tab上的关闭事件执行槽函数。注意这个index是其在tab中的序号。
+//当中间有删除时，是会动态变化的。所以不能以这个id为一起的固定索引
+void CCNotePad::slot_tabClose(int index)
+{
+	tabClose(index);
 }
 
 //输入参数：名称和文件新建文件序号。一定是文本文件。contentPath：从这个路径加载文件内容，目前在恢复文件中使用。
@@ -2547,7 +2747,20 @@ ScintillaEditView* CCNotePad::newTxtFile(QString name, int index, QString conten
 
 	ui.editTabWidget->setCurrentIndex(curIndex);
 
+	//设置自动转换和缩进参考线
+	if (s_autoWarp == 1)
+	{
+		pEdit->setWrapMode(QsciScintilla::WrapWord);
+	}
+
+	if (s_zoomValue != 0)
+	{
+		pEdit->zoomTo(s_zoomValue);
+	}
+
 	autoSetDocLexer(pEdit);
+
+	ui.statusBar->showMessage(tr("New File Finished [Text Mode] Zoom %1%").arg(100 + 10 * s_zoomValue), 8000);
 
 	return pEdit;
 }
@@ -2570,7 +2783,7 @@ QString CCNotePad::getShortName(const QString& name)
 	return name;
 }
 
-//重新加载文件以指定的编码方式
+//重新加载文件以指定的编码方式。单纯的修改编码，不视作文件做了修改。
 bool CCNotePad::reloadTextFileWithCode(CODE_ID code)
 {
 	QWidget* pw = ui.editTabWidget->currentWidget();
@@ -2591,6 +2804,8 @@ bool CCNotePad::reloadTextFileWithCode(CODE_ID code)
 
 		RC_LINE_FORM lineEnd;
 
+		disEnableEditTextChangeSign(pEdit);
+
 		pEdit->clear();
 
 		int errCode = FileManager::getInstance().loadFileDataInText(pEdit, filePath, code, lineEnd,this, false);
@@ -2608,6 +2823,7 @@ bool CCNotePad::reloadTextFileWithCode(CODE_ID code)
 		{
 			autoSetDocLexer(pEdit);
 	}
+		enableEditTextChangeSign(pEdit);
 	}
 
 	setCodeBarLabel(code);
@@ -2703,6 +2919,13 @@ bool CCNotePad::openTextFile(QString filePath, bool isCheckHex, CODE_ID code)
 		//如果存在交换文件，而且修改时间更晚，询问用户是否需要恢复
 		if ((spfi.size() > 0) /*&& (spfi.lastModified() >= fi.lastModified())*/)
 		{
+			//无条件备份一下文件，swap/原始文件都备份。避免用户文件丢失！！！
+			QString srcBakFile = QString("%1_bak").arg(filePath);
+			QString swapBakFile = QString("%1_bak").arg(swapfile);
+
+			QFile::copy(filePath, srcBakFile);
+			QFile::copy(swapfile, swapBakFile);
+
 			int ret = QMessageBox::question(this, tr("Recover File?"), tr("File %1 abnormally closed last time , Restore it ?").arg(filePath), tr("Restore"), tr("No"));
 			//使用历史存档恢复文件
 			if (ret == 0)
@@ -2747,6 +2970,7 @@ bool CCNotePad::openTextFile(QString filePath, bool isCheckHex, CODE_ID code)
 	}
 	else
 	{
+		//使用上次的swap文件恢复当前文件
 		if (0 != FileManager::getInstance().loadFileDataInText(pEdit, swapfile, code, lineEnd,this))
 		{
 			ui.statusBar->showMessage(tr("File %1 Open Failed").arg(swapfile));
@@ -2806,11 +3030,16 @@ bool CCNotePad::openTextFile(QString filePath, bool isCheckHex, CODE_ID code)
 		pEdit->setIndentGuide(true);
 	}
 
+	if (s_zoomValue != 0)
+	{
+		pEdit->zoomTo(s_zoomValue);
+	}
+
 	if (!isReadOnly)
 	{
 		setFileOpenAttrProperty(pEdit, OpenAttr::Text);
 		setWindowTitleMode(filePath, OpenAttr::Text);
-		ui.statusBar->showMessage(tr("File %1 Open Finished [Text Mode]").arg(filePath),8000);
+		ui.statusBar->showMessage(tr("File %1 Open Finished [Text Mode] Zoom %2%").arg(filePath).arg(100+10* s_zoomValue),8000);
 	}
 	else
 	{
@@ -3167,6 +3396,10 @@ bool  CCNotePad::saveFile(QString fileName, ScintillaEditView* pEdit, bool isBak
 	else if (dstCode == CODE_ID::GBK)
 	{
 		QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
+	}
+	else if (dstCode == CODE_ID::BIG5)
+	{
+		QTextCodec::setCodecForLocale(QTextCodec::codecForName("BIG5-HKSCS"));
 	}
 	else
 	{
@@ -3605,6 +3838,8 @@ void CCNotePad::initTabNewOne()
 //退出所有
 void CCNotePad::slot_quit(bool)
 {
+	close();
+#if 0
 	slot_closeAllFile(true);
 
 	//中途取消了关闭，则不退出
@@ -3615,6 +3850,7 @@ void CCNotePad::slot_quit(bool)
 	}
 
 	exit(0);
+#endif
 }
 
 void CCNotePad::slot_saveAllFile()
@@ -3933,7 +4169,8 @@ void CCNotePad::closeAllFileStatic()
 	}
 }
 
-void CCNotePad::slot_closeAllFile(bool)
+//退出时关闭所有文件
+void CCNotePad::closeAllFileWhenQuit(bool isQuit)
 {
 	m_isQuitCancel = false;
 
@@ -3942,13 +4179,19 @@ void CCNotePad::slot_closeAllFile(bool)
 	{
 		ui.editTabWidget->setCurrentIndex(i);
 
-		slot_tabClose(i);
+		tabClose(i, isQuit);
 
 		if (m_isQuitCancel)
 		{
 			break;
 		}
 	}
+}
+
+//关闭所有文件的槽函数
+void CCNotePad::slot_closeAllFile(bool)
+{
+	closeAllFileWhenQuit(false);
 }
 
 void CCNotePad::closeEvent(QCloseEvent * event)
@@ -3975,7 +4218,7 @@ void CCNotePad::closeEvent(QCloseEvent * event)
 	}
 	else
 	{
-		slot_closeAllFile(true);
+		closeAllFileWhenQuit(true);
 	}
 #else
 	if ((s_restoreLastFile == 1) && m_isMainWindows)
@@ -3985,7 +4228,7 @@ void CCNotePad::closeEvent(QCloseEvent * event)
 	}
 	else
 	{
-		slot_closeAllFile(true);
+		closeAllFileWhenQuit(true);
 	}
 #endif
 	
@@ -4037,9 +4280,8 @@ void CCNotePad::closeEvent(QCloseEvent * event)
 
 	//保存大小
 
-	QSize size = this->size();
-	QString saveSize = QString("%1:%2").arg(size.width()).arg(size.height());
-	JsonDeploy::updataKeyValueFromSets(RESTORE_SIZE, saveSize);
+	QByteArray curGeo = saveGeometry();
+	NddSetting::updataKeyByteArrayValue(WIN_POS, curGeo);
 
 	event->accept();
 }
@@ -4139,24 +4381,77 @@ void CCNotePad::slot_redo()
 
 void CCNotePad::slot_zoomin()
 {
-	QWidget* pw = ui.editTabWidget->currentWidget();
+
+	for (int i = ui.editTabWidget->count() - 1; i >= 0; --i)
+	{
+		QWidget* pw = ui.editTabWidget->widget(i);
 	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
 
 	if (pEdit != nullptr)
 	{
 		pEdit->zoomIn();
+
+		int curZoomValue = pEdit->execute(SCI_GETZOOM);
+
+			if (i == 0)
+			{
+				s_zoomValue = curZoomValue;
+				NddSetting::updataKeyValueFromNumSets(ZOOMVALUE, s_zoomValue);
+				ui.statusBar->showMessage(tr("Current Zoom Value is %1%").arg(100 + 10 * curZoomValue));
 	}
+}
+
+	}
+
+
+	//QWidget* pw = ui.editTabWidget->currentWidget();
+	//ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+
+	//if (pEdit != nullptr)
+	//{
+	//	pEdit->zoomIn();
+
+	//	int curZoomValue = pEdit->execute(SCI_GETZOOM);
+	//	s_zoomValue = curZoomValue;
+	//	NddSetting::updataKeyValueFromNumSets(ZOOMVALUE, s_zoomValue);
+	//	ui.statusBar->showMessage(tr("Current Zoom Value is %1%").arg(100+10*curZoomValue));
+	//}
 }
 
 void CCNotePad::slot_zoomout()
 {
-	QWidget* pw = ui.editTabWidget->currentWidget();
+	for (int i = ui.editTabWidget->count() - 1; i >= 0; --i)
+	{
+		QWidget* pw = ui.editTabWidget->widget(i);
 	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
 
 	if (pEdit != nullptr)
 	{
 		pEdit->zoomOut();
+
+		int curZoomValue = pEdit->execute(SCI_GETZOOM);
+
+			if (i == 0)
+			{
+				s_zoomValue = curZoomValue;
+				NddSetting::updataKeyValueFromNumSets(ZOOMVALUE, s_zoomValue);
+				ui.statusBar->showMessage(tr("Current Zoom Value is %1%").arg(100 + 10 * curZoomValue));
 	}
+}
+
+	}
+
+	/*QWidget* pw = ui.editTabWidget->currentWidget();
+	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+
+	if (pEdit != nullptr)
+	{
+		pEdit->zoomOut();
+		int curZoomValue = pEdit->execute(SCI_GETZOOM);
+		s_zoomValue = curZoomValue;
+		NddSetting::updataKeyValueFromNumSets(ZOOMVALUE, s_zoomValue);
+		ui.statusBar->showMessage(tr("Current Zoom Value is %1%").arg(100+10*curZoomValue));
+	}*/
 }
 
 //只切换了当前文档。可能会耗时，所以不全部换行。在文档切换的时候，需要检查下当前文档的自动换行状态。
@@ -4188,7 +4483,7 @@ void CCNotePad::slot_wordwrap(bool checked)
 	}
 	
 	s_autoWarp = (checked) ? 1 : 0;
-	JsonDeploy::updataKeyValueFromNumSets(AUTOWARP_KEY, s_autoWarp);
+	NddSetting::updataKeyValueFromNumSets(AUTOWARP_KEY, s_autoWarp);
 }
 
 void CCNotePad::slot_allWhite(bool checked)
@@ -4229,7 +4524,7 @@ void CCNotePad::slot_indentGuide(bool willBeShowed)
 	}
 
 	s_indent = (willBeShowed) ? 1 : 0;
-	JsonDeploy::updataKeyValueFromNumSets(INDENT_KEY, s_indent);
+	NddSetting::updataKeyValueFromNumSets(INDENT_KEY, s_indent);
 }
 
 void CCNotePad::find(FindTabIndex findType)
@@ -4295,6 +4590,12 @@ void CCNotePad::initFindWindow()
 			//二进制DOC只读，不许替换编辑。不在这里做，会导致编辑框回调。在FindWin里面去判断
 			//pFind->disableReplace();
 		}
+		//注册一个ESC的退出按钮事件
+			//设置查找的快捷键
+		QShortcut *escSc = new QShortcut(m_pFindWin);
+		escSc->setKey(QKeySequence(Qt::Key_Escape));
+		escSc->setContext(Qt::WidgetWithChildrenShortcut);
+		connect(escSc, &QShortcut::activated, this, [this]() {m_pFindWin->close(); });
 	}
 	else
 	{
@@ -4447,6 +4748,10 @@ void CCNotePad::slot_wordHighlight()
 		}
 	}
 
+void CCNotePad::slot_findResultPosChangeed(Qt::DockWidgetArea area)
+{
+	NddSetting::updataKeyValueFromNumSets(FINDRESULTPOS,area);
+}
 
 void  CCNotePad::initFindResultDockWin()
 {
@@ -4455,13 +4760,14 @@ void  CCNotePad::initFindResultDockWin()
 	{
 
 		m_dockSelectTreeWin = new QDockWidget(tr("Find result"), this);
+		connect(m_dockSelectTreeWin, &QDockWidget::dockLocationChanged, this, &CCNotePad::slot_findResultPosChangeed);
 		m_dockSelectTreeWin->layout()->setMargin(0);
 		m_dockSelectTreeWin->layout()->setSpacing(0);
 
 		//暂时不提供关闭，因为关闭后需要同步菜单的check状态
 
-		m_dockSelectTreeWin->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable);
-		m_dockSelectTreeWin->setAllowedAreas(Qt::BottomDockWidgetArea);
+		m_dockSelectTreeWin->setFeatures(QDockWidget::DockWidgetFloatable | QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable);
+		m_dockSelectTreeWin->setAllowedAreas(Qt::LeftDockWidgetArea| Qt::RightDockWidgetArea |Qt::BottomDockWidgetArea);
 
 		m_pResultWin = new FindResultWin(m_dockSelectTreeWin);
 		connect(m_pResultWin, &FindResultWin::itemDoubleClicked, this, &CCNotePad::slot_findResultItemDoubleClick);
@@ -4471,8 +4777,14 @@ void  CCNotePad::initFindResultDockWin()
 
 		m_dockSelectTreeWin->setWidget(m_pResultWin);
 
-		addDockWidget(Qt::BottomDockWidgetArea, m_dockSelectTreeWin);
+		int lastArea = NddSetting::getKeyValueFromNumSets(FINDRESULTPOS);
+		if (lastArea == 0)
+		{
+			lastArea = Qt::BottomDockWidgetArea;
 	}
+
+		addDockWidget((Qt::DockWidgetArea)lastArea, m_dockSelectTreeWin);
+}
 
 }
 
@@ -4892,6 +5204,10 @@ void CCNotePad::syncCurDocEncodeToMenu(QWidget* curEdit)
 			ui.actionencode_in_UCS_2_LE_BOM->setChecked(true);
 			break;
 
+		case BIG5:
+			ui.actionBig5->setChecked(true);
+			break;
+
 		default:
 			break;
 		}
@@ -5079,9 +5395,12 @@ void CCNotePad::slot_gotoHexPage()
 		pHexGoto->setAttribute(Qt::WA_DeleteOnClose);
 
 		connect(pHexGoto, &HexFileGoto::gotoClick, this, &CCNotePad::slot_hexGotoFile);
+
+		registerEscKeyShort(m_pHexGotoWin);
 	}
 	m_pHexGotoWin.data()->activateWindow();
 	m_pHexGotoWin.data()->show();
+
 #ifdef uos
     adjustWInPos(m_pHexGotoWin.data());
 #endif
@@ -5167,14 +5486,28 @@ void CCNotePad::slot_about()
 	QMessageBox msgBox(this);
 #if defined (Q_OS_MAC)
 	msgBox.setText(tr("bugfix: https://github.com/cxasm/notepad-- \nchina: https://gitee.com/cxasm/notepad--"));
-    msgBox.setDetailedText("Notepad-- v1.17.1");
+    msgBox.setDetailedText(QString("Notepad-- %1").arg(VersionStr));
 #else
-	msgBox.setWindowTitle(QString("Notepad-- v1.17.1"));
+	msgBox.setWindowTitle(QString("Notepad-- %1").arg(VersionStr));
 	msgBox.setText(tr("bugfix: https://github.com/cxasm/notepad-- \nchina: https://gitee.com/cxasm/notepad--"));
 #endif
 	msgBox.setTextInteractionFlags(Qt::TextSelectableByMouse);
 
 	msgBox.exec();
+}
+
+void CCNotePad::slot_aboutNdd()
+{
+	AboutNdd* pWin = new AboutNdd();
+	pWin->setAttribute(Qt::WA_DeleteOnClose);
+	QString title = tr("Ndd Version %1").arg(VersionStr);
+	pWin->setWindowTitle(title);
+	pWin->appendText(title);
+	pWin->show();
+	registerEscKeyShort(pWin);
+#ifdef uos
+	adjustWInPos(pWin);
+#endif
 }
 
 void CCNotePad::addWatchFilePath(QString filePath)
@@ -5212,22 +5545,44 @@ void CCNotePad::dropEvent(QDropEvent* e)
 	if (urls.isEmpty())
 		return;
 
-	QString fileName = urls.first().toLocalFile();
+	for (int i = 0; i < urls.size(); ++i)
+	{
+		QString fileName = urls.at(i).toLocalFile();
 
 	if (fileName.isEmpty())
 	{
-		return;
+				continue;
 	}
 
 	if (!QFile::exists(fileName))
 	{
-		return;
+				continue;
 	}
 
-	openFile(fileName);
-	e->accept();
+		QFileInfo fi(fileName);
 
-	//qDebug() << ui.leftSrc->geometry() << ui.rightSrc->geometry() << QCursor::pos() << this->mapFromGlobal(QCursor::pos());
+		if (!fi.isFile())
+		{
+			ui.statusBar->showMessage(tr("%1 is not a file, skip open it...").arg(fileName));
+			continue;
+		}
+
+	openFile(fileName);
+	}
+	
+	e->accept();
+}
+
+//目前只有一个Tabwidget的双击事件。
+bool CCNotePad::eventFilter(QObject * watched, QEvent * event)
+{
+	if (watched == ui.editTabWidget && event->type() == QEvent::MouseButtonDblClick)
+	{
+		slot_actionNewFile_toggle(true);
+		m_saveFile->setEnabled(false);
+		return true; // 注意这里一定要返回true，表示你要过滤该事件原本的实现
+	}
+	return false;
 }
 
 
@@ -5287,6 +5642,7 @@ void CCNotePad::slot_batch_convert()
 	newWin->setAttribute(Qt::WA_DeleteOnClose);
 	newWin->setWindowModality(Qt::ApplicationModal);
 	newWin->show();
+	registerEscKeyShort(newWin);
 #ifdef uos
     adjustWInPos(newWin);
 #endif
@@ -5299,6 +5655,7 @@ void CCNotePad::slot_batch_rename()
 	newWin->setAttribute(Qt::WA_DeleteOnClose);
 	newWin->setWindowModality(Qt::ApplicationModal);
 	newWin->show();
+	registerEscKeyShort(newWin);
 #ifdef uos
     adjustWInPos(newWin);
 #endif
@@ -5314,6 +5671,7 @@ void CCNotePad::slot_options()
 	//connect(p, &OptionsView::signProLangFontChange, this, &CCNotePad::slot_proLangFontChange);
 
 	p->show();
+	registerEscKeyShort(p);
 #ifdef uos
     adjustWInPos(p);
 #endif
@@ -5421,10 +5779,11 @@ void CCNotePad::slot_tabFormatChange(bool tabLenChange, bool useTabChange)
 
 void CCNotePad::slot_donate()
 {
-	donate* pWin = new donate();
-	//pWin->setWindowIcon(QIcon(":/Resources/img/main.png"));
+	Donate* pWin = new Donate();
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
 	pWin->show();
+	registerEscKeyShort(pWin);
+
 #ifdef uos
     adjustWInPos(pWin);
 #endif
@@ -5435,10 +5794,10 @@ void CCNotePad::slot_registerCmd(int cmd, int code)
 	if (cmd == 1)
 	{
 		//服务器返回注册码的消息。	//0 试用 1 正版 2 正版过期 3 错误key
-		int status = JsonDeploy::getKeyValueFromNumSets(SOFT_STATUS);
+		int status = NddSetting::getKeyValueFromNumSets(SOFT_STATUS);
 		if (status != code)
 		{
-			JsonDeploy::updataKeyValueFromNumSets(SOFT_STATUS, code);
+			NddSetting::updataKeyValueFromNumSets(SOFT_STATUS, code);
 		}
 
 		emit signRegisterReplay(code);
@@ -5452,55 +5811,76 @@ void CCNotePad::slot_toLightBlueStyle()
 	StyleSet::setLightStyle();
 
 	//皮肤id
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY,1);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY,1);
 }
 
 void CCNotePad::slot_toDefaultStyle()
 {
 	StyleSet::setDefaultStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 0);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 0);
 }
 
 void  CCNotePad::slot_toThinBlueStyle()
 {
 	StyleSet::setThinBlueStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 2);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 2);
 }
 
 void CCNotePad::slot_toRiceYellow()
 {
 	StyleSet::setRiceYellowStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 4);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 4);
 }
 
 void CCNotePad::slot_toYellow()
 {
 	StyleSet::setThinYellowStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 3);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 3);
 }
 
 void CCNotePad::slot_toSilverStyle()
 {
 	StyleSet::setSilverStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 5);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 5);
 }
 
 void CCNotePad::slot_toLavenderBlush()
 {
 	StyleSet::setLavenderBlushStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 6);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 6);
 }
 
 void CCNotePad::slot_toMistyRose()
 {
 	StyleSet::setMistyRoseStyle();
-	JsonDeploy::updataKeyValueFromNumSets(SKIN_KEY, 7);
+	NddSetting::updataKeyValueFromNumSets(SKIN_KEY, 7);
 }
+
 
 //获取注册码
 void CCNotePad::slot_register()
 {
 }
+
+//当前正在使用的所有语言的tags
+void CCNotePad::getCurUseLexerTags(QVector<QString>& tags)
+{
+	for (int i = ui.editTabWidget->count() - 1; i >= 0; --i)
+	{
+		QWidget* pw = ui.editTabWidget->widget(i);
+		ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+		if (pEdit != nullptr && (pEdit->lexer() != nullptr))
+		{
+			QString v = pEdit->lexer()->lexerTag();
+
+			if (-1 == tags.indexOf(v))
+			{
+				tags.append(v);
+			}
+		}
+	}
+}
+
 
 void CCNotePad::slot_langFormat()
 {
@@ -5518,6 +5898,7 @@ void CCNotePad::slot_langFormat()
 	connect(pWin, &QtLangSet::viewStyleChange, this, &CCNotePad::slot_viewStyleChange);
 	connect(pWin, &QtLangSet::viewLexerChange, this, &CCNotePad::slot_viewLexerChange);
 	pWin->show();
+	registerEscKeyShort(pWin);
 #ifdef uos
     adjustWInPos(pWin);
 #endif
@@ -5582,7 +5963,7 @@ void CCNotePad::restoreCleanNewFile(QString& fileName)
 	m_saveFile->setEnabled(false);
 }
 
-//2 非脏的已存在文件
+//2 非脏的老文件,直接打开
 void CCNotePad::restoreCleanExistFile(QString& filePath)
 {
 	openTextFile(filePath);
@@ -5603,8 +5984,8 @@ bool CCNotePad::restoreDirtyExistFile(QString& filePath, QString& tempFilePath)
 {
 	getRegularFilePath(filePath);
 
-	QFileInfo fi(filePath);
-
+#if 0 //这里不需要判断了，大文件压根不能编辑，没有保存临时文件的说法
+	QFileInfo fi(tempFilePath);
 	//如果文件大于300M,按照只读文件打开
 	if (ScintillaEditView::s_bigTextSize <= 0 || ScintillaEditView::s_bigTextSize > 300)
 	{
@@ -5613,9 +5994,10 @@ bool CCNotePad::restoreDirtyExistFile(QString& filePath, QString& tempFilePath)
 
 	if (fi.size() > ScintillaEditView::s_bigTextSize * 1024 * 1024)
 	{
-		return openBigTextFile(filePath);
+		return openBigTextFile(tempFilePath);
 	}
-
+#endif
+	QFileInfo fi(filePath);
 	QString fileLabel(fi.fileName());
 
 	ScintillaEditView* pEdit = FileManager::getInstance().newEmptyDocument();
@@ -5632,6 +6014,7 @@ bool CCNotePad::restoreDirtyExistFile(QString& filePath, QString& tempFilePath)
 #endif
 
 	bool isChange = false;
+	bool isLoadOrgin = false;//是否加载原始文件。只有临时文件被破坏或大小为空，才需要加载老的
 
 	//如果非空，则从contentPath中加载文件内容。做恢复文件使用
 	if (!tempFilePath.isEmpty())
@@ -5639,11 +6022,25 @@ bool CCNotePad::restoreDirtyExistFile(QString& filePath, QString& tempFilePath)
 		int ret = FileManager::getInstance().loadFileDataInText(pEdit, tempFilePath, code, lineEnd, nullptr, false);
 		if (ret != 0)
 		{
-			ui.statusBar->showMessage(tr("Restore Last Temp File %1 Failed").arg(tempFilePath));
+			isLoadOrgin = true;
+			ui.statusBar->showMessage(tr("Restore Last Temp File %1 Failed").arg(tempFilePath), 5000);
 		}
-		isChange = true;
+		else
+		{
+			//如果是空的临时文件，则直接打开原始文件，临时文件估计被破坏或是空的，则直接读取原始文件
+			if (ERROR_TYPE::OPEN_EMPTY_FILE == FileManager::getInstance().getLastErrorCode())
+			{
+				isLoadOrgin = true;
+				FileManager::getInstance().resetLastErrorCode();
 	}
 	else
+	{
+				isChange = true;
+			}
+		}
+	}
+
+	if(isLoadOrgin)
 	{
 
 		int ret = FileManager::getInstance().loadFileDataInText(pEdit, filePath, code, lineEnd, this, true);
@@ -5710,6 +6107,11 @@ bool CCNotePad::restoreDirtyExistFile(QString& filePath, QString& tempFilePath)
 	if (s_indent == 1)
 	{
 		pEdit->setIndentGuide(true);
+	}
+
+	if (s_zoomValue != 0)
+	{
+		pEdit->zoomTo(s_zoomValue);
 	}
 
 	if (!isReadOnly)
@@ -5835,6 +6237,7 @@ void CCNotePad::slot_columnBlockEdit()
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
 	pWin->setTabWidget(ui.editTabWidget);
 	pWin->show();
+	registerEscKeyShort(pWin);
 #ifdef uos
     adjustWInPos(pWin);
 #endif
@@ -5845,6 +6248,7 @@ void CCNotePad::slot_defineLangs()
 	LangStyleDefine* pWin = new LangStyleDefine(this);
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
 	pWin->show();
+	registerEscKeyShort(pWin);
 #ifdef uos
     adjustWInPos(pWin);
 #endif
@@ -6275,8 +6679,6 @@ void CCNotePad::slot_insertBlankBelCur()
 }
 
 
-
-
 void CCNotePad::dealLineSort(LINE_SORT_TYPE type)
 {
 
@@ -6399,4 +6801,51 @@ void CCNotePad::slot_sortLexDesc()
 void CCNotePad::slot_sortLexDescIngCase()
 {
 	dealLineSort(SORTLINES_LEXICO_CASE_INSENS_DESCENDING);
+}
+
+
+void CCNotePad::slot_findNext()
+{
+	initFindWindow();
+
+	FindWin* pFind = dynamic_cast<FindWin*>(m_pFindWin.data());
+	pFind->setCurrentTab(FIND_TAB);
+	pFind->findNext();
+}
+
+void CCNotePad::slot_findPrev()
+{
+	FindWin* pFind = dynamic_cast<FindWin*>(m_pFindWin.data());
+	pFind->setCurrentTab(FIND_TAB);
+	pFind->findPrev();
+}
+
+//繁体BIG5
+void CCNotePad::slot_load_with_big5()
+{
+	reloadTextFileWithCode(CODE_ID::BIG5);
+}
+
+//转成繁体BIG5
+void CCNotePad::slot_encode_big5()
+{
+	transDocToEncord(BIG5);
+}
+
+//为窗口注册ECS退出快捷键
+void CCNotePad::registerEscKeyShort(QWidget *parent)
+{
+	QShortcut *escSc = new QShortcut(parent);
+	escSc->setKey(QKeySequence(Qt::Key_Escape));
+	escSc->setContext(Qt::WidgetWithChildrenShortcut);
+	connect(escSc, &QShortcut::activated, this, &CCNotePad::slot_escQuit);
+}
+
+void CCNotePad::slot_escQuit()
+{
+	QShortcut * escSc = dynamic_cast<QShortcut *>(sender());
+	if (escSc != nullptr && escSc->parentWidget() != nullptr)
+	{
+		escSc->parentWidget()->close();
+	}
 }

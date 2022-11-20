@@ -12,10 +12,10 @@
 typedef sptr_t(*SCINTILLA_FUNC) (sptr_t ptr, unsigned int, uptr_t, sptr_t);
 typedef sptr_t SCINTILLA_PTR;
 
-const int MARK_BOOKMARK = 24;
-const int MARK_HIDELINESBEGIN = 23;
-const int MARK_HIDELINESEND = 22;
-const int MARK_HIDELINESUNDERLINE = 21;
+//const int MARK_BOOKMARK = 24;
+//const int MARK_HIDELINESBEGIN = 23;
+//const int MARK_HIDELINESEND = 22;
+//const int MARK_HIDELINESUNDERLINE = 21;
 const int NB_FOLDER_STATE = 7;
 
 struct LanguageName {
@@ -49,6 +49,7 @@ enum TextCaseType
 
 
 class FindRecords;
+class CCNotePad;
 
 class ScintillaEditView : public QsciScintilla
 {
@@ -58,11 +59,13 @@ public:
 	ScintillaEditView(QWidget *parent);
 	~ScintillaEditView();
 
+	virtual void setLexer(QsciLexer *lexer = 0);
+
 	void setNoteWidget(QWidget* win);
 	//void resetDefaultFontStyle();
 	sptr_t execute(quint32 Msg, uptr_t wParam = 0, sptr_t lParam = 0) const;
 
-	static QsciLexer * createLexer(int lexerId, QString tag="");
+	static QsciLexer * createLexer(int lexerId, QString tag="", bool isOrigin=false);
 	
 	void appendMarkRecord(FindRecords *r);
 	void releaseAllMark();
@@ -101,6 +104,16 @@ public:
 		return execute(SCI_LINEFROMPOSITION, execute(SCI_GETCURRENTPOS));
 	};
 
+	void bookmarkToggle(intptr_t lineno) const;
+	void bookmarkClearAll() const;
+	void bookmarkNext(bool forwardScan);
+	
+	void cutMarkedLines();
+	void copyMarkedLines();
+	void replaceMarkedline(int ln, QByteArray & str);
+	void pasteToMarkedLines();
+	void deleteMarkedLines(bool isMarked);
+	void inverseMarks();
 signals:
 	void delayWork();
 
@@ -113,6 +126,8 @@ private:
 	QString getEOLString();
 	intptr_t replaceTarget(QByteArray & str2replace, intptr_t fromTargetPos, intptr_t toTargetPos) const;
 	void appandGenericText(const QByteArray & text2Append) const;
+	QString getMarkedLine(int ln);
+	void deleteMarkedline(int ln);
 
 
 public:
@@ -128,6 +143,7 @@ protected:
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* e) override;
 	void mouseDoubleClickEvent(QMouseEvent *e) override;
+	void contextUserDefineMenuEvent(QMenu * menu) override;
 
 public slots:
 	void updateLineNumberWidth(int lineNumberMarginDynamicWidth=0);
@@ -138,10 +154,15 @@ private:
 	void autoAdjustLineWidth(int xScrollValue);
 	void showMargin(int whichMarge, bool willBeShowed);
 	void init();
+	void bookmarkAdd(intptr_t lineno) const;
+	void bookmarkDelete(size_t lineno) const;
+	bool bookmarkPresent(intptr_t lineno) const;
+
 	void changeCase(const TextCaseType & caseToConvert, QString & strToConvert) const;
 	void clearIndicator(int indicatorNumber);
 
 	void highlightViewWithWord(QString & word2Hilite);
+
 
 	
 
@@ -149,13 +170,16 @@ private slots:
 	void slot_delayWork();
 	void slot_scrollXValueChange(int value);
 	void slot_clearHightWord();
+	void slot_bookMarkClicked(int margin, int line, Qt::KeyboardModifiers state);
+
+
 
 private:
 
 	SCINTILLA_FUNC m_pScintillaFunc;
 	SCINTILLA_PTR  m_pScintillaPtr;
 
-	QWidget* m_NoteWin;
+	CCNotePad* m_NoteWin;
 	int m_preFirstLineNum;
 
 	QList<FindRecords *> m_curMarkList;
@@ -166,6 +190,8 @@ private:
 
 	//往前到下个位置
 	QList<int> m_nextPosRecord;
+
+	QPixmap* m_bookmarkPng;
 
 public:
 	static int s_tabLens;

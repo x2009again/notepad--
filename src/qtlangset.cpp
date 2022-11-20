@@ -1,14 +1,16 @@
 #include "qtlangset.h"
 #include "scintillaeditview.h"
-#include "jsondeploy.h"
+#include "nddsetting.h"
 #include "rcglobal.h"
+#include "ccnotepad.h"
+
 #include <SciLexer.h>
 #include <qscilexer.h>
 #include <QSettings>
 #include <QColorDialog> 
 #include <QMessageBox>
 #include <QSpinBox>
-#include <QDebug>
+//#include <QDebug>
 #include <QDir>
 
 #if 0
@@ -36,7 +38,7 @@ enum LangType {
 
 
 QtLangSet::QtLangSet(QString initTag, QWidget *parent)
-	: QMainWindow(parent), m_selectLexer(nullptr), m_selectStyleId(0), m_isStyleChange(false),m_isStyleChildChange(false), m_initShowLexerTag(initTag), m_previousSysLangItem(nullptr)
+	: QMainWindow(parent), m_selectLexer(nullptr), m_selectStyleId(0), m_isStyleChange(false),m_isStyleChildChange(false), m_initShowLexerTag(initTag), m_previousSysLangItem(nullptr),m_isGlobelItem(false)
 {
 	ui.setupUi(this);
 	initLangList();
@@ -55,6 +57,26 @@ QtLangSet::~QtLangSet()
 }
 
 
+//在同步字体时，务必先关闭关联槽函数，避免循环触发。务必配对使用
+void QtLangSet::enableFontChangeSensitive(bool isSensitive)
+{
+	if (isSensitive)
+	{
+		connect(ui.boldCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontBoldChange);
+		connect(ui.italicCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontItalicChange);
+		connect(ui.underlineCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontUnderlineChange);
+		connect(ui.fontSpinBox, SIGNAL(valueChanged(int)), this, SLOT(slot_fontSizeChange(int)));
+		connect(ui.fontComboBox, &QFontComboBox::currentFontChanged, this, &QtLangSet::slot_fontChange);
+	}
+	else
+	{
+		disconnect(ui.boldCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontBoldChange);
+		disconnect(ui.italicCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontItalicChange);
+		disconnect(ui.underlineCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontUnderlineChange);
+		disconnect(ui.fontSpinBox, SIGNAL(valueChanged(int)), this, SLOT(slot_fontSizeChange(int)));
+		disconnect(ui.fontComboBox, &QFontComboBox::currentFontChanged, this, &QtLangSet::slot_fontChange);
+	}
+}
 
 void QtLangSet::startSignSlot()
 {
@@ -62,9 +84,7 @@ void QtLangSet::startSignSlot()
 	//估计是QT5.12的bug。所以换成itemClicked信号
 	connect(ui.langListWidget, &QListWidget::itemClicked, this, &QtLangSet::slot_itemSelect);
 	connect(ui.userLangListWidget, &QListWidget::itemClicked, this, &QtLangSet::slot_userLangItemSelect);
-
-
-	connect(ui.styleListWidget, &QListWidget::currentItemChanged, this, &QtLangSet::slot_styleItemSelect);
+	connect(ui.styleListWidget, &QListWidget::itemClicked, this, &QtLangSet::slot_styleItemSelect);
 
 	connect(ui.boldCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontBoldChange);
 	connect(ui.italicCheckBox, &QCheckBox::stateChanged, this, &QtLangSet::slot_fontItalicChange);
@@ -119,7 +139,18 @@ void QtLangSet::slot_fontBoldChange(int state)
 			m_curStyleData.font.setBold((state == Qt::Unchecked) ? false : true);
 			m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
 			m_isStyleChange = true;
-			emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+
+			if (m_isGlobelItem)
+			{
+				if (ui.useGbFontBold->isChecked())
+				{
+					slot_useAlobalFontBold(true);
+				}
+			}
+			else
+			{
+				emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			}
 		}
 	}
 }
@@ -134,7 +165,17 @@ void QtLangSet::slot_fontItalicChange(int state)
 			m_curStyleData.font.setItalic((state == Qt::Unchecked) ? false : true);
 			m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
 			m_isStyleChange = true;
-			emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			if (m_isGlobelItem)
+			{
+				if (ui.useGbFontItalic->isChecked())
+				{
+					slot_useAlobalFontItalic(true);
+				}
+			}
+			else
+			{
+				emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			}
 		}
 	}
 }
@@ -149,26 +190,53 @@ void QtLangSet::slot_fontUnderlineChange(int state)
 			m_curStyleData.font.setUnderline((state == Qt::Unchecked) ? false : true);
 			m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
 			m_isStyleChange = true;
-			emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			if (m_isGlobelItem)
+			{
+				if (ui.useGbFontUnderline->isChecked())
+				{
+					slot_useAlobalFontUnderline(true);
+				}
+			}
+			else
+			{
+				emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			}
 		}
 	}
 }
 
+//发现一个qt现象：在debug断住该slot_fontSizeChange函数，会导致槽触发2次；不断住或者release模式直接跑，不会触发2次
 void QtLangSet::slot_fontSizeChange(int v)
 {
 	//即时设置风格
 	if (m_selectLexer != nullptr)
 	{
-		if (!ui.modifyAllFont->isChecked())
+		//全局修改，把所有语言的所有风格都设置
+		//全局修改，把所有语言的所有风格都设置
+		if (m_isGlobelItem)
 		{
-		if (m_curStyleData.font.pointSize() != v)
-		{
-			m_curStyleData.font.setPointSize(v);
-			m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
-			m_isStyleChange = true;
-				emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			if (m_curStyleData.font.pointSize() != v)
+			{
+				m_curStyleData.font.setPointSize(v);
+				//qDebug() << m_curStyleData.font.family();
+				m_isStyleChange = true;
+				m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
+				if (ui.useGbFontSize->isChecked())
+				{
+					slot_useAlobalFontSize(true);
+				}
+			}
 		}
-	}
+		else if (!ui.modifyAllFont->isChecked())
+		{
+			if (m_curStyleData.font.pointSize() != v)
+			{
+				m_curStyleData.font.setPointSize(v);
+				m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
+				m_isStyleChange = true;
+				emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+			}
+		}
 		else
 		{
 			m_curStyleData.font.setPointSize(v);
@@ -190,7 +258,7 @@ void QtLangSet::slot_fontSizeChange(int v)
 					QFont f = m_selectLexer->font(styleId);
 					f.setPointSize(v);
 					m_selectLexer->setFont(f, styleId);
-}
+				}
 
 				saveCurLangSettings();
 				emit viewLexerChange(m_selectLexer->lexerTag());
@@ -199,26 +267,268 @@ void QtLangSet::slot_fontSizeChange(int v)
 	}
 }
 
+
+void QtLangSet::getCurUseLexerTags(QVector<QString>& tag)
+{
+	CCNotePad* pMainNote = dynamic_cast<CCNotePad*>(parent());
+	if (pMainNote != nullptr)
+	{
+		pMainNote->getCurUseLexerTags(tag);
+	}
+}
+
+//恢复原生的风格项目
+void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+{
+	QFont oldfont;
+
+	for (int index = 0; index <= L_TXT; ++index)
+	{
+		QsciLexer *pLexer = ScintillaEditView::createLexer(index);
+		if (nullptr != pLexer)
+		{
+
+			switch (flag)
+			{
+			case GLOBAL_FONT:
+			{
+				for (int i = 0; i <= 255; ++i)
+				{
+					if (!pLexer->description(i).isEmpty())
+					{
+						oldfont = pLexer->font(i);
+						oldfont.setFamily(m_curStyleData.font.family());
+						pLexer->setFont(oldfont, i);
+					}
+				}
+			}
+			break;
+			case GLOBAL_FONT_SIZE:
+			{
+				for (int i = 0; i <= 255; ++i)
+				{
+					if (!pLexer->description(i).isEmpty())
+					{
+						oldfont = pLexer->font(i);
+						oldfont.setPointSize(m_curStyleData.font.pointSize());
+						pLexer->setFont(oldfont, i);
+					}
+				}
+			}
+			break;
+			case GLOBAL_FONT_BOLD:
+			{
+				for (int i = 0; i <= 255; ++i)
+				{
+					if (!pLexer->description(i).isEmpty())
+					{
+						oldfont = pLexer->font(i);
+						oldfont.setBold(m_curStyleData.font.bold());
+						pLexer->setFont(oldfont, i);
+					}
+				}
+			}
+			break;
+			case GLOBAL_FONT_UNDERLINE:
+			{
+				for (int i = 0; i <= 255; ++i)
+				{
+					if (!pLexer->description(i).isEmpty())
+					{
+						oldfont = pLexer->font(i);
+						oldfont.setUnderline(m_curStyleData.font.underline());
+						pLexer->setFont(oldfont, i);
+					}
+				}
+			}
+			break;
+			case GLOBAL_FONT_ITALIC:
+			{
+				for (int i = 0; i <= 255; ++i)
+				{
+					if (!pLexer->description(i).isEmpty())
+					{
+						oldfont = pLexer->font(i);
+						oldfont.setItalic(m_curStyleData.font.italic());
+						pLexer->setFont(oldfont, i);
+					}
+				}
+			}
+			break;
+			case GLOBAL_FG_COLOR:
+			{
+				pLexer->setColor(m_curStyleData.color, -1);
+			}
+			break;
+			case GLOBAL_BK_COLOR:
+			{
+				pLexer->setPaper(m_curStyleData.paper, -1);
+			}
+			break;
+			default:
+				break;
+			}
+			
+			saveLangeSet(pLexer);
+		}
+		delete pLexer;
+	}
+}
+
+//恢复所有语言的初始配置。与restoreOriginLangOneStyle类似，但是粒度更大
+void  QtLangSet::restoreOriginLangAllStyle()
+{
+	QsciLexer *pLexer = nullptr;
+
+	//一旦重置，当前修改无条件不保存。否则避免当前的刚刚重置，又被保存
+	m_isStyleChange = false;
+
+	for (int index = 0; index <= L_TXT; ++index)
+	{
+
+		pLexer = ScintillaEditView::createLexer(index);
+
+		if (pLexer == nullptr)
+		{
+			continue;
+		}
+
+		//如果存在自定义的配置，直接全部删除掉
+		QString cfgPath = QString("notepad/userstyle/%1").arg(pLexer->lexerTag());
+		QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
+
+		if (QFile::exists(qs.fileName()))
+		{
+			QFile::remove(qs.fileName());
+		}
+
+		delete pLexer;
+		pLexer = nullptr;
+	}
+}
+
+//恢复所有语言的初始配置,只恢复GLOBAL_STYLE_SET指定的风格
+void QtLangSet::restoreOriginLangOneStyle(GLOBAL_STYLE_SET flag)
+{
+
+	QFont oldfont;
+	QFont curfont;
+
+	QColor oldClor;
+
+	for (int index = 0; index <= L_TXT; ++index)
+	{
+		QsciLexer *pLexer = ScintillaEditView::createLexer(index);
+		QsciLexer *pOriginLexer = ScintillaEditView::createLexer(index,"",true);
+		if (nullptr != pLexer)
+		{
+			for (int i = 0; i <= 255; ++i)
+			{
+				if (!pLexer->description(i).isEmpty())
+				{
+
+					switch (flag)
+					{
+					case GLOBAL_FONT:
+					{
+						oldfont = pOriginLexer->font(i);
+						pLexer->setFont(oldfont, i);
+					}
+					break;
+					case GLOBAL_FONT_SIZE:
+					{
+						oldfont = pOriginLexer->font(i);
+						curfont = pLexer->font(i);
+						curfont.setPointSize(oldfont.pointSize());
+						pLexer->setFont(curfont, i);
+					}
+					break;
+					case GLOBAL_FONT_BOLD:
+					{
+						oldfont = pOriginLexer->font(i);
+						curfont = pLexer->font(i);
+						curfont.setBold(oldfont.bold());
+						pLexer->setFont(curfont, i);
+					}
+					break;
+					case GLOBAL_FONT_UNDERLINE:
+					{
+						oldfont = pOriginLexer->font(i);
+						curfont = pLexer->font(i);
+						curfont.setUnderline(oldfont.underline());
+						pLexer->setFont(curfont, i);
+					}
+					break;
+					case GLOBAL_FONT_ITALIC:
+					{
+						oldfont = pOriginLexer->font(i);
+						curfont = pLexer->font(i);
+						curfont.setItalic(oldfont.italic());
+						pLexer->setFont(curfont, i);
+					}
+					break;
+					case GLOBAL_FG_COLOR:
+					{
+						oldClor = pOriginLexer->color(i);
+						pLexer->setColor(oldClor, i);
+					}
+					break;
+					case GLOBAL_BK_COLOR:
+					{
+						oldClor = pOriginLexer->paper(i);
+						pLexer->setPaper(oldClor, i);
+					}
+					break;
+					default:
+						break;
+					}
+				}
+			}
+			saveLangeSet(pLexer);
+		}
+		delete pLexer;
+		delete pOriginLexer;
+	}
+}
+//预览全局修改字体效果。把当前所有的语法，风格字体都修改一遍
+void QtLangSet::previewAllGoblalChange()
+{
+	QVector<QString> tags;
+
+	getCurUseLexerTags(tags);
+
+	for (int i = 0, s = tags.size(); i < s; ++i)
+	{
+		emit viewLexerChange(tags.at(i));
+	}
+}
+
 void QtLangSet::slot_fontChange(const QFont &font)
 {
 	//即时设置风格
 	if (m_selectLexer != nullptr)
 	{
-		if (!ui.modifyAllFont->isChecked())
-		{
-		if (m_curStyleData.font != font)
-		{
-			QFont oldf = m_curStyleData.font;
-			m_curStyleData.font = font;
-			m_curStyleData.font.setBold(oldf.bold());
-			m_curStyleData.font.setItalic(oldf.italic());
-			m_curStyleData.font.setUnderline(oldf.underline());
+	  if (!ui.modifyAllFont->isChecked())
+	  {
+			if (m_curStyleData.font != font)
+			{
+				m_curStyleData.font.setFamily(font.family());
+				m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
+				m_isStyleChange = true;
 
-			m_selectLexer->setFont(m_curStyleData.font, m_selectStyleId);
-			m_isStyleChange = true;
-				emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+				if (m_isGlobelItem)
+				{
+					if (ui.useGbFont->isChecked())
+					{
+						slot_useAlobalFont(true);
+					}
+				}
+				else
+				{
+					emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, true);
+				}
+			}
 		}
-	}
 		else
 		{
 			//统一修改字体，大小和风格保存不变
@@ -250,7 +560,7 @@ void QtLangSet::slot_fontChange(const QFont &font)
 					newFont.setPointSize(f.pointSize());
 
 					m_selectLexer->setFont(newFont, styleId);
-}
+				}
 
 				saveCurLangSettings();
 				emit viewLexerChange(m_selectLexer->lexerTag());
@@ -268,13 +578,11 @@ void QtLangSet::initLangList()
 		if (nullptr != pLexer)
 		{
 			QString langName = pLexer->lexerTag();
-			//qDebug() << langName << pLexer->lexer();
 			QListWidgetItem *item = new QListWidgetItem(langName);
 			item->setData(Qt::UserRole,i);
 			ui.langListWidget->addItem(item);
 			delete pLexer;
 		}
-		
 	}
 
 	//怀疑这个是队列链接的，会延迟执行。故总是导致选择的选不中，而是第一个语言asp。
@@ -288,7 +596,7 @@ bool QtLangSet::readLangSetFile(QString langName,QString &keyword, QString &moth
 	QString userLangFile = QString("notepad/userlang/%1").arg(langName);//自定义语言中不能有.字符，否则可能有错，后续要检查
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
 	qs.setIniCodec("UTF-8");
-	qDebug() << qs.fileName();
+	//qDebug() << qs.fileName();
 
 	if (!qs.contains("mz"))
 	{
@@ -310,7 +618,7 @@ bool QtLangSet::readLangSetFile(QString langName,QString &keyword, QString &moth
 
 //初始化用户自定义的语言配置
 void QtLangSet::initUserDefineLangList()
-		{
+{
 	QString userLangDirPath = getUserLangDirPath();
 
 	//遍历文件夹
@@ -341,7 +649,7 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
 	if (item == nullptr)
 	{
 		return;
-		}
+	}
 	//qDebug() << item->text() << (previous ? previous->text() : 0);
 
 
@@ -352,9 +660,14 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
 	//保存前一个已经修改的。询问用户是否保存
 	if (m_isStyleChange && m_previousSysLangItem != nullptr && m_selectLexer !=nullptr)
 	{
-		if (QMessageBox::Yes == QMessageBox::question(this, tr("Save Change"), tr("%1 style configuration has been modified. Do you want to save it?").arg(m_previousSysLangItem->text())))
+		//只有当前是非全局，才需要提示用户是否要保持。
+		//全局的不需要提示，因为已经无条件全部保存过了。
+		if (!m_isGlobelItem)
 		{
-			saveCurLangSettings();
+			if (QMessageBox::Yes == QMessageBox::question(this, tr("Save Change"), tr("%1 style configuration has been modified. Do you want to save it?").arg(m_previousSysLangItem->text())))
+			{
+				saveCurLangSettings();
+			}
 		}
 	}
 
@@ -363,14 +676,42 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
 		item->setSelected(true);
 	}
 
-	int lexId = item->data(Qt::UserRole).toInt();
-
 	ui.styleListWidget->clear();
 
 	if (m_selectLexer != nullptr)
 	{
 		delete m_selectLexer;
 		m_selectLexer = nullptr;
+	}
+
+
+	int lexId = item->data(Qt::UserRole).toInt();
+
+	//全局的这个要单独对待，暂时没有任何风格。
+	if (lexId == L_GLOBAL)
+	{
+		m_isGlobelItem = true;
+		ui.stackedWidget->setCurrentIndex(1);
+
+		//全部修改模式下，目前暂时不存在修改所有的说法，目前就只能全部修改
+		ui.modiryAllColor->setChecked(false);
+		ui.modifyAllFont->setChecked(false);
+		ui.modiryAllColor->setEnabled(false);
+		ui.modifyAllFont->setEnabled(false);
+	}
+	else
+	{
+		m_isGlobelItem = false;
+		ui.stackedWidget->setCurrentIndex(0);
+
+		if (!ui.modiryAllColor->isEnabled())
+		{
+			ui.modiryAllColor->setEnabled(true);
+		}
+		if (!ui.modifyAllFont->isEnabled())
+		{
+			ui.modifyAllFont->setEnabled(true);
+		}
 	}
 
 	QsciLexer *pLexer = ScintillaEditView::createLexer(lexId);
@@ -402,8 +743,8 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
 	if (itemtemp != nullptr)
 	{
 		itemtemp->setSelected(true);
-		slot_styleItemSelect(itemtemp, nullptr);
-}
+		slot_styleItemSelect(itemtemp);
+	}
 
 	m_isStyleChange = false;
 
@@ -461,8 +802,8 @@ void QtLangSet::displayUserMotherLangsStyle(QString langTagName, UserLangMother 
 	if (itemtemp != nullptr)
 	{
 		itemtemp->setSelected(true);
-		slot_styleItemSelect(itemtemp, nullptr);
-}
+		slot_styleItemSelect(itemtemp);
+	}
 
 	m_isStyleChange = false;
 
@@ -476,6 +817,23 @@ void QtLangSet::slot_userLangItemSelect(QListWidgetItem *item)
 	{
 		return;
 	}
+
+	//肯定不能是全局设置了
+	if(m_isGlobelItem || (ui.stackedWidget->currentIndex() == 1))
+	{
+		m_isGlobelItem = false;
+		ui.stackedWidget->setCurrentIndex(0);
+
+		if (!ui.modiryAllColor->isEnabled())
+		{
+			ui.modiryAllColor->setEnabled(true);
+		}
+		if (!ui.modifyAllFont->isEnabled())
+		{
+			ui.modifyAllFont->setEnabled(true);
+		}
+	}
+
 
 	m_previousSysLangItem = nullptr;
 	ui.langListWidget->setCurrentItem(nullptr);
@@ -531,8 +889,8 @@ void QtLangSet::syncShowStyleItemToUI(QListWidgetItem *item)
 	}
 }
 //点击当前的风格item
-void QtLangSet::slot_styleItemSelect(QListWidgetItem *current, QListWidgetItem *previous)
-	{
+void QtLangSet::slot_styleItemSelect(QListWidgetItem *current)
+{
 #if 0
 	if (current != nullptr && m_selectLexer != nullptr)
 	{
@@ -564,6 +922,9 @@ void QtLangSet::fillBackgroundColor(QColor &bkColor)
 
 void QtLangSet::setStyleShow(QFont& font, QColor& fcColor, QColor &bkColor)
 {
+	//修改字体会触发槽函数执行，务必先关闭一下信号
+	enableFontChangeSensitive(false);
+
 	ui.fontComboBox->setCurrentFont(font);
 	ui.fontSpinBox->setValue(font.pointSize());
 
@@ -573,44 +934,46 @@ void QtLangSet::setStyleShow(QFont& font, QColor& fcColor, QColor &bkColor)
 
 	fillForegroundColor(fcColor);
 	fillBackgroundColor(bkColor);
+
+	enableFontChangeSensitive(true);
 	
 }
 
 //读取特定语言的设置
 bool QtLangSet::readLangSettings(QsciLexer *lexer, QString tag)
 {
-	QString cfgPath = QString("notepad/%1").arg(tag);
+	QString cfgPath = QString("notepad/userstyle/%1").arg(tag);
 
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
 	if (QFile::exists(qs.fileName()))
 	{
-	return lexer->readSettings(qs);
-}
+		return lexer->readSettings(qs);
+	}
 	return false;
 }
 
-#if 0
-void QtLangSet::setCurSelectLang(QString tag)
+
+//保存一种语言的配置。
+void QtLangSet::saveLangeSet(QsciLexer *lexer)
 {
-	QList<QListWidgetItem*> destItem = ui.langListWidget->findItems(tag, Qt::MatchExactly);
-	if (!destItem.isEmpty())
+	if (lexer != nullptr)
 	{
-		QListWidgetItem* itemtemp = destItem.first();
-		itemtemp->setSelected(true);
-		//slot_itemSelect(itemtemp, nullptr);
+		QString tag = lexer->lexerTag();
+
+		QString cfgPath =  QString("notepad/userstyle/%1").arg(tag);
+
+		QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
+		lexer->writeSettings(qs);
+		qs.sync();
 	}
 }
-#endif
 
+//保存当前选定语言的配置
 bool QtLangSet::saveCurLangSettings()
 {
 	if (m_isStyleChange && m_selectLexer != nullptr)
 	{
-		QString tag = m_selectLexer->lexerTag();
-		QString cfgPath = QString("notepad/%1").arg(tag);
-
-		QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
-		m_selectLexer->writeSettings(qs);
+		saveLangeSet(m_selectLexer);
 		m_isStyleChange = false;
 		return true;
 	}
@@ -620,27 +983,49 @@ bool QtLangSet::saveCurLangSettings()
 //修改前景色
 void QtLangSet::slot_changeFgColor()
 {
-	QColor color = QColorDialog::getColor(Qt::white, this, tr("Style Foreground Color"));
+	QColor color = QColorDialog::getColor(m_curStyleData.color, this, tr("Style Foreground Color"));
 	if (color.isValid())
 	{
-		if (!ui.modiryAllColor->isChecked())
+		//全局修改，把所有语言的所有风格都设置
+		if (m_isGlobelItem)
 		{
-		//当前前景色是否变化
-		if (m_curStyleData.color != color)
-		{
-			m_curStyleData.color = color;
-			fillForegroundColor(color);
-			m_isStyleChange = true;
-
-			//即时设置风格
-			if (m_selectLexer != nullptr)
+			if (m_curStyleData.color != color)
 			{
+				m_curStyleData.color = color;
+				fillForegroundColor(color);
+				m_isStyleChange = true;
+
+				//即时设置风格
+				if (m_selectLexer != nullptr)
+				{
+					m_selectLexer->setColor(color, m_selectStyleId);
+				}
+
+				if (ui.useGbFc->isChecked())
+				{
+					slot_useAlobalFgColor(true);
+				}
+			}
+			
+		}
+		else if (!ui.modiryAllColor->isChecked())
+		{
+			//当前前景色是否变化
+			if (m_curStyleData.color != color)
+			{
+				m_curStyleData.color = color;
+				fillForegroundColor(color);
+				m_isStyleChange = true;
+
+				//即时设置风格
+				if (m_selectLexer != nullptr)
+				{
 					m_selectLexer->setColor(color, m_selectStyleId);
 
 					emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, color, m_curStyleData.paper, m_curStyleData.font, false);
+				}
 			}
 		}
-	}
 		else
 		{
 			//全部风格颜色修改
@@ -652,22 +1037,22 @@ void QtLangSet::slot_changeFgColor()
 			//即时设置风格
 			if (m_selectLexer != nullptr)
 			{
-				int row = ui.styleListWidget->count();
+				/*int row = ui.styleListWidget->count();
 
 				QListWidgetItem* item = nullptr;
 
 				for (int i = 0; i < row; ++i)
 				{
 					item = ui.styleListWidget->item(i);
-					int styleId = item->data(Qt::UserRole).toInt();
-					m_selectLexer->setColor(color, styleId);
-				}
+					int styleId = item->data(Qt::UserRole).toInt();*/
+					m_selectLexer->setColor(color, -1);
+				/*}*/
 
 				saveCurLangSettings();
 				emit viewLexerChange(m_selectLexer->lexerTag());
 			}
-	
-}
+			
+		}
 	}
 	
 }
@@ -675,9 +1060,33 @@ void QtLangSet::slot_changeFgColor()
 //修改背景色
 void QtLangSet::slot_changeBkColor()
 {
-	QColor color = QColorDialog::getColor(Qt::white, this, tr("Style Background Color"));
+	QColor color = QColorDialog::getColor(m_curStyleData.paper, this, tr("Style Background Color"));
 	if (color.isValid())
 	{
+		//全局修改，把所有语言的所有风格都设置
+		if (m_isGlobelItem)
+		{
+			if (m_curStyleData.paper != color)
+			{
+				m_curStyleData.paper = color;
+				fillBackgroundColor(color);
+				m_isStyleChange = true;
+
+				//即时设置风格
+				if (m_selectLexer != nullptr)
+				{
+					m_selectLexer->setPaper(color, m_selectStyleId);
+				}
+
+				if (ui.useGbBc->isChecked())
+				{
+					slot_useAlobalBkColor(true);
+				}
+			}
+
+		}
+		else if (!ui.modiryAllColor->isChecked())
+		{
 		//当前前景色是否变化
 		if (m_curStyleData.paper != color)
 		{
@@ -693,6 +1102,25 @@ void QtLangSet::slot_changeBkColor()
 			}
 		}
 	}
+		else
+		{
+			//全部风格颜色修改
+			//当前前景色是否变化
+			m_curStyleData.paper = color;
+			fillBackgroundColor(color);
+			m_isStyleChange = true;
+
+			//即时设置风格
+			if (m_selectLexer != nullptr)
+			{
+				m_selectLexer->setPaper(color, -1);
+				
+				saveCurLangSettings();
+				emit viewLexerChange(m_selectLexer->lexerTag());
+}
+
+		}
+	}
 }
 
 void QtLangSet::slot_saveClick()
@@ -700,37 +1128,164 @@ void QtLangSet::slot_saveClick()
 	saveCurLangSettings();
 }
 
-
-
 //恢复初始化设置
 void QtLangSet::slot_reset()
 {
 	if (m_selectLexer != nullptr)
 	{
-		if (QMessageBox::Yes != QMessageBox::question(this, tr("Reset Style"), tr("Are you sure to reset language %1 sytle").arg(m_selectLexer->lexerTag())))
+		if (!m_isGlobelItem)
 		{
-			return;
-		}
-		//如果存在自定义的配置，也删除掉
-		QString cfgPath = QString("notepad/%1").arg(m_selectLexer->lexerTag());
+			if (QMessageBox::Yes != QMessageBox::question(this, tr("Reset Style"), tr("Are you sure to reset language %1 sytle").arg(m_selectLexer->lexerTag())))
+			{
+				return;
+			}
 
-		QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
-		if (QFile::exists(qs.fileName()))
+			//一旦重置，当前修改无条件不保存。否则避免当前的刚刚重置，又被保存
+			m_isStyleChange = false;
+
+			//如果存在自定义的配置，也删除掉
+			QString cfgPath = QString("notepad/userstyle/%1").arg(m_selectLexer->lexerTag());
+
+			QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
+			if (QFile::exists(qs.fileName()))
+			{
+				QFile::remove(qs.fileName());
+			}
+
+			//一定要先保存，因为selectInitLangTag后可能会变化
+
+			int row = ui.styleListWidget->currentRow();
+
+			selectInitLangTag(m_selectLexer->lexerTag());
+
+			//手动刷新UI
+			QListWidgetItem* styleItem = ui.styleListWidget->item(row);
+
+			syncShowStyleItemToUI(styleItem);
+
+			emit viewLexerChange(m_selectLexer->lexerTag());
+		}
+		else
 		{
-			QFile::remove(qs.fileName());
+			//如果是全局重置，则把所有语言都重置
+			if (QMessageBox::Yes != QMessageBox::question(this, tr("Reset All Style"), tr("Are you sure to reset All language sytle")))
+			{
+				return;
+			}
+			restoreOriginLangAllStyle();
+			previewAllGoblalChange();
+
+			//手动刷新UI。全局目前只有一行全局设置
+
+			if (m_selectLexer != nullptr)
+			{
+				delete m_selectLexer;
+			}
+			m_selectLexer  = ScintillaEditView::createLexer(L_GLOBAL,"",true);
+
+			QListWidgetItem* styleItem = ui.styleListWidget->item(0);
+
+			syncShowStyleItemToUI(styleItem);
 		}
+	}
+}
 
-		//一定要先保存，因为selectInitLangTag后可能会变化
 
-		int row = ui.styleListWidget->currentRow();
+void QtLangSet::slot_useAlobalFgColor(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_FG_COLOR);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_FG_COLOR);
+		previewAllGoblalChange();
+	}
 
-		selectInitLangTag(m_selectLexer->lexerTag());
+}
 
-		//手动刷新UI
-		QListWidgetItem* styleItem = ui.styleListWidget->item(row);
+void QtLangSet::slot_useAlobalBkColor(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_BK_COLOR);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_BK_COLOR);
+		previewAllGoblalChange();
+	}
+}
 
-		syncShowStyleItemToUI(styleItem);
+void QtLangSet::slot_useAlobalFont(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_FONT);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_FONT);
+		previewAllGoblalChange();
+	}
+}
 
-		emit viewLexerChange(m_selectLexer->lexerTag());
+void QtLangSet::slot_useAlobalFontSize(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_FONT_SIZE);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_FONT_SIZE);
+		previewAllGoblalChange();
+	}
+}
+
+void QtLangSet::slot_useAlobalFontBold(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_FONT_BOLD);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_FONT_BOLD);
+		previewAllGoblalChange();
+	}
+}
+
+void QtLangSet::slot_useAlobalFontUnderline(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_FONT_UNDERLINE);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_FONT_UNDERLINE);
+		previewAllGoblalChange();
+	}
+}
+
+void QtLangSet::slot_useAlobalFontItalic(bool check)
+{
+	if (check)
+	{
+		updateAllLangeStyleWithGlobal(GLOBAL_FONT_ITALIC);
+		previewAllGoblalChange();
+	}
+	else
+	{
+		restoreOriginLangOneStyle(GLOBAL_FONT_ITALIC);
+		previewAllGoblalChange();
 	}
 }

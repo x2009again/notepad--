@@ -5,7 +5,7 @@
 #include "ccnotepad.h"
 #include "styleset.h"
 #include "qtlangset.h"
-
+#include "findwin.h"
 #include <Scintilla.h>
 #include <SciLexer.h>
 #include <QImage>
@@ -53,12 +53,17 @@
 #include <Qsci/qscilexergo.h>
 #include <Qsci/qscilexertext.h>
 #include <Qsci/qscilexernsis.h>
+#include <Qsci/qscilexerglobal.h>
 #include <QScrollBar>
 #include <unordered_set>
+#include <QClipboard>
 #include <QDebug>
 
+
 #include <stdexcept>
-#include "findwin.h"
+#include <mutex>
+
+
 
 // initialize the static variable
 #define DEFAULT_FONT_NAME "Courier New" //"Microsoft YaHei"  
@@ -77,13 +82,6 @@ const int ScintillaEditView::_SC_MARGE_FOLDER = 2;
 
 const int MAX_PRE_NEXT_TIMES = 30;
 
-//const int ScintillaEditView::_markersArray[][NB_FOLDER_STATE] = {
-//  {SC_MARKNUM_FOLDEROPEN, SC_MARKNUM_FOLDER, SC_MARKNUM_FOLDERSUB, SC_MARKNUM_FOLDERTAIL, SC_MARKNUM_FOLDEREND,        SC_MARKNUM_FOLDEROPENMID,     SC_MARKNUM_FOLDERMIDTAIL},
-//  {SC_MARK_MINUS,         SC_MARK_PLUS,      SC_MARK_EMPTY,        SC_MARK_EMPTY,         SC_MARK_EMPTY,               SC_MARK_EMPTY,                SC_MARK_EMPTY},
-//  {SC_MARK_ARROWDOWN,     SC_MARK_ARROW,     SC_MARK_EMPTY,        SC_MARK_EMPTY,         SC_MARK_EMPTY,               SC_MARK_EMPTY,                SC_MARK_EMPTY},
-//  {SC_MARK_CIRCLEMINUS,   SC_MARK_CIRCLEPLUS,SC_MARK_VLINE,        SC_MARK_LCORNERCURVE,  SC_MARK_CIRCLEPLUSCONNECTED, SC_MARK_CIRCLEMINUSCONNECTED, SC_MARK_TCORNERCURVE},
-//  {SC_MARK_BOXMINUS,      SC_MARK_BOXPLUS,   SC_MARK_VLINE,        SC_MARK_LCORNER,       SC_MARK_BOXPLUSCONNECTED,    SC_MARK_BOXMINUSCONNECTED,    SC_MARK_TCORNER}
-//};
 #ifdef Q_OS_WIN
 LanguageName ScintillaEditView::langNames[L_EXTERNAL + 1] = {
 {QString("normal"),		QString("Normal QString"),		QString("Normal text file"),								L_TXT,			SCLEX_NULL},
@@ -186,7 +184,7 @@ LanguageName ScintillaEditView::langNames[L_EXTERNAL + 1] = {
 #endif
 
 ScintillaEditView::ScintillaEditView(QWidget *parent)
-	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false)
+	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false), m_bookmarkPng(nullptr)
 {
 	init();
 }
@@ -194,6 +192,21 @@ ScintillaEditView::ScintillaEditView(QWidget *parent)
 ScintillaEditView::~ScintillaEditView()
 {
 	releaseAllMark();
+
+	if (m_bookmarkPng != nullptr)
+	{
+		delete m_bookmarkPng;
+}
+}
+
+void ScintillaEditView::setLexer(QsciLexer * lexer)
+{
+	QsciScintilla::setLexer(lexer);
+
+	if (lexer->lexerId() == L_TXT)
+	{
+		showMargin(_SC_MARGE_FOLDER,false);
+	}
 }
 
 //void ScintillaEditView::resetDefaultFontStyle()
@@ -206,7 +219,11 @@ ScintillaEditView::~ScintillaEditView()
 
 void ScintillaEditView::setNoteWidget(QWidget * win)
 {
-	m_NoteWin = win;
+	CCNotePad* pv = dynamic_cast<CCNotePad*>(win);
+	if (pv != nullptr)
+	{
+		m_NoteWin = pv;
+}
 }
 
 
@@ -243,18 +260,18 @@ void ScintillaEditView::updateLineNumberWidth(int lineNumberMarginDynamicWidth)
 
 		if(lineNumberMarginDynamicWidth != 0)
 		{
-			auto firstVisibleLineVis = execute(SCI_GETFIRSTVISIBLELINE);
-			auto lastVisibleLineVis = linesVisible + firstVisibleLineVis + 1;
-			auto lastVisibleLineDoc = execute(SCI_DOCLINEFROMVISIBLE, (long)lastVisibleLineVis);
+			int firstVisibleLineVis = execute(SCI_GETFIRSTVISIBLELINE);
+			int lastVisibleLineVis = linesVisible + firstVisibleLineVis + 1;
+			int lastVisibleLineDoc = execute(SCI_DOCLINEFROMVISIBLE, (long)lastVisibleLineVis);
 
 			nbDigits = nbDigitsFromNbLines(lastVisibleLineDoc);
 			nbDigits = nbDigits < 4 ? 4 : nbDigits;
 		}
 		else
 		{
-		auto nbLines = execute(SCI_GETLINECOUNT);
+			int nbLines = execute(SCI_GETLINECOUNT);
 		nbDigits = nbDigitsFromNbLines(nbLines);
-			nbDigits = nbDigits < 5 ? 5 : nbDigits;
+			nbDigits = nbDigits < 4 ? 4 : nbDigits;
 		}
 		
 		auto pixelWidth = 6 + nbDigits * execute(SCI_TEXTWIDTH, STYLE_LINENUMBER, reinterpret_cast<sptr_t>("8"));
@@ -277,7 +294,7 @@ void ScintillaEditView::showMargin(int whichMarge, bool willBeShowed)
 		//DPIManager& dpiManager = NppParameters::getInstance()._dpiManager;
 		int width = 3;
 		if (whichMarge == _SC_MARGE_SYBOLE)
-			width = 8;
+			width = 14;
 		else if (whichMarge == _SC_MARGE_FOLDER)
 			width = 14;
 		execute(SCI_SETMARGINWIDTHN, whichMarge, willBeShowed ? width : 0);
@@ -296,7 +313,8 @@ sptr_t ScintillaEditView::execute(quint32 Msg, uptr_t wParam, sptr_t lParam) con
 
 //status : true 表示存在， false 表示不存在
 //tag，只有在用户自定义语法是，才需要给出。内部自带的语法不需要给出
-QsciLexer* ScintillaEditView::createLexer(int lexerId,QString tag)
+//isOrigin:是否原生lexer，即不读取用户修改过的配置风格
+QsciLexer* ScintillaEditView::createLexer(int lexerId, QString tag, bool isOrigin)
 {
 	QsciLexer* ret = nullptr;
 
@@ -532,6 +550,10 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId,QString tag)
 		ret = new QsciLexerGO();
 		ret->setLexerTag("go");
 		break;
+	case L_GLOBAL:
+		ret = new QsciLexerGlobal();
+		ret->setLexerTag("AllGlobal");
+		break;
 	case L_TXT:
 		ret = new QsciLexerText();
 		ret->setLexerTag("txt");
@@ -550,7 +572,9 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId,QString tag)
 	default:
 		break;
 	}
-	if (ret != nullptr)
+
+
+	if (ret != nullptr && !isOrigin)
 	{
 		ret->setLexerId(lexerId);
 		QtLangSet::readLangSettings(ret, ret->lexerTag());
@@ -583,6 +607,7 @@ void ScintillaEditView::adjuctSkinStyle()
 {
 	setFoldMarginColors(StyleSet::foldfgColor, StyleSet::foldbgColor);
 	setMarginsBackgroundColor(StyleSet::marginsBackgroundColor);
+	setMarginBackgroundColor(_SC_MARGE_SYBOLE, StyleSet::bookmarkBkColor);
 }
 
 void ScintillaEditView::setIndentGuide(bool willBeShowed)
@@ -616,47 +641,41 @@ void ScintillaEditView::init()
 	}
 
 	//开启行号marge
-	//markerDefine(SC_MARGIN_NUMBER,_SC_MARGE_LINENUMBER);
 	setMarginLineNumbers(_SC_MARGE_LINENUMBER, true);
 	
-	//execute(SCI_SETMARGINMASKN, _SC_MARGE_FOLDER, SC_MARGIN_SYMBOL);
-	//execute(SCI_SETMARGINMASKN, _SC_MARGE_FOLDER, SC_MASK_FOLDERS);
+	//QColor foldfgColor(StyleSet::foldfgColor);
+	//QColor foldbgColor(StyleSet::foldbgColor);//默认0xff,0xff,0xff
 
-	QColor foldfgColor(StyleSet::foldfgColor);
-	QColor foldbgColor(StyleSet::foldbgColor);//默认0xff,0xff,0xff
-	//QColor activeFoldFgColor(0xFF, 0, 0);
 
 	//通过fold发现，尽量使用qscint的功能，因为他做了大量封装和简化
 	setFolding(BoxedTreeFoldStyle, _SC_MARGE_FOLDER);
-	setFoldMarginColors(foldfgColor, foldbgColor);
+	//setFoldMarginColors(foldfgColor, foldbgColor);合入adjuctSkinStyle
 
 	//当前fold高亮。QT下面有bug暂时不开启
 	//execute(SCI_MARKERENABLEHIGHLIGHT, true);
-
-	setMarginsBackgroundColor(StyleSet::marginsBackgroundColor); //0xea, 0xf7, 0xff //默认0xf0f0f0
-
+	//setMarginsBackgroundColor(StyleSet::marginsBackgroundColor); //0xea, 0xf7, 0xff //默认0xf0f0f0
 	//execute(SCI_MARKERSETBACK, _SC_MARGE_FOLDER, 0x808080);
 	//execute(SCI_MARKERSETBACKSELECTED, _SC_MARGE_FOLDER, 0xff0000);
 
 	showMargin(_SC_MARGE_LINENUMBER, true);
 
-	//行号、符号、折叠。中间符号留一个很小的间隔
+	//行号、符号、折叠。中间符号留一个很小的间隔。用于圆形的标记符号
 	showMargin(_SC_MARGE_SYBOLE, true);
+
+	setMarginType(_SC_MARGE_SYBOLE, QsciScintilla::SymbolMarginColor);
+	//execute(SCI_MARKERSETALPHA, _SC_MARGE_SYBOLE, 200);
+
+	m_bookmarkPng = new QPixmap(QString(":/Resources/img/bookmark.png"));
+	markerDefine(*m_bookmarkPng, _SC_MARGE_SYBOLE);
+	setMarginSensitivity(_SC_MARGE_SYBOLE, true);
+	connect(this, &QsciScintilla::marginClicked, this, &ScintillaEditView::slot_bookMarkClicked);
+
+	//setMarginBackgroundColor(_SC_MARGE_SYBOLE, StyleSet::marginsBackgroundColor);
+	adjuctSkinStyle();
 	
-	//showMargin(_SC_MARGE_FOLDER, true);
-
-	//设置选中背景色
-	//setSelectionBackgroundColor(QColor(117, 217, 117));
-
-	
-
 	//开始括号匹配，比如html的<>，开启前后这类字段的匹配
 	setBraceMatching(SloppyBraceMatch);
 	setMatchedBraceForegroundColor(QColor(191, 141, 255));
-
-
-
-	//setMatchedBraceBackgroundColor(QColor(191, 141, 255));
 
 	//自动补全效果不好，不开启20211017
 	//setAutoCompletionSource(QsciScintilla::AcsAPIs);   //设置源，自动补全所有地方出现的
@@ -664,13 +683,12 @@ void ScintillaEditView::init()
 	//setAutoCompletionThreshold(1);    //设置每输入一个字符就会出现自动补全的提示
 
 	//设置字体
-	QFont font(DEFAULT_FONT_NAME, 11/*QsciLexer::s_defaultFontSize*/, QFont::Normal);
+	QFont font(DEFAULT_FONT_NAME, 11, QFont::Normal);
 	setFont(font);
 	setMarginsFont(font);
-	//execute(SCI_SETMARGINMASKN, _SC_MARGE_SYBOLE, (1 << MARK_BOOKMARK) | (1 << MARK_HIDELINESBEGIN) | (1 << MARK_HIDELINESEND) | (1 << MARK_HIDELINESUNDERLINE));
 	setMarginsForegroundColor(QColor(0x80, 0x80, 0x80)); //默认0x80, 0x80, 0x80
 	execute(SCI_SETTABWIDTH, 4);
-
+	//setMarginsBackgroundColor(QColor(0xff, 0xff, 0x80));
 	//setPaper(QColor(0xfc, 0xfc, 0xfc));//这个无效
 
 	//使用空格替换tab
@@ -743,12 +761,206 @@ void ScintillaEditView::init()
 	execute(SCI_SETSCROLLWIDTHTRACKING, true);
 
 }
+void ScintillaEditView::bookmarkNext(bool forwardScan)
+{
+	size_t lineno = this->getCurrentLineNumber();
+	int sci_marker = SCI_MARKERNEXT;
+	size_t lineStart = lineno + 1;	//Scan starting from next line
+	int lineRetry = 0;				//If not found, try from the beginning
+	if (!forwardScan)
+	{
+		lineStart = lineno - 1;		//Scan starting from previous line
+		lineRetry = int(this->execute(SCI_GETLINECOUNT));	//If not found, try from the end
+		sci_marker = SCI_MARKERPREVIOUS;
+	}
+	int nextLine = int(this->execute(sci_marker, lineStart, 1 << _SC_MARGE_SYBOLE));
+	if (nextLine < 0)
+		nextLine = int(this->execute(sci_marker, lineRetry, 1 << _SC_MARGE_SYBOLE));
+
+	if (nextLine < 0)
+		return;
+
+	this->execute(SCI_ENSUREVISIBLEENFORCEPOLICY, nextLine);
+	this->execute(SCI_GOTOLINE, nextLine);
+}
+
+void ScintillaEditView::bookmarkAdd(intptr_t lineno) const {
+	if (lineno == -1)
+		lineno = getCurrentLineNumber();
+	if (!bookmarkPresent(lineno))
+		this->execute(SCI_MARKERADD, lineno, _SC_MARGE_SYBOLE);
+}
+
+void ScintillaEditView::bookmarkDelete(size_t lineno) const {
+	if (lineno == -1)
+		lineno = this->getCurrentLineNumber();
+	while (bookmarkPresent(lineno))
+		this->execute(SCI_MARKERDELETE, lineno, _SC_MARGE_SYBOLE);
+}
+
+bool ScintillaEditView::bookmarkPresent(intptr_t lineno) const {
+	if (lineno == -1)
+		lineno = this->getCurrentLineNumber();
+	int state = this->execute(SCI_MARKERGET, lineno);
+	return ((state & (1 << _SC_MARGE_SYBOLE)) != 0);
+}
+
+void ScintillaEditView::bookmarkToggle(intptr_t lineno) const {
+	if (lineno == -1)
+		lineno = this->getCurrentLineNumber();
+
+	if (bookmarkPresent(lineno))
+		bookmarkDelete(lineno);
+	else
+		bookmarkAdd(lineno);
+}
+
+void ScintillaEditView::bookmarkClearAll() const {
+	this->execute(SCI_MARKERDELETEALL, _SC_MARGE_SYBOLE);
+}
+
+void ScintillaEditView::slot_bookMarkClicked(int margin, int line, Qt::KeyboardModifiers state)
+{
+	if (margin == _SC_MARGE_SYBOLE)
+	{
+		bookmarkToggle(line);
+	}
+}
+
+std::mutex mark_mutex;
+
+QString ScintillaEditView::getMarkedLine(int ln)
+{
+	auto lineLen = this->execute(SCI_LINELENGTH, ln);
+	auto lineBegin = this->execute(SCI_POSITIONFROMLINE, ln);
+
+	return this->getGenericTextAsQString(lineBegin, lineBegin + lineLen);
+}
+
+void ScintillaEditView::deleteMarkedline(int ln)
+{
+	int lineLen = static_cast<int32_t>(this->execute(SCI_LINELENGTH, ln));
+	int lineBegin = static_cast<int32_t>(this->execute(SCI_POSITIONFROMLINE, ln));
+	bookmarkDelete(ln);
+
+	QByteArray str2replace;
+
+	this->replaceTarget(str2replace, lineBegin, lineBegin + lineLen);
+}
+
+void str2Cliboard(QString& text)
+{
+	QClipboard* clip = QApplication::clipboard();
+	clip->setText(text);
+}
+
+void ScintillaEditView::cutMarkedLines()
+{
+	std::lock_guard<std::mutex> lock(mark_mutex);
+
+	int lastLine = this->lastZeroBasedLineNumber();
+	QString globalStr;
+
+	this->execute(SCI_BEGINUNDOACTION);
+	for (int i = lastLine; i >= 0; i--)
+	{
+		if (bookmarkPresent(i))
+		{
+			QString currentStr = getMarkedLine(i) + globalStr;
+			globalStr = currentStr;
+
+			deleteMarkedline(i);
+		}
+	}
+	this->execute(SCI_ENDUNDOACTION);
+	str2Cliboard(globalStr);
+}
+
+void ScintillaEditView::copyMarkedLines()
+{
+	int lastLine = this->lastZeroBasedLineNumber();
+	QString globalStr;
+	for (int i = lastLine; i >= 0; i--)
+	{
+		if (bookmarkPresent(i))
+		{
+			QString currentStr = getMarkedLine(i) + globalStr;
+			globalStr = currentStr;
+		}
+	}
+	str2Cliboard(globalStr);
+}
+
+void ScintillaEditView::replaceMarkedline(int ln, QByteArray& str)
+{
+	int lineBegin = static_cast<int32_t>(this->execute(SCI_POSITIONFROMLINE, ln));
+	int lineEnd = static_cast<int32_t>(this->execute(SCI_GETLINEENDPOSITION, ln));
+
+	this->replaceTarget(str, lineBegin, lineEnd);
+}
+
+void ScintillaEditView::pasteToMarkedLines()
+{
+	std::lock_guard<std::mutex> lock(mark_mutex);
+
+	QClipboard* clip = QApplication::clipboard();
+	const  QMimeData *mimeData = clip->mimeData();
+	if (!mimeData->hasText())
+	{
+		return;
+	}
+
+	int lastLine = this->lastZeroBasedLineNumber();
+	QString clipboardStr = clip->text();
+
+	this->execute(SCI_BEGINUNDOACTION);
+	for (int i = lastLine; i >= 0; i--)
+	{
+		if (bookmarkPresent(i))
+		{
+			QByteArray text = clipboardStr.toUtf8();
+			replaceMarkedline(i, text);
+		}
+	}
+	this->execute(SCI_ENDUNDOACTION);
+}
 
 //X方向滚动条值变化后的槽函数。一旦滚动则会出发这里，发送消息给中介，让中介去同步另外一方
 void ScintillaEditView::slot_scrollXValueChange(int value)
 {
 	slot_delayWork();
 	autoAdjustLineWidth(value);
+}
+
+void ScintillaEditView::deleteMarkedLines(bool isMarked)
+{
+	std::lock_guard<std::mutex> lock(mark_mutex);
+
+	int lastLine = this->lastZeroBasedLineNumber();
+
+	this->execute(SCI_BEGINUNDOACTION);
+	for (int i = lastLine; i >= 0; i--)
+	{
+		if (bookmarkPresent(i) == isMarked)
+			deleteMarkedline(i);
+	}
+	this->execute(SCI_ENDUNDOACTION);
+}
+
+void ScintillaEditView::inverseMarks()
+{
+	int lastLine = this->lastZeroBasedLineNumber();
+	for (int i = 0; i <= lastLine; ++i)
+	{
+		if (bookmarkPresent(i))
+		{
+			bookmarkDelete(i);
+		}
+		else
+		{
+			bookmarkAdd(i);
+		}
+	}
 }
 
 void ScintillaEditView::slot_linePosChanged(int /*line*/, int pos)
@@ -913,6 +1125,17 @@ void ScintillaEditView::highlightViewWithWord(QString & word2Hilite)
 	this->execute(SCI_SETTARGETRANGE, originalStartPos, originalEndPos);
 }
 
+void ScintillaEditView::contextUserDefineMenuEvent(QMenu* menu)
+{
+	//QAction* action;
+	if (menu != nullptr && (m_NoteWin !=nullptr))
+	{
+		menu->addAction(tr("Show File in Explorer"), m_NoteWin, &CCNotePad::slot_showFileInExplorer);
+	}
+	menu->show();
+}
+
+
 void ScintillaEditView::slot_delayWork()
 {
 	if (!hasSelectedText())
@@ -924,112 +1147,28 @@ void ScintillaEditView::slot_delayWork()
 	if (!word.isEmpty())
 	{
 		highlightViewWithWord(word);
-#if 0
-		QVector<int>resultPos;
-		resultPos.reserve(50);
-
-		int firstLine = execute(SCI_GETFIRSTVISIBLELINE);
-		int nbLineOnScreen = execute(SCI_LINESONSCREEN);
-		int nbLines = std::min(nbLineOnScreen, MAXLINEHIGHLIGHT) + 1;
-		int lastLine = firstLine + nbLines;
-
-
-		long startPos = execute(SCI_POSITIONFROMLINE, firstLine);
-		long endPos = execute(SCI_POSITIONFROMLINE, lastLine);
-
-		if (endPos == -1)
-		{	
-			endPos = execute(SCI_GETLENGTH);
 		}
-
-		int curpos = execute(SCI_GETCURRENTPOS);
-		int mainSelect = 1;
-
-		//struct Sci_TextToFind findOptions;
-		////20220226发现高亮全选如果范围过大，会导致卡死。借鉴notepad的只高亮可视化区域。但是滚动时也必须生效
-		////findOptions.chrg.cpMin = 0;
-		////findOptions.chrg.cpMax = execute(SCI_GETLENGTH);
-		//
-		//findOptions.chrg.cpMin = startPos;
-		//findOptions.chrg.cpMax = endPos;
-		//findOptions.lpstrText = wordStr.c_str();
-		//20220422 升级高版本scint后，发现Sci_TextToFind要崩溃，替换为SCI_SEARCHINTARGET
-		//int pos = execute(SCI_FINDTEXT, SCFIND_MATCHCASE | SCFIND_WHOLEWORD, reinterpret_cast<sptr_t>(&findOptions));
-
-		//std::string wordStr = word.toStdString();
-		QByteArray wordStr = word.toUtf8();
-
-		SendScintilla(SCI_SETTARGETSTART, startPos);
-		SendScintilla(SCI_SETTARGETEND, endPos);
-
-		SendScintilla(SCI_SETSEARCHFLAGS, SCFIND_MATCHCASE|SCFIND_WHOLEWORD);
-
-		long lens = wordStr.length();
-		long pos = SendScintilla(SCI_SEARCHINTARGET, lens, wordStr.data()/*,wordStr.c_str()*/);
-
-		while ((pos != -1)&&(pos < endPos))
-		{
-			resultPos.append(pos);
-
-			if (pos <= curpos)
-			{
-				mainSelect = resultPos.size();
 			}
-
-			SendScintilla(SCI_SETTARGETSTART, pos + lens);
-			SendScintilla(SCI_SETTARGETEND, endPos);
-			pos = SendScintilla(SCI_SEARCHINTARGET, wordStr.length(), wordStr.data()/*,wordStr.c_str()*/);
-			//findOptions.chrg.cpMin = findOptions.chrgText.cpMax;
-			//pos = execute(SCI_FINDTEXT, SCFIND_MATCHCASE | SCFIND_WHOLEWORD, reinterpret_cast<sptr_t>(&findOptions));
-		}
-
-		for (int i = 0, size = resultPos.size(); i < size; ++i)
-		{
-			//execute(SCI_ADDSELECTION, resultPos.at(i) + lens, resultPos.at(i) );
-
-			execute(SCI_SETINDICATORCURRENT, SCE_UNIVERSAL_FOUND_STYLE_SMART);
-
-			execute(SCI_INDICATORFILLRANGE, resultPos.at(i), lens);
-		}
-
-		//当前有高亮的字段
-		if (resultPos.size() > 0)
-		{
-			m_hasHighlight = true;
-		}
-
-		/*if (!resultPos.isEmpty())
-		{
-			execute(SCI_SETMAINSELECTION, mainSelect - 1);
-		}*/
-#endif
-	}
-}
 
 void ScintillaEditView::dragEnterEvent(QDragEnterEvent* event)
 {
-	//if (event->mimeData()->hasFormat("text/uri-list")) //只能打开文本文件
-	//{
-	//	event->accept(); //可以在这个窗口部件上拖放对象
-	//}
-	//else
-	//{
-	//	event->ignore();
-	//}
 	event->accept();
 	}
 
 void ScintillaEditView::dropEvent(QDropEvent* e)
 {
 	QList<QUrl> urls = e->mimeData()->urls();
-	if (urls.isEmpty())
-		return;
+	if (!urls.isEmpty())
+	{
 
 	CCNotePad* pv = dynamic_cast<CCNotePad*>(m_NoteWin);
 	if (pv != nullptr)
+	{
 		pv->receiveEditDrop(e);
-
-	//qDebug() << ui.leftSrc->geometry() << ui.rightSrc->geometry() << QCursor::pos() << this->mapFromGlobal(QCursor::pos());
+}
+		return;
+	}
+	QsciScintilla::dropEvent(e);
 }
 
 

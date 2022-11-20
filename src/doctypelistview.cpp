@@ -4,7 +4,7 @@
 #include <QLineEdit>
 #include <QtDebug>
 #include <QThread>
-#include "jsondeploy.h"
+#include "nddsetting.h"
 
 //已知的文档类型
 
@@ -51,7 +51,7 @@ void DocTypeListView::initSupportFileTypes()
 	}
 
 	//如果数据库不存在，则使用默认值来进行初始化
-	if (!JsonDeploy::isDbExist())
+	if (!NddSetting::isDbExist())
 	{
 		QStringList types;
 		types << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
@@ -81,7 +81,7 @@ void DocTypeListView::initSupportFileTypes()
 		//从数据库动态读取配置
 		QString key("typelist");
 
-		QString typeList = JsonDeploy::getKeyValueFromLongSets(key);
+		QString typeList = NddSetting::getKeyValueFromSets(key);
 
 		if (typeList.isEmpty())
 		{
@@ -97,7 +97,7 @@ void DocTypeListView::initSupportFileTypes()
 
 			QString typeStr = types.join("|");
 
-			JsonDeploy::addKeyValueToLongSets(key, typeStr);
+			NddSetting::addKeyValueToSets(key, typeStr);
 
 			typeStr.replace('|',':');
 
@@ -206,7 +206,7 @@ void DocTypeListView::save()
 	{
 		QString key("typelist");
 		QString typeStr = s_extBindFileType.join("|");
-		JsonDeploy::updataKeyValueFromLongSets(key, typeStr);
+		NddSetting::updataKeyValueFromSets(key, typeStr);
 		m_isDirty = false;
 	}
 }

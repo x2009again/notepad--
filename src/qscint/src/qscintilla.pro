@@ -117,7 +117,8 @@ HEADERS = \
     ./Qsci/qscilexeredifact.h \
     ./Qsci/qscilexerfortran.h \
     ./Qsci/qscilexerfortran77.h \
-    ./Qsci/qscilexergo.h \
+	./Qsci/qscilexergo.h \
+    ./Qsci/qscilexerglobal.h \
     ./Qsci/qscilexertext.h \
     ./Qsci/qscilexerhtml.h \
     ./Qsci/qscilexeridl.h \
@@ -244,7 +245,8 @@ SOURCES = \
     qscilexeredifact.cpp \
     qscilexerfortran.cpp \
     qscilexerfortran77.cpp \
-    qscilexergo.cpp \
+	qscilexergo.cpp \
+    qscilexerglobal.cpp \
     qscilexertext.cpp \
     qscilexerhtml.cpp \
     qscilexeridl.cpp \

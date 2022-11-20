@@ -1,5 +1,5 @@
 ﻿#include "ccnotepad.h"
-#include "jsondeploy.h"
+#include "nddsetting.h"
 #include "styleset.h"
 
 
@@ -23,13 +23,18 @@
 
 #ifdef Q_OS_WIN
 #pragma comment(lib, "user32.lib")
+#if _DEBUG
+#pragma comment(lib, "qmyedit_qt5d.lib")
+#else
+#pragma comment(lib, "qmyedit_qt5.lib")
+#endif
 #include <qt_windows.h>
 const ULONG_PTR CUSTOM_TYPE = 10000;
 const ULONG_PTR OPEN_NOTEPAD_TYPE = 10001;
 bool s_isAdminAuth = false;
 #endif
 
-const QString c_strTitle = "notepad-- v1.17.1";
+const QString c_strTitle = "Ndd";
 
 
 #ifdef Q_OS_UNIX
@@ -281,9 +286,9 @@ drop_old:
 	//20221009发现有小概率出现窗口没有，但是进程还在的诡异问题，加个保护一下
 	QApplication::setQuitOnLastWindowClosed(true);
 
-	JsonDeploy::init();
+	NddSetting::init();
 
-	int id = JsonDeploy::getKeyValueFromNumSets(SKIN_KEY);
+	int id = NddSetting::getKeyValueFromNumSets(SKIN_KEY);
 	StyleSet::setSkin(id);
 
 	CCNotePad *pMainNotepad = new CCNotePad(true);
@@ -326,11 +331,6 @@ drop_old:
     memcpy(nppShared.data(), &pid, sizeof(pid_t));
     nppShared.unlock();
 #endif // Q_OS_WIN
-
-	//else
-	//{
-	//	pMainNotepad->initTabNewOne();
-	//}
 	//恢复上次关闭时的文件
 #ifdef Q_OS_WIN
 	if (!s_isAdminAuth)
@@ -358,7 +358,7 @@ drop_old:
 
 	a.exec();
 
-	JsonDeploy::close();
+	NddSetting::close();
 
 	return 0;
 }

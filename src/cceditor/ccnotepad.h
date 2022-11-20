@@ -116,11 +116,13 @@ public:
 	int runAsAdmin(const QString & filePath);
 	void checkAppFont();
 #endif
+
 	void syncCurSkinToMenu(int id);
 
 	int restoreLastFiles();
 
 	ScintillaEditView * getCurEditView();
+	void getCurUseLexerTags(QVector<QString>& tag);
 
 signals:
 	void signSendRegisterKey(QString key);
@@ -148,10 +150,12 @@ public slots:
 	void slot_viewStyleChange(QString tag, int styleId, QColor & fgColor, QColor & bkColor, QFont & font, bool fontChange);
 	void slot_viewLexerChange(QString tag);
 	void slot_findInDir();
+	void slot_showFileInExplorer();
 protected:
 	void closeEvent(QCloseEvent *event) override;
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* e) override;
+	bool eventFilter(QObject *watched, QEvent *event)override;
 #ifdef Q_OS_WIN
 	bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 #endif
@@ -166,7 +170,6 @@ private slots:
 	void slot_saveAllFile();
 	void slot_autoSaveFile(bool);
 	void slot_timerAutoSave();
-
 
 	void slot_tabCurrentChanged(int index);
 	void slot_copyAvailable(bool select);
@@ -188,6 +191,7 @@ private slots:
 	void slot_markHighlight();
 	void slot_clearMark();
 	void slot_wordHighlight();
+	void slot_findResultPosChangeed(Qt::DockWidgetArea area);
 	void slot_findResultItemDoubleClick(const QModelIndex & index);
 	void slot_showFindAllInCurDocResult(FindRecords * record);
 	void slot_showfindAllInOpenDocResult(QVector<FindRecords*>* record, int hits, QString whatFind);
@@ -205,11 +209,14 @@ private slots:
 	void slot_load_with_utf8_bom();
 	void slot_load_with_utf16_be();
 	void slot_load_with_utf16_le();
+	void slot_load_with_big5();
 	void slot_encode_gbk();
 	void slot_encode_utf8();
 	void slot_encode_utf8_bom();
 	void slot_encode_utf16_be();
 	void slot_encode_utf16_le();
+	void slot_encode_big5();
+
 	void slot_lexerActTrig(QAction * action);
 	void slot_compareFile();
 	void slot_compareDir();
@@ -219,11 +226,12 @@ private slots:
 	void slot_reOpenHexMode();
 	void slot_selectLeftFile();
 	void slot_selectRightFile();
-	void slot_showFileInExplorer();
+
 	void slot_openFileInNewWin();
 	void slot_about();
+	void slot_aboutNdd();
 	void slot_fileChange(QString filePath);
-
+	void slot_tabBarDoubleClicked(int index);
 	void slot_toLightBlueStyle();
 	void slot_toDefaultStyle();
 	void slot_toThinBlueStyle();
@@ -233,6 +241,7 @@ private slots:
 	void slot_toLavenderBlush();
 	void slot_toMistyRose();
 	void slot_register();
+
 	void slot_slectionChanged();
 	void slot_preHexPage();
 	void slot_nextHexPage();
@@ -240,10 +249,9 @@ private slots:
 	void slot_hexGotoFile(qint64 addr);
 	void slot_tabFormatChange(bool tabLenChange, bool useTabChange);
 	void slot_searchResultShow();
-	//void slot_txtFontChange(QFont & font);
-	//void slot_proLangFontChange(QFont &font);
 	void slot_saveFile(QString fileName, ScintillaEditView * pEdit);
 	void slot_skinStyleGroup(QAction * action);
+	void slot_changeIconSize(QAction * action);
 	void slot_langFormat();
 
 	void slot_removeHeadBlank();
@@ -267,7 +275,7 @@ private slots:
 	void slot_spaceToTabAll();
 	void slot_spaceToTabLeading();
 
-
+	
 	void slot_dupCurLine();
 	void slot_removeDupLine();
 	void slot_splitLines();
@@ -283,6 +291,11 @@ private slots:
 	void slot_sortLexDesc();
 	void slot_sortLexDescIngCase();
 
+	void slot_findNext();
+	void slot_findPrev();
+	void slot_escQuit();
+	void slot_bookMarkAction();
+	void slot_loadBookMarkMenu();
 
 private:
 	void initFindResultDockWin();
@@ -302,6 +315,7 @@ private:
 	void updateCurTabSaveStatus();
 	void setSaveButtonStatus(bool needSave);
 	void setSaveAllButtonStatus(bool needSave);
+	void tabClose(int index, bool isInQuit=false);
 	void setDocEolMode(ScintillaEditView * pEdit, RC_LINE_FORM endStatus);
 	void convertDocLineEnd(RC_LINE_FORM endStatus);
 	void transDocToEncord(CODE_ID destCode);
@@ -322,7 +336,6 @@ private:
 	void reloadEditFile(ScintillaEditView * pEidt);
 	void initFindWindow();
 	void setToFileRightMenu();
-
 
 	QString getShortName(const QString& name);
 
@@ -359,6 +372,11 @@ private:
 	void dealLineSort(LINE_SORT_TYPE type);
 
 	void find(FindTabIndex findType);
+
+	void registerEscKeyShort(QWidget * parent);
+	void closeAllFileWhenQuit(bool isQuit=false);
+
+
 private:
 	Ui::CCNotePad ui;
 
@@ -387,6 +405,7 @@ private:
 	QActionGroup *m_pEncodeActGroup;
 	QActionGroup *m_pLineEndActGroup;
 	QActionGroup *m_pLexerActGroup;
+	QActionGroup *m_pIconSize;
 
 	QAction* m_quitAction;
 
@@ -455,6 +474,7 @@ private:
 
 	static int s_autoWarp; //自动换行
 	static int s_indent; //自动缩进
+	static int s_zoomValue;
 	
 	//QString m_txtFontStr;//从数据库读取的字体字符串
 	//QString m_proLangFontStr;//从数据库读取的字体字符串
@@ -463,12 +483,8 @@ private:
 
 	QTimer * m_timerAutoSave;
 
-	int m_initWidth;
-	int m_initHeight;
-
 public:
 		static QString s_lastOpenDirPath;
 	static int s_restoreLastFile; //自动恢复上次打开的文件
-
 };
 

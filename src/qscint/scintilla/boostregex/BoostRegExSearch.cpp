@@ -37,7 +37,7 @@
 #include "BoostRegexSearch.h"
 #include <boost/regex.hpp>
 #include <boost/throw_exception.hpp>
-#include "..\include\BoostRegexSearch.h"
+#include "BoostRegexSearch.h"
 #define CP_UTF8 65001
 #define SC_CP_UTF8 65001
 
