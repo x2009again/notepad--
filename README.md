@@ -13,7 +13,9 @@
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.17
 
-做国人自己的免费编辑器，离不开您的支持，请通过微信赞赏我们。
+最新开发预览版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.18
+
+ **做国人自己的免费编辑器，离不开您的支持，请通过微信捐赠我们。** 
 
 ![输入图片说明](6688.png)
 
