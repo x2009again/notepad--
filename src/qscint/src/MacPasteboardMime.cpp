@@ -1,4 +1,4 @@
-// This module implements part of the support for rectangular selections on
+﻿// This module implements part of the support for rectangular selections on
 // macOS.  It is a separate file to avoid clashes between macOS and Scintilla
 // data types.
 //

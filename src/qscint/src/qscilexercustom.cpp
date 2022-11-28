@@ -1,4 +1,4 @@
-// This module implements the QsciLexerCustom class.
+﻿// This module implements the QsciLexerCustom class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

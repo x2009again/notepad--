@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AE5F370E-FA65-375E-8BEC-9AD70395BF33}</ProjectGuid>
+    <ProjectGuid>{1A6F5081-AC34-3289-B3D1-C03725833468}</ProjectGuid>
     <RootNamespace>qmyedit_qt5</RootNamespace>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -65,11 +65,11 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>5.12.10_msvc2017_64</QtInstall>
+    <QtInstall>msvc2017_64</QtInstall>
     <QtModules>core;gui;widgets;printsupport</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>5.12.10_msvc2017_64</QtInstall>
+    <QtInstall>msvc2017_64</QtInstall>
     <QtModules>core;gui;widgets;printsupport</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -77,7 +77,7 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\scintilla\boostregex;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -118,7 +118,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\scintilla\boostregex;debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -158,6 +158,7 @@
   <ItemGroup>
     <ClCompile Include="..\scintilla\lexlib\Accessor.cpp" />
     <ClCompile Include="..\scintilla\src\AutoComplete.cpp" />
+    <ClCompile Include="..\scintilla\boostregex\BoostRegExSearch.cpp" />
     <ClCompile Include="..\scintilla\src\CallTip.cpp" />
     <ClCompile Include="..\scintilla\src\CaseConvert.cpp" />
     <ClCompile Include="..\scintilla\src\CaseFolder.cpp" />
@@ -308,6 +309,7 @@
     <ClCompile Include="..\scintilla\src\Selection.cpp" />
     <ClCompile Include="..\scintilla\src\Style.cpp" />
     <ClCompile Include="..\scintilla\lexlib\StyleContext.cpp" />
+    <ClCompile Include="..\scintilla\boostregex\UTF8DocumentIterator.cpp" />
     <ClCompile Include="..\scintilla\src\UniConversion.cpp" />
     <ClCompile Include="..\scintilla\src\ViewStyle.cpp" />
     <ClCompile Include="..\scintilla\lexlib\WordList.cpp" />
@@ -332,6 +334,7 @@
     <ClCompile Include="qscilexeredifact.cpp" />
     <ClCompile Include="qscilexerfortran.cpp" />
     <ClCompile Include="qscilexerfortran77.cpp" />
+    <ClCompile Include="qscilexerglobal.cpp" />
     <ClCompile Include="qscilexergo.cpp" />
     <ClCompile Include="qscilexerhtml.cpp" />
     <ClCompile Include="qscilexeridl.cpp" />
@@ -371,6 +374,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\scintilla\lexlib\Accessor.h" />
+    <ClInclude Include="..\scintilla\boostregex\AnsiDocumentIterator.h" />
     <ClInclude Include="..\scintilla\src\AutoComplete.h" />
     <ClInclude Include="..\scintilla\src\CallTip.h" />
     <ClInclude Include="..\scintilla\src\CaseConvert.h" />
@@ -431,6 +435,7 @@
     <ClInclude Include="..\scintilla\src\Style.h" />
     <ClInclude Include="..\scintilla\lexlib\StyleContext.h" />
     <ClInclude Include="..\scintilla\lexlib\SubStyles.h" />
+    <ClInclude Include="..\scintilla\boostregex\UTF8DocumentIterator.h" />
     <ClInclude Include="..\scintilla\src\UniConversion.h" />
     <ClInclude Include="..\scintilla\src\UniqueString.h" />
     <ClInclude Include="..\scintilla\src\ViewStyle.h" />
@@ -473,6 +478,8 @@
     <QtMoc Include="Qsci\qscilexerfortran.h">
     </QtMoc>
     <QtMoc Include="Qsci\qscilexerfortran77.h">
+    </QtMoc>
+    <QtMoc Include="Qsci\qscilexerglobal.h">
     </QtMoc>
     <QtMoc Include="Qsci\qscilexergo.h">
     </QtMoc>

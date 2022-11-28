@@ -1,4 +1,4 @@
-// This module defines interface to the QsciStyle class.
+﻿// This module defines interface to the QsciStyle class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

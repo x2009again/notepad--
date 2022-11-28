@@ -1,4 +1,4 @@
-// This defines the specialisation of QListBox that handles the Scintilla
+﻿// This defines the specialisation of QListBox that handles the Scintilla
 // double-click callback.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>

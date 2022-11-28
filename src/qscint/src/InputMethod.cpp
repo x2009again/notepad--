@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Riverbank Computing Limited
+﻿// Copyright (c) 2021 Riverbank Computing Limited
 // Copyright (c) 2011 Archaeopteryx Software, Inc.
 // Copyright (c) 1990-2011, Scientific Toolworks, Inc.
 //

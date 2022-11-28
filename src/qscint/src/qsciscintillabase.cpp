@@ -1,4 +1,4 @@
-// This module implements the "official" low-level API.
+﻿// This module implements the "official" low-level API.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

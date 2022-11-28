@@ -1,4 +1,4 @@
-// This module defines interface to the QsciPrinter class.
+﻿// This module defines interface to the QsciPrinter class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

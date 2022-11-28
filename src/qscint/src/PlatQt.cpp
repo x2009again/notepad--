@@ -1,4 +1,4 @@
-// This module implements the portability layer for the Qt port of Scintilla.
+﻿// This module implements the portability layer for the Qt port of Scintilla.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

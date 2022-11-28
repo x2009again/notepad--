@@ -1,4 +1,4 @@
-// This defines the interface to the QsciLexerDiff class.
+﻿// This defines the interface to the QsciLexerDiff class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

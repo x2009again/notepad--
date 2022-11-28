@@ -42,7 +42,7 @@ TRANSLATIONS += realcompare_zh.ts
         DESTDIR = x64/Release
 		LIBS	+= -Lx64/Release
 		LIBS += -lqmyedit_qt5
-                QMAKE_CXXFLAGS += /openmp
+        #QMAKE_CXXFLAGS += /openmp
     }
    }
 unix{

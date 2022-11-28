@@ -1,4 +1,4 @@
-// This module implements the QsciCommandSet class.
+﻿// This module implements the QsciCommandSet class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

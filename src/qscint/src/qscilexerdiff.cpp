@@ -1,4 +1,4 @@
-// This module implements the QsciLexerDiff class.
+﻿// This module implements the QsciLexerDiff class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

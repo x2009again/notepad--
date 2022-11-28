@@ -1,4 +1,4 @@
-// This module defines various things common to all of the Scintilla Qt port.
+﻿// This module defines various things common to all of the Scintilla Qt port.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

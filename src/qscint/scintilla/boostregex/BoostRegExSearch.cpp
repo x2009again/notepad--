@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Copyright (c) since 2009 Simon Steele - http://untidy.net/
  * Based on the work of Simon Steele for Programmer's Notepad 2 (http://untidy.net)
  * Converted from boost::xpressive to boost::regex and performance improvements 

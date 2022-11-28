@@ -1,4 +1,4 @@
-// This defines the interface to the QsciDocument class.
+﻿// This defines the interface to the QsciDocument class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

@@ -1,4 +1,4 @@
-// This module implements the QsciPrinter class.
+﻿// This module implements the QsciPrinter class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

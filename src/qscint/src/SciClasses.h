@@ -1,4 +1,4 @@
-// The definition of various Qt version independent classes used by the rest of
+﻿// The definition of various Qt version independent classes used by the rest of
 // the port.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>

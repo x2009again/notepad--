@@ -1,4 +1,4 @@
-// This defines the interface to the QsciLexerCustom class.
+﻿// This defines the interface to the QsciLexerCustom class.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 

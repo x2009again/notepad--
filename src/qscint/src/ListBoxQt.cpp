@@ -1,4 +1,4 @@
-// This module implements the specialisation of QListBox that handles the
+﻿// This module implements the specialisation of QListBox that handles the
 // Scintilla double-click callback.
 //
 // Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
