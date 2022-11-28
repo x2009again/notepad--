@@ -17,7 +17,7 @@
 
 ![输入图片说明](6688.png)
 
-### 编译说明：
+ **编译说明：** 
 
 1）使用qtcreator 或 vs  先打开qscint/src/qscintilla.pro 。先编译出这个qscintlla的依赖库。
 
