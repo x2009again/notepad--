@@ -1,4 +1,5 @@
 这是一个使用C++编写的文本编辑器Notepad--,可以支持Win/Linux/Mac平台。
+
 我们的目标是要替换Notepad++，重点在国产Uos系统、Mac 系统上发展。
 
 一个支持windows/linux/mac的文本编辑器，目标是要替换notepad++，来自中国。
@@ -12,6 +13,8 @@
 您可以在这个项目提交bug或反馈问题。
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.18
+
+最新预览版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.19
 
 做国人自己的免费编辑器，离不开您的支持，请通过微信赞赏我们。
 
@@ -36,3 +39,7 @@
 ![输入图片说明](png/3.png)
 
 ![输入图片说明](png/4.png)
+
+![输入图片说明](png/7.png)
+
+![输入图片说明](png/8.png)
