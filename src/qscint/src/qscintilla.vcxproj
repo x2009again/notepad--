@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{1A6F5081-AC34-3289-B3D1-C03725833468}</ProjectGuid>
+    <ProjectGuid>{9BC42707-EE25-3B28-9906-F7919E273020}</ProjectGuid>
     <RootNamespace>qmyedit_qt5</RootNamespace>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -65,11 +65,11 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <QtInstall>msvc2017_64</QtInstall>
+    <QtInstall>5.15.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets;printsupport</QtModules>
   </PropertyGroup>
   <PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <QtInstall>msvc2017_64</QtInstall>
+    <QtInstall>5.15.2_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets;printsupport</QtModules>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
@@ -77,7 +77,7 @@
   </ImportGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\scintilla\boostregex;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\scintilla\boostregex;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -85,7 +85,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>release\</ObjectFileName>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;SCINTILLA_QT;SCI_LEXER;INCLUDE_DEPRECATED_FEATURES;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;SCINTILLA_QT;SCI_LEXER;INCLUDE_DEPRECATED_FEATURES;NDEBUG;QT_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>
       </ProgramDataBaseFileName>
@@ -105,7 +105,7 @@
       <WarningLevel>0</WarningLevel>
     </Midl>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;SCINTILLA_QT;SCI_LEXER;INCLUDE_DEPRECATED_FEATURES;QT_NO_DEBUG;QT_PRINTSUPPORT_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;SCINTILLA_QT;SCI_LEXER;INCLUDE_DEPRECATED_FEATURES;NDEBUG;QT_NO_DEBUG;QT_PRINTSUPPORT_LIB;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <QtMoc>
       <CompilerFlavor>msvc</CompilerFlavor>
@@ -118,7 +118,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\scintilla\boostregex;debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;..\scintilla\include;..\scintilla\lexlib;..\scintilla\src;..\scintilla\boostregex;debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -355,11 +355,13 @@
     <ClCompile Include="qscilexerproperties.cpp" />
     <ClCompile Include="qscilexerpython.cpp" />
     <ClCompile Include="qscilexerruby.cpp" />
+    <ClCompile Include="qscilexerrust.cpp" />
     <ClCompile Include="qscilexerspice.cpp" />
     <ClCompile Include="qscilexersql.cpp" />
     <ClCompile Include="qscilexertcl.cpp" />
     <ClCompile Include="qscilexertex.cpp" />
     <ClCompile Include="qscilexertext.cpp" />
+    <ClCompile Include="qscilexervb.cpp" />
     <ClCompile Include="qscilexerverilog.cpp" />
     <ClCompile Include="qscilexervhdl.cpp" />
     <ClCompile Include="qscilexerxml.cpp" />
@@ -521,6 +523,8 @@
     </QtMoc>
     <QtMoc Include="Qsci\qscilexerruby.h">
     </QtMoc>
+    <QtMoc Include="Qsci\qscilexerrust.h">
+    </QtMoc>
     <QtMoc Include="Qsci\qscilexerspice.h">
     </QtMoc>
     <QtMoc Include="Qsci\qscilexersql.h">
@@ -530,6 +534,8 @@
     <QtMoc Include="Qsci\qscilexertex.h">
     </QtMoc>
     <QtMoc Include="Qsci\qscilexertext.h">
+    </QtMoc>
+    <QtMoc Include="Qsci\qscilexervb.h">
     </QtMoc>
     <QtMoc Include="Qsci\qscilexerverilog.h">
     </QtMoc>

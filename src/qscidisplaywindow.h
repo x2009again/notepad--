@@ -48,6 +48,7 @@ public:
 signals:
 	void delayWork();
 	void sign_find(bool v=true);
+	void sign_saveAsFile();
 
 private slots:
 	void slot_delayWork();
@@ -66,9 +67,10 @@ protected:
 	void clearIndicator(int indicatorNumber);
 	void slot_clearHightWord();
 	void highlightViewWithWord(QString & word2Hilite);
-
-
 	void updateLineNumberWidth();
+
+	void setStyleOptions();
+	void setFoldColor(int margin, QColor fgClack, QColor bkColor);
 
 private:
 	RC_DIRECTION m_direction;

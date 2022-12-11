@@ -57,7 +57,8 @@ QsciLexer::QsciLexer(QObject *parent)
 
     // Set the default fore and background colours.
     QPalette pal = QApplication::palette();
-    defColor = pal.text().color();
+    //defColor = pal.text().color();
+	defColor = QColor(Qt::black);
     defPaper = pal.base().color();
 
     // Putting this on the heap means we can keep the style getters const.
@@ -491,7 +492,7 @@ bool QsciLexer::readSettings(QSettings &qs,const char *prefix)
             }
         }
 
-#if 0 //不读取背景颜色，和主题保存一致
+#if 1 //不读取背景颜色，和主题保存一致
         // Read the background colour.
         full_key = key + "paper";
 
@@ -527,7 +528,7 @@ bool QsciLexer::readSettings(QSettings &qs,const char *prefix)
     else
         rc = false;
 
-#if 0
+#if 1
     // Read the default background colour.
     full_key = key + "defaultpaper";
 
@@ -653,7 +654,7 @@ bool QsciLexer::writeSettings(QSettings &qs,const char *prefix) const
 
         qs.setValue(key + "font2", fdesc);
 
-#if 0 //背景颜色和主题皮肤保存一致，故不写入背景颜色
+#if 1 //背景颜色和主题皮肤保存一致，故不写入背景颜色
         // Write the background colour.
         c = paper(i);
         num = (c.red() << 16) | (c.green() << 8) | c.blue();
@@ -676,7 +677,7 @@ bool QsciLexer::writeSettings(QSettings &qs,const char *prefix) const
 
     qs.setValue(key + "defaultcolor", num);
 
-#if 0
+#if 1
     // Write the default background colour.
     num = (defPaper.red() << 16) | (defPaper.green() << 8) | defPaper.blue();
 

@@ -58,6 +58,8 @@ QsciDisplayWindow::QsciDisplayWindow(QWidget *parent):QsciScintilla(parent), m_t
 	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_SMART, false);
 	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_SMART, 0x00ff00);
 
+	setStyleOptions();
+
 	//开启后可以保证长行在滚动条下完整显示
 	execute(SCI_SETSCROLLWIDTHTRACKING, true);
 	connect(this, &QsciScintilla::selectionChanged, this, &QsciDisplayWindow::slot_clearHightWord, Qt::QueuedConnection);
@@ -70,6 +72,61 @@ QsciDisplayWindow::~QsciDisplayWindow()
 	{
 		delete m_textFindWin;
 		m_textFindWin = nullptr;
+	}
+}
+
+void QsciDisplayWindow::setFoldColor(int margin, QColor fgClack, QColor bkColor)
+{
+	SendScintilla(SCI_MARKERSETFORE, margin, fgClack);
+	SendScintilla(SCI_MARKERSETBACK, margin, bkColor);
+}
+
+void QsciDisplayWindow::setStyleOptions()
+{
+	if (StyleSet::m_curStyleId != BLACK_SE)
+	{
+		setMarginsForegroundColor(QColor(0x80, 0x80, 0x80)); //默认0x80, 0x80, 0x80
+	}
+	else
+	{
+		setMarginsForegroundColor(QColor(0xde, 0xde, 0xde)); //默认0x80, 0x80, 0x80
+	}
+	setMarginsBackgroundColor(StyleSet::marginsBackgroundColor);
+	setFoldMarginColors(StyleSet::marginsBackgroundColor, StyleSet::marginsBackgroundColor);
+
+	//如果是黑色主题，则单独做一些风格设置
+	if (StyleSet::m_curStyleId == BLACK_SE)
+	{
+		this->setColor(QColor(0xff, 0xff, 0xff));//有lexer时无效
+		this->setPaper(QColor(0x282020));//有lexer时无效
+
+
+		setCaretLineBackgroundColor(QColor(0x333333));
+		setMatchedBraceForegroundColor(QColor(246, 81, 246));
+		setMatchedBraceBackgroundColor(QColor(18, 90, 36));
+		setCaretForegroundColor(QColor(255, 255, 255));
+		setFoldColor(SC_MARKNUM_FOLDEROPEN, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDER, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDERSUB, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDERTAIL, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDEREND, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDEROPENMID, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDERMIDTAIL, QColor(45, 130, 45), QColor(222, 222, 222));
+	}
+	else
+	{
+		//setCaretLineBackgroundColor(QColor(0xe8e8ff));
+		setCaretLineBackgroundColor(QColor(0xFAF9DE));
+		setMatchedBraceForegroundColor(QColor(191, 141, 255));
+		setMatchedBraceBackgroundColor(QColor(222, 222, 222));
+		setCaretForegroundColor(QColor(0, 0, 0));
+		setFoldColor(SC_MARKNUM_FOLDEROPEN, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDER, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDERSUB, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDERTAIL, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDEREND, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDEROPENMID, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDERMIDTAIL, QColor(Qt::white), QColor(128, 128, 128));
 	}
 }
 
@@ -325,29 +382,6 @@ void QsciDisplayWindow::autoAdjustLineWidth(int xScrollValue)
 		updateLineNumberWidth();
 	}
 }
-//
-//int nbDigitsFromNbLines(size_t nbLines)
-//{
-//	int nbDigits = 0; // minimum number of digit should be 4
-//	if (nbLines < 10) nbDigits = 1;
-//	else if (nbLines < 100) nbDigits = 2;
-//	else if (nbLines < 1000) nbDigits = 3;
-//	else if (nbLines < 10000) nbDigits = 4;
-//	else if (nbLines < 100000) nbDigits = 5;
-//	else if (nbLines < 1000000) nbDigits = 6;
-//	else // rare case
-//	{
-//		nbDigits = 7;
-//		nbLines /= 1000000;
-//
-//		while (nbLines)
-//		{
-//			nbLines /= 10;
-//			++nbDigits;
-//		}
-//	}
-//	return nbDigits;
-//}
 
 void QsciDisplayWindow::updateLineNumberWidth()
 {
@@ -408,6 +442,7 @@ void QsciDisplayWindow::contextUserDefineMenuEvent(QMenu* menu)
 	{
 		menu->addAction(tr("Find Text"), this, SLOT(slot_findText()));
 		menu->addAction(tr("Show File in Explorer"), this, SLOT(slot_showFileInExplorer()));
+		menu->addAction(tr("Save As ..."), this, &QsciDisplayWindow::sign_saveAsFile);
 	}
 	menu->show();
 }

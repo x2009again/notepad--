@@ -28,12 +28,14 @@ public:
 	QtLangSet(QString initTag, QWidget *parent = nullptr);
 	~QtLangSet();
 
-
+	static void setAllLangFontFgColorToDarkStyle();
+    static bool isExistDarkLangSetings();
+	void selectInitLangTag(QString initLangTag);
+	static bool readLangSettings(QsciLexer * lexer, QString tag);
+private:
+	static void setLangFontFgColorToDarkStyle(LangType langId, QString tag="");
 	void startSignSlot();
 
-	void selectInitLangTag(QString initLangTag);
-
-	static 	bool readLangSettings(QsciLexer * lexer, QString tag);
 
 
 signals:
@@ -70,12 +72,15 @@ private slots:
 	void slot_useAlobalFontUnderline(bool);
 	void slot_useAlobalFontItalic(bool);
 
+
+
+
 private:
 	void initLangList();
 	bool readLangSetFile(QString langName, QString & keyword, QString & motherLang, QString & extTypes);
 	void initUserDefineLangList();
 	void setStyleShow(QFont & font, QColor& fcColor, QColor &bkColor);
-	void saveLangeSet(QsciLexer * lexer);
+	static void saveLangeSet(QsciLexer * lexer);
 	bool saveCurLangSettings();
 	void fillForegroundColor(QColor & fcColor);
 	void fillBackgroundColor(QColor & bkColor);
@@ -110,4 +115,8 @@ private:
 
 	//是否是全局修改项
 	bool m_isGlobelItem;
+
+public:
+	//黑色模式下不显眼的颜色，替换到显眼颜色
+	static QMap<QString, QColor> s_darkColorMap;
 };

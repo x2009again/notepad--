@@ -294,7 +294,7 @@ drop_old:
 	CCNotePad *pMainNotepad = new CCNotePad(true);
 	pMainNotepad->setAttribute(Qt::WA_DeleteOnClose);
 	pMainNotepad->setShareMem(&shared);
-	pMainNotepad->show();
+	pMainNotepad->quickshow();
 
 	pMainNotepad->syncCurSkinToMenu(id);
 

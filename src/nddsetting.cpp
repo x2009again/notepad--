@@ -88,6 +88,9 @@ void NddSetting::init()
 		//开启自动缩进
 		addKeyValueToNumSets(INDENT_KEY, 0);
 
+		//显示空白
+		addKeyValueToNumSets(SHOWSPACE_KEY, 0);
+
 		//最大文本文件的门限。默认100M.(50-300)
 		addKeyValueToNumSets(MAX_BIG_TEXT, 100);
 
@@ -146,6 +149,12 @@ void NddSetting::init()
 				checkNoExistAdd(INDENT_KEY, v);
 			}
 
+			{
+				QVariant v(0);
+				checkNoExistAdd(SHOWSPACE_KEY, v);
+			}
+
+			
 			{
 				QVariant v(100);
 				checkNoExistAdd(MAX_BIG_TEXT, v);

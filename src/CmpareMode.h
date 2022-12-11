@@ -85,7 +85,7 @@ private:
 
 	static bool recognizeTextCode(QByteArray & text, LineFileInfo & lineInfo, QString & outUnicodeText);
 	static CODE_ID getTextFileEncodeType(uchar* fileFpr, int fileLength, QString filePath);
-	CODE_ID static readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fileLength, QList<LineFileInfo>& lineInfoVec, QList<LineFileInfo>& blankLineInfoVec,int mode, int &maxLineSize);
+	quint32 static readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fileLength, QList<LineFileInfo>& lineInfoVec, QList<LineFileInfo>& blankLineInfoVec,int mode, int &maxLineSize);
 
 	
 };

@@ -4135,7 +4135,8 @@ Sci::Position Editor::SearchInTarget(const char *text, Sci::Position length) {
 		const Sci::Position pos = pdoc->FindText(targetStart, targetEnd, text,
 				searchFlags,
 				&lengthFound);
-		if (pos != -1) {
+		//返回值为负，就是错误，不仅仅只有-1的情况
+		if (pos >= 0) {
 			targetStart = pos;
 			targetEnd = pos + lengthFound;
 		}

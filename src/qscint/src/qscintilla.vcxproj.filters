@@ -634,6 +634,9 @@
     <ClCompile Include="qscilexerruby.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="qscilexerrust.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="qscilexerspice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -647,6 +650,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qscilexertext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="qscilexervb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qscilexerverilog.cpp">
@@ -1008,6 +1014,9 @@
     <QtMoc Include="Qsci\qscilexerruby.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Qsci\qscilexerrust.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="Qsci\qscilexerspice.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -1021,6 +1030,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Qsci\qscilexertext.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Qsci\qscilexervb.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Qsci\qscilexerverilog.h">
@@ -1068,6 +1080,10 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
+    
+    
+    
+    
     
     
     

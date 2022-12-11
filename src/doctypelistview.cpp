@@ -16,17 +16,15 @@ QStringList DocTypeListView::s_supportFileExt = (QStringList ()<< "common" << "m
 
 QMap<QString, bool>* DocTypeListView::s_binFileExts = nullptr;
 
-
 QStringList DocTypeListView::s_extBindFileType;
-#if 0
-= (QStringList() << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
-	<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:.js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
-	<< ".sh:.bsh:.bash:.bat:.cmd:.nsi:.nsh:.lua:.pl:.pm:.py" << ".rc:.as:.mx:.vb:.vbs" << ".f:.for:.f90:.f95:.f2k:.tex:.sql" \
-	<< ".nfo:.mak" << ".ui:.pro:.pri:.qrc" << "");
-#endif
 
 QStringList HEX_FILE_EXTS_LIST = (QStringList() << "exe" << "dll" << "png" << "jpg" << "doc" << "docx" << "ppt" << "pptx" \
 	<< "zip" << "gz" << "rar" << "pdf" << "7z" << "lib" << "so" << "db" << "obj" << "pdb" << "bmp" << "ico" << "qm" << "icns" << "jpeg" << "res" << "exp" << "ilk" << "deb");
+
+QStringList INIT_EXTS_TYPES = (QStringList() << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
+<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:.js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
+<< ".sh:.bsh:.bash:.bat:.cmd:.nsi:.nsh:.lua:.pl:.pm:.py" << ".rc:.as:.mx:.vb:.vbs" << ".f:.for:.f90:.f95:.f2k:.tex:.sql" \
+<< "nfo:.mak" << ".ui:.pro:.pri:.qrc:.qss");
 
 //20220402发现bug:在1.11中引入深入对比后，会在子线程中调用这个初始化函数。引发了后续的sqlite错误。
 //务必要保证这些实例和数据库对象，是在主线程中创建的。
@@ -53,11 +51,13 @@ void DocTypeListView::initSupportFileTypes()
 	//如果数据库不存在，则使用默认值来进行初始化
 	if (!NddSetting::isDbExist())
 	{
-		QStringList types;
+		QStringList types = INIT_EXTS_TYPES;
+#if 0
 		types << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
-			<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
+			<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:.js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
 			<< ".sh:.bsh:.bash:.bat:.cmd:.nsi:.nsh:.lua:.pl:.pm:.py" << ".rc:.as:.mx:.vb:.vbs" << ".f:.for:.f90:.f95:.f2k:.tex:.sql" \
 			<< "nfo:.mak" << ".ui:.pro:.pri:.qrc";
+#endif
 
 		QString typeStr = types.join(":");
 
@@ -71,10 +71,13 @@ void DocTypeListView::initSupportFileTypes()
 			}
 		}
 
+		s_extBindFileType << types << "";
+#if 0
 		s_extBindFileType << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
-			<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
+			<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:.js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
 			<< ".sh:.bsh:.bash:.bat:.cmd:.nsi:.nsh:.lua:.pl:.pm:.py" << ".rc:.as:.mx:.vb:.vbs" << ".f:.for:.f90:.f95:.f2k:.tex:.sql" \
 			<< ".nfo:.mak" << ".ui:.pro:.pri:.qrc" << "";
+#endif
 	}
 	else
 	{
@@ -87,11 +90,15 @@ void DocTypeListView::initSupportFileTypes()
 		{
 			//没有读取到，这是第一次启动软件，没有写入导致。在这里进行第一次的写入
 
-			QStringList types;
+			QStringList types = INIT_EXTS_TYPES;
+			types << "";
+
+#if 0
 			types << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
-				<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
+				<< ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:.js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \
 				<< ".sh:.bsh:.bash:.bat:.cmd:.nsi:.nsh:.lua:.pl:.pm:.py" << ".rc:.as:.mx:.vb:.vbs" << ".f:.for:.f90:.f95:.f2k:.tex:.sql" \
 				<< ".nfo:.mak" << ".ui:.pro:.pri:.qrc" << "";
+#endif
 
 			s_extBindFileType = types;
 

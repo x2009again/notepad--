@@ -17,7 +17,7 @@ QFont QsciLexerText::s_defaultTxtFont(u8"宋体", QsciLexer::s_defaultFontSize);
 QsciLexerText::QsciLexerText(QObject *parent)
 	: QsciLexer(parent)
 {
-	
+	setLexerId(L_TXT);
 }
 
 QsciLexerText::~QsciLexerText()
@@ -166,7 +166,7 @@ QColor QsciLexerText::defaultPaper(int style) const
 }
 
 // Return the lexer identifier.
-int QsciLexerText::lexerId() const
-{
-	return L_TXT;
-}
+//int QsciLexerText::lexerId() const
+//{
+//	return L_TXT;
+//}

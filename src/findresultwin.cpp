@@ -1,7 +1,7 @@
 #include "findresultwin.h"
 #include "findwin.h"
 #include "common.h"
-
+#include "styleset.h"
 #include <QTreeWidgetItem>
 #include <QStyleFactory>
 #include <QToolButton>
@@ -17,7 +17,7 @@
 //使用Html的转义解决了该问题
 
 FindResultWin::FindResultWin(QWidget *parent)
-	: QWidget(parent), m_menu(nullptr)
+	: QWidget(parent), m_menu(nullptr), m_parent(parent)
 {
 	ui.setupUi(this);
 
@@ -32,19 +32,19 @@ FindResultWin::FindResultWin(QWidget *parent)
 	ui.resultTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 	ui.resultTreeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 
-#if defined (Q_OS_MAC)
-	QString qss = "QTreeView::item:selected{ \
-	   background:#e8e8ff; \
-    } \
-    QTreeView::item{ \
-        height:18px; \
-    }";
-#else
-    QString qss = "QTreeView::item:selected{ \
-       background:#e8e8ff; \
-    }";
-#endif
-	ui.resultTreeView->setStyleSheet(qss);
+//#if defined (Q_OS_MAC)
+//	QString qss = "QTreeView::item:selected{ \
+//	   background:#e8e8ff; \
+//    } \
+//    QTreeView::item{ \
+//        height:18px; \
+//    }";
+//#else
+//    QString qss = "QTreeView::item:selected{ \
+//       background:#e8e8ff; \
+//    }";
+//#endif
+//	ui.resultTreeView->setStyleSheet(qss);
 
 	connect(ui.resultTreeView, &QTreeView::doubleClicked, this, &FindResultWin::itemDoubleClicked);
 }
@@ -70,6 +70,8 @@ void FindResultWin::contextMenuEvent(QContextMenuEvent *)
 		m_menu->addAction(tr("copy select item (Ctrl Muli)"), this, &FindResultWin::slot_copyItemContents);
 		m_menu->addAction(tr("copy select Line (Ctrl Muli)"), this, &FindResultWin::slot_copyContents);
 
+		m_menu->addSeparator();
+		m_menu->addAction(tr("close"), m_parent, &QWidget::close);
 
 	}
 	m_menu->move(cursor().pos()); //让菜单显示的位置在鼠标的坐标上
@@ -381,9 +383,21 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 	int targetLens = record.end - record.pos;
 	int tailStart = record.end - record.lineStartPos;
 
-	QString head = QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped();
-	QString src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
-	QString tail = QString(utf8bytes.mid(tailStart)).toHtmlEscaped();
+	QString head; 
+	QString src;
+	QString tail;
+	if (BLACK_SE != StyleSet::getCurrentSytleId())
+	{
+		head = QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped();
+		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+		tail = QString(utf8bytes.mid(tailStart)).toHtmlEscaped();
+	}
+	else
+	{
+		head = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped());
+		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+		tail = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(tailStart)).toHtmlEscaped());
+	}
 
 	return QString("%1%2%3").arg(head).arg(src).arg(tail);
 }
@@ -416,8 +430,18 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 	}
 
 	QString desc = tr("<font style='font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
+
 	QStandardItem* descItem = new QStandardItem(desc);
+
+	if (BLACK_SE != StyleSet::getCurrentSytleId())
+	{
 	setItemBackground(descItem, QColor(0xd5ffd5));
+	}
+	else
+	{
+		setItemBackground(descItem, QColor(0x484848));
+	}
+
 	titleItem->appendRow(descItem);
 	
 
@@ -433,19 +457,6 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 	for (int i =0 ; i < record->records.size(); ++i)
 	{
 		FindRecord v = record->records.at(i);
-
-		////找到是第几次出现关键字
-		//if (lastLineNum != v.lineNum)
-		//{
-		//	lastLineNum = v.lineNum;
-		//	occurTimes = 1;
-		//}
-		//else
-		//{
-		//	occurTimes++;
-		//}
-
-		//highlightFindText(occurTimes, v.lineContents, record->findText, (Qt::CaseSensitivity)record->caseSensitivity);
 
 		QString richText = highlightFindText(v);
 
@@ -492,14 +503,25 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 		return;
 	}
 
+
+
 	for (int i = 0,count= record->size(); i < count; ++i)
 	{
 		FindRecords* pr = record->at(i);
 
 		QString desc = tr("<font style='font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(pr->findFilePath.toHtmlEscaped()).arg(pr->records.size());
-
+	
 		QStandardItem* descItem = new QStandardItem(desc);
+
+		if (BLACK_SE != StyleSet::getCurrentSytleId())
+		{
 		setItemBackground(descItem, QColor(0xd5ffd5));
+		}
+		else
+		{
+			setItemBackground(descItem, QColor(0x484848));
+		}
+
 		titleItem->insertRow(0,descItem);
 
 		//默认全部收起来

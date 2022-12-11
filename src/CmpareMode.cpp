@@ -115,7 +115,8 @@ CODE_ID CmpareMode::getTextFileEncodeType(uchar* fileFpr, int fileLength, QStrin
 
 //20210802：发现如果是CODE_ID::UNICODE_LE，\r\n变成了\r\0\n\0，读取readLine遇到\n就结束了，而且toUnicode也会变成乱码失败
 //所以UNICODE_LE需要单独处理。该函数只处理Unicode_LE编码文件，事先一定要检查文件编码
-CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fileLength, QList<LineFileInfo>& lineInfoVec, QList<LineFileInfo>& blankLineInfoVec,int mode, int &maxLineSize)
+//返回字符数，不是编码类型，注意是字符数，不是bytes
+quint32 CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fileLength, QList<LineFileInfo>& lineInfoVec, QList<LineFileInfo>& blankLineInfoVec,int mode, int &maxLineSize)
 {
 	QCryptographicHash md4(QCryptographicHash::Md4);
 
@@ -166,6 +167,8 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 
 	QByteArray line;
 
+	quint32 charNums = 0;
+
 	auto work = [mode, &md4](LineFileInfo& lineInfo, const int n) {
 		if (mode == 0)
 		{
@@ -199,20 +202,14 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 		//如果是头部有标识的格式，则后续不用详细检查每行编码，直接按照头部标识走
 		Encode::tranStrToUNICODE(code, line.data(), line.count(), lineInfo.unicodeStr);
 		lineInfo.code = code;
+
+		charNums += lineInfo.unicodeStr.size();
 	
 		if (lineInfo.unicodeStr.endsWith("\r\r\n"))
 		{
 			//这里是一种错误，但确实可能出现
 			if (length > 3)
 			{
-				/*if (mode == 0)
-				{
-					md4.addData(lineInfo.unicodeStr.trimmed().toUtf8());
-				}
-				else if (mode == 1)
-				{
-					md4.addData(lineInfo.unicodeStr.left(lineInfo.unicodeStr.length() - 3).toUtf8());
-				}*/
 				work(lineInfo, 3);
 				}
 			else
@@ -227,14 +224,6 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 		{
 			if (length > 2)
 			{
-				/*if (mode == 0)
-				{
-					md4.addData(lineInfo.unicodeStr.trimmed().toUtf8());
-				}
-				else if(mode == 1)
-				{
-					md4.addData(lineInfo.unicodeStr.left(lineInfo.unicodeStr.length() - 2).toUtf8());
-				}*/
 				work(lineInfo, 2);
 				}
 			else
@@ -250,14 +239,6 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 		{
 			if (length > 1)
 			{
-				/*if (mode == 0)
-				{
-					md4.addData(lineInfo.unicodeStr.trimmed().toUtf8());
-				}
-				else if (mode == 1)
-				{
-					md4.addData(lineInfo.unicodeStr.left(lineInfo.unicodeStr.length() - 1).toUtf8());
-				}*/
 				work(lineInfo, 1);
 				}
 			else
@@ -273,14 +254,6 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 		{
 			if (length > 1)
 			{
-			/*	if (mode == 0)
-				{
-					md4.addData(lineInfo.unicodeStr.trimmed().toUtf8());
-				}
-				else if (mode == 1)
-				{
-					md4.addData(lineInfo.unicodeStr.left(lineInfo.unicodeStr.length() - 1).toUtf8());
-				}*/
 				work(lineInfo, 1);
 				}
 			else
@@ -295,14 +268,6 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 		{
 			if (length > 0)
 			{
-				/*if (mode == 0)
-				{
-					md4.addData(lineInfo.unicodeStr.trimmed().toUtf8());
-				}
-				else if (mode == 1)
-				{
-					md4.addData(lineInfo.unicodeStr.toUtf8());
-				}*/
 				work(lineInfo, 0);
 				}
 			else
@@ -329,7 +294,7 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 		++lineNums;
 	}
 
-	return code;
+	return charNums;
 }
 
 
@@ -341,6 +306,7 @@ CODE_ID CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 
 //20210901 发现使用readLine的方式来读取一行不可靠。因为有些文件中一行中间有个\r，这种情况没有识别为多行。readLine是根据\n来识别的。
 //进而导致中间的\r没有识别为多行，但是在编辑器中却多一行，导致对比错误。还是要自己来识别行。不依赖于readLine
+
 
 //CODE_ID fileCode 事先预判定的编码
 CODE_ID CmpareMode::readLineFromFile(uchar* m_fileFpr, const int fileLength, const CODE_ID fileCode, QList<LineFileInfo>&lineInfoVec, QList<LineFileInfo>&blankLineInfoVec, int mode, int &maxLineSize)
@@ -1015,7 +981,7 @@ CODE_ID CmpareMode::scanFileOutPut(CODE_ID code, QString filePath, QList<LineFil
 	//UNICODE_LE格式需要单独处理
 	if (code == UNICODE_LE)
 	{
-		readLineFromFileWithUnicodeLe(m_fileFpr, file->size(), outputLineInfoVec, outputLineInfoVec, 0, maxLineSize);
+		charsNums = readLineFromFileWithUnicodeLe(m_fileFpr, file->size(), outputLineInfoVec, outputLineInfoVec, 0, maxLineSize);
 	}
 	else
 	{

@@ -3,6 +3,7 @@
 #include "nddsetting.h"
 #include "rcglobal.h"
 #include "ccnotepad.h"
+#include "styleset.h"
 
 #include <SciLexer.h>
 #include <qscilexer.h>
@@ -36,6 +37,43 @@ enum LangType {
 };
 #endif
 
+static const QColor blackColor(Qt::black);
+static const QColor lightColor(0xdedede);
+
+static const QColor blackColor1(0x0000ff);
+static const QColor lightColor1(0xffaa00);
+
+//C++注释的默认颜色，不显眼
+static const QColor blackColor2(0x007f00);
+static const QColor lightColor2(0x009000);
+
+static const QColor blackColor3(0x7f7f00);
+static const QColor lightColor3(0xfca287);
+
+static const QColor blackColor4(0x8000ff);
+static const QColor lightColor4(0xffaa00);
+
+static const QColor blackColor5(0x007f7f);
+static const QColor lightColor5(0xaaff7f);
+
+static const QColor blackColor6(0x7f007f);
+static const QColor lightColor6(0x00ffff);
+
+QMap<QString, QColor> QtLangSet::s_darkColorMap;
+
+static void initDarkColorMap()
+{
+	if (QtLangSet::s_darkColorMap.isEmpty())
+	{
+		QtLangSet::s_darkColorMap.insert(blackColor.name(), lightColor);
+		QtLangSet::s_darkColorMap.insert(blackColor1.name(), lightColor1);
+		QtLangSet::s_darkColorMap.insert(blackColor2.name(), lightColor2);
+		QtLangSet::s_darkColorMap.insert(blackColor3.name(), lightColor3);
+		QtLangSet::s_darkColorMap.insert(blackColor4.name(), lightColor4);
+		QtLangSet::s_darkColorMap.insert(blackColor5.name(), lightColor5);
+		QtLangSet::s_darkColorMap.insert(blackColor6.name(), lightColor6);
+	}
+}
 
 QtLangSet::QtLangSet(QString initTag, QWidget *parent)
 	: QMainWindow(parent), m_selectLexer(nullptr), m_selectStyleId(0), m_isStyleChange(false),m_isStyleChildChange(false), m_initShowLexerTag(initTag), m_previousSysLangItem(nullptr),m_isGlobelItem(false)
@@ -45,6 +83,7 @@ QtLangSet::QtLangSet(QString initTag, QWidget *parent)
 	initUserDefineLangList();
 
 	startSignSlot();
+	initDarkColorMap();
 }
 
 QtLangSet::~QtLangSet()
@@ -277,7 +316,7 @@ void QtLangSet::getCurUseLexerTags(QVector<QString>& tag)
 	}
 }
 
-//恢复原生的风格项目
+//使用全局设置设定所有语言风格
 void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
 {
 	QFont oldfont;
@@ -363,6 +402,8 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
 			case GLOBAL_BK_COLOR:
 			{
 				pLexer->setPaper(m_curStyleData.paper, -1);
+				//默认纸背景色会和QPalette保持一致。单独需要单独设置一下
+				pLexer->setDefaultPaper(m_curStyleData.paper);
 			}
 			break;
 			default:
@@ -394,7 +435,7 @@ void  QtLangSet::restoreOriginLangAllStyle()
 		}
 
 		//如果存在自定义的配置，直接全部删除掉
-		QString cfgPath = QString("notepad/userstyle/%1").arg(pLexer->lexerTag());
+		QString cfgPath = QString("notepad/userstyle/%1/%2").arg(StyleSet::getCurrentStyle()).arg(pLexer->lexerTag());
 		QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
 
 		if (QFile::exists(qs.fileName()))
@@ -404,6 +445,27 @@ void  QtLangSet::restoreOriginLangAllStyle()
 
 		delete pLexer;
 		pLexer = nullptr;
+	}
+}
+
+//只在restoreOriginLangOneStyle中调用
+static void restoreLangFontFgColorToDarkStyle(QsciLexer *pLexer, int i)
+{
+	if (QtLangSet::s_darkColorMap.contains(pLexer->color(i).name()))
+	{
+		pLexer->setColor(QtLangSet::s_darkColorMap.value(pLexer->color(i).name()), i);
+	}
+	}
+
+//只在restoreOriginLangOneStyle中调用
+static void restoreLangPaperColorToDarkStyle(QsciLexer *pLexer, int i)
+{
+	//注意下面这个颜色和void StyleSet::setBlackStyle()中保持一致
+	//背景也变成暗黑色
+	if (StyleSet::foldbgColor != pLexer->paper(i))
+	{
+		pLexer->setPaper(StyleSet::foldbgColor, i);
+		pLexer->setDefaultPaper(StyleSet::foldbgColor);
 	}
 }
 
@@ -471,12 +533,23 @@ void QtLangSet::restoreOriginLangOneStyle(GLOBAL_STYLE_SET flag)
 					{
 						oldClor = pOriginLexer->color(i);
 						pLexer->setColor(oldClor, i);
+
+						if (BLACK_SE == StyleSet::getCurrentSytleId())
+						{
+							restoreLangFontFgColorToDarkStyle(pLexer, i);
+					}
+
 					}
 					break;
 					case GLOBAL_BK_COLOR:
 					{
 						oldClor = pOriginLexer->paper(i);
 						pLexer->setPaper(oldClor, i);
+
+						if (BLACK_SE == StyleSet::getCurrentSytleId())
+						{
+						restoreLangPaperColorToDarkStyle(pLexer, i);
+					}
 					}
 					break;
 					default:
@@ -588,6 +661,11 @@ void QtLangSet::initLangList()
 	//怀疑这个是队列链接的，会延迟执行。故总是导致选择的选不中，而是第一个语言asp。
 	ui.langListWidget->sortItems(Qt::AscendingOrder);
 
+	//手动修改第一个名称为中文。
+	if (ui.langListWidget->item(0)->text() == QString("AllGlobal"))
+	{
+		ui.langListWidget->item(0)->setText(tr("AllGlobal"));
+}
 }
 
 //isLoadToUI是否加载显示到当前UI界面
@@ -942,7 +1020,7 @@ void QtLangSet::setStyleShow(QFont& font, QColor& fcColor, QColor &bkColor)
 //读取特定语言的设置
 bool QtLangSet::readLangSettings(QsciLexer *lexer, QString tag)
 {
-	QString cfgPath = QString("notepad/userstyle/%1").arg(tag);
+	QString cfgPath = QString("notepad/userstyle/%1/%2").arg(StyleSet::getCurrentStyle()).arg(tag);
 
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
 	if (QFile::exists(qs.fileName()))
@@ -960,7 +1038,7 @@ void QtLangSet::saveLangeSet(QsciLexer *lexer)
 	{
 		QString tag = lexer->lexerTag();
 
-		QString cfgPath =  QString("notepad/userstyle/%1").arg(tag);
+		QString cfgPath =  QString("notepad/userstyle/%1/%2").arg(StyleSet::getCurrentStyle()).arg(tag);
 
 		QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
 		lexer->writeSettings(qs);
@@ -1144,12 +1222,18 @@ void QtLangSet::slot_reset()
 			m_isStyleChange = false;
 
 			//如果存在自定义的配置，也删除掉
-			QString cfgPath = QString("notepad/userstyle/%1").arg(m_selectLexer->lexerTag());
+			QString cfgPath = QString("notepad/userstyle/%1/%2").arg(StyleSet::getCurrentStyle()).arg(m_selectLexer->lexerTag());
 
 			QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
 			if (QFile::exists(qs.fileName()))
 			{
 				QFile::remove(qs.fileName());
+			}
+
+			//如果是暗色风格，还需要多做一步，替换暗色下不显眼的颜色
+			if (BLACK_SE == StyleSet::getCurrentSytleId())
+			{
+				setLangFontFgColorToDarkStyle((LangType)m_selectLexer->lexerId(), m_selectLexer->lexerTag());
 			}
 
 			//一定要先保存，因为selectInitLangTag后可能会变化
@@ -1173,6 +1257,13 @@ void QtLangSet::slot_reset()
 				return;
 			}
 			restoreOriginLangAllStyle();
+
+			//如果是暗色风格，还需要多做一步，替换暗色下不显眼的颜色
+			if (BLACK_SE == StyleSet::getCurrentSytleId())
+			{
+				setAllLangFontFgColorToDarkStyle();
+			}
+
 			previewAllGoblalChange();
 
 			//手动刷新UI。全局目前只有一行全局设置
@@ -1181,7 +1272,9 @@ void QtLangSet::slot_reset()
 			{
 				delete m_selectLexer;
 			}
-			m_selectLexer  = ScintillaEditView::createLexer(L_GLOBAL,"",true);
+
+			//如果是暗黑风格，则不能读取源分隔;非暗黑则读取源
+			m_selectLexer  = ScintillaEditView::createLexer(L_GLOBAL,"",(BLACK_SE != StyleSet::getCurrentSytleId()));
 
 			QListWidgetItem* styleItem = ui.styleListWidget->item(0);
 
@@ -1289,3 +1382,133 @@ void QtLangSet::slot_useAlobalFontItalic(bool check)
 		previewAllGoblalChange();
 	}
 }
+
+
+
+//把默认语言风格的部分颜色，替换为暗色下显眼的颜色
+//这个函数是可以处理自定义语言的。
+void QtLangSet::setLangFontFgColorToDarkStyle(LangType langId, QString tag)
+{
+	//QColor blackColor(Qt::black);
+	//QColor lightColor(0xdedede);
+
+	//QColor blackColor1(0x0000ff);
+	//QColor lightColor1(0xffaa00);
+
+
+	////C++注释的默认颜色，不显眼
+	//QColor blackColor2(0x007f00);
+	//QColor lightColor2(0x009000);
+
+	//QColor blackColor3(0x7f7f00);
+	//QColor lightColor3(0xfca287);
+
+
+	//QColor blackColor4(0x8000ff);
+	//QColor lightColor4(0xffaa00);
+
+	//注意下面这个颜色和void StyleSet::setBlackStyle()中保持一致
+	//QColor bkPaperColor(0, 0, 0);
+
+	QsciLexer *pLexer = ScintillaEditView::createLexer(langId, tag);
+		if (nullptr != pLexer)
+		{
+			for (int i = 0; i <= 255; ++i)
+			{
+				if (!pLexer->description(i).isEmpty())
+				{
+				/*if (blackColor == pLexer->color(i))
+					{
+					pLexer->setColor(lightColor, i);
+					}
+					else if (blackColor1 == pLexer->color(i))
+					{
+						pLexer->setColor(lightColor1, i);
+					}
+				else if (blackColor2 == pLexer->color(i))
+				{
+					pLexer->setColor(lightColor2, i);
+				}
+				else if (blackColor3 == pLexer->color(i))
+				{
+					pLexer->setColor(lightColor3, i);
+				}
+				else if (blackColor4 == pLexer->color(i))
+				{
+					pLexer->setColor(lightColor4, i);
+				}*/
+
+				if (QtLangSet::s_darkColorMap.contains(pLexer->color(i).name()))
+				{
+					pLexer->setColor(QtLangSet::s_darkColorMap.value(pLexer->color(i).name()), i);
+				}
+
+				//背景也变成暗黑色
+				if (StyleSet::foldbgColor != pLexer->paper(i))
+				{
+					pLexer->setPaper(StyleSet::foldbgColor, i);
+				}
+			}
+		}
+		//默认纸背景色会和QPalette保持一致。但是因为黑色特色，其背景和QPalette不一样，所有需要单独设置一下
+		pLexer->setDefaultPaper(StyleSet::foldbgColor);
+			saveLangeSet(pLexer);
+			delete pLexer;
+		}
+	}
+
+//把暗色系下面不容易看清的颜色给替换一下。默认是有风格的，但是默认风格是亮色系的。
+//把凡是0x000000的字体，变成0xdedede
+//凡是0x0000ff的颜色，变成0xffff00
+//这个函数没有处理自定义语言。
+void QtLangSet::setAllLangFontFgColorToDarkStyle()
+{
+	initDarkColorMap();
+
+	for (int index = 0; index <= L_TXT; ++index)
+	{
+		setLangFontFgColorToDarkStyle((LangType)index);
+					}
+					}
+
+//检查当前是否已经存在暗黑色语言配置
+bool QtLangSet::isExistDarkLangSetings()
+{
+	QString cfgPath = QString("notepad/userstyle/black/AllGlobal");
+	QSettings qs(QSettings::IniFormat, QSettings::UserScope, cfgPath);
+	return QFile::exists(qs.fileName());
+				}
+
+////把凡是0xdedede的字体，变成0x000000
+//void QtLangSet::setAllLangFontFgColorToLightStyle()
+//{
+//	QColor blackColor(Qt::black);
+//	QColor lightColor(0xdedede);
+//
+//	QColor blackColor1(0xffaa00);
+//	QColor lightColor1(0x0000ff);
+//
+//	for (int index = 0; index <= L_TXT; ++index)
+//	{
+//		QsciLexer *pLexer = ScintillaEditView::createLexer(index);
+//		if (nullptr != pLexer)
+//		{
+//			for (int i = 0; i <= 255; ++i)
+//			{
+//				if (!pLexer->description(i).isEmpty())
+//				{
+//					if (lightColor == pLexer->color(i))
+//					{
+//						pLexer->setColor(blackColor, i);
+//					}
+//					else if (blackColor1 == pLexer->color(i))
+//					{
+//						pLexer->setColor(lightColor1, i);
+//					}
+//				}
+//			}
+//			saveLangeSet(pLexer);
+//			delete pLexer;
+//		}
+//	}
+//}

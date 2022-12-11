@@ -5,7 +5,7 @@ TARGET = Notepad--
 
 CONFIG	+= qt warn_on release
 
-QT += core gui widgets concurrent network
+QT += core gui widgets concurrent network xmlpatterns
 
 
 HEADERS	+= *.h \

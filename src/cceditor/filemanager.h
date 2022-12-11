@@ -6,6 +6,7 @@
 #include <QString>
 #include <QObject>
 #include <QList>
+#include <QFile>
 
 class ScintillaEditView;
 class ScintillaHexEditView;

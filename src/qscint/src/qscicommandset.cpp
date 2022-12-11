@@ -722,13 +722,13 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Copy current line")
         },
-        {
+       /* {
             QsciCommand::LineTranspose,
-            Qt::Key_T | Qt::CTRL,
+            Qt::Key_T | Qt::SHIFT,
             0,
             QT_TRANSLATE_NOOP("QsciCommand",
                     "Transpose current and previous lines")
-        },
+        },*/
         {
             QsciCommand::LineDuplicate,
             0,

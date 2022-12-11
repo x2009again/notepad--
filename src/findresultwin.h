@@ -51,4 +51,6 @@ private:
 
 	QStandardItemModel* m_model;
 	NdStyledItemDelegate* m_delegate;
+
+	QWidget* m_parent;
 };

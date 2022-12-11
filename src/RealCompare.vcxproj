@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{3842E8A0-CF86-31D6-A247-40F65F8611D3}</ProjectGuid>
+    <ProjectGuid>{26BC87D0-189B-3661-B87D-347CF9E0A47F}</ProjectGuid>
     <RootNamespace>Notepad--</RootNamespace>
     <Keyword>QtVS_v304</Keyword>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
-    <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformMinVersion>10.0.19041.0</WindowsTargetPlatformMinVersion>
   <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild></PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -44,11 +44,11 @@
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
   </ImportGroup>
-  <PropertyGroup Label="UserMacros" /><ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')"><Import Project="$(QtMsBuild)\qt_defaults.props" /></ImportGroup><PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"><OutDir>x64\Debug\</OutDir><IntDir>debug\</IntDir><TargetName>Notepad--</TargetName><IgnoreImportLibrary>true</IgnoreImportLibrary></PropertyGroup><PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"><OutDir>x64\Release\</OutDir><IntDir>release\</IntDir><TargetName>Notepad--</TargetName><IgnoreImportLibrary>true</IgnoreImportLibrary><LinkIncremental>false</LinkIncremental></PropertyGroup><PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"><QtInstall>msvc2017_64</QtInstall><QtModules>core;network;gui;widgets;concurrent</QtModules></PropertyGroup><PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'"><QtInstall>msvc2017_64</QtInstall><QtModules>core;network;gui;widgets;concurrent</QtModules></PropertyGroup><ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')"><Import Project="$(QtMsBuild)\qt.props" /></ImportGroup>
+  <PropertyGroup Label="UserMacros" /><ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')"><Import Project="$(QtMsBuild)\qt_defaults.props" /></ImportGroup><PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"><OutDir>x64\Debug\</OutDir><IntDir>debug\</IntDir><TargetName>Notepad--</TargetName><IgnoreImportLibrary>true</IgnoreImportLibrary></PropertyGroup><PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'"><OutDir>x64\Release\</OutDir><IntDir>release\</IntDir><TargetName>Notepad--</TargetName><IgnoreImportLibrary>true</IgnoreImportLibrary><LinkIncremental>false</LinkIncremental></PropertyGroup><PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'"><QtInstall>5.15.2_msvc2019_64</QtInstall><QtModules>core;network;gui;xmlpatterns;widgets;concurrent</QtModules></PropertyGroup><PropertyGroup Label="QtSettings" Condition="'$(Configuration)|$(Platform)'=='Release|x64'"><QtInstall>5.15.2_msvc2019_64</QtInstall><QtModules>core;network;gui;xmlpatterns;widgets;concurrent</QtModules></PropertyGroup><ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')"><Import Project="$(QtMsBuild)\qt.props" /></ImportGroup>
   
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;qscint\src;qscint\src\Qsci;qscint\scintilla\include;cceditor;x64\Release;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;qscint\src;qscint\src\Qsci;qscint\scintilla\include;cceditor;x64\Release;release;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -56,9 +56,8 @@
       <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <ExceptionHandling>Sync</ExceptionHandling>
       <ObjectFileName>release\</ObjectFileName>
-      <OpenMPSupport>true</OpenMPSupport>
       <Optimization>MaxSpeed</Optimization>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QSCINTILLA_DLL;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QSCINTILLA_DLL;NDEBUG;QT_NO_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName></ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -68,12 +67,13 @@
     <MultiProcessorCompilation>true</MultiProcessorCompilation></ClCompile>
     <Link>
       <AdditionalDependencies>qmyedit_qt5.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>x64\Release;C:\openssl\lib;C:\Utils\my_sql\mysql-5.6.11-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>x64\Release;C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreImportLibrary>true</IgnoreImportLibrary>
       <LinkIncremental>false</LinkIncremental>
+      <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(OutDir)\Notepad--.exe</OutputFile>
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <SubSystem>Windows</SubSystem>
@@ -85,12 +85,12 @@
       <WarningLevel>0</WarningLevel>
     </Midl>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QSCINTILLA_DLL;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CONCURRENT_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QSCINTILLA_DLL;NDEBUG;QT_NO_DEBUG;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CONCURRENT_LIB;QT_XMLPATTERNS_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   <QtMoc><CompilerFlavor>msvc</CompilerFlavor><Include>./$(Configuration)/moc_predefs.h</Include><ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription><DynamicSource>output</DynamicSource><QtMocDir>$(Configuration)</QtMocDir><QtMocFileName>moc_%(Filename).cpp</QtMocFileName></QtMoc><QtRcc><InitFuncName>RealCompare</InitFuncName><Compression>default</Compression><ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription><QtRccDir>$(Configuration)</QtRccDir><QtRccFileName>qrc_%(Filename).cpp</QtRccFileName></QtRcc><QtUic><ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription><QtUicDir>$(ProjectDir)</QtUicDir><QtUicFileName>ui_%(Filename).h</QtUicFileName></QtUic></ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;qscint\src;qscint\src\Qsci;qscint\scintilla\include;cceditor;x64\Release;debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>GeneratedFiles\$(ConfigurationName);GeneratedFiles;.;qscint\src;qscint\src\Qsci;qscint\scintilla\include;cceditor;x64\Release;debug;/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -108,7 +108,7 @@
     <MultiProcessorCompilation>true</MultiProcessorCompilation></ClCompile>
     <Link>
       <AdditionalDependencies>x64\Debug\qmyedit_qt5d.lib;shell32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>x64\Debug;C:\openssl\lib;C:\Utils\my_sql\mysql-5.6.11-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>x64\Debug;C:\openssl\lib;C:\Utils\my_sql\mysql-5.7.25-winx64\lib;C:\Utils\postgresql\pgsql\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -124,7 +124,7 @@
       <WarningLevel>0</WarningLevel>
     </Midl>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QSCINTILLA_DLL;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CONCURRENT_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;_ENABLE_EXTENDED_ALIGNED_STORAGE;WIN64;QSCINTILLA_DLL;QT_WIDGETS_LIB;QT_GUI_LIB;QT_CONCURRENT_LIB;QT_XMLPATTERNS_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   <QtMoc><CompilerFlavor>msvc</CompilerFlavor><Include>./$(Configuration)/moc_predefs.h</Include><ExecutionDescription>Moc'ing %(Identity)...</ExecutionDescription><DynamicSource>output</DynamicSource><QtMocDir>$(Configuration)</QtMocDir><QtMocFileName>moc_%(Filename).cpp</QtMocFileName></QtMoc><QtRcc><InitFuncName>RealCompare</InitFuncName><Compression>default</Compression><ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription><QtRccDir>$(Configuration)</QtRccDir><QtRccFileName>qrc_%(Filename).cpp</QtRccFileName></QtRcc><QtUic><ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription><QtUicDir>$(ProjectDir)</QtUicDir><QtUicFileName>ui_%(Filename).h</QtUicFileName></QtUic></ItemDefinitionGroup>
   <ItemGroup>
@@ -532,6 +532,31 @@
       
       
     </QtMoc>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <ClInclude Include="userlexdef.h" />
   </ItemGroup>
   <ItemGroup>
@@ -596,7 +621,7 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <FileType>Document</FileType>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus /openmp -O2 -MD -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zc:__cplusplus -O2 -MD -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -947,15 +972,35 @@
       
     </QtRcc>
     <None Include="qss\lightblue\add_bottom.png" />
+    <None Include="qss\psblack\add_bottom.png" />
+    <None Include="qss\psblack\add_left.png" />
+    <None Include="qss\psblack\add_right.png" />
     <None Include="qss\lightblue\add_top.png" />
+    <None Include="qss\psblack\add_top.png" />
     <None Include="Resources\img\all.png" />
     <None Include="qss\lightblue\arrow_bottom.png" />
+    <None Include="Resources\edit\styledark\autosave.png" />
+    <None Include="Resources\edit\styledeepblue\autosave.png" />
     <None Include="notepad\autosave.png" />
     <None Include="Resources\img\bin.png" />
+    <None Include="Resources\edit\styledark\bincmp.png" />
     <None Include="Resources\edit\styledeepblue\bincmp.png" />
+    <None Include="qss\black.qss" />
     <None Include="Resources\img\bookmark.png" />
+    <None Include="qss\psblack\branch_close.png" />
+    <None Include="qss\psblack\branch_open.png" />
     <None Include="Resources\img\break.png" />
+    <None Include="qss\psblack\calendar_nextmonth.png" />
+    <None Include="qss\psblack\calendar_prevmonth.png" />
+    <None Include="qss\psblack\checkbox_checked.png" />
+    <None Include="qss\psblack\checkbox_checked_disable.png" />
+    <None Include="qss\psblack\checkbox_parcial.png" />
+    <None Include="qss\psblack\checkbox_parcial_disable.png" />
+    <None Include="qss\psblack\checkbox_unchecked.png" />
+    <None Include="qss\psblack\checkbox_unchecked_disable.png" />
     <None Include="Resources\img\clear.png" />
+    <None Include="Resources\edit\styledark\clearsign.png" />
+    <None Include="Resources\edit\styledeepblue\clearsign.png" />
     <None Include="notepad\clearsign.png" />
     <None Include="Resources\edit\global\close.png" />
     <None Include="notepad\close.png" />
@@ -965,9 +1010,9 @@
     <None Include="notepad\closeTabButton_hover.png" />
     <None Include="notepad\closeTabButton_inact.png" />
     <None Include="notepad\closeTabButton_push.png" />
-    <None Include="Resources\edit\styleblack\closeall.png" />
+    <None Include="Resources\edit\styledark\closeall.png" />
     <None Include="Resources\edit\styledeepblue\closeall.png" />
-    <None Include="Resources\edit\styleblack\closefile.png" />
+    <None Include="Resources\edit\styledark\closefile.png" />
     <None Include="Resources\edit\styledeepblue\closefile.png" />
     <None Include="Resources\edit\global\closehover.png" />
     <None Include="notepad\closehover.png" />
@@ -975,30 +1020,36 @@
     <None Include="notepad\cmpdir.png" />
     <None Include="notepad\cmpfile.png" />
     <None Include="notepad\cmpfile1.png" />
-    <None Include="Resources\edit\styleblack\copy.png" />
+    <None Include="Resources\edit\styledark\copy.png" />
     <None Include="Resources\edit\styledeepblue\copy.png" />
     <None Include="notepad\copy.png" />
-    <None Include="Resources\edit\styleblack\crlf.png" />
+    <None Include="Resources\edit\styledark\crlf.png" />
     <None Include="Resources\edit\styledeepblue\crlf.png" />
-    <None Include="Resources\edit\styleblack\cut.png" />
+    <None Include="Resources\edit\styledark\cut.png" />
     <None Include="Resources\edit\styledeepblue\cut.png" />
     <None Include="notepad\cut.png" />
     <None Include="Resources\img\diff.png" />
     <None Include="Resources\img\diff1.png" />
+    <None Include="Resources\img\diffall.png" />
     <None Include="Resources\img\dir.png" />
-    <None Include="Resources\edit\styleblack\dircompare.png" />
+    <None Include="Resources\edit\styledark\dircompare.png" />
     <None Include="Resources\edit\styledeepblue\dircompare.png" />
     <None Include="notepad\ecg.png" />
+    <None Include="Resources\img\expand.png" />
     <None Include="Resources\img\file.png" />
-    <None Include="Resources\edit\styleblack\filecompare.png" />
+    <None Include="Resources\edit\styledark\filecompare.png" />
     <None Include="Resources\edit\styledeepblue\filecompare.png" />
-    <None Include="Resources\edit\styleblack\find.png" />
+    <None Include="Resources\edit\styledark\find.png" />
     <None Include="Resources\edit\styledeepblue\find.png" />
     <None Include="notepad\find.png" />
     <None Include="notepad\findReplace.png" />
+    <None Include="Resources\img\fold.png" />
     <None Include="notepad\go.png" />
+    <None Include="Resources\edit\styledark\goto.png" />
     <None Include="Resources\edit\styledeepblue\goto.png" />
     <None Include="Resources\img\hidechar.png" />
+    <None Include="Resources\edit\styledark\indentGuide.png" />
+    <None Include="Resources\edit\styledeepblue\indentGuide.png" />
     <None Include="notepad\indentGuide.png" />
     <None Include="Resources\img\info.png" />
     <None Include="notepad\invisibleChar.png" />
@@ -1006,57 +1057,66 @@
     <None Include="qss\lightbluestyle.qss" />
     <None Include="mac.icns" />
     <None Include="Resources\img\main.png" />
+    <None Include="Resources\edit\styledark\mark.png" />
+    <None Include="Resources\edit\styledeepblue\mark.png" />
     <None Include="notepad\mark.png" />
     <None Include="qss\mystyle.qss" />
     <None Include="Resources\edit\global\ndd.ico" />
     <None Include="Resources\edit\global\needsave.png" />
     <None Include="Resources\img\needsave.png" />
     <None Include="notepad\needsave.png" />
-    <None Include="Resources\edit\styleblack\needsaveallbar.png" />
-    <None Include="Resources\edit\styledeepblue\needsaveallbar.png" />
-    <None Include="Resources\edit\styleblack\needsavebar.png" />
+    <None Include="Resources\edit\styledark\needsaveall.png" />
+    <None Include="Resources\edit\styledeepblue\needsaveall.png" />
+    <None Include="Resources\edit\styledark\needsavebar.png" />
     <None Include="Resources\edit\styledeepblue\needsavebar.png" />
     <None Include="notepad\newFile.png" />
-    <None Include="Resources\edit\styleblack\newfile.png" />
+    <None Include="Resources\edit\styledark\newfile.png" />
     <None Include="Resources\edit\styledeepblue\newfile.png" />
+    <None Include="Resources\edit\styledark\next.png" />
     <None Include="Resources\edit\styledeepblue\next.png" />
     <None Include="Resources\img\next.png" />
     <None Include="notepad\next.png" />
     <None Include="Resources\img\next2.png" />
     <None Include="Resources\edit\global\noneedsave.png" />
     <None Include="notepad\noneedsave.png" />
-    <None Include="Resources\edit\styleblack\noneedsaveallbar.png" />
-    <None Include="Resources\edit\styledeepblue\noneedsaveallbar.png" />
-    <None Include="Resources\edit\styleblack\noneedsavebar.png" />
-    <None Include="Resources\edit\styledeepblue\noneedsavebar.png" />
+    <None Include="Resources\edit\global\noneedsavedark.png" />
     <None Include="Resources\edit\global\notebook.png" />
     <None Include="Resources\img\onlyfile.png" />
     <None Include="Resources\img\open.png" />
     <None Include="Resources\img\open1.png" />
     <None Include="notepad\openFile.png" />
-    <None Include="Resources\edit\styleblack\openfile.png" />
+    <None Include="Resources\img\opendark.png" />
+    <None Include="Resources\edit\styledark\openfile.png" />
     <None Include="Resources\edit\styledeepblue\openfile.png" />
-    <None Include="Resources\edit\styleblack\paste.png" />
+    <None Include="Resources\edit\styledark\paste.png" />
     <None Include="Resources\edit\styledeepblue\paste.png" />
     <None Include="notepad\paste.png" />
     <None Include="Resources\img\point.png" />
+    <None Include="Resources\edit\styledark\pre.png" />
     <None Include="Resources\edit\styledeepblue\pre.png" />
     <None Include="Resources\img\pre.png" />
     <None Include="notepad\pre.png" />
     <None Include="Resources\img\pre2.png" />
     <None Include="Resources\img\pullopen.png" />
+    <None Include="qss\psblack\radiobutton_checked.png" />
+    <None Include="qss\psblack\radiobutton_checked_disable.png" />
+    <None Include="qss\psblack\radiobutton_unchecked.png" />
+    <None Include="qss\psblack\radiobutton_unchecked_disable.png" />
     <None Include="realcompare_zh.qm" />
-    <None Include="Resources\edit\styleblack\redo.png" />
+    <None Include="Resources\edit\styledark\redo.png" />
     <None Include="Resources\edit\styledeepblue\redo.png" />
     <None Include="Resources\img\redo.png" />
     <None Include="notepad\redo.png" />
+    <None Include="Resources\img\refresh.png" />
     <None Include="Resources\img\register.png" />
     <None Include="Resources\img\reload.png" />
     <None Include="Resources\img\reload2.png" />
+    <None Include="Resources\img\reloaddark.png" />
     <None Include="Resources\edit\styleblack\rename.png" />
+    <None Include="Resources\edit\styledark\rename.png" />
     <None Include="Resources\edit\styledeepblue\rename.png" />
     <None Include="notepad\rename.png" />
-    <None Include="Resources\edit\styleblack\replace.png" />
+    <None Include="Resources\edit\styledark\replace.png" />
     <None Include="Resources\edit\styledeepblue\replace.png" />
     <None Include="Resources\img\right3.png" />
     <None Include="notepad\rightClose.png" />
@@ -1065,31 +1125,36 @@
     <None Include="Resources\img\save.png" />
     <None Include="notepad\saveAll.png" />
     <None Include="notepad\saveFile.png" />
+    <None Include="Resources\img\savedark.png" />
     <None Include="notepad\savetab.png" />
     <None Include="Resources\img\showall.png" />
     <None Include="Resources\img\showchar.png" />
+    <None Include="Resources\edit\styledark\sign.png" />
+    <None Include="Resources\edit\styledeepblue\sign.png" />
     <None Include="notepad\sign.png" />
     <None Include="Resources\img\strict.png" />
     <None Include="Resources\img\swap.png" />
     <None Include="Resources\img\tolerant.png" />
     <None Include="Resources\img\tran.png" />
-    <None Include="Resources\edit\styleblack\transcode.png" />
+    <None Include="Resources\edit\styledark\transcode.png" />
     <None Include="Resources\edit\styledeepblue\transcode.png" />
-    <None Include="Resources\edit\styleblack\undo.png" />
+    <None Include="Resources\edit\styledark\undo.png" />
     <None Include="Resources\edit\styledeepblue\undo.png" />
     <None Include="Resources\img\undo.png" />
     <None Include="notepad\undo.png" />
     <None Include="Resources\img\unequaldir.png" />
     <None Include="Resources\img\unequalfile.png" />
-    <None Include="Resources\edit\styleblack\white.png" />
+    <None Include="Resources\img\vip.png" />
+    <None Include="Resources\img\vipdark.png" />
+    <None Include="Resources\edit\styledark\white.png" />
     <None Include="Resources\edit\styledeepblue\white.png" />
     <None Include="notepad\wrap.png" />
     <None Include="notepad\zoomIn.png" />
     <None Include="notepad\zoomOut.png" />
-    <None Include="Resources\edit\styleblack\zoomin.png" />
+    <None Include="Resources\edit\styledark\zoomin.png" />
     <None Include="Resources\edit\styledeepblue\zoomin.png" />
     <None Include="Resources\img\zoomin.png" />
-    <None Include="Resources\edit\styleblack\zoomout.png" />
+    <None Include="Resources\edit\styledark\zoomout.png" />
     <None Include="Resources\edit\styledeepblue\zoomout.png" />
     <None Include="Resources\img\zoomout.png" />
   </ItemGroup>

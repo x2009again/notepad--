@@ -5,7 +5,7 @@
 #include <QTreeWidgetItem>
 #include <qscilexer.h>
 
-static const char* VersionStr = "v1.18.0";
+static const char* VersionStr = "v1.19.2";
 
 #define CMP_CODE_NOEQUAL
 

@@ -95,6 +95,7 @@ public:
 
 	void sortLines(size_t fromLine, size_t toLine, ISorter * pSort);
 
+
 	intptr_t lastZeroBasedLineNumber() const {
 		auto endPos = execute(SCI_GETLENGTH);
 		return execute(SCI_LINEFROMPOSITION, endPos);
@@ -114,6 +115,13 @@ public:
 	void pasteToMarkedLines();
 	void deleteMarkedLines(bool isMarked);
 	void inverseMarks();
+	intptr_t searchInTarget(QByteArray & text2Find, size_t fromPos, size_t toPos) const;
+	intptr_t replaceTargetRegExMode(QByteArray & re, intptr_t fromTargetPos = -1, intptr_t toTargetPos = -1) const;
+	intptr_t replaceTarget(QByteArray & str2replace, intptr_t fromTargetPos = -1, intptr_t toTargetPos = -1) const;
+
+	//设置不同风格
+	void setStyleOptions();
+
 signals:
 	void delayWork();
 
@@ -124,10 +132,11 @@ private:
 	QString getGenericTextAsQString(size_t start, size_t end) const;
 
 	QString getEOLString();
-	intptr_t replaceTarget(QByteArray & str2replace, intptr_t fromTargetPos, intptr_t toTargetPos) const;
+
 	void appandGenericText(const QByteArray & text2Append) const;
 	QString getMarkedLine(int ln);
 	void deleteMarkedline(int ln);
+	void setFoldColor(int margin, QColor fgClack, QColor bkColor);
 
 
 public:
@@ -163,13 +172,13 @@ private:
 
 	void highlightViewWithWord(QString & word2Hilite);
 
-
-	
+	void slot_markColorGroup(QAction * action);
 
 private slots:
 	void slot_delayWork();
 	void slot_scrollXValueChange(int value);
 	void slot_clearHightWord();
+
 	void slot_bookMarkClicked(int margin, int line, Qt::KeyboardModifiers state);
 
 
@@ -192,6 +201,8 @@ private:
 	QList<int> m_nextPosRecord;
 
 	QPixmap* m_bookmarkPng;
+
+	QMenu* m_styleColorMenu;
 
 public:
 	static int s_tabLens;

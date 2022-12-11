@@ -9,6 +9,7 @@
 #include <QtGlobal>
 #include <qscilexer.h>
 
+
 FileManager::FileManager():m_lastErrorCode(NONE_ERROR)
 {
 }

@@ -6,6 +6,7 @@ static QString SKIN_KEY = "skinid";
 static QString LANGS_KEY = "langs";
 static QString AUTOWARP_KEY = "warp";
 static QString INDENT_KEY = "indent";
+static QString SHOWSPACE_KEY = "blank";
 static QString MAX_BIG_TEXT = "maxtsize";
 static QString SOFT_STATUS = "rstatus";
 static QString SOFT_KEY = "rkey";

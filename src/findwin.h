@@ -31,12 +31,14 @@ public:
 	//是否区分大小写
 	//int caseSensitivity;
 	//int totalMatch; //全词匹配
+	int hightLightColor; //高亮颜色
 
 	ScintillaEditView* pEdit;
 	QVector<FindRecord> records;
 	FindRecords()
 	{
 		pEdit = nullptr;
+		hightLightColor = 0;
 	}
 	~FindRecords()
 	{
@@ -92,7 +94,7 @@ private:
 
 	bool replaceTextInFile(QString & filePath, int & replaceNums, QVector<FindRecords*>* r = nullptr);
 
-	int walkDirfile(QString path, int & foundTimes, bool isSkipBinary, bool isSkipHide, int skipMaxSize, bool isfilterFileType, QStringList & fileExtType, bool isSkipChildDirs, std::function<bool(QString&, int&, QVector<FindRecords*>*allfileInDirRecord)> foundCallBack, bool isAskAbort=true);
+	int walkDirfile(QString path, int & foundTimes, bool isSkipBinary, bool isSkipHide, int skipMaxSize, bool isfilterFileType, QStringList & fileExtType, bool isSkipDir, QStringList & skipDirNames, bool isSkipChildDirs, std::function<bool(QString&, int&, QVector<FindRecords*>*allfileInDirRecord)> foundCallBack, bool isAskAbort=true);
 
 	QWidget* autoAdjustCurrentEditWin();
 
@@ -106,9 +108,12 @@ private:
 
 	bool replace(ScintillaEditView* pEdit);
 
-private slots:
-	void slot_findNext();
+	int doReplaceAll(ScintillaEditView * pEdit, QString& whatFind, QString& replaceText);
 
+
+private slots:
+
+	void slot_findNext();
 
 	void slot_findPrev();
 
@@ -134,19 +139,29 @@ private slots:
 
 	void slot_clearMark();
 
+	void slot_clearAllMark();
+
 	void slot_dirSelectDest();
 
 	void slot_dealFileTypeChange(int state);
+
+	void slot_skipDirChange(int state);
 
 	void slot_dirFindAll();
 
 	void slot_dirReplaceAll();
 
+	void slot_tabIndexChange(int index);
+
 private:
 	Ui::FindWin ui;
 
+	FindWin(const FindWin& other) = delete;
+	FindWin& operator=(const FindWin& other) = delete;
+
 	QTabWidget *m_editTabWidget;
 
+	QWidget* m_pMainPad;
 	//第一次查找，查找参数变化，认定为第一次查找
 	bool m_isFindFirst;
 

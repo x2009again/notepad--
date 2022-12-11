@@ -54,6 +54,8 @@
 #include <Qsci/qscilexertext.h>
 #include <Qsci/qscilexernsis.h>
 #include <Qsci/qscilexerglobal.h>
+#include <Qsci/qscilexerrust.h>
+#include <Qsci/qscilexervb.h>
 #include <QScrollBar>
 #include <unordered_set>
 #include <QClipboard>
@@ -184,7 +186,7 @@ LanguageName ScintillaEditView::langNames[L_EXTERNAL + 1] = {
 #endif
 
 ScintillaEditView::ScintillaEditView(QWidget *parent)
-	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false), m_bookmarkPng(nullptr)
+	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false), m_bookmarkPng(nullptr), m_styleColorMenu(nullptr)
 {
 	init();
 }
@@ -203,19 +205,15 @@ void ScintillaEditView::setLexer(QsciLexer * lexer)
 {
 	QsciScintilla::setLexer(lexer);
 
-	if (lexer->lexerId() == L_TXT)
+	if (lexer != nullptr && lexer->lexerId() == L_TXT)
 	{
 		showMargin(_SC_MARGE_FOLDER,false);
 	}
+	else if(lexer != nullptr && lexer->lexerId() != L_TXT)
+	{
+		showMargin(_SC_MARGE_FOLDER, true);
 }
-
-//void ScintillaEditView::resetDefaultFontStyle()
-//{
-//	QFont font(DEFAULT_FONT_NAME, 11/*QsciLexer::s_defaultFontSize*/, QFont::Normal);
-//	setFont(font);
-//	setMarginsFont(font);
-//	setMarginsForegroundColor(QColor(0x80, 0x80, 0x80));
-//}
+}
 
 void ScintillaEditView::setNoteWidget(QWidget * win)
 {
@@ -239,11 +237,11 @@ void ScintillaEditView::updateLineNumbersMargin(bool forcedToHide) {
 
 }
 
-//根据现有滚动条来决定是否更新屏幕线宽长度。每滚动2000个单位必须调整line宽
+//根据现有滚动条来决定是否更新屏幕线宽长度。每滚动200个单位必须调整line宽
 void ScintillaEditView::autoAdjustLineWidth(int xScrollValue)
 {
 
-	if (std::abs(xScrollValue - m_preFirstLineNum) > 400)
+	if (std::abs(xScrollValue - m_preFirstLineNum) > 200)
 	{
 		m_preFirstLineNum = xScrollValue;
 
@@ -265,7 +263,7 @@ void ScintillaEditView::updateLineNumberWidth(int lineNumberMarginDynamicWidth)
 			int lastVisibleLineDoc = execute(SCI_DOCLINEFROMVISIBLE, (long)lastVisibleLineVis);
 
 			nbDigits = nbDigitsFromNbLines(lastVisibleLineDoc);
-			nbDigits = nbDigits < 4 ? 4 : nbDigits;
+			nbDigits = nbDigits < 3 ? 3 : nbDigits;
 		}
 		else
 		{
@@ -383,6 +381,7 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId, QString tag, bool isOrigi
 		ret = new QsciLexerSQL();
 		break;
 	case L_VB:
+		ret = new QsciLexerVB();
 		break;
 	case L_CSS:
 		ret = new QsciLexerCSS();
@@ -528,6 +527,7 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId, QString tag, bool isOrigi
 	case L_REGISTRY:
 		break;
 	case L_RUST:
+		ret = new QsciLexerRust();
 		break;
 	case L_SPICE:
 		ret = new QsciLexerSpice();
@@ -572,12 +572,14 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId, QString tag, bool isOrigi
 	default:
 		break;
 	}
-
-
-	if (ret != nullptr && !isOrigin)
+	if (ret != nullptr)
 	{
 		ret->setLexerId(lexerId);
+
+		if (!isOrigin)
+		{
 		QtLangSet::readLangSettings(ret, ret->lexerTag());
+	}
 	}
 	return ret;
 }
@@ -605,15 +607,24 @@ QList<FindRecords *>& ScintillaEditView::getCurMarkRecord()
 //调整颜色
 void ScintillaEditView::adjuctSkinStyle()
 {
-	setFoldMarginColors(StyleSet::foldfgColor, StyleSet::foldbgColor);
+	if (StyleSet::m_curStyleId != BLACK_SE)
+	{
+		setMarginsForegroundColor(QColor(0x80, 0x80, 0x80)); //默认0x80, 0x80, 0x80
+	}
+	else
+	{
+		setMarginsForegroundColor(QColor(0xde, 0xde, 0xde)); //默认0x80, 0x80, 0x80
+	}
 	setMarginsBackgroundColor(StyleSet::marginsBackgroundColor);
 	setMarginBackgroundColor(_SC_MARGE_SYBOLE, StyleSet::bookmarkBkColor);
+	setFoldMarginColors(StyleSet::marginsBackgroundColor, StyleSet::marginsBackgroundColor);
+	setStyleOptions();
 }
 
 void ScintillaEditView::setIndentGuide(bool willBeShowed)
 {
 	QsciLexer* pLexer = this->lexer(); 
-	if (nullptr == pLexer || (pLexer->lexerId() == L_TXT))
+	if (nullptr == pLexer)
 	{
 		return;
 	}
@@ -675,7 +686,17 @@ void ScintillaEditView::init()
 	
 	//开始括号匹配，比如html的<>，开启前后这类字段的匹配
 	setBraceMatching(SloppyBraceMatch);
+
+	if (StyleSet::m_curStyleId != BLACK_SE)
+	{
 	setMatchedBraceForegroundColor(QColor(191, 141, 255));
+		setMatchedBraceBackgroundColor(QColor(222, 222, 222));
+	}
+	else
+	{
+		setMatchedBraceForegroundColor(QColor(246, 81, 246));
+		setMatchedBraceBackgroundColor(QColor(18, 90, 36));
+	}
 
 	//自动补全效果不好，不开启20211017
 	//setAutoCompletionSource(QsciScintilla::AcsAPIs);   //设置源，自动补全所有地方出现的
@@ -686,13 +707,15 @@ void ScintillaEditView::init()
 	QFont font(DEFAULT_FONT_NAME, 11, QFont::Normal);
 	setFont(font);
 	setMarginsFont(font);
-	setMarginsForegroundColor(QColor(0x80, 0x80, 0x80)); //默认0x80, 0x80, 0x80
-	execute(SCI_SETTABWIDTH, 4);
+	
+	execute(SCI_SETTABWIDTH, ScintillaEditView::s_tabLens);
 	//setMarginsBackgroundColor(QColor(0xff, 0xff, 0x80));
 	//setPaper(QColor(0xfc, 0xfc, 0xfc));//这个无效
 
 	//使用空格替换tab
-	execute(SCI_SETUSETABS, !ScintillaEditView::s_noUseTab);
+	//execute(SCI_SETUSETABS, !ScintillaEditView::s_noUseTab);
+
+	setIndentationsUseTabs(!ScintillaEditView::s_noUseTab);
 
 	//这个无比要设置false，否则双击后高亮单词，拷贝时会拷贝多个选择。
 	execute(SCI_SETMULTIPLESELECTION, true);
@@ -711,10 +734,34 @@ void ScintillaEditView::init()
 	execute(SCI_SETSELBACK, true, 0x9bff9b); //0x00ffff原来的黄色
 
 	//设置查找到Mark的风格。定义其前景颜色和形状
-	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE, INDIC_ROUNDBOX);
-	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE, 130);
-	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE, false);
-	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE, 0x00ffff);
+	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE_EXT5, INDIC_ROUNDBOX);
+	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE_EXT5, 130);
+	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_EXT5, false);
+	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_EXT5, 0x00ffff);
+
+	//设置查找到Mark的风格。定义其前景颜色和形状
+	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE_EXT4, INDIC_ROUNDBOX);
+	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE_EXT4, 130);
+	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_EXT4, false);
+	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_EXT4, 0xffff00);
+
+	//设置查找到Mark的风格。定义其前景颜色和形状
+	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE_EXT3, INDIC_ROUNDBOX);
+	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE_EXT3, 130);
+	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_EXT3, false);
+	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_EXT3, 0x0080ff);
+
+	//设置查找到Mark的风格。定义其前景颜色和形状
+	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE_EXT2, INDIC_ROUNDBOX);
+	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE_EXT2, 130);
+	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_EXT2, false);
+	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_EXT2, 0xff0080);
+
+	//设置查找到Mark的风格。定义其前景颜色和形状
+	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_FOUND_STYLE_EXT1, INDIC_ROUNDBOX);
+	execute(SCI_INDICSETALPHA, SCE_UNIVERSAL_FOUND_STYLE_EXT1, 130);
+	execute(SCI_INDICSETUNDER, SCE_UNIVERSAL_FOUND_STYLE_EXT1, false);
+	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_EXT1, 0xff8000);
 
 	//下面这两个是HTML文件的tag高亮的表示。
 	execute(SCI_INDICSETSTYLE, SCE_UNIVERSAL_TAGMATCH, INDIC_STRAIGHTBOX);
@@ -734,7 +781,16 @@ void ScintillaEditView::init()
 	execute(SCI_INDICSETFORE, SCE_UNIVERSAL_FOUND_STYLE_SMART, 0x00ff00);
 
 	setCaretLineVisible(true);
+	
+
+	if (StyleSet::m_curStyleId != BLACK_SE)
+	{
 	setCaretLineBackgroundColor(QColor(0xe8e8ff));
+	}
+	else
+	{
+		setCaretLineBackgroundColor(QColor(0x333333));
+	}
 
 	//记住position变化。不能使用cursorPositionChanged，因为他的列考虑uft8字符，中文一个也算1个，每次列不一定相等。
 	//要使用自定义的cursorPosChange，跟踪的是SCI_GETCURRENTPOS 的值。换行才会触发这个cursorPosChange。自定义的信号
@@ -1038,6 +1094,34 @@ void ScintillaEditView::slot_clearHightWord()
 }
 
 
+intptr_t ScintillaEditView::searchInTarget(QByteArray& text2Find,size_t fromPos, size_t toPos) const
+{
+	execute(SCI_SETTARGETRANGE, fromPos, toPos);
+	return execute(SCI_SEARCHINTARGET, text2Find.size(), reinterpret_cast<sptr_t>(text2Find.data()));
+}
+
+intptr_t ScintillaEditView::replaceTargetRegExMode(QByteArray& re, intptr_t fromTargetPos, intptr_t toTargetPos) const
+{
+	if (fromTargetPos != -1 || toTargetPos != -1)
+	{
+		execute(SCI_SETTARGETRANGE, fromTargetPos, toTargetPos);
+	}
+	return execute(SCI_REPLACETARGETRE, re.size(), reinterpret_cast<sptr_t>(re.data()));
+}
+
+
+//替换fromTargetPos 到 toTargetPos的内容为str2replace。
+intptr_t ScintillaEditView::replaceTarget(QByteArray& str2replace, intptr_t fromTargetPos, intptr_t toTargetPos) const
+{
+	if (fromTargetPos != -1 || toTargetPos != -1)
+	{
+		execute(SCI_SETTARGETRANGE, fromTargetPos, toTargetPos);
+	}
+
+	return execute(SCI_REPLACETARGET, str2replace.size(), reinterpret_cast<sptr_t>(str2replace.data()));
+}
+
+
 void ScintillaEditView::highlightViewWithWord(QString & word2Hilite)
 {
 	int originalStartPos = execute(SCI_GETTARGETSTART);
@@ -1081,6 +1165,7 @@ void ScintillaEditView::highlightViewWithWord(QString & word2Hilite)
 
 			if (foundTextLen > 0)
 			{
+
 				this->execute(SCI_SETINDICATORCURRENT, SCE_UNIVERSAL_FOUND_STYLE_SMART);
 				this->execute(SCI_INDICATORFILLRANGE, targetStart, foundTextLen);
 			}
@@ -1125,12 +1210,65 @@ void ScintillaEditView::highlightViewWithWord(QString & word2Hilite)
 	this->execute(SCI_SETTARGETRANGE, originalStartPos, originalEndPos);
 }
 
+void ScintillaEditView::slot_markColorGroup(QAction *action)
+{
+	CCNotePad::s_curMarkColorId = action->data().toInt();
+	if (m_NoteWin != nullptr)
+	{
+		m_NoteWin->slot_wordHighlight();
+	}
+}
+
 void ScintillaEditView::contextUserDefineMenuEvent(QMenu* menu)
 {
 	//QAction* action;
 	if (menu != nullptr && (m_NoteWin !=nullptr))
 	{
 		menu->addAction(tr("Show File in Explorer"), m_NoteWin, &CCNotePad::slot_showFileInExplorer);
+
+		if (m_styleColorMenu == nullptr)
+		{
+			m_styleColorMenu = new QMenu(tr("mark with color"),this);
+			QPixmap colorBar(36, 36);
+
+			QActionGroup* markColorGroup = new QActionGroup(this);
+			connect(markColorGroup, &QActionGroup::triggered, this, &ScintillaEditView::slot_markColorGroup, Qt::QueuedConnection);
+
+			int index = 1;
+			auto initColorBar = [this, markColorGroup, &index](QPixmap& colorBar) {
+				QAction* action = new QAction(m_styleColorMenu);
+				action->setIcon(colorBar);
+				action->setCheckable(true);
+				action->setText(tr("Color %1").arg(index));
+				action->setData(index + SCE_UNIVERSAL_FOUND_STYLE_EXT5-1);
+				++index;
+				m_styleColorMenu->addAction(action);
+				markColorGroup->addAction(action);
+			};
+
+			colorBar.fill(QColor(0xffff00));
+			initColorBar(colorBar);
+
+			colorBar.fill(QColor(0x00ffff));
+			initColorBar(colorBar);
+
+			colorBar.fill(QColor(0xff8000));
+			initColorBar(colorBar);
+
+			colorBar.fill(QColor(0x8000ff));
+			initColorBar(colorBar);
+
+			colorBar.fill(QColor(0x0080ff));
+			initColorBar(colorBar);
+
+
+			m_styleColorMenu->addSeparator();
+
+			m_styleColorMenu->addAction(tr("Clear Select"), m_NoteWin, &CCNotePad::slot_clearWordHighlight);
+			m_styleColorMenu->addAction(tr("Clear All"), m_NoteWin, &CCNotePad::slot_clearMark);
+	}
+		menu->addMenu(m_styleColorMenu);
+		
 	}
 	menu->show();
 }
@@ -1403,17 +1541,7 @@ QString ScintillaEditView::getEOLString()
 
 
 
-//替换fromTargetPos 到 toTargetPos的内容为str2replace。
 
-intptr_t ScintillaEditView::replaceTarget(QByteArray& str2replace, intptr_t fromTargetPos, intptr_t toTargetPos) const
-{
-	if (fromTargetPos != -1 || toTargetPos != -1)
-	{
-		execute(SCI_SETTARGETRANGE, fromTargetPos, toTargetPos);
-	}
-
-	return execute(SCI_REPLACETARGET, str2replace.size(), reinterpret_cast<sptr_t>(str2replace.data()));
-}
 
 size_t vecRemoveDuplicates(QList<QString>& vec)
 {
@@ -1589,5 +1717,45 @@ void ScintillaEditView::sortLines(size_t fromLine, size_t toLine, ISorter* pSort
 	{
 		QByteArray bytes = joined.toUtf8();
 		replaceTarget(bytes, startPos, endPos);
+	}
+}
+
+void ScintillaEditView::setFoldColor(int margin, QColor fgClack, QColor bkColor)
+{
+	SendScintilla(SCI_MARKERSETFORE, margin, fgClack);
+	SendScintilla(SCI_MARKERSETBACK, margin, bkColor);
+}
+
+void ScintillaEditView::setStyleOptions()
+{
+	//如果是黑色主题，则单独做一些风格设置
+	if (StyleSet::m_curStyleId == BLACK_SE)
+	{
+		//setCaretLineBackgroundColor(QColor(0x3f3f12));
+		setCaretLineBackgroundColor(QColor(0x333333));
+		setMatchedBraceForegroundColor(QColor(246, 81, 246));
+		setMatchedBraceBackgroundColor(QColor(18, 90, 36));
+		setCaretForegroundColor(QColor(255, 255, 255));
+		setFoldColor(SC_MARKNUM_FOLDEROPEN, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDER, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDERSUB, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDERTAIL, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDEREND, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDEROPENMID, QColor(45, 130, 45), QColor(222, 222, 222));
+		setFoldColor(SC_MARKNUM_FOLDERMIDTAIL, QColor(45, 130, 45), QColor(222, 222, 222));
+	}
+	else
+	{
+		setCaretLineBackgroundColor(QColor(0xe8e8ff)); 
+		setMatchedBraceForegroundColor(QColor(191, 141, 255));
+		setMatchedBraceBackgroundColor(QColor(222, 222, 222));
+		setCaretForegroundColor(QColor(0, 0, 0));
+		setFoldColor(SC_MARKNUM_FOLDEROPEN, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDER, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDERSUB, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDERTAIL, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDEREND, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDEROPENMID, QColor(Qt::white), QColor(128, 128, 128));
+		setFoldColor(SC_MARKNUM_FOLDERMIDTAIL, QColor(Qt::white), QColor(128, 128, 128));
 	}
 }

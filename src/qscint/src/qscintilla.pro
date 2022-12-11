@@ -120,6 +120,7 @@ HEADERS = \
 	./Qsci/qscilexergo.h \
     ./Qsci/qscilexerglobal.h \
     ./Qsci/qscilexertext.h \
+    ./Qsci/qscilexerrust.h \
     ./Qsci/qscilexerhtml.h \
     ./Qsci/qscilexeridl.h \
     ./Qsci/qscilexerjava.h \
@@ -150,6 +151,7 @@ HEADERS = \
     ./Qsci/qscistyle.h \
     ./Qsci/qscistyledtext.h \
     ./Qsci/qscilexernsis.h \
+    ./Qsci/qscilexervb.h \
     ListBoxQt.h \
     SciAccessibility.h \
     SciClasses.h \
@@ -222,6 +224,7 @@ HEADERS = \
 
 SOURCES = \
     qscilexertext.cpp \
+    qscilexerrust.cpp \
     qscilexernsis.cpp \
     qsciscintilla.cpp \
     qsciscintillabase.cpp \
@@ -277,6 +280,7 @@ SOURCES = \
     qscimacro.cpp \
     qscistyle.cpp \
     qscistyledtext.cpp \
+    qscilexervb.cpp \
     InputMethod.cpp \
     ListBoxQt.cpp \
     MacPasteboardMime.cpp \

@@ -292,13 +292,16 @@ void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int ini
 	}
 	
 	//最后一段不能遗漏，也需要识别
-	if (IsAAsciiChar(sc.ch))
+	if (sc.state == SCE_TXT_IDENTIFIER)
 	{
+		if (IsAAsciiChar(sc.chPrev))
+		{
 		sc.ChangeState(SCE_TXT_ASCII);
 	}
 	else
 	{
 		sc.ChangeState(SCE_TXT_DEFAULT);
+	}
 	}
 
 	sc.SetState(SCE_TXT_DEFAULT);
