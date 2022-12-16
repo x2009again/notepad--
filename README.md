@@ -14,6 +14,7 @@
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.19
 
+最新开发预览下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.20
 
 做国人自己的免费编辑器，离不开您的支持，请通过微信赞赏我们。
 
