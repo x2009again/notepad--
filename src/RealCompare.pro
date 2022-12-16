@@ -3,7 +3,7 @@ LANGUAGE = C++
 
 TARGET = Notepad--
 
-CONFIG	+= qt warn_on release
+CONFIG	+= qt warn_on Release
 
 QT += core gui widgets concurrent network xmlpatterns
 
@@ -29,7 +29,7 @@ INCLUDEPATH	+= qscint/src/Qsci
 INCLUDEPATH	+= qscint/scintilla/include
 INCLUDEPATH += cceditor
 
-DEFINES +=  QSCINTILLA_DLL
+#DEFINES +=  QSCINTILLA_DLL
 
 TRANSLATIONS += realcompare_zh.ts
 
