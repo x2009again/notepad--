@@ -47,13 +47,11 @@ TRANSLATIONS += realcompare_zh.ts
    }
 unix{
 if(CONFIG(debug, debug|release)){
-          LIBS += -L/home/yzw/build/CCNotePad/lib -lprotobuf
           LIBS += -L/home/yzw/build/CCNotePad/x64/Debug -lqmyedit_qt5
 
 QMAKE_CXXFLAGS += -fopenmp
 LIBS += -lgomp -lpthread
     }else{
-          LIBS += -L/home/yzw/build/CCNotePad/lib -lprotobuf
           LIBS += -L/home/yzw/build/CCNotePad/x64/Release -lqmyedit_qt5
         DESTDIR = x64/Release
 
@@ -66,12 +64,10 @@ LIBS += -lgomp -lpthread
 RC_FILE += RealCompare.rc
 unix
 {
-unix:!macx: LIBS += -L$$PWD/lib/ -lprotobuf
 
 INCLUDEPATH += $$PWD/.
 DEPENDPATH += $$PWD/.
 
-unix:!macx: PRE_TARGETDEPS += $$PWD/lib/libprotobuf.a
 
 unix:!macx: LIBS += -L$$PWD/x64/Release/ -lqmyedit_qt5
 
