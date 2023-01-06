@@ -12,11 +12,11 @@
 
 您可以在这个项目提交bug或反馈问题。
 
-最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.19
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.20
 
-最新开发预览下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.20
+最新开发预览下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.21
 
-NDD将在后续推出插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
+NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
 开发者参与插件功能开发。
 
 做国人自己的免费编辑器，离不开您的支持，请通过微信捐赠我们。
