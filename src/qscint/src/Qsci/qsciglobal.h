@@ -38,6 +38,11 @@
 // define QSCINTILLA_DLL to link against a QScintilla shared library, or define
 // neither to either build or link against a static QScintilla library.
 
+//在编译插件的时候，先打开QSCINTILLA_MAKE_DLL宏，让qscitilla生成lib dll文件
+//#define QSCINTILLA_MAKE_DLL
+
+//编译完成后，注释掉QSCINTILLA_MAKE_DLL
+
 #if defined(QSCINTILLA_DLL)
 #define QSCINTILLA_EXPORT       Q_DECL_IMPORT
 #elif defined(QSCINTILLA_MAKE_DLL)
