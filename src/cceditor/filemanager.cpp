@@ -18,9 +18,9 @@ FileManager::~FileManager()
 {
 }
 
-ScintillaEditView* FileManager::newEmptyDocument()
+ScintillaEditView* FileManager::newEmptyDocument(bool isBigText)
 {
-	ScintillaEditView* pEdit = new ScintillaEditView(nullptr);
+	ScintillaEditView* pEdit = new ScintillaEditView(nullptr, isBigText);
 	return pEdit;
 }
 
@@ -500,6 +500,7 @@ int  FileManager::loadFilePreNextPage(int dir, QString& filePath, HexFileMgr* & 
 const int ONE_PAGE_TEXT_SIZE = 200 * 1024;
 
 //加载下一页或者上一页。(文本模式）
+//返回值：0表示成功
 int  FileManager::loadFilePreNextPage(int dir, QString& filePath, TextFileMgr* & textFileOut)
 {
 	if (m_bigTxtFileMgr.contains(filePath))
@@ -802,7 +803,7 @@ bool FileManager::loadFileData(QString filePath, HexFileMgr* & hexFileOut)
 }
 
 //加载大文本文件。从0开始读取ONE_PAGE_TEXT_SIZE 500K的内容
-bool FileManager::loadFileData(QString filePath, TextFileMgr* & textFileOut)
+bool FileManager::loadFileData(QString filePath, TextFileMgr* & textFileOut, RC_LINE_FORM & lineEnd)
 {
 	QFile *file = new QFile(filePath);
 
@@ -834,6 +835,22 @@ bool FileManager::loadFileData(QString filePath, TextFileMgr* & textFileOut)
 		{
 			//给后面的字符填\0，让字符串正常结尾\0
 			buf[ret - preLineEndPos] = '\0';
+
+			if (ret - preLineEndPos >= 2)
+			{
+				if (buf[ret - preLineEndPos - 1] == '\n' && buf[ret - preLineEndPos - 2] == '\r')
+				{
+					lineEnd = DOS_LINE;
+		}
+				else if (buf[ret - preLineEndPos - 1] == '\n')
+				{
+					lineEnd = UNIX_LINE;
+				}
+				else if (buf[ret - preLineEndPos - 1] == '\r')
+				{
+					lineEnd = MAC_LINE;
+				}
+			}
 		}
 
 		TextFileMgr* txtFile = nullptr;

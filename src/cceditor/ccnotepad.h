@@ -13,6 +13,7 @@
 #include <QTranslator>
 #include <QTimer>
 #include <QSettings>
+#include <QListWidgetItem>
 
 #include "rcglobal.h"
 #include "ui_ccnotepad.h"
@@ -20,6 +21,7 @@
 #include "extlexermanager.h"
 #include "scintillaeditview.h"
 #include "findwin.h"
+#include "pluginGl.h"
 
 
 //class ScintillaEditView;
@@ -32,15 +34,6 @@ class CompareWin;
 struct HexFileMgr;
 struct TextFileMgr;
 
-#define uos 1
-
-#ifdef Q_OS_WIN
-#undef uos
-#endif
-
-#ifdef Q_OS_MAC
-#undef uos
-#endif
 
 enum OpenAttr {
 	Text = 1,
@@ -69,7 +62,7 @@ enum LINE_SORT_TYPE {
 
 //打开模式。1 文本 2 二进制 3 大文本只读 4 文本只读
 //const char* Open_Attr = "openid";
-
+class FileListView;
 
 class CCNotePad : public QMainWindow
 {
@@ -127,8 +120,18 @@ public:
 	void getCurUseLexerTags(QVector<QString>& tag);
 
 	void clearHighlightWord(QString signWord, ScintillaEditView* pEdit = nullptr);
+	bool closeFileByEditWidget(QWidget* pEdit);
+	void showChangePageTips(QWidget* pEdit);
+	int markAtBack(QString keyword);
+	int findAtBack(QString keyword);
+	int replaceAtBack(QStringList& keyword, QStringList& replace);
+	void updateThemes();
 
+	void setGlobalFgColor(int style);
+	void setGlobalBgColor(int style);
+	void setGlobalFont(int style);
 
+	void changeMarkColor(int sytleId);
 signals:
 	void signSendRegisterKey(QString key);
 	void signRegisterReplay(int code);
@@ -146,6 +149,7 @@ public slots:
 	void slot_actionCloseLeftAll();
 	void slot_actionCloseRightAll();
 	void slot_quit(bool);
+
 	void slot_closeAllFile(bool);
 	void slot_batch_convert();
 	void slot_batch_rename();
@@ -160,6 +164,9 @@ public slots:
 
 	void slot_clearWordHighlight();
 	void slot_clearMark();
+	void slot_zoomValueChange();
+
+
 protected:
 	void closeEvent(QCloseEvent *event) override;
 	void dragEnterEvent(QDragEnterEvent* event) override;
@@ -239,7 +246,7 @@ private slots:
 	void slot_aboutNdd();
 	void slot_fileChange(QString filePath);
 	void slot_tabBarDoubleClicked(int index);
-	void slot_toLightBlueStyle();
+	/*void slot_toLightBlueStyle();
 	void slot_toDefaultStyle();
 	void slot_toThinBlueStyle();
 	void slot_toRiceYellow();
@@ -247,7 +254,7 @@ private slots:
 	void slot_toSilverStyle();
 	void slot_toDarkStyle();
 	void slot_toLavenderBlush();
-	void slot_toMistyRose();
+	void slot_toMistyRose();*/
 	void slot_register();
 
 	void slot_slectionChanged();
@@ -258,7 +265,7 @@ private slots:
 	void slot_tabFormatChange(bool tabLenChange, bool useTabChange);
 	void slot_searchResultShow();
 	void slot_saveFile(QString fileName, ScintillaEditView * pEdit);
-	void slot_skinStyleGroup(QAction * action);
+	/*void slot_skinStyleGroup(QAction * action);*/
 	void slot_changeIconSize(QAction * action);
 	void slot_langFormat();
 
@@ -312,6 +319,16 @@ private slots:
 	void slot_markColorGroup(QAction * action);
 	void slot_loadMarkColor();
 	void slot_saveSearchHistory();
+	void slot_fileListView(bool check);
+	void slot_fileListItemDoubleClick(QListWidgetItem* item);
+	void slot_showToolBar(bool);
+	void slot_dynamicLoadToolMenu();
+	void slot_batchFind();
+	void slot_pluginMgr();
+	void slot_showWebAddr(bool check);
+	void onPlugWork(bool check);
+
+
 private:
 	void initFindResultDockWin();
 	void enableEditTextChangeSign(ScintillaEditView * pEdit);
@@ -392,8 +409,19 @@ private:
 
 	void registerEscKeyShort(QWidget * parent);
 	void closeAllFileWhenQuit(bool isQuit=false);
+	void initFileListDockWin();
+	void addFileListView(QString file, QWidget* pw);
+	void delFileListView(QString file);
+	void fileListSetCurItem(QString filePath);
+	void syncFileTabToListView();
+	void setZoomLabelValue(int zoomValue);
+	void zoomto(int zoomValue);
+	void tabClose(QWidget* pEdit);
 
-
+	void init_toolsMenu();
+	void loadPluginLib();
+	void loadPluginProcs(QString strLibDir, QMenu* pMenu);
+	void onPlugFound(NDD_PROC_DATA& procData, QMenu* pUserData);
 private:
 	Ui::CCNotePad ui;
 
@@ -401,11 +429,15 @@ private:
 	QLabel* m_lineEndLabel;
 	QLabel* m_lineNumLabel;
 	QLabel* m_langDescLabel;
+	QLabel* m_zoomLabel;
 
 	QMenu* m_tabRightClickMenu;
 
 	QDockWidget* m_dockSelectTreeWin;
 	FindResultWin* m_pResultWin;
+
+	QPointer<QDockWidget> m_dockFileListWin;
+	FileListView* m_fileListView;
 
 	//一个用于查找，一个用于排序
 	QMap <QString,QAction*> m_receneOpenFile;
@@ -431,6 +463,7 @@ private:
 	QString m_cmpRightFilePath;
 
 	QPointer<QMainWindow> m_pFindWin;
+	QPointer <QWidget> m_columnEditWin;
 
 	QSharedMemory* m_shareMem;
 
@@ -506,12 +539,26 @@ private:
 	QToolButton* m_transcode;
 	QToolButton* m_rename;
 
+
+	QPointer<QMainWindow> m_batchFindWin;
+
 	int m_curIconSize;
 	int m_curColorIndex;
+
+	bool m_isInReloadFile;
+
+	bool m_isToolMenuLoaded;
+
+	bool m_isInitBookMarkAct;
+
+	QList<QAction*>m_styleMarkActList;
+	QList<NDD_PROC_DATA> m_pluginList;
+
 public:
 		static QString s_lastOpenDirPath;
 	static int s_restoreLastFile; //自动恢复上次打开的文件
 	static int s_curStyleId;
 	static int s_curMarkColorId;
+	static int s_hightWebAddr;//高亮网页地址
 };
 

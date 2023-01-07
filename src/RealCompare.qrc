@@ -135,55 +135,6 @@
         <file>Resources/edit/styledeepblue/zoomin.png</file>
         <file>Resources/edit/styledeepblue/zoomout.png</file>
         <file>Resources/edit/styledeepblue/needsaveall.png</file>
-        <file>qss/black.qss</file>
-        <file>qss/psblack/add_bottom.png</file>
-        <file>qss/psblack/add_left.png</file>
-        <file>qss/psblack/add_right.png</file>
-        <file>qss/psblack/add_top.png</file>
-        <file>qss/psblack/branch_close.png</file>
-        <file>qss/psblack/branch_open.png</file>
-        <file>qss/psblack/calendar_nextmonth.png</file>
-        <file>qss/psblack/calendar_prevmonth.png</file>
-        <file>qss/psblack/checkbox_checked.png</file>
-        <file>qss/psblack/checkbox_checked_disable.png</file>
-        <file>qss/psblack/checkbox_parcial.png</file>
-        <file>qss/psblack/checkbox_parcial_disable.png</file>
-        <file>qss/psblack/checkbox_unchecked.png</file>
-        <file>qss/psblack/checkbox_unchecked_disable.png</file>
-        <file>qss/psblack/radiobutton_checked.png</file>
-        <file>qss/psblack/radiobutton_checked_disable.png</file>
-        <file>qss/psblack/radiobutton_unchecked.png</file>
-        <file>qss/psblack/radiobutton_unchecked_disable.png</file>
-        <file>Resources/edit/styledark/needsaveall.png</file>
-        <file>Resources/edit/styledark/needsavebar.png</file>
-        <file>Resources/edit/styledark/autosave.png</file>
-        <file>Resources/edit/styledark/bincmp.png</file>
-        <file>Resources/edit/styledark/clearsign.png</file>
-        <file>Resources/edit/styledark/closefile.png</file>
-        <file>Resources/edit/styledark/copy.png</file>
-        <file>Resources/edit/styledark/crlf.png</file>
-        <file>Resources/edit/styledark/cut.png</file>
-        <file>Resources/edit/styledark/dircompare.png</file>
-        <file>Resources/edit/styledark/filecompare.png</file>
-        <file>Resources/edit/styledark/find.png</file>
-        <file>Resources/edit/styledark/goto.png</file>
-        <file>Resources/edit/styledark/indentGuide.png</file>
-        <file>Resources/edit/styledark/mark.png</file>
-        <file>Resources/edit/styledark/newfile.png</file>
-        <file>Resources/edit/styledark/next.png</file>
-        <file>Resources/edit/styledark/openfile.png</file>
-        <file>Resources/edit/styledark/paste.png</file>
-        <file>Resources/edit/styledark/pre.png</file>
-        <file>Resources/edit/styledark/redo.png</file>
-        <file>Resources/edit/styledark/rename.png</file>
-        <file>Resources/edit/styledark/replace.png</file>
-        <file>Resources/edit/styledark/sign.png</file>
-        <file>Resources/edit/styledark/transcode.png</file>
-        <file>Resources/edit/styledark/undo.png</file>
-        <file>Resources/edit/styledark/white.png</file>
-        <file>Resources/edit/styledark/zoomin.png</file>
-        <file>Resources/edit/styledark/zoomout.png</file>
-        <file>Resources/edit/styledark/closeall.png</file>
         <file>Resources/img/savedark.png</file>
         <file>Resources/img/opendark.png</file>
         <file>Resources/img/reloaddark.png</file>
@@ -193,5 +144,6 @@
         <file>Resources/img/diffall.png</file>
         <file>Resources/img/expand.png</file>
         <file>Resources/img/fold.png</file>
+        <file>qss/common.qss</file>
     </qresource>
 </RCC>

@@ -6,6 +6,9 @@
 #include <QCloseEvent>
 #include "ui_qtlangset.h"
 #include "rcglobal.h"
+#include "Qsci/qsciscintilla.h"
+#include "Scintilla.h"
+#include "SciLexer.h"
 
 class QsciLexer;
 
@@ -20,6 +23,8 @@ enum GLOBAL_STYLE_SET {
 	GLOBAL_BK_COLOR,
 };
 
+
+
 class QtLangSet : public QMainWindow
 {
 	Q_OBJECT
@@ -28,12 +33,14 @@ public:
 	QtLangSet(QString initTag, QWidget *parent = nullptr);
 	~QtLangSet();
 
-	static void setAllLangFontFgColorToDarkStyle();
-    static bool isExistDarkLangSetings();
+	/*static void setAllLangFontFgColorToDarkStyle();*/
+    //static bool isExistDarkLangSetings();
 	void selectInitLangTag(QString initLangTag);
-	static bool readLangSettings(QsciLexer * lexer, QString tag);
+	static bool readLangSettings(QsciLexer * lexer, QString tag, int StyleId = -1);
+	static bool readLangOriginSettings(QsciLexer* lexer, QString tag, int StyleId=-1);
 private:
-	static void setLangFontFgColorToDarkStyle(LangType langId, QString tag="");
+	//static void setLangFontFgColorToDarkStyle(LangType langId, QString tag="");
+	static void createOneLangStyleFromThemes(int styleId, LangType langId, QString tag = "");
 	void startSignSlot();
 
 
@@ -52,7 +59,11 @@ protected:
 private slots:
 
 	void slot_itemSelect(QListWidgetItem * item);
+	void slot_langListCurRowChanged(int row);
+	
 	void slot_styleItemSelect(QListWidgetItem * item);
+	void slot_styleListCurRowChanged(int row);
+
 	void slot_saveClick();
 	void slot_reset();
 	void slot_changeFgColor();
@@ -71,7 +82,7 @@ private slots:
 	void slot_useAlobalFontBold(bool);
 	void slot_useAlobalFontUnderline(bool);
 	void slot_useAlobalFontItalic(bool);
-
+	void on_themesChange(int index);
 
 
 
@@ -80,7 +91,7 @@ private:
 	bool readLangSetFile(QString langName, QString & keyword, QString & motherLang, QString & extTypes);
 	void initUserDefineLangList();
 	void setStyleShow(QFont & font, QColor& fcColor, QColor &bkColor);
-	static void saveLangeSet(QsciLexer * lexer);
+	static void saveLangeSet(QsciLexer * lexer, int styleId=-1);
 	bool saveCurLangSettings();
 	void fillForegroundColor(QColor & fcColor);
 	void fillBackgroundColor(QColor & bkColor);
@@ -93,7 +104,17 @@ private:
 
 	void getCurUseLexerTags(QVector<QString>& tag);
 	void enableFontChangeSensitive(bool isSensitive);
+	void updateThemes();
 
+	bool isUseGlobalFgColor();
+	bool isUseGlobalBgColor();
+
+	void setGlobalFgColor(int style, QColor color);
+	void setGlobalBgColor(int style, QColor color);
+	void setGlobalFont(int style, QFont font);
+
+	bool isExistThemesSetings(int styleId);
+	void createUserStyleFormThemes(int styleId);
 private:
 	Ui::QtLangSetClass ui;
 
@@ -116,7 +137,11 @@ private:
 	//是否是全局修改项
 	bool m_isGlobelItem;
 
+	int m_themesId;
+
+	int m_lastThemesId;
+
 public:
-	//黑色模式下不显眼的颜色，替换到显眼颜色
-	static QMap<QString, QColor> s_darkColorMap;
+	////黑色模式下不显眼的颜色，替换到显眼颜色
+	//static QMap<QString, QColor> s_darkColorMap;
 };

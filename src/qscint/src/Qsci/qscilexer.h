@@ -302,8 +302,20 @@ public:
                const char *prefix = "/Scintilla") const;
 
 	StyleData &styleData(int style) const;
+    StyleData& setThemesDefaultStyleData(int style) const;
 
 	void resetStyleDefaults();
+
+    QByteArray getCommentLineSymbol();
+    void setCommentLineSymbol(QByteArray comment);
+
+    QByteArray getCommentStart();
+    QByteArray getCommentEnd();
+
+    void setCommentStart(QByteArray commentStart);
+    void setCommentEnd(QByteArray commentEnd);
+
+    static void setCurThemes(int themesId);
 
 public slots:
     //! The auto-indentation style is set to \a autoindentstyle.
@@ -365,6 +377,14 @@ protected:
 	bool m_isUserDefineKeyword; //是否使用用户自定义关键字。默认false
 
 	QByteArray m_userDefineKeyword;//用户自定义的关键字
+
+    QByteArray m_commentSymbol;
+    QByteArray m_commentStart;
+    QByteArray m_commentEnd;
+
+    //当前主题id
+    static int m_themesId;
+
 private:
 
 

@@ -5,7 +5,7 @@
 #include <QTreeWidgetItem>
 #include <qscilexer.h>
 
-static const char* VersionStr = "v1.19.2";
+static const char* VersionStr = "v1.21.0";
 
 #define CMP_CODE_NOEQUAL
 
@@ -137,3 +137,24 @@ enum UserLangMother
 };
 
 QString getUserLangDirPath();
+
+//在这定义一次即可。
+//#define uos 1
+
+#ifdef Q_OS_WIN
+#undef uos
+#endif
+
+#ifdef ubu
+#undef uos
+#endif
+
+#ifdef uos
+#undef ubu
+#endif
+
+#ifdef Q_OS_MAC
+#undef uos
+#endif
+
+void showFileInExplorer(QString path);

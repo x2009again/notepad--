@@ -18,6 +18,7 @@ QsciLexerText::QsciLexerText(QObject *parent)
 	: QsciLexer(parent)
 {
 	setLexerId(L_TXT);
+	m_commentSymbol = "#";
 }
 
 QsciLexerText::~QsciLexerText()

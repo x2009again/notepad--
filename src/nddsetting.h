@@ -18,6 +18,11 @@ static QString ICON_SIZE = "iconsize";//图标大小
 static QString ZOOMVALUE = "zoom"; //放大倍数
 static QString VERSION = "version";//当前版本
 static QString FINDRESULTPOS = "findpos";//查找窗口悬浮的位置
+static QString FILELISTPOS = "filepos";//文件列表悬浮框的位置
+static QString FILELISTSHOW = "showfilelist"; //文件列表框是否显示
+static QString TOOLBARSHOW = "showbar"; //是否显示工具栏
+static QString FINDWINSIZE = "findwinsize";//保存查找框的大小。150%放大时界面永久。保留避免每次手动调整
+static QString SHOWWEBADDR = "showweb";//高亮web地址，双击网页打开
 
 class NddSetting
 {

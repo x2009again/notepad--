@@ -29,6 +29,7 @@
 QsciLexerProperties::QsciLexerProperties(QObject *parent)
     : QsciLexer(parent), fold_compact(true), initial_spaces(true)
 {
+    m_commentSymbol = "#";
 }
 
 

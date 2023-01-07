@@ -4,6 +4,7 @@ QsciLexerVB::QsciLexerVB(QObject *parent)
 	: QsciLexer(parent)
 {
 	setLexerId(L_VB);
+	m_commentSymbol = "'";
 }
 
 QsciLexerVB::~QsciLexerVB()
@@ -85,7 +86,7 @@ QString QsciLexerVB::description(int style) const
 	switch (style)
 	{
 	case VB_DEFAULT:
-		return "default";
+		return "Default";
 	case VB_COMMENT:
 		return "comment";
 	case VB_NUMBER:

@@ -167,7 +167,7 @@ void FindWin::setFindHistory(QList<QString>* findHistory)
 }
 
 //标记高亮所有word单词
-void FindWin::markAllWord(QString & word)
+int FindWin::markAllWord(QString & word)
 {
 	ui.markTextBox->setCurrentText(word);
 	ui.findinfilesTab->setCurrentIndex(3);
@@ -175,7 +175,7 @@ void FindWin::markAllWord(QString & word)
 	//但是好像没有一个现成的方法来判断word中的字符。暂时不做全词匹配
 	ui.markMatchWholeBox->setChecked(false);
 	ui.markMatchCaseBox->setChecked(true);
-	slot_markAll();
+	return markAll();
 }
 
 //删除行首尾的空白字符
@@ -732,7 +732,7 @@ void FindWin::findNext()
 void FindWin::findPrev()
 {
 	slot_findPrev();
-}
+	}
 
 /*处理查找时零长的问题。一定要处理，否则会死循环，因为每次都在原地查找。
 * 就是把下次查找的startpos往前一个，否则每次都从这个startpos找到自己
@@ -1014,13 +1014,101 @@ void FindWin::addCurFindRecord(ScintillaEditView* pEdit, FindRecords& recordRet,
 	recordRet.records.append(aRecord);
 }
 
-void FindWin::slot_findAllInCurDoc()
+//在后台查找
+int FindWin::findAtBack(QString keyword)
+{
+	this->setCurrentTab(FIND_TAB);
+	ui.findComboBox->setCurrentText(keyword);
+	ui.findBackwardBox->setChecked(false);
+	ui.findMatchCaseBox->setChecked(true);
+	ui.findWrapBox->setChecked(false);
+	ui.findMatchWholeBox->setChecked(false);
+	ui.findModeNormalBt->setChecked(true);
+
+	m_isStatic = true;
+	int times = findAllInCurDoc();
+	m_isStatic = false;
+
+	return times;
+}
+
+//在后台替换
+int FindWin::replaceAtBack(QStringList& keyword, QStringList& replace)
+{
+	assert(keyword.size() == replace.size());
+
+	this->setCurrentTab(REPLACE_TAB);
+
+	QWidget* pw = autoAdjustCurrentEditWin();
+	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+	if (pEdit != nullptr)
+	{
+		if (pEdit->isReadOnly())
+		{
+			ui.statusbar->showMessage(tr("The ReadOnly document does not allow replacement."), 8000);
+			QApplication::beep();
+			return 0;
+		}
+	}
+
+	ui.replaceBackwardBox->setChecked(false);
+	ui.replaceMatchWholeBox->setChecked(false);
+	ui.replaceMatchCaseBox->setChecked(true);
+	ui.replaceWrapBox->setChecked(false);
+	ui.replaceModeNormalBox->setChecked(true);
+
+	m_isStatic = true;
+	int times = 0;
+
+	pEdit->execute(SCI_BEGINUNDOACTION);
+
+	ProgressWin* loadFileProcessWin = new ProgressWin(this);
+
+	loadFileProcessWin->setWindowModality(Qt::WindowModal);
+
+	loadFileProcessWin->info(tr("total %1 keyword, please wait ...").arg(keyword.size()));
+
+	loadFileProcessWin->setTotalSteps(keyword.size());
+
+	loadFileProcessWin->show();
+
+	for (int i = 0; i < keyword.size(); ++i)
+	{
+		if (loadFileProcessWin->isCancel())
+		{
+			break;
+		}
+
+		ui.replaceTextBox->setCurrentText(keyword.at(i));
+		ui.replaceWithBox->setCurrentText(replace.at(i));
+
+		updateParameterFromUI();
+
+		QString whatFind = ui.replaceTextBox->currentText();
+		QString replaceText = ui.replaceWithBox->currentText();
+
+		times += doReplaceAll(pEdit, whatFind, replaceText, false);
+
+		loadFileProcessWin->moveStep();
+
+		QCoreApplication::processEvents();
+	}
+	delete loadFileProcessWin;
+
+	pEdit->execute(SCI_ENDUNDOACTION);
+
+	m_isStatic = false;
+
+	return times;
+}
+
+int FindWin::findAllInCurDoc()
 {
 	if (ui.findComboBox->currentText().isEmpty())
 	{
 		ui.statusbar->showMessage(tr("what find is null !"), 8000);
 		QApplication::beep();
-		return;
+		return 0;
 	}
 
 	QWidget* pw = autoAdjustCurrentEditWin();
@@ -1029,9 +1117,12 @@ void FindWin::slot_findAllInCurDoc()
 	{
 		if (pEdit->isReadOnly())
 		{
-			ui.statusbar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			if (!m_isStatic)
+			{
+				ui.statusbar->showMessage(tr("The ReadOnly document does not allow this operation."), 8000);
+			}
 			QApplication::beep();
-			return;
+			return 0;
 		}
 
 		FindRecords results;
@@ -1057,18 +1148,21 @@ void FindWin::slot_findAllInCurDoc()
 			convertExtendedToString(whatFind, extendFind);
 			whatFind = extendFind;
 		}
-		
+
 		//这里的forward一定要是true。回环一定是false
 		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
 		{
 			ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
-			QApplication::beep();
-			
-			emit sign_findAllInCurDoc(&results);
+
+			if (!m_isStatic)
+			{
+				QApplication::beep();
+				emit sign_findAllInCurDoc(&results);
+			}
 
 			m_isFindFirst = true;
 
-			return;
+			return 0;
 		}
 		else
 		{
@@ -1097,12 +1191,23 @@ void FindWin::slot_findAllInCurDoc()
 		ui.statusbar->showMessage(tr("find finished, total %1 found!").arg(replaceNums), 10000);
 
 		emit sign_findAllInCurDoc(&results);
+
+		return replaceNums;
 	}
 	else
 	{
-		ui.statusbar->showMessage(tr("The mode of the current document does not allow this operation."), 8000);
-		QApplication::beep();
+		if (!m_isStatic)
+		{
+			ui.statusbar->showMessage(tr("The mode of the current document does not allow this operation."), 8000);
+			QApplication::beep();
+		}
 	}
+	return 0;
+}
+
+void FindWin::slot_findAllInCurDoc()
+{
+	findAllInCurDoc();
 }
 
 void FindWin::slot_findAllInOpenDoc()
@@ -1533,14 +1638,17 @@ struct FindReplaceInfo
 };
 
 //返回值替换数量
-int FindWin::doReplaceAll(ScintillaEditView* pEdit, QString &whatFind, QString& replaceText)
+int FindWin::doReplaceAll(ScintillaEditView* pEdit, QString &whatFind, QString& replaceText, bool isCombineUndo)
 {
 	int replaceNums = 0;
 
 	int srcPostion = pEdit->execute(SCI_GETCURRENTPOS);
 	int firstDisLineNum = pEdit->execute(SCI_GETFIRSTVISIBLELINE);
 
+	if (isCombineUndo)
+	{
 	pEdit->execute(SCI_BEGINUNDOACTION);
+	}
 
 	int flags = buildSearchFlags(m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_REPLACENEXT, 0, 0);
 
@@ -1601,8 +1709,10 @@ int FindWin::doReplaceAll(ScintillaEditView* pEdit, QString &whatFind, QString& 
 		findReplaceInfo._endRange += replaceDelta;									//adjust end of range in case of replace
 	}
 
-
+	if (isCombineUndo)
+	{
 	pEdit->execute(SCI_ENDUNDOACTION);
+	}
 
 	pEdit->execute(SCI_GOTOPOS, srcPostion);
 	pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
@@ -1613,19 +1723,17 @@ int FindWin::doReplaceAll(ScintillaEditView* pEdit, QString &whatFind, QString& 
 	return replaceNums;
 }
 
-//替换当前文档里面的所有。之前的要慢，是因为qscintilla中实时计算了行在屏幕需要的长度。
-//大量的这种计算一行实时长度的操作，非常耗时。查找、标记均不耗时，只有替换修改了文本才耗时。
-void FindWin::slot_replaceAll()
+int FindWin::replaceAll()
 {
 	if (ui.replaceTextBox->currentText().isEmpty())
 	{
 		ui.statusbar->showMessage(tr("what find is null !"), 8000);
-		return;
+		return 0;
 	}
 
-	if (!m_isStatic &&  QMessageBox::Yes != QMessageBox::question(this, tr("Replace All current Doc"), tr("Are you sure replace all occurrences in current documents?")))
+	if (!m_isStatic && QMessageBox::Yes != QMessageBox::question(this, tr("Replace All current Doc"), tr("Are you sure replace all occurrences in current documents?")))
 	{
-		return;
+		return 0;
 	}
 
 	QWidget* pw = autoAdjustCurrentEditWin();
@@ -1636,7 +1744,7 @@ void FindWin::slot_replaceAll()
 		{
 			ui.statusbar->showMessage(tr("The ReadOnly document does not allow replacement."), 8000);
 			QApplication::beep();
-			return;
+			return 0;
 		}
 	}
 	updateParameterFromUI();
@@ -1659,6 +1767,15 @@ void FindWin::slot_replaceAll()
 	//全部替换后，下次查找，必须算第一次查找
 	m_isFindFirst = true;
 	ui.statusbar->showMessage(tr("replace finished, total %1 replaced!").arg(replaceNums), 10000);
+
+	return replaceNums;
+}
+
+//替换当前文档里面的所有。之前的要慢，是因为qscintilla中实时计算了行在屏幕需要的长度。
+//大量的这种计算一行实时长度的操作，非常耗时。查找、标记均不耗时，只有替换修改了文本才耗时。
+void FindWin::slot_replaceAll()
+{
+	replaceAll();
 }
 
 void FindWin::slot_replaceAllInOpenDoc()
@@ -1737,22 +1854,20 @@ void FindWin::slot_replaceAllInOpenDoc()
 	ui.statusbar->showMessage(tr("Replace in Opened Files: %1 occurrences were replaced.").arg(replaceNums), 10000);
 }
 
-
-//标记高亮单词
-void FindWin::slot_markAll()
+int  FindWin::markAll()
 {
 	if (ui.markTextBox->currentText().isEmpty())
 	{
 		ui.statusbar->showMessage(tr("what mark is null !"), 8000);
 		QApplication::beep();
-		return;
+		return 0;
 	}
 
 	QWidget* pw = autoAdjustCurrentEditWin();
 	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
 	if (pEdit != nullptr)
 	{
-		FindRecords *results = new FindRecords;
+		FindRecords* results = new FindRecords;
 		results->pEdit = pEdit;
 		results->hightLightColor = CCNotePad::s_curMarkColorId;
 
@@ -1778,8 +1893,8 @@ void FindWin::slot_markAll()
 		if (!pEdit->findFirst(whatMark, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
 		{
 			ui.statusbar->showMessage(tr("cant't find text \'%1\'").arg(m_expr), 8000);
-			QApplication::beep();
-			return;
+			//QApplication::beep();
+			return 0;
 		}
 		else
 		{
@@ -1789,11 +1904,11 @@ void FindWin::slot_markAll()
 			{
 				ui.statusbar->showMessage(tr("cant't mark text \'%1\'").arg(m_expr), 8000);
 				QApplication::beep();
-				return;
+				return 0;
 			}
 		}
 
-		addCurFindRecord(pEdit, *results,true);
+		addCurFindRecord(pEdit, *results, true);
 
 		++replaceNums;
 
@@ -1813,7 +1928,7 @@ void FindWin::slot_markAll()
 
 			if (foundTextLen > 0)
 			{
-				pEdit->execute(SCI_SETINDICATORCURRENT,CCNotePad::s_curMarkColorId);
+				pEdit->execute(SCI_SETINDICATORCURRENT, CCNotePad::s_curMarkColorId);
 				pEdit->execute(SCI_INDICATORFILLRANGE, rs.pos, foundTextLen);
 			}
 		}
@@ -1831,12 +1946,20 @@ void FindWin::slot_markAll()
 		//全部替换后，下次查找，必须算第一次查找
 		m_isFindFirst = true;
 		ui.statusbar->showMessage(tr("mark finished, total %1 found!").arg(replaceNums), 10000);
+
+		return replaceNums;
 	}
 	else
 	{
 		ui.statusbar->showMessage(tr("The mode of the current document does not allow mark."), 8000);
 		QApplication::beep();
 	}
+	return 0;
+}
+//标记高亮单词
+void FindWin::slot_markAll()
+{
+	markAll();
 }
 
 //取消高亮当前关键字

@@ -78,6 +78,12 @@
     <ClCompile Include="aboutndd.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="batchfindreplace.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bigfilemessage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="cceditor\ccnotepad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -115,6 +121,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="filecmprulewin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filelistview.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cceditor\filemanager.cpp">
@@ -157,6 +166,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="optionsview.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="plugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pluginmgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="progresswin.cpp">
@@ -224,6 +239,12 @@
     <QtMoc Include="aboutndd.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="batchfindreplace.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="bigfilemessage.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="cceditor\ccnotepad.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -266,6 +287,9 @@
     <QtMoc Include="filecmprulewin.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="filelistview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="cceditor\filemanager.h">
       <Filter>Header Files</Filter>
     </QtMoc>
@@ -303,6 +327,15 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="optionsview.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <ClInclude Include="plugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pluginGl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="pluginmgr.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="progresswin.h">
@@ -347,36 +380,19 @@
     <QtMoc Include="textfind.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <ClInclude Include="userlexdef.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -478,6 +494,10 @@
     
     
     
+    
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <None Include="realcompare_zh.ts">
@@ -486,6 +506,12 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="aboutndd.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="batchfindreplace.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="bigfilemessage.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="cceditor\ccnotepad.ui">
@@ -515,6 +541,9 @@
     <QtUic Include="filecmprulewin.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="filelistview.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
     <QtUic Include="findcmpwin.ui">
       <Filter>Form Files</Filter>
     </QtUic>
@@ -540,6 +569,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="optionsview.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="pluginmgr.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="progresswin.ui">
@@ -589,28 +621,13 @@
     <None Include="qss\lightblue\add_bottom.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qss\psblack\add_bottom.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\add_left.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\add_right.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="qss\lightblue\add_top.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\add_top.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\img\all.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="qss\lightblue\arrow_bottom.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\autosave.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\autosave.png">
@@ -622,55 +639,16 @@
     <None Include="Resources\img\bin.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\bincmp.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\bincmp.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\black.qss">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\img\bookmark.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qss\psblack\branch_close.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\branch_open.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\img\break.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qss\psblack\calendar_nextmonth.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\calendar_prevmonth.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\checkbox_checked.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\checkbox_checked_disable.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\checkbox_parcial.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\checkbox_parcial_disable.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\checkbox_unchecked.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\checkbox_unchecked_disable.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\img\clear.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\clearsign.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\clearsign.png">
@@ -703,13 +681,7 @@
     <None Include="notepad\closeTabButton_push.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\closeall.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\closeall.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\closefile.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\closefile.png">
@@ -733,7 +705,7 @@
     <None Include="notepad\cmpfile1.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\copy.png">
+    <None Include="qss\common.qss">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\copy.png">
@@ -742,13 +714,7 @@
     <None Include="notepad\copy.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\crlf.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\crlf.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\cut.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\cut.png">
@@ -769,9 +735,6 @@
     <None Include="Resources\img\dir.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\dircompare.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\dircompare.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -784,13 +747,7 @@
     <None Include="Resources\img\file.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\filecompare.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\filecompare.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\find.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\find.png">
@@ -808,16 +765,10 @@
     <None Include="notepad\go.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\goto.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\goto.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\img\hidechar.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\indentGuide.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\indentGuide.png">
@@ -844,9 +795,6 @@
     <None Include="Resources\img\main.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\mark.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\mark.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -868,13 +816,7 @@
     <None Include="notepad\needsave.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\needsaveall.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\needsaveall.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\needsavebar.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\needsavebar.png">
@@ -883,13 +825,7 @@
     <None Include="notepad\newFile.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\newfile.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\newfile.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\next.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\next.png">
@@ -931,13 +867,7 @@
     <None Include="Resources\img\opendark.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\openfile.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\openfile.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\paste.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\paste.png">
@@ -947,9 +877,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\img\point.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\pre.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\pre.png">
@@ -967,22 +894,7 @@
     <None Include="Resources\img\pullopen.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qss\psblack\radiobutton_checked.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\radiobutton_checked_disable.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\radiobutton_unchecked.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="qss\psblack\radiobutton_unchecked_disable.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="realcompare_zh.qm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\redo.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\redo.png">
@@ -1012,16 +924,10 @@
     <None Include="Resources\edit\styleblack\rename.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\rename.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\rename.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="notepad\rename.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\replace.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\replace.png">
@@ -1060,9 +966,6 @@
     <None Include="Resources\img\showchar.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\sign.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\sign.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -1081,13 +984,7 @@
     <None Include="Resources\img\tran.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\transcode.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\transcode.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\undo.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\undo.png">
@@ -1111,9 +1008,6 @@
     <None Include="Resources\img\vipdark.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\white.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\white.png">
       <Filter>Resource Files</Filter>
     </None>
@@ -1126,16 +1020,10 @@
     <None Include="notepad\zoomOut.png">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="Resources\edit\styledark\zoomin.png">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="Resources\edit\styledeepblue\zoomin.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\img\zoomin.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\edit\styledark\zoomout.png">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="Resources\edit\styledeepblue\zoomout.png">

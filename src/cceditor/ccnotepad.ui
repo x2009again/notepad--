@@ -224,8 +224,11 @@
     </widget>
     <addaction name="menudisplay_symbols"/>
     <addaction name="actionSearch_Result"/>
-    <addaction name="actionWrap"/>
     <addaction name="menuIcon_Size"/>
+    <addaction name="actionWrap"/>
+    <addaction name="actionFileListView"/>
+    <addaction name="actionShow_ToolBar"/>
+    <addaction name="actionShow_Web_Addr"/>
    </widget>
    <widget class="QMenu" name="menuCode">
     <property name="title">
@@ -466,20 +469,6 @@
     <property name="title">
      <string>Set(&amp;T)</string>
     </property>
-    <widget class="QMenu" name="menuStyle">
-     <property name="title">
-      <string>Style</string>
-     </property>
-     <addaction name="actionDefaultStyle"/>
-     <addaction name="actionLightBlueStyle"/>
-     <addaction name="actionThinBlue"/>
-     <addaction name="actionYellow"/>
-     <addaction name="actionRiceYellow"/>
-     <addaction name="actionSilver"/>
-     <addaction name="actionLavenderBlush"/>
-     <addaction name="actionMistyRose"/>
-     <addaction name="actionDark"/>
-    </widget>
     <widget class="QMenu" name="menuLanguage_2">
      <property name="title">
       <string>Language</string>
@@ -487,20 +476,10 @@
      <addaction name="actionChinese"/>
      <addaction name="actionEnglish"/>
     </widget>
-    <widget class="QMenu" name="menuFormat_Language">
-     <property name="title">
-      <string>Format Language</string>
-     </property>
-     <addaction name="actionFormat_Xml"/>
-     <addaction name="actionFormat_Json"/>
-    </widget>
     <addaction name="actionOptions"/>
-    <addaction name="menuStyle"/>
     <addaction name="menuLanguage_2"/>
     <addaction name="actionLanguage_Format"/>
     <addaction name="actionDefine_Language"/>
-    <addaction name="separator"/>
-    <addaction name="menuFormat_Language"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -515,6 +494,11 @@
     </property>
     <addaction name="actioninfo"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools(&amp;O)</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuSearch"/>
@@ -522,6 +506,7 @@
    <addaction name="menuCode"/>
    <addaction name="menuLanguage"/>
    <addaction name="menuSet"/>
+   <addaction name="menuTools"/>
    <addaction name="menuAbout"/>
    <addaction name="menuAbout_2"/>
   </widget>
@@ -2007,6 +1992,38 @@
     <string>Clear History</string>
    </property>
   </action>
+  <action name="actionFileListView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>FileListView</string>
+   </property>
+  </action>
+  <action name="actionShow_ToolBar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show ToolBar</string>
+   </property>
+  </action>
+  <action name="actionBatch_Find">
+   <property name="text">
+    <string>Batch Find</string>
+   </property>
+  </action>
+  <action name="actionShow_Web_Addr">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Web Addr(Not recommended)</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -2626,134 +2643,6 @@
    <signal>triggered()</signal>
    <receiver>CCNotePad</receiver>
    <slot>slot_donate()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionDefaultStyle</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toDefaultStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionLightBlueStyle</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toLightBlueStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionThinBlue</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toThinBlueStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionRiceYellow</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toRiceYellow()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionYellow</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toYellow()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionSilver</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toSilverStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionLavenderBlush</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toLavenderBlush()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>554</x>
-     <y>379</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionMistyRose</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toMistyRose()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -3454,58 +3343,58 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionFormat_Xml</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_formatXml()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>728</x>
-     <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionFormat_Json</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_formatJson()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>728</x>
-     <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionDark</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_toDarkStyle()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>728</x>
-     <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionClear_History</sender>
    <signal>triggered()</signal>
    <receiver>CCNotePad</receiver>
    <slot>slot_clearHistoryOpenList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>728</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionFileListView</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_fileListView(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>728</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_ToolBar</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_showToolBar(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>728</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShow_Web_Addr</sender>
+   <signal>triggered(bool)</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_showWebAddr(bool)</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -3615,5 +3504,8 @@
   <slot>slot_allWhite(bool)</slot>
   <slot>slot_toDarkStyle()</slot>
   <slot>slot_clearHistoryOpenList()</slot>
+  <slot>slot_fileListView(bool)</slot>
+  <slot>slot_showToolBar(bool)</slot>
+  <slot>slot_showWebAddr(bool)</slot>
  </slots>
 </ui>

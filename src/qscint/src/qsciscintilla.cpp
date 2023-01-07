@@ -3713,9 +3713,11 @@ void QsciScintilla::handleUpdateUI(int)
 		if (line != oldLine)
 		{
 			oldLine = line;
-			emit cursorPosChange(line, newPos);
+			emit cursorPosChange(line, newPos);	
+        }
     }
-    }
+
+	addHotSpot();
 
     if (braceMode != NoBraceMatch)
         braceMatch();

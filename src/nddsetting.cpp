@@ -64,8 +64,8 @@ void NddSetting::init()
 
 		//tab的长度，默认为4
 		addKeyValueToNumSets("tablens", 4);
-		//space replace tab空格替换tab，默认1为true,0为false
-		addKeyValueToNumSets("tabnouse", 1);
+		//space replace tab空格替换tab，默认0, 1为true,0为false
+		addKeyValueToNumSets("tabnouse", 0);
 
 		addKeyValueToSets("mac", "0");
 		addKeyValueToNumSets("padtimes", 0);
@@ -100,6 +100,21 @@ void NddSetting::init()
 
 		//0 24 1 36 2 48
 		addKeyValueToNumSets(ICON_SIZE, 1);
+
+		addKeyValueToNumSets(ZOOMVALUE, 100);
+	
+		addKeyValueToNumSets(FINDRESULTPOS, Qt::BottomDockWidgetArea);
+
+		addKeyValueToNumSets(FILELISTPOS, Qt::LeftDockWidgetArea);
+
+		//默认0不显示
+		addKeyValueToNumSets(FILELISTSHOW, 0);
+
+		//默认显示工具栏
+		addKeyValueToNumSets(TOOLBARSHOW, 1);
+
+		//打开网页，默认不勾选，资源耗费多
+		addKeyValueToNumSets(SHOWWEBADDR, 0);
 	};
 
 	if (!s_nddSet->contains(VERSION))
@@ -188,6 +203,23 @@ void NddSetting::init()
 				QVariant v(Qt::BottomDockWidgetArea);
 				checkNoExistAdd(FINDRESULTPOS, v);
 			}
+
+			{
+				QVariant v(Qt::LeftDockWidgetArea);
+				checkNoExistAdd(FILELISTPOS, v);
+			}
+			{
+				QVariant v(0);
+				checkNoExistAdd(FILELISTSHOW, v);
+			}
+			{
+				QVariant v(1);
+				checkNoExistAdd(TOOLBARSHOW, v);
+			}
+			{
+				QVariant v(0);
+				checkNoExistAdd(SHOWWEBADDR, v);
+			}
 		} while (false);
 
 	}
@@ -195,6 +227,7 @@ void NddSetting::init()
 	s_isExistDb = initOk;
 
 }
+
 
 
 //写一个总的获取配置的接口，避免以后每个字段都需要写一个读写接口

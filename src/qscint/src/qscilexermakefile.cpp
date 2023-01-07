@@ -28,6 +28,7 @@
 QsciLexerMakefile::QsciLexerMakefile(QObject *parent)
     : QsciLexer(parent)
 {
+    m_commentSymbol = "#";
 }
 
 

@@ -8,7 +8,9 @@
 QsciLexerRust::QsciLexerRust(QObject *parent)
 	: QsciLexer(parent)
 {
-	
+	m_commentSymbol = "//";
+	m_commentStart = "/*";
+	m_commentEnd = "*/";
 }
 
 QsciLexerRust::~QsciLexerRust()
@@ -69,7 +71,7 @@ QString QsciLexerRust::description(int style) const
 	switch (style)
 	{
 	case RUST_DEFAULT:
-		return "default";
+		return "Default";
 	case RUST_COMMENTBLOCK:
 		return "comment";
 	case RUST_COMMENTLINE:

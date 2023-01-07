@@ -135,6 +135,18 @@ int main(int argc, char *argv[])
 
 	QStringList arguments = QCoreApplication::arguments();
 
+#ifdef uos
+	QFont font("Noto Sans CJK SC,9,-1,5,50,0,0,0,0,0,Regular", 9);
+	QApplication::setFont(font);
+#endif
+#ifdef Q_OS_MAC
+	//这里的字体大小，务必要和查找结果框的高度匹配，否则会结构字体拥挤
+	QFont font("Courier New,11,-1,5,50,0,0,0,0,0,Regular", 11);
+	// qDebug() << "font name mac";
+	QApplication::setFont(font);
+	// qDebug() << QApplication::font().toString();
+#endif
+
 #ifdef Q_OS_WIN
 	QSharedMemory shared("ccnotepad");
 	if (arguments.size() > 2)
@@ -298,15 +310,6 @@ drop_old:
 
 	pMainNotepad->syncCurSkinToMenu(id);
 
-#ifdef uos
-	QFont font("Noto Sans CJK JP,9,-1,5,50,0,0,0,0,0,Regular", 9);
-	QApplication::setFont(font);
-#endif
-#ifdef Q_OS_MAC
-	//这里的字体大小，务必要和查找结果框的高度匹配，否则会结构字体拥挤
-	QFont font("Courier New,11,-1,5,50,0,0,0,0,0,Regular", 11);
-	QApplication::setFont(font);
-#endif
 
 #ifdef Q_OS_WIN
 	//HWND hwnd = ::FindWindowA("Qt5QWindowIcon", "CCNotebook");
@@ -335,7 +338,7 @@ drop_old:
 #ifdef Q_OS_WIN
 	if (!s_isAdminAuth)
 	{
-		if (0 == pMainNotepad->restoreLastFiles())
+		if (0 == pMainNotepad->restoreLastFiles() && (arguments.size() == 1))
 		{
 		pMainNotepad->initTabNewOne();
 	}

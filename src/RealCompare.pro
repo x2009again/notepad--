@@ -3,7 +3,7 @@ LANGUAGE = C++
 
 TARGET = Notepad--
 
-CONFIG	+= qt warn_on Release
+CONFIG	+= qt warn_on Debug
 
 QT += core gui widgets concurrent network xmlpatterns
 
@@ -46,7 +46,7 @@ TRANSLATIONS += realcompare_zh.ts
     }
    }
 unix{
-if(CONFIG(debug, debug|release)){
+if(CONFIG(debug, Debug|Release)){
           LIBS += -L/home/yzw/build/CCNotePad/x64/Debug -lqmyedit_qt5
 
 QMAKE_CXXFLAGS += -fopenmp

@@ -96,7 +96,7 @@ class FileManager:public QObject
 {
 	Q_OBJECT
 public:
-	ScintillaEditView* newEmptyDocument();
+	ScintillaEditView* newEmptyDocument(bool isBigText = false);
 
 	ScintillaHexEditView * newEmptyHexDocument();
 
@@ -122,7 +122,7 @@ public:
 
 	bool loadFileData(QString filePath, HexFileMgr * & hexFileOut);
 
-	bool loadFileData(QString filePath, TextFileMgr *& textFileOut);
+	bool loadFileData(QString filePath, TextFileMgr *& textFileOut, RC_LINE_FORM & lineEnd);
 
 	HexFileMgr* getHexFileHand(QString filepath);
 

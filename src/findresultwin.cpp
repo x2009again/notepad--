@@ -373,10 +373,23 @@ void FindResultWin::highlightFindText(int index, QString &srcText, QString &find
 	srcText.replace(pos, lens, QString("<font style='background-color:#ffffbf'>%1</font>").arg(srcText.mid(pos,lens)));
 }
 
+const int MAX_HEAD_LENTGH = 20;
+const int MAX_TAIL_LENGTH = 80;
+
 //更复杂的高亮：在全词语匹配，大小写敏感，甚至正则表达式情况下，上面的highlightFindText是不够的。需要精确定位
 QString FindResultWin::highlightFindText(FindRecord& record)
 {
 	QByteArray utf8bytes = record.lineContents.toUtf8();
+
+	int lineLens = utf8bytes.length();
+
+	bool isNeedCut = false;
+
+	//行太长的进行缩短显示
+	if (lineLens > 300)
+	{
+		isNeedCut = true;
+	}
 
 	//高亮的开始、结束位置
 	int targetStart = record.pos - record.lineStartPos;
@@ -386,17 +399,71 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 	QString head; 
 	QString src;
 	QString tail;
-	if (BLACK_SE != StyleSet::getCurrentSytleId())
+	if (!StyleSet::isCurrentDeepStyle())
 	{
+		if (!isNeedCut)
+		{
 		head = QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped();
 		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
 		tail = QString(utf8bytes.mid(tailStart)).toHtmlEscaped();
 	}
 	else
 	{
-		head = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped());
+			head = QString(utf8bytes.mid(0, targetStart));
+			if (head.size() > MAX_HEAD_LENTGH)
+			{
+				head = (head.mid(0, MAX_HEAD_LENTGH) + "...").toHtmlEscaped();
+			}
+			else
+			{
+				head = head.toHtmlEscaped();
+			}
 		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+			tail = QString(utf8bytes.mid(tailStart));
+			if (tail > MAX_TAIL_LENGTH)
+			{
+				tail = (tail.mid(0, MAX_TAIL_LENGTH) + "...").toHtmlEscaped();
+			}
+			else
+			{
+				tail = tail.toHtmlEscaped();
+			}
+		}
+	}
+	else
+	{
+		if (!isNeedCut)
+		{
+			head = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped());
+			src = QString("<font style='font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
 		tail = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(tailStart)).toHtmlEscaped());
+	}
+		else
+		{
+			QString headContens = QString(utf8bytes.mid(0, targetStart));
+			if (headContens.size() > MAX_HEAD_LENTGH)
+			{
+				headContens = (headContens.mid(0, MAX_HEAD_LENTGH) + "...").toHtmlEscaped();
+			}
+			else
+			{
+				headContens = headContens.toHtmlEscaped();
+			}
+
+			head = QString("<font style='color:#dcdcdc'>%1</font>").arg(headContens);
+			src = QString("<font style='font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+
+			QString tailContens = QString(utf8bytes.mid(tailStart));
+			if (tailContens > MAX_TAIL_LENGTH)
+			{
+				tailContens = (tailContens.mid(0, MAX_TAIL_LENGTH) + "...").toHtmlEscaped();
+			}
+			else
+			{
+				tailContens = tailContens.toHtmlEscaped();
+			}
+			tail = QString("<font style='color:#dcdcdc'>%1</font>").arg(tailContens);
+		}
 	}
 
 	return QString("%1%2%3").arg(head).arg(src).arg(tail);
@@ -408,10 +475,20 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 	{
 		return;
 	}
+
 	QString findTitle = tr("<font style='font-weight:bold;color:#343497'>Search \"%1\" (%2 hits)</font>").arg(record->findText.toHtmlEscaped()).arg(record->records.size());
 
 	QStandardItem* titleItem = new QStandardItem(findTitle);
+
+	if (!StyleSet::isCurrentDeepStyle())
+	{
 	setItemBackground(titleItem, QColor(0xbbbbff));
+	}
+	else
+	{
+		setItemBackground(titleItem, QColor(0xd5ffd5));
+	}
+
 	m_model->insertRow(0, titleItem);
 	titleItem->setData(QVariant(true), ResultItemRoot);
 
@@ -429,11 +506,19 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 		return;
 	}
 
-	QString desc = tr("<font style='font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
+	QString desc;
+	if (!StyleSet::isCurrentDeepStyle())
+	{
+		desc = tr("<font style='font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
+	}
+	else
+	{
+		desc = tr("<font style='color:#99cc99'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
+	}
 
 	QStandardItem* descItem = new QStandardItem(desc);
 
-	if (BLACK_SE != StyleSet::getCurrentSytleId())
+	if (!StyleSet::isCurrentDeepStyle())
 	{
 	setItemBackground(descItem, QColor(0xd5ffd5));
 	}
@@ -460,7 +545,7 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 
 		QString richText = highlightFindText(v);
 
-		QString text = tr("Line <font style='color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
+		QString text = tr("<font style='color:#ff8040'>Line %1</font> : %2").arg(v.lineNum + 1).arg(richText);
 
 		QStandardItem* childItem = new QStandardItem(text);
 		childItem->setData(QVariant(v.pos), ResultItemPos);
@@ -513,7 +598,7 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 	
 		QStandardItem* descItem = new QStandardItem(desc);
 
-		if (BLACK_SE != StyleSet::getCurrentSytleId())
+		if (!StyleSet::isCurrentDeepStyle())
 		{
 		setItemBackground(descItem, QColor(0xd5ffd5));
 		}
@@ -542,7 +627,7 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 			FindRecord  v = pr->records.at(i);
 			QString richText = highlightFindText(v);
 
-			QString text = QString("Line <font style='color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
+			QString text = QString("<font style='color:#ff8040'>Line %1</font> : %2").arg(v.lineNum + 1).arg(richText);
 
 			QStandardItem* childItem = new QStandardItem(text);
 			childItem->setData(QVariant(v.pos), ResultItemPos);

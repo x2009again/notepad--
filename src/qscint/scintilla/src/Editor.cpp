@@ -2488,7 +2488,7 @@ void Editor::NotifyDwelling(Point pt, bool state) {
 
 void Editor::NotifyZoom() {
 	SCNotification scn = {};
-	scn.nmhdr.code = SCN_ZOOM;
+	scn.nmhdr.code = SCN_ZOOM_CODE;
 	NotifyParent(scn);
 }
 

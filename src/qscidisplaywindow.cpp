@@ -3,6 +3,7 @@
 #include "textfind.h"
 #include "common.h"
 #include "styleset.h"
+#include "rcglobal.h"
 
 #include <QScrollBar>
 #include <QFileInfo>
@@ -538,15 +539,6 @@ void QsciDisplayWindow::slot_FindTextWithPara(int prevOrNext, QString text)
 //定位到文件夹
 void QsciDisplayWindow::slot_showFileInExplorer()
 {
-	QString path, cmd;
-#ifdef _WIN32
-	path = m_filePath.replace("/", "\\");
-	cmd = QString("explorer.exe /select,%1").arg(path);
-#else
-	path = m_filePath.replace("\\", "/");
-	cmd = QString("open -R %1").arg(path);
-#endif
-	QProcess process;
-	process.startDetached(cmd);
+	showFileInExplorer(m_filePath);
 }
 

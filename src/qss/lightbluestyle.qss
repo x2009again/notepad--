@@ -3,7 +3,8 @@ border-style:none;
 border:1px solid #C0DCF2;
 color:#386487;
 padding:3px;
-/*min-height:15px;*/
+min-height:15px;
+min-width:50px;
 border-radius:3px;
 }
 
@@ -41,9 +42,9 @@ background:qlineargradient(spread:pad,x1:0,y1:0,x2:0,y2:1,stop:0 #DEF0FE,stop:1 
 }
 
 QToolBar,QMessageBox,QHeaderView::section{
-    background-color:rgba(255, 255, 255, 255); 
-		border: none;
-		padding: 1px;
+   background-color:rgba(255, 255, 255, 255); 
+	border: none;
+	padding: 1px;
 }
 
 QComboBox,QLineEdit,QSpinBox{
@@ -146,7 +147,7 @@ QTabBar::close-button:hover{
 
 /*设置垂直滚动条基本样式*/
 QScrollBar:vertical {
-    width: 12px;
+    width: 15px;
     background: rgba(0,0,0,0%);
     margin: 0px,0px,0px,0px;
     /*留出9px给上面和下面的箭头*/
@@ -156,7 +157,7 @@ QScrollBar:vertical {
 }
 
 QScrollBar::handle:vertical {
-    width: 12px;
+    width: 15px;
     background: rgba(0,0,0,25%);
     /*滚动条两端变成椭圆 */
     border-radius: 4px;
@@ -164,7 +165,7 @@ QScrollBar::handle:vertical {
 }
 
 QScrollBar::handle:vertical:hover {
-    width: 12px;
+    width: 15px;
     /*鼠标放到滚动条上的时候，颜色变深*/
     background: rgba(0,0,0,50%);
     border-radius: 4px;

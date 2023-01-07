@@ -62,13 +62,17 @@ public:
 	void setFindText(QString & text);
 	void disableReplace();
 	void setFindHistory(QList<QString>* findHistory);
-	void markAllWord(QString& word);
+	int markAllWord(QString& word);
 	void removeLineHeadEndBlank(int mode);
 	static void showCallTip(QsciScintilla * pEdit, int pos);
 	void removeEmptyLine(bool isBlankContained);
 	void findNext();
 	void findPrev();
 	void setFindBackward(bool isBackward);
+	int findAtBack(QString keyword);
+	int replaceAtBack(QStringList& keyword, QStringList& replace);
+
+
 
 protected:
 	
@@ -108,8 +112,13 @@ private:
 
 	bool replace(ScintillaEditView* pEdit);
 
-	int doReplaceAll(ScintillaEditView * pEdit, QString& whatFind, QString& replaceText);
+	int doReplaceAll(ScintillaEditView * pEdit, QString& whatFind, QString& replaceText, bool isCombineUndo = true);
 
+	int replaceAll();
+
+	int markAll();
+
+	int findAllInCurDoc();
 
 private slots:
 
@@ -197,7 +206,6 @@ private:
 	QList<QString>* m_findHistory;
 
 	ScintillaEditView* pEditTemp;
-
 
 	QWidget* m_curEditWin;
 
