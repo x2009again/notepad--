@@ -6,13 +6,16 @@
 
 
 #include "ui_findwin.h"
-
+#ifndef DEF_FIND_TAB_INDEX
+#define DEF_FIND_TAB_INDEX
 enum FindTabIndex {
 	FIND_TAB =0,
 	REPLACE_TAB,
 	DIR_FIND_TAB,
 	MARK_TAB,
 };
+#endif
+
 class ScintillaEditView;
 class QsciScintilla;
 
