@@ -3,7 +3,7 @@ LANGUAGE = C++
 
 TARGET = Notepad--
 
-CONFIG	+= qt warn_on Debug
+CONFIG	+= qt warn_on
 
 QT += core gui widgets concurrent network xmlpatterns
 
