@@ -53,3 +53,5 @@ install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
 
 include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake) 
 include(CPack)
+
+target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)

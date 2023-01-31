@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
-project(qscintilla2_qt5 CXX)
+cmake_minimum_required(VERSION 3.24)
+project(qscint CXX)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -28,7 +28,7 @@ ${PROJECT_SOURCE_DIR}/scintilla/boostregex
 
 target_include_directories(${PROJECT_NAME} PUBLIC
 ${PROJECT_SOURCE_DIR}/src
-${PROJECT_SOURCE_DIR}/src/Qsci 
+${PROJECT_SOURCE_DIR}/src/Qsci
 ${PROJECT_SOURCE_DIR}/scintilla/src
 ${PROJECT_SOURCE_DIR}/scintilla/include)
 
