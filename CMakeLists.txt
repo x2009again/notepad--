@@ -80,6 +80,14 @@ if(CMAKE_HOST_UNIX)
     spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
     spark_install_target(/usr/bin/ ${PROJECT_NAME})
 
+
+    # 1. 在顶层构建中导入 Appimage 的构建
+    include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
+    add_appimage_icon(assets/spark.png)       # 添加到 Appimage 中的默认的图标
+    add_appimage_desktop()                    # 添加到 Appimage 中的默认desktop(使用来自 Spark 构建的 Desktop 构建中配置的信息(必须要求 spark-desktop))
+    add_appimage()                            # 应用对 Appimage 的构建
+
+
     # 注释行(使用方式)
     find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
     add_package_descript(cmake/package-deb.descript)
