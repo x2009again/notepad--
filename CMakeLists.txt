@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.16)
-project(notepad--)
+cmake_minimum_required(VERSION 3.24)
+project(notepad-- VERSION 1.22.0)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
@@ -55,3 +55,33 @@ include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake)
 include(CPack)
 
 target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+
+if(CMAKE_HOST_UNIX)
+    include(cmake/SparkInstallMacrosConfig.cmake)
+    include(cmake/SparkDesktopMacros.cmake)
+    # 内容默认应用名称: Name= 应与项目名称相同
+    spark_desktop_macros(
+        # 应用名称: Name=
+        ${PROJECT_NAME}
+        # 应用名称: Name[zh_CN]=
+        "Notepad--"
+        # 应用说明: Comment=
+        "Notepad-- 是一个国产跨平台、简单的文本编辑器。"
+        # 应用类型: Type=
+        "Application"
+        # 执行程序: Exec=
+        "notepad--"
+        # 图标路径: Icon=
+        "/usr/share/notepad--/icons/spark.png"
+        # 应用分类: Category=
+        "Development"
+    )
+    spark_install_file(/usr/share/applications/    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop)
+    spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
+    spark_install_target(/usr/bin/ ${PROJECT_NAME})
+
+    # 注释行(使用方式)
+    find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
+    add_package_descript(cmake/package-deb.descript)
+
+endif(CMAKE_HOST_UNIX)
