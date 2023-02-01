@@ -1,0 +1,1269 @@
+From 0940320b6009c3a1a59395e774a204e70d8ae033 Mon Sep 17 00:00:00 2001
+From: coconil <coconil@foxmail.com>
+Date: Tue, 31 Jan 2023 22:17:32 +0800
+Subject: [PATCH 1/4] add cmake support
+
+---
+ CMakeLists.txt            | 31 +++++++++++++++++++++++++++++++
+ src/findcmpwin.h          |  4 ++++
+ src/findwin.h             |  5 ++++-
+ src/qscint/CMakeLists.txt | 35 +++++++++++++++++++++++++++++++++++
+ 4 files changed, 74 insertions(+), 1 deletion(-)
+ create mode 100644 CMakeLists.txt
+ create mode 100644 src/qscint/CMakeLists.txt
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+new file mode 100644
+index 0000000..09769f8
+--- /dev/null
++++ b/CMakeLists.txt
+@@ -0,0 +1,31 @@
++cmake_minimum_required(VERSION 3.24)
++project(notepad--)
++
++set(CMAKE_AUTOMOC ON)
++set(CMAKE_AUTOUIC ON)
++set(CMAKE_AUTORCC ON)
++
++find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Concurrent Network PrintSupport XmlPatterns)
++
++add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
++
++
++file(GLOB UI_SRC ${PROJECT_SOURCE_DIR}/src/*.ui)
++set(UI_SRC ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/cceditor/ccnotepad.ui)
++aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
++aux_source_directory(${PROJECT_SOURCE_DIR}/src/cceditor SRC)
++
++add_executable(${PROJECT_NAME} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
++target_include_directories(${PROJECT_NAME} PRIVATE 
++${PROJECT_SOURCE_DIR}/src
++${PROJECT_SOURCE_DIR}/src/cceditor
++
++${PROJECT_SOURCE_DIR}/src/qscint/src
++${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci 
++${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
++${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
++${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
++${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
++)
++
++target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+\ No newline at end of file
+diff --git a/src/findcmpwin.h b/src/findcmpwin.h
+index 4432e85..4f53fca 100755
+--- a/src/findcmpwin.h
++++ b/src/findcmpwin.h
+@@ -7,10 +7,14 @@
+ #include "ui_findcmpwin.h"
+ #include "rcglobal.h"
+ 
++#ifndef DEF_FIND_TAB_INDEX
++#define DEF_FIND_TAB_INDEX
++
+ enum FindTabIndex {
+ 	FIND_TAB,
+ 	REPLACE_TAB,
+ };
++#endif
+ class ScintillaEditView;
+ 
+ //struct FindCmpRecord {
+diff --git a/src/findwin.h b/src/findwin.h
+index c32a7d4..8633ce6 100755
+--- a/src/findwin.h
++++ b/src/findwin.h
+@@ -6,13 +6,16 @@
+ 
+ 
+ #include "ui_findwin.h"
+-
++#ifndef DEF_FIND_TAB_INDEX
++#define DEF_FIND_TAB_INDEX
+ enum FindTabIndex {
+ 	FIND_TAB =0,
+ 	REPLACE_TAB,
+ 	DIR_FIND_TAB,
+ 	MARK_TAB,
+ };
++#endif
++
+ class ScintillaEditView;
+ class QsciScintilla;
+ 
+diff --git a/src/qscint/CMakeLists.txt b/src/qscint/CMakeLists.txt
+new file mode 100644
+index 0000000..6987a2f
+--- /dev/null
++++ b/src/qscint/CMakeLists.txt
+@@ -0,0 +1,35 @@
++cmake_minimum_required(VERSION 3.24)
++project(qscint CXX)
++
++set(CMAKE_AUTOMOC ON)
++set(CMAKE_AUTOUIC ON)
++set(CMAKE_AUTORCC ON)
++
++find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets PrintSupport)
++
++aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
++aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/lexers SRC)
++aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/lexlib SRC)
++aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/src SRC)
++aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/boostregex SRC)
++
++file(GLOB MOC_HEADER ${PROJECT_SOURCE_DIR}/src/Qsci/*.h)
++
++#message(${MOC_HEADER})
++
++add_library(${PROJECT_NAME} STATIC ${SRC} ${MOC_HEADER})
++
++target_compile_definitions(${PROJECT_NAME} PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES)
++
++target_include_directories(${PROJECT_NAME} PRIVATE
++${PROJECT_SOURCE_DIR}/scintilla/lexlib
++${PROJECT_SOURCE_DIR}/scintilla/boostregex
++)
++
++target_include_directories(${PROJECT_NAME} PUBLIC
++${PROJECT_SOURCE_DIR}/src
++${PROJECT_SOURCE_DIR}/src/Qsci 
++${PROJECT_SOURCE_DIR}/scintilla/src
++${PROJECT_SOURCE_DIR}/scintilla/include)
++
++target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network Qt5::PrintSupport)
+-- 
+2.20.1
+
+
+From c41bc435255a1e56615e7d8ab608c84d7e9772a2 Mon Sep 17 00:00:00 2001
+From: coconil <coconil@foxmail.com>
+Date: Tue, 31 Jan 2023 22:49:55 +0800
+Subject: [PATCH 2/4] add cmake build doc
+
+---
+ cmake.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+ create mode 100644 cmake.md
+
+diff --git a/cmake.md b/cmake.md
+new file mode 100644
+index 0000000..8e9b440
+--- /dev/null
++++ b/cmake.md
+@@ -0,0 +1,8 @@
++# cmake构建说明
++
++## Ubuntu
++
++1. 安装编译环境 `sudo apt-get install g++ make cmake`
++1. 安装qt工具和库 `sudo apt-get install qtbase5-dev qt5-qmake qtbase5-dev-tools libqt5printsupport5 libqt5xmlpatterns5-dev `
++1. 配置 `cmake path_to_src`
++1. 编译 `make -j` 
+\ No newline at end of file
+-- 
+2.20.1
+
+
+From 6115c0a6d3addc6e22504b2a71db67b412c8ef97 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Wed, 1 Feb 2023 20:04:05 +0800
+Subject: [PATCH 3/4] =?UTF-8?q?=20repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+ =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
+ =?UTF-8?q?=20deb?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .gitignore                           |  30 +++
+ CMakeLists.txt                       |  34 ++-
+ Makefile                             |  61 +++++
+ assets/spark.png                     | Bin 0 -> 4959 bytes
+ cmake/DebPackageConfig.cmake         | 323 +++++++++++++++++++++++++++
+ cmake/SparkDesktopMacros.cmake       |  35 +++
+ cmake/SparkInstallMacrosConfig.cmake | 131 +++++++++++
+ cmake/package-deb.descript           |  46 ++++
+ cmake/spark-desktop.desktop.in       |  12 +
+ 9 files changed, 670 insertions(+), 2 deletions(-)
+ create mode 100644 Makefile
+ create mode 100644 assets/spark.png
+ create mode 100644 cmake/DebPackageConfig.cmake
+ create mode 100644 cmake/SparkDesktopMacros.cmake
+ create mode 100644 cmake/SparkInstallMacrosConfig.cmake
+ create mode 100644 cmake/package-deb.descript
+ create mode 100644 cmake/spark-desktop.desktop.in
+
+diff --git a/.gitignore b/.gitignore
+index 8d723bc..7adfee2 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -396,3 +396,33 @@ FodyWeavers.xsd
+ 
+ # JetBrains Rider
+ *.sln.iml
++
++
++
++# Ignore the build directory generated by the vsocde cmake extension
++build/
++# Ignore the build directory generated by the vsocde clangd extension
++.cache
++
++# Created by https://www.toptal.com/developers/gitignore/api/cmake
++# Edit at https://www.toptal.com/developers/gitignore?templates=cmake
++
++### CMake ###
++CMakeLists.txt.user
++CMakeCache.txt
++CMakeFiles
++CMakeScripts
++Testing
++Makefile
++cmake_install.cmake
++install_manifest.txt
++compile_commands.json
++CTestTestfile.cmake
++_deps
++
++### CMake Patch ###
++# External projects
++*-prefix/
++
++# End of https://www.toptal.com/developers/gitignore/api/cmake
++!/Makefile
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09769f8..52efcf6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,5 +1,5 @@
+ cmake_minimum_required(VERSION 3.24)
+-project(notepad--)
++project(notepad-- VERSION 1.22.0)
+ 
+ set(CMAKE_AUTOMOC ON)
+ set(CMAKE_AUTOUIC ON)
+@@ -28,4 +28,34 @@ ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
+ ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
+ )
+ 
+-target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+\ No newline at end of file
++target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
++
++if(CMAKE_HOST_UNIX)
++    include(cmake/SparkInstallMacrosConfig.cmake)
++    include(cmake/SparkDesktopMacros.cmake)
++    # 内容默认应用名称: Name= 应与项目名称相同
++    spark_desktop_macros(
++        # 应用名称: Name=
++        ${PROJECT_NAME} 
++        # 应用名称: Name[zh_CN]=
++        "Notepad--"
++        # 应用说明: Comment=
++        "Notepad-- 是一个国产跨平台、简单的文本编辑器。"
++        # 应用类型: Type=
++        "Application"
++        # 执行程序: Exec=
++        "notepad--"
++        # 图标路径: Icon=
++        "/usr/share/notepad--/icons/spark.png"
++        # 应用分类: Category=
++        "Development"
++    )
++    spark_install_file(/usr/share/applications/    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop)
++    spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
++    spark_install_target(/usr/bin/ ${PROJECT_NAME})
++
++    # 注释行(使用方式)
++    find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
++    add_package_descript(cmake/package-deb.descript)
++
++endif(CMAKE_HOST_UNIX)
+diff --git a/Makefile b/Makefile
+new file mode 100644
+index 0000000..c652e21
+--- /dev/null
++++ b/Makefile
+@@ -0,0 +1,61 @@
++CPUS=$(shell nproc)
++CALENDAR=$(shell date '+%Y%m%d')
++OSID=$(shell lsb_release -si)
++OSRELEASE=$(shell lsb_release -sr)
++SUFFIX=
++ifneq ("$(OSID)", "")
++SUFFIX=_$(OSID)$(OSRELEASE)
++endif
++
++PROJECT_NAME=notepad--
++PACKAGE_NAME=com.hmja.notepad
++
++all:
++	mkdir -p build
++	cd build && cmake ..
++	cd build && make -j$(CPUS)
++
++run: all
++	exec $(shell find build/ -maxdepth 1 -type f -executable | grep $(PROJECT_NAME))
++
++debug: 
++	mkdir -p build
++	cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
++	cd build && make -j$(CPUS)
++
++release:
++	mkdir -p build
++	cd build && cmake -DCMAKE_BUILD_TYPE=Release -DPACKAGE_SUFFIX="$(SUFFIX)" ..
++	cd build && make -j$(CPUS)
++
++package: release
++	cd build && make package
++	tree build/_CPack_Packages/Linux/DEB/$(PROJECT_NAME)-*
++	dpkg-deb --contents build/$(PACKAGE_NAME)_*$(CALENDAR)*$(SUFFIX).deb
++	# cd build/_CPack_Packages/Linux/DEB/$(PROJECT_NAME)_*$(CALENDAR)*$(SUFFIX).deb && find .
++
++builddeps:
++	cd build && make builddeps
++
++cpus:
++	@echo "CPU数量: $(CPUS)"
++
++copytosource:package
++	cp build/$(PACKAGE_NAME)_*$(CALENDAR)*.deb .
++
++# 进入 qdebug 模式，在 deepin 中默认被禁用，可 env | grep QT 查看，并在 /etc/X11/Xsession.d/00deepin-dde-env 配置中已定义
++# 1. 禁止 qt 的 debug 打印: qt.*.debug=false
++# 	qt.qpa.input.events
++#	qt.qpa.events
++# 2. 禁止 dtk 的 debug 打印: dtk.*.debug=false
++# 	dtk.dpluginloader
++# 3. 禁止 qtcreator 本身的 debug 打印
++# 	qtc.autotest.testcodeparser
++#	qtc.clangbackend.server
++#	...
++# 4. 关闭其它的太麻烦了，直接只启用本地 debug
++#	.debug=true
++enter-qdebug-mode:
++	# 进入新的 bash 环境
++	@# export QT_LOGGING_RULES=".debug=true; qt.*.debug=false; dtk.*.debug=false; dde.*.debug=false; qtc*=false; " && bash
++	export QT_LOGGING_RULES=".debug=true" && bash
+diff --git a/assets/spark.png b/assets/spark.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..544e2c7cff5f70894e27a7a717d4a62120630b7a
+GIT binary patch
+literal 4959
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/cmake/DebPackageConfig.cmake b/cmake/DebPackageConfig.cmake
+new file mode 100644
+index 0000000..59950ec
+--- /dev/null
++++ b/cmake/DebPackageConfig.cmake
+@@ -0,0 +1,323 @@
++cmake_minimum_required(VERSION 3.0.0)
++
++# function(add_deb_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_MAINTAINER PACKAGE_EMAIL PACKAGE_SHORT_DESCRIPTION PACKAGE_LONG_DESCRIPTION)
++    
++# endfunction(add_deb_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_MAINTAINER PACKAGE_EMAIL PACKAGE_SHORT_DESCRIPTION PACKAGE_LONG_DESCRIPTION)
++
++# if(add_deb_package    VALUE) set(Package    ${VALUE} PARENT_SCOPE) endif(add_deb_package    VALUE)
++# if(add_deb_version    VALUE) set(Version    ${VALUE} PARENT_SCOPE) endif(add_deb_version    VALUE)
++# if(add_deb_maintainer VALUE) set(Maintainer ${VALUE} PARENT_SCOPE) endif(add_deb_maintainer VALUE)
++# if(add_deb_email      VALUE) set(Email      ${VALUE} PARENT_SCOPE) endif(add_deb_email      VALUE)
++# if(add_deb_descrition VALUE) set(Descrition ${VALUE} PARENT_SCOPE) endif(add_deb_descrition VALUE)
++# if(add_deb_detail     VALUE) set(Detail     ${VALUE} PARENT_SCOPE) endif(add_deb_detail     VALUE)
++
++
++# set(Package         "")
++# set(Version         "")
++# set(Architecture    "")
++# set(Maintainer      "")
++# set(Email           "")
++# set(Descrition      "")
++
++function(find_str _IN _SEP _OUT)
++    string(FIND "${_IN}" "${_SEP}" _TMP)
++    set(${_OUT} ${_TMP} PARENT_SCOPE)
++endfunction(find_str _IN _SEP _OUT)
++
++
++function(find_next _IN _OUT)
++    find_str("${_IN}" "\n" _TMP)
++    set(${_OUT} ${_TMP} PARENT_SCOPE)
++endfunction(find_next _IN _OUT)
++
++function(sub_next _IN _INDEX _OUT __OUT)
++    find_next(${_IN} _NEXTINDEX)
++    string(SUBSTRING "${_IN}" ${_INDEX} ${_NEXTINDEX} _TMP)
++    math(EXPR _NEXTINDEX ${_NEXTINDEX}+1)
++    string(SUBSTRING "${_IN}" ${_NEXTINDEX} -1 __TMP)
++    set(${_OUT} ${_TMP} PARENT_SCOPE)
++    set(${__OUT} ${__TMP} PARENT_SCOPE)
++endfunction(sub_next _IN _INDEX _OUT)
++
++function(trim_str _IN _OUT)
++    string(STRIP "${_IN}" _TMP)
++    set(${_OUT} ${_TMP} PARENT_SCOPE)
++endfunction(trim_str _IN _OUT)
++
++function(split_str _IN _SEP _OUT)
++    string(FIND "${_IN}" "${_SEP}" _TMP_INDEX)
++    if(NOT _TMP_INDEX EQUAL -1)
++        string(SUBSTRING "${_IN}" 0 ${_TMP_INDEX} _TMP)
++        math(EXPR _TMP_INDEX ${_TMP_INDEX}+1)
++        string(SUBSTRING "${_IN}" ${_TMP_INDEX} -1 __TMP)
++        set(${_OUT} "${_TMP};${__TMP}" PARENT_SCOPE)
++    else()
++        set(${_OUT} ${_IN} PARENT_SCOPE)
++    endif(NOT _TMP_INDEX EQUAL -1)
++endfunction(split_str _IN _SEP _OUT)
++
++function(split_str_p _IN _SEP _OUT __OUT)
++    split_str("${_IN}" "${_SEP}" _TMP)
++    list(GET _TMP 0 __TMP)
++    list(GET _TMP 1 ___TMP)
++    set(${_OUT} ${__TMP} PARENT_SCOPE)
++    set(${__OUT} ${___TMP} PARENT_SCOPE)
++endfunction(split_str_p _IN _SEP _OUT __OUT)
++
++function(split_str_n _IN _SEP _OUT _N)
++    if(_N GREATER 1)
++        set(_C ${_N})
++        set(_RET "")
++        set(_NEXT ${_IN})
++        while(NOT _C EQUAL 0)
++            split_str("${_NEXT}" "${_SEP}" _TMP)
++            list(LENGTH _TMP _TMP_LEN)
++            if(_TMP_LEN EQUAL 2)
++                list(GET _TMP 0 __TMP)
++                list(GET _TMP 1 _NEXT)
++                list(APPEND _RET ${__TMP})
++            else()
++                break()
++            endif(_TMP_LEN EQUAL 2)
++            math(EXPR _C "${_C}-1")
++        endwhile(NOT _C EQUAL 0)
++        list(APPEND _RET ${_NEXT})
++        set(${_OUT} ${_RET} PARENT_SCOPE)
++    else()
++        split_str("${_IN}" "${_SEP}" _TMP)
++        set(${_OUT} ${_TMP} PARENT_SCOPE)
++    endif(_N GREATER 1)
++endfunction(split_str_n _IN _SEP _OUT _N)
++
++
++function(set_package_vars _IN_KEY _IN_VAL)
++
++    # trim_str("${_IN_KEY}" _IN_KEY)
++
++    find_str("${_IN_KEY}" "Type" _Type)
++    if(_Type EQUAL "0")
++        string(TOUPPER "${_IN_VAL}" _IN_VAL_UPPER)
++        string(TOLOWER "${_IN_VAL}" _IN_VAL_LOWER)
++        set(CPACK_GENERATOR "${_IN_VAL_UPPER}" PARENT_SCOPE)
++        message("--> 软件包类型: ${_IN_VAL_LOWER}")
++    endif(_Type EQUAL "0")
++
++    find_str("${_IN_KEY}" "Package" _Package)
++    if(_Package EQUAL "0")
++        if(_IN_VAL STREQUAL "auto")
++            set(CPACK_DEBIAN_PACKAGE_NAME "${PROJECT_NAME}" PARENT_SCOPE)
++        else()
++            set(CPACK_DEBIAN_PACKAGE_NAME "${_IN_VAL}" PARENT_SCOPE)
++        endif(_IN_VAL STREQUAL "auto")
++        message("--> 软件包名: ${_IN_VAL}")
++    endif(_Package EQUAL "0")
++
++    find_str("${_IN_KEY}" "Version" _Version)
++    if(_Version EQUAL "0")
++        if(_IN_VAL STREQUAL "auto")
++            set(CPACK_DEBIAN_PACKAGE_VERSION "${PROJECT_VERSION}" PARENT_SCOPE)
++        else()
++            set(CPACK_DEBIAN_PACKAGE_VERSION "${_IN_VAL}" PARENT_SCOPE)
++        endif(_IN_VAL STREQUAL "auto")
++        
++        message("--> 软件版本: ${_IN_VAL}")
++    endif(_Version EQUAL "0")
++
++    find_str("${_IN_KEY}" "CalVer" _CalVer)
++    if(_CalVer EQUAL "0")
++        set(CalVer "${_IN_VAL}" PARENT_SCOPE)
++        message("--> 日历化版本: ${_IN_VAL}")
++    endif(_CalVer EQUAL "0")
++
++    find_str("${_IN_KEY}" "Architecture" _Architecture)
++    if(_Architecture EQUAL "0")
++        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_IN_VAL}" PARENT_SCOPE)    
++        if(_IN_VAL STREQUAL "auto")
++            execute_process(
++                COMMAND dpkg --print-architecture
++                OUTPUT_VARIABLE _RETV
++                OUTPUT_STRIP_TRAILING_WHITESPACE
++            )
++            set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_RETV}" PARENT_SCOPE)
++        endif(_IN_VAL STREQUAL "auto")
++        message("--> 软件架构: ${_IN_VAL}")
++    endif(_Architecture EQUAL "0")
++    
++    find_str("${_IN_KEY}" "Priority" _Priority)
++    if(_Priority EQUAL "0")
++        set(CPACK_DEBIAN_PACKAGE_PRIORITY "${_IN_VAL}" PARENT_SCOPE)
++        message("--> 优先级: ${_IN_VAL}")
++    endif(_Priority EQUAL "0")
++
++    find_str("${_IN_KEY}" "Depends" _Depends)
++    if(_Depends EQUAL "0")
++        set(CPACK_DEBIAN_PACKAGE_DEPENDS "${_IN_VAL}" PARENT_SCOPE)
++        message("--> 软件依赖: ${_IN_VAL}")
++    endif(_Depends EQUAL "0")
++
++    find_str("${_IN_KEY}" "Maintainer" _Maintainer)
++    if(_Maintainer EQUAL "0")
++        set(CPACK_DEBIAN_PACKAGE_MAINTAINER "${_IN_VAL}" PARENT_SCOPE)
++        message("--> 软件维护者: ${_IN_VAL}")
++    endif(_Maintainer EQUAL "0")
++
++    find_str("${_IN_KEY}" "Homepage" _Homepage)
++    if(_Homepage EQUAL "0")
++        set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "${_IN_VAL}" PARENT_SCOPE)
++        message("--> 软件主页: ${_IN_VAL}")
++    endif(_Homepage EQUAL "0")
++
++    find_str("${_IN_KEY}" "Recommends" _Recommends)
++    if(_Recommends EQUAL "0")
++        set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "${_IN_VAL}" PARENT_SCOPE)
++        message("--> 软件建议: ${_IN_VAL}")
++    endif(_Recommends EQUAL "0")
++    
++endfunction(set_package_vars _IN_KEY _IN_VAL)
++
++# 定义一个自定义(add_package_descript)函数
++# 用于按特定配置约定自动化构建软件包配置
++function(add_package_descript IN_DES)
++    set(PACKAGE_DES_PATH "${IN_DES}")
++
++    if(EXISTS ${IN_DES})
++
++    elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${IN_DES}")
++        set(PACKAGE_DES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${IN_DES}")
++    else()
++        message(FATAL_ERROR "!! Not Found Path: ${PACKAGE_DES_PATH}")
++        return()
++    endif(EXISTS ${IN_DES})
++    
++    file(READ ${PACKAGE_DES_PATH} DES_CONTENT)
++    trim_str("${DES_CONTENT}" DES_CONTENT)
++
++    ################## 解析 ##################
++
++    sub_next(${DES_CONTENT} NEXT_INDEX DES_LINE DES_CONTENT)
++    set(PREV_DES "")
++    while(NOT DES_LINE STREQUAL "${PREV_DES}")
++        # 检查该描述行是否是 # 注释开头，是的话将跳过该行
++        find_str("${DES_LINE}" "#" _COMMENT)
++        if(_COMMENT EQUAL "0")
++            message("--> !!!!!!! ${DES_LINE}")
++            sub_next(${DES_CONTENT} NEXT_INDEX DES_LINE DES_CONTENT)
++            continue()
++        endif(_COMMENT EQUAL "0")
++
++        # 检查该描述行是否是 Descrition 开头，是的话说明描述结尾了
++        find_str("${DES_LINE}" "Descrition" _DESCRIPTION)
++        if(_DESCRIPTION EQUAL "0")
++            break()
++        endif(_DESCRIPTION EQUAL "0")
++
++        split_str_n("${DES_LINE}" ":" _TMP 1)
++        list(LENGTH _TMP _TMP_LEN)
++
++        if(_TMP_LEN EQUAL 2)
++            split_str_p("${DES_LINE}" ":" _TMP __TMP)
++            trim_str("${__TMP}" __TMP)
++            string(LENGTH "${__TMP}" __TMP_LENGTH)
++            if(NOT __TMP_LENGTH EQUAL "0")
++                set_package_vars("${_TMP}" "${__TMP}")
++            endif(NOT __TMP_LENGTH EQUAL "0")
++        endif(_TMP_LEN EQUAL 2)
++
++        # 记录当前行，获取下一行，可能是已经结尾了(将保持重复行)
++        set(PREV_DES "${DES_LINE}")
++        sub_next(${DES_CONTENT} NEXT_INDEX DES_LINE DES_CONTENT)
++    endwhile(NOT DES_LINE STREQUAL "${PREV_DES}")
++
++
++    # 再一次检查该描述行是否是 Descrition 开头，是的话将进行分析描述行
++    find_str("${DES_LINE}" "Descrition" _DESCRIPTION)
++    if(_DESCRIPTION EQUAL "0")
++        split_str_p("${DES_LINE}" ":" _TMP __TMP)
++        trim_str("${__TMP}" __TMP)
++        set(Descrition ${__TMP})
++        set(PREV_DES_LINE "")
++        while(NOT PREV_DES_LINE STREQUAL DES_LINE)
++            if(NOT PREV_DES_LINE STREQUAL "")
++                set(Descrition "${Descrition}\n${DES_LINE}")
++            endif(NOT PREV_DES_LINE STREQUAL "")
++            set(PREV_DES_LINE "${DES_LINE}")
++            sub_next(${DES_CONTENT} NEXT_INDEX DES_LINE DES_CONTENT)
++        endwhile(NOT PREV_DES_LINE STREQUAL DES_LINE)
++        # set(Descrition "${Descrition}")
++        message("--> 软件说明: ${Descrition}")
++
++        set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${Descrition})
++    endif(_DESCRIPTION EQUAL "0")
++
++    ##################### deb #####################
++    # ARCHITECTURE
++    if(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86_64")
++        set(ARCHITECTURE "amd64")
++    elseif(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "aarch64")
++        set(ARCHITECTURE "arm64")
++    endif()
++
++    #################### Calendar Version ###################
++    if("${CalVer}" STREQUAL "true")
++        string(TIMESTAMP BUILD_TIME "%Y%m%d")
++        set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_DEBIAN_PACKAGE_VERSION}-${BUILD_TIME}")
++    endif("${CalVer}" STREQUAL "true")
++    
++
++
++    ##################### deb file name #####################
++    set(_Package      "${CPACK_DEBIAN_PACKAGE_NAME}")
++    set(_Version      "${CPACK_DEBIAN_PACKAGE_VERSION}")
++    set(_Architecture "${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
++
++    set(_DebFileName 
++        "${_Package}_${_Version}_${_Architecture}${PACKAGE_SUFFIX}.deb"
++    )
++    set(CPACK_DEBIAN_FILE_NAME            ${_DebFileName})
++
++
++    # set(CPACK_DEBIAN_PACKAGE_NAME         "${Package}")
++    # set(CPACK_DEBIAN_PACKAGE_VERSION      "${Version}")
++    # set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${Architecture}")
++    # set(CPACK_DEBIAN_PACKAGE_DEPENDS      "${Depends}")
++    # set(CPACK_DEBIAN_PACKAGE_PRIORITY     "${Priority}")
++    # set(CPACK_DEBIAN_PACKAGE_MAINTAINER   "${Maintainer}")
++    # set(CPACK_DEBIAN_PACKAGE_DESCRIPTION  "${Descrition}")
++
++    # 设置即将使用的标准脚本
++    # set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA
++    #     "${CMAKE_SOURCE_DIR}/config/DEBIAN/preinst"
++    #     "${CMAKE_SOURCE_DIR}/config/DEBIAN/postinst"
++    #     "${CMAKE_SOURCE_DIR}/config/DEBIAN/prerm"
++    #     "${CMAKE_SOURCE_DIR}/config/DEBIAN/postrm"
++    # )
++
++    # 设置为ON，以便使用 dpkg-shlibdeps 生成更好的包依赖列表。
++    # set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
++    # set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
++    # set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS_POLICY "=")
++
++    include(CPack)
++
++endfunction(add_package_descript IN_DES)
++
++
++# TODO:
++# CPACK_GENERATOR
++# CPACK_DEBIAN_FILE_NAME                - n
++# CPACK_DEBIAN_PACKAGE_NAME             - y
++# CPACK_DEBIAN_PACKAGE_VERSION          - y
++# CPACK_DEBIAN_PACKAGE_ARCHITECTURE     - y(auto)
++# CPACK_DEBIAN_PACKAGE_DEPENDS          - y
++# CPACK_DEBIAN_PACKAGE_PRIORITY         - y
++# CPACK_DEBIAN_PACKAGE_MAINTAINER       - y
++# CPACK_DEBIAN_PACKAGE_DESCRIPTION      - y
++
++# ARCHITECTURE
++# if(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "x86_64")
++#     set(ARCHITECTURE "amd64")
++# elseif(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "aarch64")
++#     set(ARCHITECTURE "arm64")
++# endif()
++
++# string(TIMESTAMP BUILD_TIME "%Y%m%d")
+diff --git a/cmake/SparkDesktopMacros.cmake b/cmake/SparkDesktopMacros.cmake
+new file mode 100644
+index 0000000..223ac6b
+--- /dev/null
++++ b/cmake/SparkDesktopMacros.cmake
+@@ -0,0 +1,35 @@
++
++macro(spark_desktop_macros _APP_NAME _APP_NAME_ZH_CN _APP_COMMENT _APP_TYPE _APP_EXECUTE_PATH _APP_EXECUTE_ICON_PATH _APP_CATEGORIES)
++    set(APP_NAME ${_APP_NAME})
++    set(APP_NAME_ZH_CN ${_APP_NAME_ZH_CN})
++    set(APP_COMMENT ${_APP_COMMENT})
++    set(APP_TYPE ${_APP_TYPE})
++    set(APP_EXECUTE_PATH ${_APP_EXECUTE_PATH})
++    set(APP_EXECUTE_ICON_PATH ${_APP_EXECUTE_ICON_PATH})
++    set(APP_CATEGORIES ${_APP_CATEGORIES})
++    configure_file(cmake/spark-desktop.desktop.in
++        ${CMAKE_BINARY_DIR}/${_APP_NAME}.desktop
++    )
++endmacro(spark_desktop_macros _APP_NAME _APP_NAME_ZH_CN _APP_COMMENT _APP_TYPE _APP_EXECUTE_PATH _APP_EXECUTE_ICON_PATH _APP_CATEGORIES)
++
++# include(cmake/SparkDesktopMacros.cmake)
++# 内容默认应用名称: Name= 应与项目名称相同
++# spark_desktop_macros(
++    # 应用名称: Name=
++    # 应用名称: Name[zh_CN]=
++    # 应用说明: Comment=
++    # 应用类型: Type=
++    # 执行程序: Exec=
++    # 图标路径: Icon=
++    # 应用分类: Category=
++# )
++
++# configure_file(<input> <output>
++#                [NO_SOURCE_PERMISSIONS | USE_SOURCE_PERMISSIONS |
++#                 FILE_PERMISSIONS <permissions>...]
++#                [COPYONLY] [ESCAPE_QUOTES] [@ONLY]
++#                [NEWLINE_STYLE [UNIX|DOS|WIN32|LF|CRLF] ])
++
++# install(FILES ${APP_NAME}.desktop
++#     DESTINATION /usr/share/applications
++# )
+\ No newline at end of file
+diff --git a/cmake/SparkInstallMacrosConfig.cmake b/cmake/SparkInstallMacrosConfig.cmake
+new file mode 100644
+index 0000000..52d9664
+--- /dev/null
++++ b/cmake/SparkInstallMacrosConfig.cmake
+@@ -0,0 +1,131 @@
++
++# spark_install_target
++# 基于传入的路径/目标进行安装
++# 可接受的值为: 安装路径 目标A
++# 可接受的值为: 安装路径 目标A 目标B 目标C...
++macro(spark_install_target INSTALL_TARGET_DIR INSTALL_TARGETS)
++    install(TARGETS 
++        ${INSTALL_TARGETS} ${ARGN}
++        DESTINATION ${INSTALL_TARGET_DIR})
++endmacro(spark_install_target INSTALL_TARGET_DIR INSTALL_TARGETS)
++
++# spark_install_file
++# 基于传入的路径/文件进行安装
++# 可接受的值为: 安装路径 文件A
++# 可接受的值为: 安装路径 文件A 文件B 文件C...
++macro(spark_install_file INSTALL_FILE_DIR INSTALL_FILE)
++    install(FILES 
++        ${INSTALL_FILE} ${ARGN}
++        DESTINATION ${INSTALL_FILE_DIR})
++endmacro(spark_install_file INSTALL_FILE_DIR INSTALL_FILE)
++
++# spark_install_program
++# 基于传入的路径/文件进行安装，并自动为其添加可执行权限
++# 可接受的值为: 安装路径 文件A
++# 可接受的值为: 安装路径 文件A 文件B 文件C...
++macro(spark_install_program INSTALL_PROGRAM_DIR INSTALL_PROGRAM)
++    install(PROGRAMS 
++        ${INSTALL_PROGRAM} ${ARGN}
++        DESTINATION ${INSTALL_PROGRAM_DIR})
++endmacro(spark_install_program INSTALL_PROGRAM_DIR INSTALL_PROGRAM)
++
++
++# spark_install_directory
++# 基于传入的路径/目录进行安装
++# 可接受的值为: 安装路径 路径A
++# 可接受的值为: 安装路径 路径A/* 为安装路径A下所有内容
++macro(spark_install_directory INSTALL_DIRECTORY_DIR INSTALL_DIRECOTRY)
++    # INSTALL_DIRECOTRY 可能包含 * ？
++    # 1. 找到 '*', 截取，列出目录下所有文件，安装
++    # 2. 是文件的直接使用 spark_install_file 安装
++    # 2. 是目录的直接使用 spark_install_directory 安装
++    # message(FATAL_ERROR "${INSTALL_DIRECTORY_DIR}")
++    # string(FIND <string> <substring> <output_variable> [REVERSE])
++    string(FIND "${INSTALL_DIRECOTRY}" "*" INSTALL_DIRECTORY_FIND_INDEX)
++    # message(FATAL_ERROR "${INSTALL_DIRECTORY_FIND_INDEX}:  ${INSTALL_DIRECTORY_DIR}")
++
++    # file(GLOB <variable>
++    #  [LIST_DIRECTORIES true|false] [RELATIVE <path>] [CONFIGURE_DEPENDS]
++    #  [<globbing-expressions>...])
++
++    if (NOT INSTALL_DIRECTORY_FIND_INDEX EQUAL -1)
++        # string(SUBSTRING <string> <begin> <length> <output_variable>)
++        string(SUBSTRING "${INSTALL_DIRECOTRY}" 0 ${INSTALL_DIRECTORY_FIND_INDEX} INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING)
++        # message(FATAL_ERROR "directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING}")
++
++        # file(GLOB <variable>
++        #     [LIST_DIRECTORIES true|false] [RELATIVE <path>] [CONFIGURE_DEPENDS]
++        #     [<globbing-expressions>...])
++
++        file(GLOB INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST  ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING}/*)
++        list(LENGTH INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST_LENGTH)
++        foreach(item IN LISTS INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST)
++            # message("-> ${item}")
++            if(IS_DIRECTORY ${item})
++                message("-> ${item} IS_DIRECTORY")
++                # spark_install_directory(${INSTALL_DIRECTORY_DIR} ${item})
++                install(DIRECTORY
++                    ${item}
++                    DESTINATION ${INSTALL_DIRECTORY_DIR}
++                    USE_SOURCE_PERMISSIONS)
++            else()
++                message("-> ${item} NOT IS_DIRECTORY")
++                spark_install_program(${INSTALL_DIRECTORY_DIR} ${item})
++                # spark_install_file(${INSTALL_DIRECTORY_DIR} ${item})
++            endif(IS_DIRECTORY ${item})
++        endforeach(item IN LISTS INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST)
++        
++        # message(FATAL_ERROR " directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST}")
++        # message(FATAL_ERROR " directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST_LENGTH}")
++
++    else()
++        message(FATAL_ERROR "install： ${INSTALL_DIRECTORY_DIR}")
++
++        install(DIRECTORY
++            ${INSTALL_DIRECOTRY} ${ARGN}
++            DESTINATION ${INSTALL_DIRECTORY_DIR})
++    endif(NOT INSTALL_DIRECTORY_FIND_INDEX EQUAL -1)
++
++endmacro(spark_install_directory INSTALL_DIRECTORY_DIR INSTALL_DIRECOTRY)
++
++
++
++macro(spark_install_changelog CHANGE_LOG_FILE)
++    set(SOURCE_CHANGE_LOG_FILE ${CHANGE_LOG_FILE})
++    if (EXISTS ${SOURCE_CHANGE_LOG_FILE})
++
++        execute_process(COMMAND test -f ${SOURCE_CHANGE_LOG_FILE}
++            RESULT_VARIABLE changelog_test
++        )
++        execute_process(COMMAND which gzip
++            RESULT_VARIABLE gzip_test
++        )
++        if (NOT changelog_test  EQUAL 0)
++            message(FATAL_ERROR "NOTE: 不是常规文件: ${SOURCE_CHANGE_LOG_FILE}")
++        endif(NOT changelog_test  EQUAL 0)
++
++        if (NOT gzip_test  EQUAL 0)
++            message(FATAL_ERROR "NOTE: 未安装 gzip, 无法压缩 changelog")
++        endif(NOT gzip_test  EQUAL 0)
++
++        # 压缩与安装日志文件
++        add_custom_command(
++            OUTPUT "${CMAKE_BINARY_DIR}/changelog.gz"
++            COMMAND gzip -cn9 "${SOURCE_CHANGE_LOG_FILE}" > "${CMAKE_BINARY_DIR}/changelog.gz"
++            WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
++            COMMENT "Compressing changelog"
++        )
++        add_custom_target(changelog ALL DEPENDS "${CMAKE_BINARY_DIR}/changelog.gz")
++
++        # include(GNUInstallDirs)
++        set(SPARK_INSTALL_CHANGE_LOG_DIR "/usr/share/doc/${PROJECT_NAME}/")
++        install(FILES 
++            ${CMAKE_BINARY_DIR}/changelog.gz
++            debian/copyright
++
++            DESTINATION ${SPARK_INSTALL_CHANGE_LOG_DIR}
++        )
++    else()
++        message(FATAL_ERROR "未找到: ${SOURCE_CHANGE_LOG_FILE}")
++    endif(EXISTS ${SOURCE_CHANGE_LOG_FILE})
++endmacro(spark_install_changelog CHANGE_LOG_FILE)
+diff --git a/cmake/package-deb.descript b/cmake/package-deb.descript
+new file mode 100644
+index 0000000..cfd1e7c
+--- /dev/null
++++ b/cmake/package-deb.descript
+@@ -0,0 +1,46 @@
++# 注释行(使用方式)
++# find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
++# add_package_descript(cmake/package-deb.descript)
++
++# 打包后的文件名称
++# FileName: 待定
++# 配置 PACKAGE_SUFFIX 变量可添加尾巴名称
++# 如在 Makefile 中硬编码方式
++# OSID=$(shell lsb_release -si)
++# OSRELEASE=$(shell lsb_release -sr)
++# -DPACKAGE_SUFFIX="_$(OSID)$(OSRELEASE)"
++
++# deb 安装包的安装时脚本
++# 1.安装[前|后]执行脚本(preinst,postinst),
++# 2.卸载[前|后]执行脚本(prerm,postrm)
++# ControlExtra: 未定义(暂不支持)
++# 如需指定请修改 DebPackageConfig.cmake 模板(第252行)
++# CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA 变量
++
++# 打包类型，暂支持 deb, 未来支持 tgz(tar.gz)
++Type: deb
++# 软件包名称(自动, 使用 PROJECT_NAME 变量值)
++Package: com.hmja.notepad
++# 软件包版本(自动, 使用 PROJECT_VERSION 变量值)
++Version: auto
++# 日历化尾部版本
++CalVer: true
++# 软件包架构(自动)
++Architecture: auto
++# 软件包属于的系统部分[admin|cli-mono|comm|database|debug|devel|doc|editors|education|electronics|embedded|fonts|games|gnome|gnu-r|gnustep|graphics|hamradio|haskell|httpd|interpreters|introspection|java|javascript|kde|kernel|libdevel|libs|lisp|localization|mail|math|metapackages|misc|net|news|ocaml|oldlibs|otherosfs|perl|php|python|ruby|rust|science|shells|sound|tasks|tex|text|utils|vcs|video|web|x11|xfce|zope]
++Section: editors
++# 软件包优先级[required|important|stantard|optional|extra]
++Priority: optional
++# 软件包依赖
++Depends: 
++# 软件包维护者(组织或个人)
++Maintainer: 尹作为 <757210198@qq.com>
++# 软件包主页
++Homepage: https://gitee.com/cxasm/notepad--
++# 软件包建议
++Recommends: 
++# 软件包描述信息
++Descrition: Notepad--是一个国产跨平台、简单的文本编辑器。
++ Notepad--是一个国产跨平台、简单的文本编辑器，是替换notepad++的一种选择。
++ 其内置强大的代码对比功能，让你丢掉付费的beyond compare。
++
+diff --git a/cmake/spark-desktop.desktop.in b/cmake/spark-desktop.desktop.in
+new file mode 100644
+index 0000000..e7c3b18
+--- /dev/null
++++ b/cmake/spark-desktop.desktop.in
+@@ -0,0 +1,12 @@
++[Desktop Entry]
++Version=1.0
++Name=@APP_NAME@
++Name[zh_CN]=@APP_NAME_ZH_CN@
++Comment=@APP_COMMENT@
++Type=@APP_TYPE@
++Exec=@APP_EXECUTE_PATH@
++Icon=@APP_EXECUTE_ICON_PATH@
++Categories=@APP_CATEGORIES@
++MimeType=text/plain
++
++# Generated from the DesktopGenerater component of the z-Tools toolkit
+\ No newline at end of file
+-- 
+2.20.1
+
+
+From 8dd955e0995e22d1c9cec7a8127cc9d08f593941 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Wed, 1 Feb 2023 20:09:49 +0800
+Subject: [PATCH 4/4] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+ =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
+ =?UTF-8?q?=20Appimage?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt                  |   8 ++
+ Makefile                        |  23 ++++++
+ cmake/SparkAppimageConfig.cmake | 139 ++++++++++++++++++++++++++++++++
+ cmake/spark-appimage.desktop.in |  10 +++
+ 4 files changed, 180 insertions(+)
+ create mode 100644 cmake/SparkAppimageConfig.cmake
+ create mode 100644 cmake/spark-appimage.desktop.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 52efcf6..c1d2c59 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -54,6 +54,14 @@ if(CMAKE_HOST_UNIX)
+     spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
+     spark_install_target(/usr/bin/ ${PROJECT_NAME})
+ 
++    
++    # 1. 在顶层构建中导入 Appimage 的构建
++    include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
++    add_appimage_icon(assets/spark.png)       # 添加到 Appimage 中的默认的图标
++    add_appimage_desktop()                    # 添加到 Appimage 中的默认desktop(使用来自 Spark 构建的 Desktop 构建中配置的信息(必须要求 spark-desktop))
++    add_appimage()                            # 应用对 Appimage 的构建
++
++
+     # 注释行(使用方式)
+     find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
+     add_package_descript(cmake/package-deb.descript)
+diff --git a/Makefile b/Makefile
+index c652e21..35bf326 100644
+--- a/Makefile
++++ b/Makefile
+@@ -59,3 +59,26 @@ enter-qdebug-mode:
+ 	# 进入新的 bash 环境
+ 	@# export QT_LOGGING_RULES=".debug=true; qt.*.debug=false; dtk.*.debug=false; dde.*.debug=false; qtc*=false; " && bash
+ 	export QT_LOGGING_RULES=".debug=true" && bash
++
++# Appimage 的构建流 --
++# 在 Makefile 进行构建目标构建 Appimage (要求提供工具的绝对路径，然后可依次进行linuxdeployqt, genrate-appimage)
++# 来自于 https://github.com/probonopd/linuxdeployqt 	的 linuxdeployqt
++# 来自于 https://github.com/AppImage/AppImageKit		的 appimagetool
++# 来自于 https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git  托管存储的工具
++
++# 或指定你所想存放克隆项目的位置
++BUNDLE_LINUXDEPLOYQT := $(shell pwd)/build/bundle-linuxdeployqt
++
++download-bundle-linuxdeploytools: 
++	-git clone https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git $(BUNDLE_LINUXDEPLOYQT)
++
++LINUXDEPLOYQT := "$(BUNDLE_LINUXDEPLOYQT)/linuxdeployqt-continuous-x86_64.AppImage"
++APPIMAGETOOL  := "$(BUNDLE_LINUXDEPLOYQT)/appimagetool-x86_64.AppImage"
++
++linuxdeploy: release download-bundle-linuxdeploytools
++	cd build && cmake .. -DLINUXDEPLOYQT=$(LINUXDEPLOYQT) -DAPPIMAGETOOL=$(APPIMAGETOOL)
++	cd build && make linuxdeploy
++
++genrate-appimage:
++	cd build && cmake .. -DLINUXDEPLOYQT=$(LINUXDEPLOYQT) -DAPPIMAGETOOL=$(APPIMAGETOOL)
++	cd build && make appimage
+diff --git a/cmake/SparkAppimageConfig.cmake b/cmake/SparkAppimageConfig.cmake
+new file mode 100644
+index 0000000..99fc9d6
+--- /dev/null
++++ b/cmake/SparkAppimageConfig.cmake
+@@ -0,0 +1,139 @@
++# export PATH=/usr/lib/x86_64-linux-gnu/qt5/bin:$PATH
++# export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
++# export QT_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins:$QT_PLUGIN_PATH
++# export QML2_IMPORT_PATH=/usr/lib/x86_64-linux-gnu/qt5/qml:$QML2_IMPORT_PATH
++
++# export PATH=/usr/lib/x86_64-linux-gnu/qt5/bin:$PATH
++# ~/linuxdeployqt-continuous-x86_64.AppImage spark-store-submitter -appimage
++# cd ..
++# ~/appimagetool-x86_64.AppImage appimage/
++
++# LINUXDEPLOYQT=/home/zinface/linuxdeployqt-continuous-x86_64.AppImage
++# APPIMAGETOOL=/home/zinface/appimagetool-x86_64.AppImage
++
++# if ()
++set(APPIMAGE_OUTPUT  "${CMAKE_BINARY_DIR}/appimage")
++set(APPIMAGE_ICON    "${APPIMAGE_OUTPUT}/default.png")
++set(APPIMAGE_DESTKOP "${APPIMAGE_OUTPUT}/default.desktop")
++# set(LINUXDEPLOYQT)
++# set(APPIMAGETOOL)
++
++function(execute_linuxdeploy _PATH)
++    execute_process(COMMAND ${LINUXDEPLOYQT}
++        WORKING_DIRECTORY "${APPIMAGE_OUTPUT}"
++        )
++endfunction(execute_linuxdeploy _PATH)
++
++function(target_linuxdeploy)
++    add_custom_target(linuxdeploy pwd
++        BYPRODUCTS appimage
++        COMMAND cp ../${PROJECT_NAME} .
++        COMMAND "${LINUXDEPLOYQT}" ${PROJECT_NAME} -appimage -unsupported-allow-new-glibc -verbose=3 -no-strip|| true
++        COMMAND cp ../spark-appimage.desktop default.desktop
++        COMMAND cp ../spark-appimage.png     default.png
++        WORKING_DIRECTORY "${APPIMAGE_OUTPUT}")
++endfunction(target_linuxdeploy)
++
++function(target_appimage)
++    add_custom_target(copy-desktop-appimage
++        COMMAND cp ../spark-appimage.desktop default.desktop
++        COMMAND cp ../spark-appimage.png     default.png
++        WORKING_DIRECTORY "${APPIMAGE_OUTPUT}")
++    add_custom_target(appimage pwd
++        COMMAND ${APPIMAGETOOL} ${APPIMAGE_OUTPUT}
++        WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
++        DEPENDS copy-desktop-appimage)
++endfunction(target_appimage)
++
++function(add_appimage)
++    # check linuxdeploy
++    if(NOT DEFINED LINUXDEPLOYQT)
++        message("AppImage> Not Found LINUXDEPLOYQT Variable!")
++        return()
++    endif(NOT DEFINED LINUXDEPLOYQT)
++    if(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
++        message("> cmake version is less than 3.19")
++        message(WARNING "!Relative paths are not supported!")
++    else()
++        file(REAL_PATH ${LINUXDEPLOYQT} LINUXDEPLOYQT_REAL_PATH)
++    endif(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
++    message("AppImage> Found LINUXDEPLOYQT Variable: ${LINUXDEPLOYQT_REAL_PATH}")
++
++    # check appimagetool
++    if(NOT DEFINED APPIMAGETOOL)
++        message("AppImage> Not Found APPIMAGETOOL Variable!")
++        return()
++    endif(NOT DEFINED APPIMAGETOOL)
++    if(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
++        # execute_process(COMMAND realpath ${APPIMAGETOOL} OUTPUT_VARIABLE APPIMAGETOOL_REAL_PATH)
++        message("> cmake version is less than 3.19")
++        message(WARNING "!Relative paths are not supported!")
++    else()
++        file(REAL_PATH ${APPIMAGETOOL} APPIMAGETOOL_REAL_PATH)
++    endif(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
++    message("AppImage> Found APPIMAGETOOL Variable: ${LINUXDEPLOYQT_REAL_PATH}")
++    
++    # do add_custome_target
++    make_directory(${APPIMAGE_OUTPUT})
++    target_linuxdeploy()
++    target_appimage()
++endfunction(add_appimage)
++
++function(add_appimage_desktop)
++    configure_file(cmake/spark-appimage.desktop.in 
++        ${CMAKE_BINARY_DIR}/spark-appimage.desktop @ONLY) 
++endfunction(add_appimage_desktop)
++
++function(add_appimage_icon _ICON_PATH)
++    if(CMAKE_VERSION VERSION_LESS 3.21)
++        message("> cmake version is less than 3.21")
++        configure_file(${_ICON_PATH} ${CMAKE_BINARY_DIR}/spark-appimage.png COPYONLY)
++    else()
++        file(COPY_FILE ${_ICON_PATH} ${CMAKE_BINARY_DIR}/spark-appimage.png)
++    endif(CMAKE_VERSION VERSION_LESS 3.21)
++endfunction(add_appimage_icon _ICON_PATH) 
++
++
++
++# 如果glic>=2.27,你就需要加上参数 -unsupported-allow-new-glibc (意思就是不再低版本发行版使用了) 
++# 或 -unsupported-bundle-everything（大概的意思是尝试兼容，实际测试，到其他发行版直接用不了了，有可能是发行版的原因，还是建议用前者，虽然放弃了低版本）
++
++# -unsupported-bundle-everything
++    # 捆绑所有依赖库，包括 ld-linux.so 加载器和 glibc。这将允许构建在较新系统上的应用程序在较旧的目标系统上运行，但不建议这样做，因为它会导致捆绑包超出所需的大小（并且可能到其他发行版无法使用）
++# -unsupported-allow-new-glibc
++    # 允许 linuxdeployqt 在比仍受支持的最旧 Ubuntu LTS 版本更新的发行版上运行。这将导致 AppImage无法在所有仍受支持的发行版上运行，既不推荐也不测试或支持
++
++# ./linuxdeployqt-7-x86_64.AppImage 程序目录/程序 -appimage -unsupported-allow-new-glibc
++# ./linuxdeployqt-7-x86_64.AppImage 程序目录/程序 -appimage -unsupported-bundle-everything
++
++
++
++
++# 1. 在顶层构建中导入 Appimage 的构建
++# include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
++# add_appimage_icon(assets/spark.png)       # 添加到 Appimage 中的默认的图标
++# add_appimage_desktop()                    # 添加到 Appimage 中的默认desktop(使用来自 Spark 构建的 Desktop 构建中配置的信息(必须要求 spark-desktop))
++# add_appimage()                            # 应用对 Appimage 的构建
++
++# 2. 在 Makefile 进行构建目标构建 Appimage 的构建流 --
++# 在 Makefile 进行构建目标构建 Appimage (要求提供工具的绝对路径，然后可依次进行linuxdeployqt, genrate-appimage)
++# 来自于 https://github.com/probonopd/linuxdeployqt 	的 linuxdeployqt
++# 来自于 https://github.com/AppImage/AppImageKit		的 appimagetool
++# 来自于 https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git  托管存储的工具
++
++# 或指定你所想存放克隆项目的位置
++# BUNDLE_LINUXDEPLOYQT := $(shell pwd)/build/bundle-linuxdeployqt
++
++# download-bundle-linuxdeploytools: 
++# 	-git clone https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git $(BUNDLE_LINUXDEPLOYQT)
++
++# LINUXDEPLOYQT := "$(BUNDLE_LINUXDEPLOYQT)/linuxdeployqt-continuous-x86_64.AppImage"
++# APPIMAGETOOL  := "$(BUNDLE_LINUXDEPLOYQT)/appimagetool-x86_64.AppImage"
++
++# linuxdeploy: release download-bundle-linuxdeploytools
++# 	cd build && cmake .. -DLINUXDEPLOYQT=$(LINUXDEPLOYQT) -DAPPIMAGETOOL=$(APPIMAGETOOL)
++# 	cd build && make linuxdeploy
++
++# genrate-appimage:
++# 	cd build && cmake .. -DLINUXDEPLOYQT=$(LINUXDEPLOYQT) -DAPPIMAGETOOL=$(APPIMAGETOOL)
++# 	cd build && make appimage
+diff --git a/cmake/spark-appimage.desktop.in b/cmake/spark-appimage.desktop.in
+new file mode 100644
+index 0000000..0ca2577
+--- /dev/null
++++ b/cmake/spark-appimage.desktop.in
+@@ -0,0 +1,10 @@
++[Desktop Entry]
++Name=@APP_NAME@
++Name[zh_CN]=@APP_NAME_ZH_CN@
++Exec=AppRun %F
++Icon=default
++Comment=@APP_COMMENT@
++Terminal=true
++Type=Application
++Categories=@APP_CATEGORIES@
++MimeType=text/plain
+-- 
+2.20.1
+
