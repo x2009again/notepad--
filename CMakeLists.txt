@@ -28,4 +28,15 @@ ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
 ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
 )
 
-target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+target_link_libraries(${PROJECT_NAME} qscintilla2_qt5 Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+
+install(
+    TARGETS ${PROJECT_NAME}
+    DESTINATION "bin"
+)
+
+install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
+        DESTINATION "/")
+
+include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake) 
+include(CPack)
