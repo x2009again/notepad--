@@ -89,32 +89,8 @@ void QsciDisplayWindow::setStyleOptions()
 		setMarginsForegroundColor(QColor(0x80, 0x80, 0x80)); //默认0x80, 0x80, 0x80
 	}
 	else
-	{
-		setMarginsForegroundColor(QColor(0xde, 0xde, 0xde)); //默认0x80, 0x80, 0x80
-	}
-	setMarginsBackgroundColor(StyleSet::marginsBackgroundColor);
-	setFoldMarginColors(StyleSet::marginsBackgroundColor, StyleSet::marginsBackgroundColor);
-
-	//如果是黑色主题，则单独做一些风格设置
-	if (StyleSet::m_curStyleId == BLACK_SE)
-	{
-		this->setColor(QColor(0xff, 0xff, 0xff));//有lexer时无效
-		this->setPaper(QColor(0x282020));//有lexer时无效
-
-
-		setCaretLineBackgroundColor(QColor(0x333333));
-		setMatchedBraceForegroundColor(QColor(246, 81, 246));
-		setMatchedBraceBackgroundColor(QColor(18, 90, 36));
-		setCaretForegroundColor(QColor(255, 255, 255));
-		setFoldColor(SC_MARKNUM_FOLDEROPEN, QColor(45, 130, 45), QColor(222, 222, 222));
-		setFoldColor(SC_MARKNUM_FOLDER, QColor(45, 130, 45), QColor(222, 222, 222));
-		setFoldColor(SC_MARKNUM_FOLDERSUB, QColor(45, 130, 45), QColor(222, 222, 222));
-		setFoldColor(SC_MARKNUM_FOLDERTAIL, QColor(45, 130, 45), QColor(222, 222, 222));
-		setFoldColor(SC_MARKNUM_FOLDEREND, QColor(45, 130, 45), QColor(222, 222, 222));
-		setFoldColor(SC_MARKNUM_FOLDEROPENMID, QColor(45, 130, 45), QColor(222, 222, 222));
-		setFoldColor(SC_MARKNUM_FOLDERMIDTAIL, QColor(45, 130, 45), QColor(222, 222, 222));
-	}
-	else
+	setMarginsBackgroundColor(0xf0f0f0);
+	setFoldMarginColors(0xf0f0f0, 0xf0f0f0);
 	{
 		//setCaretLineBackgroundColor(QColor(0xe8e8ff));
 		setCaretLineBackgroundColor(QColor(0xFAF9DE));

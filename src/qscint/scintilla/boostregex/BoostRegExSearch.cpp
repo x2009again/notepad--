@@ -6,7 +6,7 @@
  * (c) 2012 Dave Brotherstone - Changes for boost::regex
  * (c) 2013 Francois-R.Boyer@PolyMtl.ca - Empty match modes and best match backward search
  * (c) 2019 Don Ho - Adapt for upgrading Scitilla (to version 4.1.4) and boost (to version 1.70)
- * 
+ * (c) 2022 zuowei yin - Upgrading QScitilla and boost
  */
 
 #include <stdlib.h>

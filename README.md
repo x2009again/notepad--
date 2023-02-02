@@ -14,10 +14,7 @@
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.21
 
-Arch Linux 及其衍生版可以通过 AUR 仓库安装：[notepad---git](https://aur.archlinux.org/packages/notepad---git)
-```
-yay -S notepad---git
-```
+最新开发版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.22
 
 NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
 开发者参与插件功能开发。
@@ -35,6 +32,11 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 3）由于编译的平台较多，涉及windows/linux/mac，有任何编译问题，还请加qq群 959439826 。欢迎广大网友实现新功能后提交代码给我们。
 
 代码上线不久，删除了商业的对比功能和注册功能（这部分有商业原因，请理解），除此以外，所有功能全部保留。
+
+4）Arch Linux 及其衍生版可以通过 AUR 仓库安装：[notepad---git](https://aur.archlinux.org/packages/notepad---git)
+```
+yay -S notepad---git
+```
 
 ![输入图片说明](png/20221107_160824.png)
 

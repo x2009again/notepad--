@@ -1,4 +1,4 @@
-﻿// Scintilla source code edit control
+// Scintilla source code edit control
 /** @file LexAVS.cxx
  ** Lexer for AviSynth.
  **/
@@ -288,4 +288,4 @@ static const char * const avsWordLists[] = {
 	0,
 };
 
-LexerModule lmAVS(SCLEX_AVS, ColouriseAvsDoc, "avs", FoldAvsDoc, avsWordLists);
+//LexerModule lmAVS(SCLEX_AVS, ColouriseAvsDoc, "avs", FoldAvsDoc, avsWordLists);

@@ -363,7 +363,6 @@
      <addaction name="actionAutoIt"/>
      <addaction name="actionAviSynth"/>
      <addaction name="actionASN1"/>
-     <addaction name="actionAVS"/>
     </widget>
     <widget class="QMenu" name="menuS">
      <property name="title">
@@ -1583,7 +1582,7 @@
   </action>
   <action name="actionLanguage_Format">
    <property name="text">
-    <string>Language Format</string>
+    <string>Theme Style</string>
    </property>
   </action>
   <action name="actionOpen_In_Text">
@@ -2022,6 +2021,16 @@
    </property>
    <property name="text">
     <string>Show Web Addr(Not recommended)</string>
+   </property>
+  </action>
+  <action name="actionLanguage_File_Suffix">
+   <property name="text">
+    <string>Language File Suffix</string>
+   </property>
+  </action>
+  <action name="actionShortcut_Key_Manager">
+   <property name="text">
+    <string>Shortcut Key Manager</string>
    </property>
   </action>
  </widget>
@@ -3406,6 +3415,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionLanguage_File_Suffix</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_langFileSuffix()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>728</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionShortcut_Key_Manager</sender>
+   <signal>triggered()</signal>
+   <receiver>CCNotePad</receiver>
+   <slot>slot_shortcutManager()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>728</x>
+     <y>394</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_actionNewFile_toggle(bool)</slot>
@@ -3507,5 +3548,7 @@
   <slot>slot_fileListView(bool)</slot>
   <slot>slot_showToolBar(bool)</slot>
   <slot>slot_showWebAddr(bool)</slot>
+  <slot>slot_langFileSuffix()</slot>
+  <slot>slot_shortcutManager()</slot>
  </slots>
 </ui>

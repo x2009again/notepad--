@@ -29,7 +29,7 @@
 #include "Qsci/qsciscintilla.h"
 #include "Qsci/qsciscintillabase.h"
 
-int QsciLexer::s_defaultFontSize = 14;
+int QsciLexer::s_defaultFontSize = 12;
 
 int QsciLexer::m_themesId = 0;
 
@@ -38,7 +38,7 @@ QFont QsciLexer::s_defaultLangFont("Courier New", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
 QFont QsciLexer::s_defaultLangFont("Menlo", s_defaultFontSize);
 #else
-QFont QsciLexer::s_defaultLangFont("Courier 10 Pitch", 14);
+QFont QsciLexer::s_defaultLangFont("Courier 10 Pitch", 12);
 #endif
 
 // The ctor.

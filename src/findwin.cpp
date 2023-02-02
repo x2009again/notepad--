@@ -72,13 +72,34 @@ void FindWin::slot_tabIndexChange(int index)
 {
 	TAB_TYPES type = (TAB_TYPES)index;
 
+	if (RELPACE_TYPE == type)
+	{
+		if (ui.replaceTextBox->currentText().isEmpty() && !ui.findComboBox->currentText().isEmpty())
+		{
+			if (ui.findComboBox->currentText().size() < 255)
+			{
+				ui.replaceTextBox->setCurrentText(ui.findComboBox->currentText());
+			}
+		}
+	}
+	else if(FIND_TYPE == type)
+	{
+		if (ui.findComboBox->currentText().isEmpty() && !ui.replaceTextBox->currentText().isEmpty())
+		{
+			if (ui.replaceTextBox->currentText().size() < 255)
+			{
+				ui.findComboBox->setCurrentText(ui.replaceTextBox->currentText());
+			}
+		}
+	}
+
 	m_isFindFirst = true;
 
 	if (m_findHistory->isEmpty())
 	{
 		return;
 	}
-		}
+}
 
 void FindWin::slot_dealFileTypeChange(int state)
 {
@@ -144,6 +165,18 @@ void FindWin::setFindText(QString &text)
 	addFindHistory(text);
 }
 
+void FindWin::setReplaceFindText(QString& text)
+{
+	ui.replaceTextBox->setEditText(text);
+	addFindHistory(text);
+}
+
+void FindWin::setDirFindText(QString& text)
+{
+	ui.dirFindWhat->setEditText(text);
+	addFindHistory(text);
+}
+
 void FindWin::disableReplace()
 {
 	ui.tab_replace->setEnabled(false);
@@ -201,7 +234,7 @@ void FindWin::removeLineHeadEndBlank(int mode)
 		{
 			ui.replaceTextBox->setCurrentText("\\s+$");
 		}
-		ui.replaceWithBox->setCurrentText("");
+		ui.replaceWithBox->setText("");
 		
 		ui.replaceModeRegularBt->setChecked(true);
 
@@ -355,9 +388,9 @@ void FindWin::updateParameterFromUI()
 			m_isFindFirst = true;
 		}
 
-		if (m_replaceWithText != ui.replaceWithBox->currentText())
+		if (m_replaceWithText != ui.replaceWithBox->text())
 		{
-			m_replaceWithText = ui.replaceWithBox->currentText();
+			m_replaceWithText = ui.replaceWithBox->text();
 			m_isFindFirst = true;
 		}
 
@@ -417,9 +450,9 @@ void FindWin::updateParameterFromUI()
 			m_isFindFirst = true;
 		}
 
-		if (m_replaceWithText != ui.dirReplaceWhat->currentText())
+		if (m_replaceWithText != ui.dirReplaceWhat->text())
 		{
-			m_replaceWithText = ui.dirReplaceWhat->currentText();
+			m_replaceWithText = ui.dirReplaceWhat->text();
 			m_isFindFirst = true;
 		}
 
@@ -523,6 +556,11 @@ void FindWin::updateParameterFromUI()
 
 void FindWin::addFindHistory(QString &text)
 {
+	//太长会导致看起来很杂乱，也不记录
+	if (text.isEmpty() || text.size() >= 255)
+	{
+		return;
+	}
 	if ((m_findHistory != nullptr) && (-1 == m_findHistory->indexOf(text)))
 	{
 		m_findHistory->push_front(text);
@@ -712,7 +750,7 @@ void FindWin::removeEmptyLine(bool isBlankContained)
 		{
 			ui.replaceTextBox->setCurrentText("^$(\\r\\n|\\r|\\n)");
 		}
-		ui.replaceWithBox->setCurrentText("");
+		ui.replaceWithBox->setText("");
 
 		ui.replaceModeRegularBt->setChecked(true);
 
@@ -1080,12 +1118,12 @@ int FindWin::replaceAtBack(QStringList& keyword, QStringList& replace)
 		}
 
 		ui.replaceTextBox->setCurrentText(keyword.at(i));
-		ui.replaceWithBox->setCurrentText(replace.at(i));
+		ui.replaceWithBox->setText(replace.at(i));
 
 		updateParameterFromUI();
 
 		QString whatFind = ui.replaceTextBox->currentText();
-		QString replaceText = ui.replaceWithBox->currentText();
+		QString replaceText = ui.replaceWithBox->text();
 
 		times += doReplaceAll(pEdit, whatFind, replaceText, false);
 
@@ -1384,7 +1422,7 @@ bool FindWin::replace(ScintillaEditView* pEdit)
 	}
 
 	QString findText = ui.replaceTextBox->currentText();
-	QString replaceText = ui.replaceWithBox->currentText();
+	QString replaceText = ui.replaceWithBox->text();
 
 	if (m_extend)
 	{
@@ -1750,7 +1788,7 @@ int FindWin::replaceAll()
 	updateParameterFromUI();
 
 	QString whatFind = ui.replaceTextBox->currentText();
-	QString replaceText = ui.replaceWithBox->currentText();
+	QString replaceText = ui.replaceWithBox->text();
 
 	if (m_extend)
 	{
@@ -2445,7 +2483,7 @@ void FindWin::slot_dirReplaceAll()
 {
 	QString dirPath = ui.destFindDir->text();
 	QString whatFind = ui.dirFindWhat->currentText();
-	QString dirReplaceWhat = ui.dirReplaceWhat->currentText();
+	QString dirReplaceWhat = ui.dirReplaceWhat->text();
 
 	if (dirPath.isEmpty())
 	{

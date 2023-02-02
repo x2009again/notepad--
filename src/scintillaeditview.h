@@ -113,6 +113,7 @@ enum Font_Set_Bit {
 
 class FindRecords;
 class CCNotePad;
+struct BigTextEditFileMgr;
 
 class ScintillaEditView : public QsciScintilla
 {
@@ -129,7 +130,8 @@ public:
 	sptr_t execute(quint32 Msg, uptr_t wParam = 0, sptr_t lParam = 0) const;
 
 	static QsciLexer * createLexer(int lexerId, QString tag="", bool isOrigin=false, int styleId=-1);
-	
+	static QString getTagByLexerId(int lexerId);
+
 	void appendMarkRecord(FindRecords *r);
 	void releaseAllMark();
 	QList<FindRecords*>& getCurMarkRecord();
@@ -195,14 +197,19 @@ public:
 
 	void setBigTextMode(bool isBigText);
 	void showBigTextLineAddr(qint64 fileOffset);
-
+	void showBigTextLineAddr(qint64 fileStartOffset, qint64 fileEndOffset);
+	void showBigTextRoLineNum(BigTextEditFileMgr* txtFile, int blockIndex);
 	void updateThemes();
+	void clearSuperBitLineCache();
 
 	//下面三个函数，是设置全局样式的接口。全局样式不同于每个语法中的样式
 	void setGlobalFgColor(int style);
 	void setGlobalBgColor(int style);
 	void setGlobalFont(int style);
-	//void setGlobalFont(int style, const QFont& f,int stylePointSize = -1);
+	
+	//获取当前块的开始行号。只在大文件只读模式下有效。其余模式下均返回0
+	quint32 getBigTextBlockStartLine();
+	void setBigTextBlockStartLine(quint32 line);
 signals:
 	void delayWork();
 
@@ -300,6 +307,10 @@ private:
 	QList<QAction*> m_styleMarkActList;
 
 	bool m_isBigText;//大文本
+
+	quint32 m_curBlockLineStartNum;
+
+	QMap<qint64, quint32> m_addrLineNumMap;//大文本模式下，地址和行号的对应关系。只需要首尾即可
 public:
 	static int s_tabLens;
 	static bool s_noUseTab;

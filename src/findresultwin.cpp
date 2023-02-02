@@ -2,6 +2,8 @@
 #include "findwin.h"
 #include "common.h"
 #include "styleset.h"
+#include "nddsetting.h"
+
 #include <QTreeWidgetItem>
 #include <QStyleFactory>
 #include <QToolButton>
@@ -10,6 +12,7 @@
 #include <QStandardItemModel>
 #include <QClipboard>
 #include <QTextEdit>
+#include <qscrollbar.h>
 
 #include "ndstyleditemdelegate.h"
 
@@ -17,7 +20,7 @@
 //使用Html的转义解决了该问题
 
 FindResultWin::FindResultWin(QWidget *parent)
-	: QWidget(parent), m_menu(nullptr), m_parent(parent)
+	: QWidget(parent), m_menu(nullptr), m_parent(parent),m_defaultFontSize(14), m_defFontSizeChange(false)
 {
 	ui.setupUi(this);
 
@@ -47,10 +50,37 @@ FindResultWin::FindResultWin(QWidget *parent)
 //	ui.resultTreeView->setStyleSheet(qss);
 
 	connect(ui.resultTreeView, &QTreeView::doubleClicked, this, &FindResultWin::itemDoubleClicked);
+
+	connect(ui.resultTreeView, SIGNAL(pressed(QModelIndex)), this, SLOT(slot_treeView_pressed(QModelIndex)));
+	connect(ui.resultTreeView, SIGNAL(expanded(QModelIndex)), this, SLOT(slot_treeView_pressed(QModelIndex)));
+
+	ui.resultTreeView->verticalScrollBar()->setStyle(QStyleFactory::create("vis"));
+	ui.resultTreeView->horizontalScrollBar()->setStyle(QStyleFactory::create("vis"));
+
+	int defFontSize = NddSetting::getKeyValueFromNumSets(FIND_RESULT_FONT_SIZE);
+	if (defFontSize >= 8)
+	{
+		m_defaultFontSize = defFontSize;
+
+		QFont curFt = ui.resultTreeView->font();
+		curFt.setPointSize(m_defaultFontSize);
+		ui.resultTreeView->setFont(curFt);
+
+		m_delegate->setFontSize(m_defaultFontSize);
+}
 }
 
 FindResultWin::~FindResultWin()
 {
+	if (m_defFontSizeChange)
+	{
+		NddSetting::updataKeyValueFromNumSets(FIND_RESULT_FONT_SIZE, m_defaultFontSize);
+}
+}
+
+void FindResultWin::slot_treeView_pressed(QModelIndex modeIndex)
+{
+	ui.resultTreeView->resizeColumnToContents(modeIndex.column());
 }
 
 void FindResultWin::contextMenuEvent(QContextMenuEvent *)
@@ -71,6 +101,8 @@ void FindResultWin::contextMenuEvent(QContextMenuEvent *)
 		m_menu->addAction(tr("copy select Line (Ctrl Muli)"), this, &FindResultWin::slot_copyContents);
 
 		m_menu->addSeparator();
+		m_menu->addAction(tr("Zoom In"), this, &FindResultWin::slot_fontZoomIn);
+		m_menu->addAction(tr("Zoom Out"), this, &FindResultWin::slot_fontZoomOut);
 		m_menu->addAction(tr("close"), m_parent, &QWidget::close);
 
 	}
@@ -370,7 +402,7 @@ void FindResultWin::highlightFindText(int index, QString &srcText, QString &find
 		}
 		index--;
 	}
-	srcText.replace(pos, lens, QString("<font style='background-color:#ffffbf'>%1</font>").arg(srcText.mid(pos,lens)));
+	srcText.replace(pos, lens, QString("<font style='font-size:14px;background-color:#ffffbf'>%1</font>").arg(srcText.mid(pos,lens)));
 }
 
 const int MAX_HEAD_LENTGH = 20;
@@ -403,9 +435,9 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 	{
 		if (!isNeedCut)
 		{
-		head = QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped();
-		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
-		tail = QString(utf8bytes.mid(tailStart)).toHtmlEscaped();
+			head = QString("<font style='font-size:14px;'>%1</font>").arg(QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped());
+			src = QString("<font style='font-size:14px;background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+			tail = QString("<font style='font-size:14px;'>%1</font>").arg(QString(utf8bytes.mid(tailStart)).toHtmlEscaped());
 	}
 	else
 	{
@@ -418,7 +450,8 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 			{
 				head = head.toHtmlEscaped();
 			}
-		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+			head = QString("<font style='font-size:14px;'>%1</font>").arg(head);
+			src = QString("<font style='font-size:14px;background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
 			tail = QString(utf8bytes.mid(tailStart));
 			if (tail > MAX_TAIL_LENGTH)
 			{
@@ -428,15 +461,16 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 			{
 				tail = tail.toHtmlEscaped();
 			}
+			tail = QString("<font style='font-size:14px;'>%1</font>").arg(tail);
 		}
 	}
 	else
 	{
 		if (!isNeedCut)
 		{
-			head = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped());
-			src = QString("<font style='font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
-		tail = QString("<font style='color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(tailStart)).toHtmlEscaped());
+			head = QString("<font style='font-size:14px;color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(0, targetStart)).toHtmlEscaped());
+			src = QString("<font style='font-size:14px;font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+			tail = QString("<font style='font-size:14px;color:#dcdcdc'>%1</font>").arg(QString(utf8bytes.mid(tailStart)).toHtmlEscaped());
 	}
 		else
 		{
@@ -450,8 +484,8 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 				headContens = headContens.toHtmlEscaped();
 			}
 
-			head = QString("<font style='color:#dcdcdc'>%1</font>").arg(headContens);
-			src = QString("<font style='font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+			head = QString("<font style='font-size:14px;color:#dcdcdc'>%1</font>").arg(headContens);
+			src = QString("<font style='font-size:14px;font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
 
 			QString tailContens = QString(utf8bytes.mid(tailStart));
 			if (tailContens > MAX_TAIL_LENGTH)
@@ -462,7 +496,7 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 			{
 				tailContens = tailContens.toHtmlEscaped();
 			}
-			tail = QString("<font style='color:#dcdcdc'>%1</font>").arg(tailContens);
+			tail = QString("<font style='font-size:14px;color:#dcdcdc'>%1</font>").arg(tailContens);
 		}
 	}
 
@@ -476,18 +510,27 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 		return;
 	}
 
-	QString findTitle = tr("<font style='font-weight:bold;color:#343497'>Search \"%1\" (%2 hits)</font>").arg(record->findText.toHtmlEscaped()).arg(record->records.size());
+	QString findTitle;
+	//if (!StyleSet::isCurrentDeepStyle())
+	//{
+		findTitle = tr("<font style='font-size:14px;font-weight:bold;color:#343497'>Search \"%1\" (%2 hits)</font>").arg(record->findText.toHtmlEscaped()).arg(record->records.size());
+	/*}
+	else
+	{
+		findTitle = tr("<font style='font-size:14px;font-weight:bold;color:#ffffff'>Search \"%1\" (%2 hits)</font>").arg(record->findText.toHtmlEscaped()).arg(record->records.size());
+	}*/
+
 
 	QStandardItem* titleItem = new QStandardItem(findTitle);
 
-	if (!StyleSet::isCurrentDeepStyle())
-	{
-	setItemBackground(titleItem, QColor(0xbbbbff));
-	}
-	else
-	{
-		setItemBackground(titleItem, QColor(0xd5ffd5));
-	}
+	//if (!StyleSet::isCurrentDeepStyle())
+	//{
+		setItemBackground(titleItem, QColor(0xbbbbff));
+	//}
+	//else
+	//{
+	//	setItemBackground(titleItem, QColor(0x423328));//0xd5ffd5
+	//}
 
 	m_model->insertRow(0, titleItem);
 	titleItem->setData(QVariant(true), ResultItemRoot);
@@ -509,11 +552,11 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 	QString desc;
 	if (!StyleSet::isCurrentDeepStyle())
 	{
-		desc = tr("<font style='font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
+		desc = tr("<font style='font-size:14px;font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
 	}
 	else
 	{
-		desc = tr("<font style='color:#99cc99'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
+		desc = tr("<font style='font-size:14px;color:#99cc99'>%1 (%2 hits)</font>").arg(record->findFilePath.toHtmlEscaped()).arg(record->records.size());
 	}
 
 	QStandardItem* descItem = new QStandardItem(desc);
@@ -545,8 +588,15 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 
 		QString richText = highlightFindText(v);
 
-		QString text = tr("<font style='color:#ff8040'>Line %1</font> : %2").arg(v.lineNum + 1).arg(richText);
-
+		QString text;
+		if (!StyleSet::isCurrentDeepStyle())
+		{
+			text = tr("<font style='font-size:14px;'>Line </font><font style='font-size:14px;color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
+		}
+		else
+		{
+			text = tr("<font style='font-size:14px;color:#ffffff'>Line </font><font style='font-size:14px;color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
+		}
 		QStandardItem* childItem = new QStandardItem(text);
 		childItem->setData(QVariant(v.pos), ResultItemPos);
 		childItem->setData(QVariant(v.end - v.pos), ResultItemLen);
@@ -566,7 +616,7 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 		return;
 	}
 
-	QString findTitle = tr("<font style='font-weight:bold;color:#343497'>Search \"%1\" (%2 hits in %3 files)</font>").arg(whatFind.toHtmlEscaped()).arg(hits).arg(record->size());
+	QString findTitle = tr("<font style='font-size:14px;font-weight:bold;color:#343497'>Search \"%1\" (%2 hits in %3 files)</font>").arg(whatFind.toHtmlEscaped()).arg(hits).arg(record->size());
 	QStandardItem* titleItem = new QStandardItem(findTitle);
 	setItemBackground(titleItem, QColor(0xbbbbff));
 	titleItem->setData(QVariant(true), ResultItemRoot);
@@ -594,8 +644,16 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 	{
 		FindRecords* pr = record->at(i);
 
-		QString desc = tr("<font style='font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(pr->findFilePath.toHtmlEscaped()).arg(pr->records.size());
-	
+		QString desc;
+		if (!StyleSet::isCurrentDeepStyle())
+		{
+			desc = tr("<font style='font-size:14px;font-weight:bold;color:#309730'>%1 (%2 hits)</font>").arg(pr->findFilePath.toHtmlEscaped()).arg(pr->records.size());
+		}
+		else
+		{
+			desc = tr("<font style='font-size:14px;color:#99cc99'>%1 (%2 hits)</font>").arg(pr->findFilePath.toHtmlEscaped()).arg(pr->records.size());
+		}
+
 		QStandardItem* descItem = new QStandardItem(desc);
 
 		if (!StyleSet::isCurrentDeepStyle())
@@ -627,8 +685,15 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 			FindRecord  v = pr->records.at(i);
 			QString richText = highlightFindText(v);
 
-			QString text = QString("<font style='color:#ff8040'>Line %1</font> : %2").arg(v.lineNum + 1).arg(richText);
-
+			QString text;
+			if (!StyleSet::isCurrentDeepStyle())
+			{
+				text = tr("<font style='font-size:14px;'>Line </font><font style='font-size:14px;color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
+			}
+			else
+			{
+				text = tr("<font style='font-size:14px;color:#ffffff'>Line </font><font style='font-size:14px;color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
+			}
 			QStandardItem* childItem = new QStandardItem(text);
 			childItem->setData(QVariant(v.pos), ResultItemPos);
 			childItem->setData(QVariant(v.end - v.pos), ResultItemLen);
@@ -654,4 +719,49 @@ void FindResultWin::setItemForeground(QStandardItem* item, const QColor& color)
 {
 	QBrush b(color);
 	item->setForeground(b);
+}
+
+//查找结果框的字体变大
+void FindResultWin::slot_fontZoomIn()
+{
+	QFont curFt = ui.resultTreeView->font();
+
+	int s = curFt.pointSize();
+	s += 2;
+	curFt.setPointSize(s);
+
+	m_defaultFontSize += 2;
+
+	ui.resultTreeView->setFont(curFt);
+
+	m_delegate->setFontSize(m_defaultFontSize);
+
+	m_defFontSizeChange = true;
+}
+
+void FindResultWin::slot_fontZoomOut()
+{
+	QFont curFt = ui.resultTreeView->font();
+
+	int s = curFt.pointSize();
+	s -= 2;
+
+	if (s >= 8)
+	{
+		m_defFontSizeChange = true;
+		m_defaultFontSize -= 2;
+		curFt.setPointSize(s);
+		ui.resultTreeView->setFont(curFt);
+		m_delegate->setFontSize(m_defaultFontSize);
+	}
+}
+
+int FindResultWin::getDefaultFontSize()
+{
+	return m_defaultFontSize;
+}
+
+void FindResultWin::setDefaultFontSize(int defSize)
+{
+	m_defaultFontSize = defSize;
 }
