@@ -31,9 +31,9 @@
 #include <qt_windows.h>
 const ULONG_PTR CUSTOM_TYPE = 10000;
 const ULONG_PTR OPEN_NOTEPAD_TYPE = 10001;
-bool s_isAdminAuth = false;
 #endif
 
+bool s_isAdminAuth = false;
 const QString c_strTitle = "Ndd";
 
 

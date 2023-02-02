@@ -8770,7 +8770,7 @@ void CCNotePad::slot_formatXml()
 void CCNotePad::slot_formatJson()
 {
 	ScintillaEditView* _pEditView = getCurEditView();
-	if (_pEditView == nullptr && _pEditView->isReadOnly())
+	if (_pEditView == nullptr || _pEditView->isReadOnly())
 	{
 		return;
 	}
