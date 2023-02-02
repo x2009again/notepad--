@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 project(notepad-- VERSION 1.22.0)
 
 set(CMAKE_AUTOMOC ON)
