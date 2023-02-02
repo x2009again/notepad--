@@ -33,7 +33,7 @@ INCLUDEPATH += cceditor
 
 TRANSLATIONS += realcompare_zh.ts
 
- if(contains(QMAKE_HOST.arch, x86_64)){
+ if(contains(QMAKE_HOST.arch, x86_64|loongarch64)){
     CONFIG(Debug, Debug|Release){
         DESTDIR = x64/Debug
 		LIBS	+= -Lx64/Debug
