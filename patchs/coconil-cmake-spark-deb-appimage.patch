@@ -1,20 +1,20 @@
-From 0940320b6009c3a1a59395e774a204e70d8ae033 Mon Sep 17 00:00:00 2001
+From d8b90bb4d709d643c7490ce8a79534769185e24e Mon Sep 17 00:00:00 2001
 From: coconil <coconil@foxmail.com>
 Date: Tue, 31 Jan 2023 22:17:32 +0800
-Subject: [PATCH 1/4] add cmake support
+Subject: [PATCH 1/6] add cmake support
 
 ---
  CMakeLists.txt            | 31 +++++++++++++++++++++++++++++++
- src/findcmpwin.h          |  4 ++++
- src/findwin.h             |  5 ++++-
+ src/findcmpwin.h          | 24 ++++++++++++++----------
+ src/findwin.h             | 29 ++++++++++++++++-------------
  src/qscint/CMakeLists.txt | 35 +++++++++++++++++++++++++++++++++++
- 4 files changed, 74 insertions(+), 1 deletion(-)
+ 4 files changed, 96 insertions(+), 23 deletions(-)
  create mode 100644 CMakeLists.txt
  create mode 100644 src/qscint/CMakeLists.txt
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 new file mode 100644
-index 0000000..09769f8
+index 0000000..4dd3768
 --- /dev/null
 +++ b/CMakeLists.txt
 @@ -0,0 +1,31 @@
@@ -36,12 +36,12 @@ index 0000000..09769f8
 +aux_source_directory(${PROJECT_SOURCE_DIR}/src/cceditor SRC)
 +
 +add_executable(${PROJECT_NAME} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
-+target_include_directories(${PROJECT_NAME} PRIVATE 
++target_include_directories(${PROJECT_NAME} PRIVATE
 +${PROJECT_SOURCE_DIR}/src
 +${PROJECT_SOURCE_DIR}/src/cceditor
 +
 +${PROJECT_SOURCE_DIR}/src/qscint/src
-+${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci 
++${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci
 +${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
 +${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
 +${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
@@ -51,49 +51,83 @@ index 0000000..09769f8
 +target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
 \ No newline at end of file
 diff --git a/src/findcmpwin.h b/src/findcmpwin.h
-index 4432e85..4f53fca 100755
+index 4432e85..70deee3 100755
 --- a/src/findcmpwin.h
 +++ b/src/findcmpwin.h
-@@ -7,10 +7,14 @@
- #include "ui_findcmpwin.h"
- #include "rcglobal.h"
+@@ -4,16 +4,20 @@
+ #include <QTabWidget>
+ #include <QVector>
  
+-#include "ui_findcmpwin.h"
+-#include "rcglobal.h"
+-
+-enum FindTabIndex {
+-	FIND_TAB,
+-	REPLACE_TAB,
+-};
+-class ScintillaEditView;
+-
+-//struct FindCmpRecord {
++#include "ui_findcmpwin.h"
++#include "rcglobal.h"
++
 +#ifndef DEF_FIND_TAB_INDEX
 +#define DEF_FIND_TAB_INDEX
 +
- enum FindTabIndex {
- 	FIND_TAB,
- 	REPLACE_TAB,
- };
++enum FindTabIndex {
++	FIND_TAB,
++	REPLACE_TAB,
++};
 +#endif
- class ScintillaEditView;
- 
- //struct FindCmpRecord {
++class ScintillaEditView;
++
++//struct FindCmpRecord {
+ //	int lineNum;
+ //	int pos;
+ //	QString lineContents;
 diff --git a/src/findwin.h b/src/findwin.h
-index c32a7d4..8633ce6 100755
+index c32a7d4..be82deb 100755
 --- a/src/findwin.h
 +++ b/src/findwin.h
-@@ -6,13 +6,16 @@
- 
- 
- #include "ui_findwin.h"
+@@ -3,19 +3,22 @@
+ #include <QMainWindow>
+ #include <QTabWidget>
+ #include <QVector>
 -
+-
+-#include "ui_findwin.h"
+-
+-enum FindTabIndex {
+-	FIND_TAB =0,
+-	REPLACE_TAB,
+-	DIR_FIND_TAB,
+-	MARK_TAB,
+-};
+-class ScintillaEditView;
+-class QsciScintilla;
+-
++
++
++#include "ui_findwin.h"
 +#ifndef DEF_FIND_TAB_INDEX
 +#define DEF_FIND_TAB_INDEX
- enum FindTabIndex {
- 	FIND_TAB =0,
- 	REPLACE_TAB,
- 	DIR_FIND_TAB,
- 	MARK_TAB,
- };
++enum FindTabIndex {
++	FIND_TAB =0,
++	REPLACE_TAB,
++	DIR_FIND_TAB,
++	MARK_TAB,
++};
 +#endif
 +
- class ScintillaEditView;
- class QsciScintilla;
- 
++class ScintillaEditView;
++class QsciScintilla;
++
+ struct FindRecord {
+ 	int lineNum;
+ 	int lineStartPos; //行开始位置
 diff --git a/src/qscint/CMakeLists.txt b/src/qscint/CMakeLists.txt
 new file mode 100644
-index 0000000..6987a2f
+index 0000000..f132dc6
 --- /dev/null
 +++ b/src/qscint/CMakeLists.txt
 @@ -0,0 +1,35 @@
@@ -127,7 +161,7 @@ index 0000000..6987a2f
 +
 +target_include_directories(${PROJECT_NAME} PUBLIC
 +${PROJECT_SOURCE_DIR}/src
-+${PROJECT_SOURCE_DIR}/src/Qsci 
++${PROJECT_SOURCE_DIR}/src/Qsci
 +${PROJECT_SOURCE_DIR}/scintilla/src
 +${PROJECT_SOURCE_DIR}/scintilla/include)
 +
@@ -136,10 +170,10 @@ index 0000000..6987a2f
 2.20.1
 
 
-From c41bc435255a1e56615e7d8ab608c84d7e9772a2 Mon Sep 17 00:00:00 2001
+From af0785b1f7060ac535900f159173153d2028d1a7 Mon Sep 17 00:00:00 2001
 From: coconil <coconil@foxmail.com>
 Date: Tue, 31 Jan 2023 22:49:55 +0800
-Subject: [PATCH 2/4] add cmake build doc
+Subject: [PATCH 2/6] add cmake build doc
 
 ---
  cmake.md | 8 ++++++++
@@ -148,7 +182,7 @@ Subject: [PATCH 2/4] add cmake build doc
 
 diff --git a/cmake.md b/cmake.md
 new file mode 100644
-index 0000000..8e9b440
+index 0000000..b5f9785
 --- /dev/null
 +++ b/cmake.md
 @@ -0,0 +1,8 @@
@@ -159,16 +193,16 @@ index 0000000..8e9b440
 +1. 安装编译环境 `sudo apt-get install g++ make cmake`
 +1. 安装qt工具和库 `sudo apt-get install qtbase5-dev qt5-qmake qtbase5-dev-tools libqt5printsupport5 libqt5xmlpatterns5-dev `
 +1. 配置 `cmake path_to_src`
-+1. 编译 `make -j` 
++1. 编译 `make -j`
 \ No newline at end of file
 -- 
 2.20.1
 
 
-From 6115c0a6d3addc6e22504b2a71db67b412c8ef97 Mon Sep 17 00:00:00 2001
+From 44ef7d609c77688c46a0334bc08d863114b46998 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:04:05 +0800
-Subject: [PATCH 3/4] =?UTF-8?q?=20repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 3/6] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20deb?=
 MIME-Version: 1.0
@@ -176,16 +210,16 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 ---
- .gitignore                           |  30 +++
+ .gitignore                           |  36 ++-
  CMakeLists.txt                       |  34 ++-
  Makefile                             |  61 +++++
  assets/spark.png                     | Bin 0 -> 4959 bytes
  cmake/DebPackageConfig.cmake         | 323 +++++++++++++++++++++++++++
  cmake/SparkDesktopMacros.cmake       |  35 +++
  cmake/SparkInstallMacrosConfig.cmake | 131 +++++++++++
- cmake/package-deb.descript           |  46 ++++
+ cmake/package-deb.descript           |  45 ++++
  cmake/spark-desktop.desktop.in       |  12 +
- 9 files changed, 670 insertions(+), 2 deletions(-)
+ 9 files changed, 672 insertions(+), 5 deletions(-)
  create mode 100644 Makefile
  create mode 100644 assets/spark.png
  create mode 100644 cmake/DebPackageConfig.cmake
@@ -195,13 +229,19 @@ Content-Transfer-Encoding: 8bit
  create mode 100644 cmake/spark-desktop.desktop.in
 
 diff --git a/.gitignore b/.gitignore
-index 8d723bc..7adfee2 100644
+index 8d723bc..30bcfd5 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -396,3 +396,33 @@ FodyWeavers.xsd
- 
- # JetBrains Rider
- *.sln.iml
+@@ -393,6 +393,36 @@ FodyWeavers.xsd
+ *.msix
+ *.msm
+ *.msp
+-
+-# JetBrains Rider
+-*.sln.iml
++
++# JetBrains Rider
++*.sln.iml
 +
 +
 +
@@ -233,7 +273,7 @@ index 8d723bc..7adfee2 100644
 +# End of https://www.toptal.com/developers/gitignore/api/cmake
 +!/Makefile
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 09769f8..52efcf6 100644
+index 4dd3768..a48badb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,5 +1,5 @@
@@ -257,7 +297,7 @@ index 09769f8..52efcf6 100644
 +    # 内容默认应用名称: Name= 应与项目名称相同
 +    spark_desktop_macros(
 +        # 应用名称: Name=
-+        ${PROJECT_NAME} 
++        ${PROJECT_NAME}
 +        # 应用名称: Name[zh_CN]=
 +        "Notepad--"
 +        # 应用说明: Comment=
@@ -282,7 +322,7 @@ index 09769f8..52efcf6 100644
 +endif(CMAKE_HOST_UNIX)
 diff --git a/Makefile b/Makefile
 new file mode 100644
-index 0000000..c652e21
+index 0000000..43e849f
 --- /dev/null
 +++ b/Makefile
 @@ -0,0 +1,61 @@
@@ -306,7 +346,7 @@ index 0000000..c652e21
 +run: all
 +	exec $(shell find build/ -maxdepth 1 -type f -executable | grep $(PROJECT_NAME))
 +
-+debug: 
++debug:
 +	mkdir -p build
 +	cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
 +	cd build && make -j$(CPUS)
@@ -453,14 +493,14 @@ HcmV?d00001
 
 diff --git a/cmake/DebPackageConfig.cmake b/cmake/DebPackageConfig.cmake
 new file mode 100644
-index 0000000..59950ec
+index 0000000..cfba051
 --- /dev/null
 +++ b/cmake/DebPackageConfig.cmake
 @@ -0,0 +1,323 @@
 +cmake_minimum_required(VERSION 3.0.0)
 +
 +# function(add_deb_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_MAINTAINER PACKAGE_EMAIL PACKAGE_SHORT_DESCRIPTION PACKAGE_LONG_DESCRIPTION)
-+    
++
 +# endfunction(add_deb_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_MAINTAINER PACKAGE_EMAIL PACKAGE_SHORT_DESCRIPTION PACKAGE_LONG_DESCRIPTION)
 +
 +# if(add_deb_package    VALUE) set(Package    ${VALUE} PARENT_SCOPE) endif(add_deb_package    VALUE)
@@ -578,7 +618,7 @@ index 0000000..59950ec
 +        else()
 +            set(CPACK_DEBIAN_PACKAGE_VERSION "${_IN_VAL}" PARENT_SCOPE)
 +        endif(_IN_VAL STREQUAL "auto")
-+        
++
 +        message("--> 软件版本: ${_IN_VAL}")
 +    endif(_Version EQUAL "0")
 +
@@ -590,7 +630,7 @@ index 0000000..59950ec
 +
 +    find_str("${_IN_KEY}" "Architecture" _Architecture)
 +    if(_Architecture EQUAL "0")
-+        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_IN_VAL}" PARENT_SCOPE)    
++        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_IN_VAL}" PARENT_SCOPE)
 +        if(_IN_VAL STREQUAL "auto")
 +            execute_process(
 +                COMMAND dpkg --print-architecture
@@ -601,7 +641,7 @@ index 0000000..59950ec
 +        endif(_IN_VAL STREQUAL "auto")
 +        message("--> 软件架构: ${_IN_VAL}")
 +    endif(_Architecture EQUAL "0")
-+    
++
 +    find_str("${_IN_KEY}" "Priority" _Priority)
 +    if(_Priority EQUAL "0")
 +        set(CPACK_DEBIAN_PACKAGE_PRIORITY "${_IN_VAL}" PARENT_SCOPE)
@@ -631,7 +671,7 @@ index 0000000..59950ec
 +        set(CPACK_DEBIAN_PACKAGE_RECOMMENDS "${_IN_VAL}" PARENT_SCOPE)
 +        message("--> 软件建议: ${_IN_VAL}")
 +    endif(_Recommends EQUAL "0")
-+    
++
 +endfunction(set_package_vars _IN_KEY _IN_VAL)
 +
 +# 定义一个自定义(add_package_descript)函数
@@ -647,7 +687,7 @@ index 0000000..59950ec
 +        message(FATAL_ERROR "!! Not Found Path: ${PACKAGE_DES_PATH}")
 +        return()
 +    endif(EXISTS ${IN_DES})
-+    
++
 +    file(READ ${PACKAGE_DES_PATH} DES_CONTENT)
 +    trim_str("${DES_CONTENT}" DES_CONTENT)
 +
@@ -721,7 +761,7 @@ index 0000000..59950ec
 +        string(TIMESTAMP BUILD_TIME "%Y%m%d")
 +        set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_DEBIAN_PACKAGE_VERSION}-${BUILD_TIME}")
 +    endif("${CalVer}" STREQUAL "true")
-+    
++
 +
 +
 +    ##################### deb file name #####################
@@ -729,7 +769,7 @@ index 0000000..59950ec
 +    set(_Version      "${CPACK_DEBIAN_PACKAGE_VERSION}")
 +    set(_Architecture "${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 +
-+    set(_DebFileName 
++    set(_DebFileName
 +        "${_Package}_${_Version}_${_Architecture}${PACKAGE_SUFFIX}.deb"
 +    )
 +    set(CPACK_DEBIAN_FILE_NAME            ${_DebFileName})
@@ -824,7 +864,7 @@ index 0000000..223ac6b
 \ No newline at end of file
 diff --git a/cmake/SparkInstallMacrosConfig.cmake b/cmake/SparkInstallMacrosConfig.cmake
 new file mode 100644
-index 0000000..52d9664
+index 0000000..1f8939b
 --- /dev/null
 +++ b/cmake/SparkInstallMacrosConfig.cmake
 @@ -0,0 +1,131 @@
@@ -834,7 +874,7 @@ index 0000000..52d9664
 +# 可接受的值为: 安装路径 目标A
 +# 可接受的值为: 安装路径 目标A 目标B 目标C...
 +macro(spark_install_target INSTALL_TARGET_DIR INSTALL_TARGETS)
-+    install(TARGETS 
++    install(TARGETS
 +        ${INSTALL_TARGETS} ${ARGN}
 +        DESTINATION ${INSTALL_TARGET_DIR})
 +endmacro(spark_install_target INSTALL_TARGET_DIR INSTALL_TARGETS)
@@ -844,7 +884,7 @@ index 0000000..52d9664
 +# 可接受的值为: 安装路径 文件A
 +# 可接受的值为: 安装路径 文件A 文件B 文件C...
 +macro(spark_install_file INSTALL_FILE_DIR INSTALL_FILE)
-+    install(FILES 
++    install(FILES
 +        ${INSTALL_FILE} ${ARGN}
 +        DESTINATION ${INSTALL_FILE_DIR})
 +endmacro(spark_install_file INSTALL_FILE_DIR INSTALL_FILE)
@@ -854,7 +894,7 @@ index 0000000..52d9664
 +# 可接受的值为: 安装路径 文件A
 +# 可接受的值为: 安装路径 文件A 文件B 文件C...
 +macro(spark_install_program INSTALL_PROGRAM_DIR INSTALL_PROGRAM)
-+    install(PROGRAMS 
++    install(PROGRAMS
 +        ${INSTALL_PROGRAM} ${ARGN}
 +        DESTINATION ${INSTALL_PROGRAM_DIR})
 +endmacro(spark_install_program INSTALL_PROGRAM_DIR INSTALL_PROGRAM)
@@ -904,7 +944,7 @@ index 0000000..52d9664
 +                # spark_install_file(${INSTALL_DIRECTORY_DIR} ${item})
 +            endif(IS_DIRECTORY ${item})
 +        endforeach(item IN LISTS INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST)
-+        
++
 +        # message(FATAL_ERROR " directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST}")
 +        # message(FATAL_ERROR " directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST_LENGTH}")
 +
@@ -949,7 +989,7 @@ index 0000000..52d9664
 +
 +        # include(GNUInstallDirs)
 +        set(SPARK_INSTALL_CHANGE_LOG_DIR "/usr/share/doc/${PROJECT_NAME}/")
-+        install(FILES 
++        install(FILES
 +            ${CMAKE_BINARY_DIR}/changelog.gz
 +            debian/copyright
 +
@@ -961,10 +1001,10 @@ index 0000000..52d9664
 +endmacro(spark_install_changelog CHANGE_LOG_FILE)
 diff --git a/cmake/package-deb.descript b/cmake/package-deb.descript
 new file mode 100644
-index 0000000..cfd1e7c
+index 0000000..be0fa83
 --- /dev/null
 +++ b/cmake/package-deb.descript
-@@ -0,0 +1,46 @@
+@@ -0,0 +1,45 @@
 +# 注释行(使用方式)
 +# find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
 +# add_package_descript(cmake/package-deb.descript)
@@ -999,18 +1039,17 @@ index 0000000..cfd1e7c
 +# 软件包优先级[required|important|stantard|optional|extra]
 +Priority: optional
 +# 软件包依赖
-+Depends: 
++Depends:
 +# 软件包维护者(组织或个人)
 +Maintainer: 尹作为 <757210198@qq.com>
 +# 软件包主页
 +Homepage: https://gitee.com/cxasm/notepad--
 +# 软件包建议
-+Recommends: 
++Recommends:
 +# 软件包描述信息
 +Descrition: Notepad--是一个国产跨平台、简单的文本编辑器。
 + Notepad--是一个国产跨平台、简单的文本编辑器，是替换notepad++的一种选择。
 + 其内置强大的代码对比功能，让你丢掉付费的beyond compare。
-+
 diff --git a/cmake/spark-desktop.desktop.in b/cmake/spark-desktop.desktop.in
 new file mode 100644
 index 0000000..e7c3b18
@@ -1034,10 +1073,10 @@ index 0000000..e7c3b18
 2.20.1
 
 
-From 8dd955e0995e22d1c9cec7a8127cc9d08f593941 Mon Sep 17 00:00:00 2001
+From b2c247073dfaf9539af26cb5372f8ba16c297cdc Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:09:49 +0800
-Subject: [PATCH 4/4] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 4/6] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20Appimage?=
 MIME-Version: 1.0
@@ -1054,14 +1093,14 @@ Content-Transfer-Encoding: 8bit
  create mode 100644 cmake/spark-appimage.desktop.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 52efcf6..c1d2c59 100644
+index a48badb..364adaa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -54,6 +54,14 @@ if(CMAKE_HOST_UNIX)
      spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
      spark_install_target(/usr/bin/ ${PROJECT_NAME})
  
-+    
++
 +    # 1. 在顶层构建中导入 Appimage 的构建
 +    include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
 +    add_appimage_icon(assets/spark.png)       # 添加到 Appimage 中的默认的图标
@@ -1073,7 +1112,7 @@ index 52efcf6..c1d2c59 100644
      find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
      add_package_descript(cmake/package-deb.descript)
 diff --git a/Makefile b/Makefile
-index c652e21..35bf326 100644
+index 43e849f..b71b27f 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -59,3 +59,26 @@ enter-qdebug-mode:
@@ -1090,7 +1129,7 @@ index c652e21..35bf326 100644
 +# 或指定你所想存放克隆项目的位置
 +BUNDLE_LINUXDEPLOYQT := $(shell pwd)/build/bundle-linuxdeployqt
 +
-+download-bundle-linuxdeploytools: 
++download-bundle-linuxdeploytools:
 +	-git clone https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git $(BUNDLE_LINUXDEPLOYQT)
 +
 +LINUXDEPLOYQT := "$(BUNDLE_LINUXDEPLOYQT)/linuxdeployqt-continuous-x86_64.AppImage"
@@ -1105,7 +1144,7 @@ index c652e21..35bf326 100644
 +	cd build && make appimage
 diff --git a/cmake/SparkAppimageConfig.cmake b/cmake/SparkAppimageConfig.cmake
 new file mode 100644
-index 0000000..99fc9d6
+index 0000000..7463a48
 --- /dev/null
 +++ b/cmake/SparkAppimageConfig.cmake
 @@ -0,0 +1,139 @@
@@ -1183,7 +1222,7 @@ index 0000000..99fc9d6
 +        file(REAL_PATH ${APPIMAGETOOL} APPIMAGETOOL_REAL_PATH)
 +    endif(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
 +    message("AppImage> Found APPIMAGETOOL Variable: ${LINUXDEPLOYQT_REAL_PATH}")
-+    
++
 +    # do add_custome_target
 +    make_directory(${APPIMAGE_OUTPUT})
 +    target_linuxdeploy()
@@ -1191,8 +1230,8 @@ index 0000000..99fc9d6
 +endfunction(add_appimage)
 +
 +function(add_appimage_desktop)
-+    configure_file(cmake/spark-appimage.desktop.in 
-+        ${CMAKE_BINARY_DIR}/spark-appimage.desktop @ONLY) 
++    configure_file(cmake/spark-appimage.desktop.in
++        ${CMAKE_BINARY_DIR}/spark-appimage.desktop @ONLY)
 +endfunction(add_appimage_desktop)
 +
 +function(add_appimage_icon _ICON_PATH)
@@ -1202,11 +1241,11 @@ index 0000000..99fc9d6
 +    else()
 +        file(COPY_FILE ${_ICON_PATH} ${CMAKE_BINARY_DIR}/spark-appimage.png)
 +    endif(CMAKE_VERSION VERSION_LESS 3.21)
-+endfunction(add_appimage_icon _ICON_PATH) 
++endfunction(add_appimage_icon _ICON_PATH)
 +
 +
 +
-+# 如果glic>=2.27,你就需要加上参数 -unsupported-allow-new-glibc (意思就是不再低版本发行版使用了) 
++# 如果glic>=2.27,你就需要加上参数 -unsupported-allow-new-glibc (意思就是不再低版本发行版使用了)
 +# 或 -unsupported-bundle-everything（大概的意思是尝试兼容，实际测试，到其他发行版直接用不了了，有可能是发行版的原因，还是建议用前者，虽然放弃了低版本）
 +
 +# -unsupported-bundle-everything
@@ -1235,7 +1274,7 @@ index 0000000..99fc9d6
 +# 或指定你所想存放克隆项目的位置
 +# BUNDLE_LINUXDEPLOYQT := $(shell pwd)/build/bundle-linuxdeployqt
 +
-+# download-bundle-linuxdeploytools: 
++# download-bundle-linuxdeploytools:
 +# 	-git clone https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git $(BUNDLE_LINUXDEPLOYQT)
 +
 +# LINUXDEPLOYQT := "$(BUNDLE_LINUXDEPLOYQT)/linuxdeployqt-continuous-x86_64.AppImage"
@@ -1264,6 +1303,81 @@ index 0000000..0ca2577
 +Type=Application
 +Categories=@APP_CATEGORIES@
 +MimeType=text/plain
+-- 
+2.20.1
+
+
+From bee93666ed61aa5f605ccf98aa79585708ea098a Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Thu, 2 Feb 2023 13:58:29 +0800
+Subject: [PATCH 5/6] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20=E6=B7=BB?=
+ =?UTF-8?q?=E5=8A=A0=E6=96=87=E6=9C=AC=E6=96=87=E4=BB=B6=E7=9A=84=E7=9B=B8?=
+ =?UTF-8?q?=E5=85=B3=20MimeType?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ cmake/spark-appimage.desktop.in | 2 +-
+ cmake/spark-desktop.desktop.in  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/cmake/spark-appimage.desktop.in b/cmake/spark-appimage.desktop.in
+index 0ca2577..70fc6b9 100644
+--- a/cmake/spark-appimage.desktop.in
++++ b/cmake/spark-appimage.desktop.in
+@@ -7,4 +7,4 @@ Comment=@APP_COMMENT@
+ Terminal=true
+ Type=Application
+ Categories=@APP_CATEGORIES@
+-MimeType=text/plain
++MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-patch;text/x-adasrc;text/x-chdr;text/x-csrc;text/css;application/x-desktop;text/x-patch;text/x-fortran;text/html;text/x-java;text/x-tex;text/x-makefile;text/x-objcsrc;text/x-pascal;application/x-perl;application/x-perl;application/x-php;text/vnd.wap.wml;text/x-python;application/x-ruby;text/sgml;application/xml;model/vrml;image/svg+xml;application/json;
+diff --git a/cmake/spark-desktop.desktop.in b/cmake/spark-desktop.desktop.in
+index e7c3b18..e33c74e 100644
+--- a/cmake/spark-desktop.desktop.in
++++ b/cmake/spark-desktop.desktop.in
+@@ -7,6 +7,6 @@ Type=@APP_TYPE@
+ Exec=@APP_EXECUTE_PATH@
+ Icon=@APP_EXECUTE_ICON_PATH@
+ Categories=@APP_CATEGORIES@
+-MimeType=text/plain
++MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-patch;text/x-adasrc;text/x-chdr;text/x-csrc;text/css;application/x-desktop;text/x-patch;text/x-fortran;text/html;text/x-java;text/x-tex;text/x-makefile;text/x-objcsrc;text/x-pascal;application/x-perl;application/x-perl;application/x-php;text/vnd.wap.wml;text/x-python;application/x-ruby;text/sgml;application/xml;model/vrml;image/svg+xml;application/json;
+ 
+ # Generated from the DesktopGenerater component of the z-Tools toolkit
+\ No newline at end of file
+-- 
+2.20.1
+
+
+From d4d07795f09d33b4995e34c1f86a03c678025f96 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Thu, 2 Feb 2023 14:00:54 +0800
+Subject: [PATCH 6/6] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
+ =?UTF-8?q?=E4=BB=B6=E6=B7=BB=E5=8A=A0=20%F=20=E5=8F=82=E6=95=B0=EF=BC=8C?=
+ =?UTF-8?q?=E4=BB=A5=E4=BF=9D=E8=AF=81=E5=8F=AF=E6=AD=A3=E7=A1=AE=E4=BC=A0?=
+ =?UTF-8?q?=E5=85=A5=E5=8F=82=E6=95=B0?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 364adaa..fed2a51 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,7 +44,8 @@ if(CMAKE_HOST_UNIX)
+         # 应用类型: Type=
+         "Application"
+         # 执行程序: Exec=
+-        "notepad--"
++        # 有关此 %F 参数可查看: https://gitee.com/zinface/z-tools/blob/desktop-dev/src/DesktopGenerater/desktopexecparamdialog.cpp
++        "notepad-- %F"
+         # 图标路径: Icon=
+         "/usr/share/notepad--/icons/spark.png"
+         # 应用分类: Category=
 -- 
 2.20.1
 
