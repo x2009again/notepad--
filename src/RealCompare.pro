@@ -3,7 +3,7 @@ LANGUAGE = C++
 
 TARGET = Notepad--
 
-CONFIG	+= qt warn_on Debug
+CONFIG	+= qt warn_on
 
 QT += core gui widgets concurrent network xmlpatterns
 
@@ -33,7 +33,7 @@ INCLUDEPATH += cceditor
 
 TRANSLATIONS += realcompare_zh.ts
 
- if(contains(QMAKE_HOST.arch, x86_64)){
+ if(contains(QMAKE_HOST.arch, x86_64|loongarch64)){
     CONFIG(Debug, Debug|Release){
         DESTDIR = x64/Debug
 		LIBS	+= -Lx64/Debug
