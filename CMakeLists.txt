@@ -70,7 +70,8 @@ if(CMAKE_HOST_UNIX)
         # 应用类型: Type=
         "Application"
         # 执行程序: Exec=
-        "notepad--"
+        # 有关此 %F 参数可查看: https://gitee.com/zinface/z-tools/blob/desktop-dev/src/DesktopGenerater/desktopexecparamdialog.cpp
+        "notepad-- %F"
         # 图标路径: Icon=
         "/usr/share/notepad--/icons/spark.png"
         # 应用分类: Category=
