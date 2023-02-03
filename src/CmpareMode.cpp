@@ -2,6 +2,7 @@
 #include "Encode.h"
 #include "rcglobal.h"
 
+
 #include <QFile>
 #include <QFileDevice> 
 #include <QVector>
@@ -87,12 +88,22 @@ bool CmpareMode::recognizeTextCode(QByteArray & text, LineFileInfo &lineInfo, QS
 	return result;
 }
 
-
-CODE_ID CmpareMode::getTextFileEncodeType(uchar* fileFpr, int fileLength, QString filePath)
+//LE编码要特殊对待。
+bool CmpareMode::isUnicodeLeBomFile(uchar* fileFpr, int fileLength)
 {
-
 	if (fileLength >= 2 && fileFpr[0] == 0xFF && fileFpr[1] == 0xFE)
 	{
+		return true;
+	}
+	return false;
+}
+//isCheckHead:是否检测头。只有文件开头，才有。如果是分块加载，中间打开的文件，则不需要检测。默认检测
+CODE_ID CmpareMode::getTextFileEncodeType(uchar* fileFpr, int fileLength, QString filePath, bool isCheckHead)
+{
+	if (isCheckHead)
+	{
+		if (fileLength >= 2 && fileFpr[0] == 0xFF && fileFpr[1] == 0xFE)
+		{
 		return CODE_ID::UNICODE_LE; //skip 2
 	}
 	else if (fileLength >= 2 && fileFpr[0] == 0xFE && fileFpr[1] == 0xFF)
@@ -103,7 +114,7 @@ CODE_ID CmpareMode::getTextFileEncodeType(uchar* fileFpr, int fileLength, QStrin
 	{
 		return CODE_ID::UTF8_BOM; //skip 3 with BOM
 	}
-
+	}
 	//走到这里说明没有文件头BOM，进行全盘文件扫描
 	if (!filePath.isEmpty())
 	{
@@ -111,6 +122,83 @@ CODE_ID CmpareMode::getTextFileEncodeType(uchar* fileFpr, int fileLength, QStrin
 	}
 	
 	return CODE_ID::UNKOWN;
+}
+
+//20230201新增:把Unicode_LE的字节流，转换为QString 发现如果是CODE_ID::UNICODE_LE，\r\n变成了\r\0\n\0，读取readLine遇到\n就结束了，而且toUnicode也会变成乱码失败
+//所以UNICODE_LE需要单独处理。该函数只处理Unicode_LE编码文件，事先一定要检查文件编码
+//返回字符数，不是编码类型，注意是字符数，不是bytes
+
+//这里有个问题，当初读取文件分块是，是无条件读取到\n就结束，则可能最后不是\n\0，而是\n。这种情况要特殊处理。标记为A。
+//是否跳过前面的LE头。默认不跳过。只有文件块开头第一块，才需要跳过。
+bool CmpareMode::tranUnicodeLeToUtf8Bytes(uchar* fileFpr, const int fileLength, QString &outUtf8Bytes, bool isSkipHead)
+{
+	int lineNums = 0;
+	CODE_ID code = CODE_ID::UNICODE_LE;
+
+	int lineStartPos = (isSkipHead ? 2:0); //uicode_le前面有2个特殊标识，故跳过2
+
+	//获取一行在文件中
+	auto getOneLineFromFile = [fileFpr](int& startPos, const int fileLength, QByteArray& ret)->bool {
+
+		if (startPos < fileLength)
+		{
+			ret.clear();
+
+			int lineLens = 0;
+
+			bool isFindLine = false;
+
+			for (int i = startPos; i < fileLength; ++i, ++lineLens)
+			{
+				//遇到换行符号
+				if (fileFpr[i] == 0x0A)
+				{
+					//lineLens需要加2，因为当前这个没有加，而且后面还有一个\0,这是le格式规定的。
+					//特殊对待A。如果后续还要一个\0，及长度足够，则+2，否则只能加1
+					if (startPos + lineLens + 2 < fileLength)
+					{
+						ret.append((char*)(fileFpr + startPos), lineLens + 2);
+						startPos += lineLens + 2;
+					}
+					else
+					{
+						//这里就是特殊情况，尾部后面没有\0，只能前进1个。
+						ret.append((char*)(fileFpr + startPos), lineLens + 1);
+						//必须手动补上一个\0。避免格式残缺
+						ret.append('\0');
+						startPos += lineLens + 1;
+					}
+					isFindLine = true;
+					break;
+				}
+			}
+
+			//没有找到一行
+			if (!isFindLine)
+			{
+				//最后一行，可能没有带\r\0直接返回
+				ret.append((char*)(fileFpr + startPos), fileLength - startPos);
+
+				startPos = fileLength;
+			}
+
+			return true;
+
+		}
+
+		return false;
+	};
+
+	QByteArray line;
+
+	QByteArray tempUtf8Bytes;
+	tempUtf8Bytes.reserve(fileLength+1);
+
+	while (getOneLineFromFile(lineStartPos, fileLength, line)) {
+		tempUtf8Bytes.append(line);
+	}
+
+	return Encode::tranStrToUNICODE(code, tempUtf8Bytes.data(), tempUtf8Bytes.count(), outUtf8Bytes);
 }
 
 //20210802：发现如果是CODE_ID::UNICODE_LE，\r\n变成了\r\0\n\0，读取readLine遇到\n就结束了，而且toUnicode也会变成乱码失败
@@ -141,9 +229,21 @@ quint32 CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
 				//遇到换行符号
 				if (m_fileFpr[i] == 0x0A)
 				{
+					if (startPos + lineLens + 2 < fileLength)
+					{
 					//lineLens需要加2，因为当前这个没有加，而且后面还有一个\0,这是le格式规定的
 					ret.append((char*)(m_fileFpr + startPos), lineLens + 2);
 					startPos += lineLens + 2;
+					}
+					else
+					{
+						//这里就是特殊情况，尾部后面没有\0，只能前进1个。
+						//其实是容错，可能最后一个没有\0
+						ret.append((char*)(m_fileFpr + startPos), lineLens + 1);
+						//必须手动补上一个\0。避免格式残缺
+						ret.append('\0');
+						startPos += lineLens + 1;
+					}
 					isFindLine = true;
 					break;
 				}
@@ -952,7 +1052,8 @@ CODE_ID CmpareMode::scanFileRealCode(QString filePath)
 
 		++lineNums;
 
-		if (lineNums >= 1000)
+		//最多扫描200行，加块速度。速度与精确性的权衡
+		if (lineNums >= 200)
 		{
 			break;
 		}

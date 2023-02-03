@@ -8,9 +8,9 @@
 #if defined(Q_OS_WIN)
 QFont QsciLexerText::s_defaultTxtFont(u8"宋体", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
-    QFont QsciLexerText::s_defaultTxtFont("STSong",18);
+    QFont QsciLexerText::s_defaultTxtFont("STSong",14);
 #else
-    QFont QsciLexerText::s_defaultTxtFont("Courier 10 Pitch", 14);
+    QFont QsciLexerText::s_defaultTxtFont("Courier 10 Pitch", 12);
 #endif
 
 
@@ -83,9 +83,9 @@ QFont QsciLexerText::defaultFont(int style) const
 		break;
 	case Ascii:
 #if defined(Q_OS_WIN)
-		return QFont("Courier New", 14);
+		return QFont("Courier New", 12);
 #elif defined(Q_OS_MAC)
-		return QFont("Courier New", 18);
+		return QFont("Courier New", 14);
 #else
 		return s_defaultTxtFont;
 #endif

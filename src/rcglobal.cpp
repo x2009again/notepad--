@@ -20,6 +20,38 @@ QString getUserLangDirPath()
 	return s_userLangDirPath;
 }
 
+const int M_SIZE = 1024 * 1024;
+const int G_SIZE = 1024 * 1024 * 1024;
+
+//把字节大小文件，转换为M 或 G 单位
+QString tranFileSize(qint64 fileSize)
+{
+	float num = 0.0f;
+	QString unit;
+
+	if (fileSize >= G_SIZE)
+	{
+		num = double(fileSize) / G_SIZE;
+		unit = "GB";
+	}
+	else if (fileSize >= M_SIZE)
+	{
+		num = double(fileSize) / M_SIZE;
+		unit = "MB";
+	}
+	else if (fileSize > 1024)
+	{
+		num = float(fileSize) / 1024;
+		unit = "KB";
+	}
+	else
+	{
+		return QString("%1").arg(fileSize);
+	}
+	
+	return QString("%1 %2").arg(num, 0, 'f' , 2).arg(unit);
+}
+
 void showFileInExplorer(QString path)
 {
 	QString cmd;

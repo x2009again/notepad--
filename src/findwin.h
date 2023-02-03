@@ -63,6 +63,8 @@ public:
 	void setCurrentTab(FindTabIndex index);
 	void setTabWidget(QTabWidget * editTabWidget);
 	void setFindText(QString & text);
+	void setReplaceFindText(QString& text);
+	void setDirFindText(QString& text);
 	void disableReplace();
 	void setFindHistory(QList<QString>* findHistory);
 	int markAllWord(QString& word);

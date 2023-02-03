@@ -23,6 +23,11 @@ static QString FILELISTSHOW = "showfilelist"; //文件列表框是否显示
 static QString TOOLBARSHOW = "showbar"; //是否显示工具栏
 static QString FINDWINSIZE = "findwinsize";//保存查找框的大小。150%放大时界面永久。保留避免每次手动调整
 static QString SHOWWEBADDR = "showweb";//高亮web地址，双击网页打开
+static QString FIND_RESULT_FONT_SIZE = "frfs";//查找结果的默认字体大小，默认为14
+
+
+//下面这个是winpos.ini中的key，避免单个文件太大，拖慢启动速度
+static QString BATCH_FIND_REPLACE_POS = "bfpos";//批量查找替换窗口的大小
 
 class NddSetting
 {
@@ -49,11 +54,18 @@ public:
 
 	static void close();
 
+	static QByteArray getWinPos(QString key);
+
+	static void updataWinPos(QString key, QByteArray& value);
+
+	
+
 	static bool isDbExist()
 	{
 		return s_isExistDb;
 	}
-
+private:
+	static void winPosInit();
 private:
 
 	static bool s_isExistDb;
@@ -61,4 +73,6 @@ private:
 	static int s_reference;
 
 	static QSettings* s_nddSet;
+
+	static QSettings* s_winPosSet;
 };

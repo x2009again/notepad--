@@ -4,6 +4,7 @@
 #include "rcglobal.h"
 #include "ccnotepad.h"
 #include "styleset.h"
+#include "extlexermanager.h"
 
 #include <SciLexer.h>
 #include <qscilexer.h>
@@ -917,6 +918,12 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
 		ui.keywordTe->setPlainText(keyword);
 		ui.motherLangCb->setCurrentIndex(0);
 
+		//设置关联文件项
+		QString langName = item->text();
+		QStringList extList;
+		ExtLexerManager::getInstance()->getExtlistByLangTag(langName, extList);
+		ui.extFileType->setText(extList.join(','));
+
 		for (int i = 0; i <= 255; ++i)
 		{
 			QString desc = pLexer->description(i);
@@ -941,7 +948,7 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
 
 	m_isStyleChange = false;
 
-	ui.extFileType->clear();
+	//ui.extFileType->clear();
 	ui.motherLangCb->setCurrentIndex(0);
 }
 

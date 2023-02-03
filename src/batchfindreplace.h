@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QTabWidget>
+#include <QCloseEvent>
 #include "ui_batchfindreplace.h"
 
 class CCNotePad;
@@ -14,6 +15,9 @@ public:
 	BatchFindReplace(QWidget *parent = nullptr);
 	virtual ~BatchFindReplace();
 	void setTabWidget(QTabWidget* editTabWidget);
+
+protected:
+	void closeEvent(QCloseEvent* event);
 
 private slots:
 	void on_freshBtClick();

@@ -31,9 +31,9 @@
 #include <qt_windows.h>
 const ULONG_PTR CUSTOM_TYPE = 10000;
 const ULONG_PTR OPEN_NOTEPAD_TYPE = 10001;
-bool s_isAdminAuth = false;
 #endif
 
+bool s_isAdminAuth = false;
 const QString c_strTitle = "Ndd";
 
 
@@ -352,8 +352,20 @@ drop_old:
 
 	if (arguments.size() == 2)
 	{
+#ifdef Q_OS_WIN
+		if (!s_isAdminAuth)
+		{
+			pMainNotepad->openFile(arguments[1]);
+		}
+		else
+		{
+			//如果是管理员，还不能直接打开文件，需要恢复之前文件的修改内容
+			//恢复不了，再直接打开
+			pMainNotepad->tryRestoreFile(arguments[1]);
+		}
+#else
 		pMainNotepad->openFile(arguments[1]);
-		pMainNotepad->showNormal();
+#endif
 	}
 #ifdef Q_OS_WIN
 	pMainNotepad->checkAppFont();

@@ -19,7 +19,7 @@ QMap<QString, bool>* DocTypeListView::s_binFileExts = nullptr;
 QStringList DocTypeListView::s_extBindFileType;
 
 QStringList HEX_FILE_EXTS_LIST = (QStringList() << "exe" << "dll" << "png" << "jpg" << "doc" << "docx" << "ppt" << "pptx" \
-	<< "zip" << "gz" << "rar" << "pdf" << "7z" << "lib" << "so" << "db" << "obj" << "pdb" << "bmp" << "ico" << "qm" << "icns" << "jpeg" << "res" << "exp" << "ilk" << "deb");
+	<< "zip" << "gz" << "rar" << "pdf" << "7z" << "lib" << "so" << "db" << "obj" << "bmp" << "ico" << "qm" << "icns" << "jpeg" << "res" << "exp" << "ilk" << "deb");
 
 QStringList INIT_EXTS_TYPES = (QStringList() << ".txt:.log" << ".ini:.inf" << ".h:.hh:.hpp:.hxx:.c:.cpp:.cxx:.cc:.m:.mm:.vcxproj:.vcproj:.props:vsprops:mainfest:.go:.mod" \
 << ".java:.cs:.pas:.pp:.inc" << ".html:.htm:.shtml:.shtm:.hta:.asp:.aspx:.css:.js:.json:.jsm:.jsp:.php:.php3:.php4:.php5:.phps:.phpt:.phtml:.xml:.xhtml:.xht:.xul:.kml:.xaml:.xsml" \

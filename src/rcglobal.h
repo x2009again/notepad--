@@ -5,7 +5,17 @@
 #include <QTreeWidgetItem>
 #include <qscilexer.h>
 
-static const char* VersionStr = "v1.21.0";
+//#define TEST_PRE
+
+#ifdef TEST_PRE
+static const char* VersionStr = u8"(内部测试非稳定) v1.22.0";
+#else
+
+static const char* VersionStr = "v1.22.0";
+#endif // TEST_PRE
+
+
+//#define NO_PLUGIN 1
 
 #define CMP_CODE_NOEQUAL
 
@@ -158,3 +168,4 @@ QString getUserLangDirPath();
 #endif
 
 void showFileInExplorer(QString path);
+QString tranFileSize(qint64 fileSize);

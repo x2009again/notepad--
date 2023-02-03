@@ -8,16 +8,11 @@
 
  **鉴于Notepad++作者的错误言论，Notepad--的意义在于：减少一点错误言论，减少一点自以为是。** 
 
- **严正声明，台湾是中国的一部分。** 
-
 您可以在这个项目提交bug或反馈问题。
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.21
 
-Arch Linux 及其衍生版可以通过 AUR 仓库安装：[notepad---git](https://aur.archlinux.org/packages/notepad---git)
-```
-yay -S notepad---git
-```
+最新开发版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.22
 
 NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
 开发者参与插件功能开发。
@@ -54,6 +49,11 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 
 代码上线不久，删除了商业的对比功能和注册功能（这部分有商业原因，请理解），除此以外，所有功能全部保留。
 
+4）Arch Linux 及其衍生版可以通过 AUR 仓库安装：[notepad---git](https://aur.archlinux.org/packages/notepad---git)
+```
+yay -S notepad---git
+```
+
 ![输入图片说明](png/20221107_160824.png)
 
 ![输入图片说明](png/6.png)
@@ -61,5 +61,3 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 ![输入图片说明](png/3.png)
 
 ![输入图片说明](png/7.png)
-
-![输入图片说明](png/8.png)

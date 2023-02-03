@@ -7,7 +7,7 @@
 #include <QStorageInfo>
 #include <QSettings>
 
-
+static short version_num = 29; //1.22.0 是29
 //配置文件是否存在。如果初始化失败，则不存在
 bool NddSetting::s_isExistDb = false;
 int NddSetting::s_reference = 0;
@@ -15,7 +15,7 @@ bool NddSetting::s_isContentChanged = false;
 
 QSettings* NddSetting::s_nddSet = nullptr;
 
-const int version_num = 25;
+QSettings* NddSetting::s_winPosSet = nullptr;
 
 //如果key不存在，则新增key-value。存在：返回true
 bool NddSetting::checkNoExistAdd(QString key, QVariant& value)
@@ -115,6 +115,9 @@ void NddSetting::init()
 
 		//打开网页，默认不勾选，资源耗费多
 		addKeyValueToNumSets(SHOWWEBADDR, 0);
+
+		//查找结果框的默认字体大小
+		addKeyValueToNumSets(FIND_RESULT_FONT_SIZE, 14);
 	};
 
 	if (!s_nddSet->contains(VERSION))
@@ -220,6 +223,10 @@ void NddSetting::init()
 				QVariant v(0);
 				checkNoExistAdd(SHOWWEBADDR, v);
 			}
+			{
+				QVariant v(14);
+				checkNoExistAdd(FIND_RESULT_FONT_SIZE, v);
+			}
 		} while (false);
 
 	}
@@ -301,7 +308,39 @@ void NddSetting::close()
 				s_nddSet = nullptr;
 				s_isContentChanged = false;	
 			}
+
+			//在这里保存一下子窗口的位置。不排除有可能子窗口还在，主窗口已经退出的情况，不过问题不大。
+			if (s_winPosSet != nullptr)
+			{
+				s_winPosSet->sync();
+				s_winPosSet = nullptr;
 		}
 	}
 }
+}
 
+//子窗口的位置，单独放在一个winpos.ini文件中，而且启动程序时，不需要读取，可避免启动时拖慢速度
+QByteArray NddSetting::getWinPos(QString key)
+{
+	winPosInit();
+	return s_winPosSet->value(key, "").toByteArray();
+}
+
+void NddSetting::updataWinPos(QString key, QByteArray& value)
+{
+	winPosInit();
+	s_winPosSet->setValue(key, QVariant(value));
+}
+
+void NddSetting::winPosInit()
+{
+	if (s_winPosSet == nullptr)
+	{
+		QString settingDir = QString("notepad/delayset");
+		QSettings qs(QSettings::IniFormat, QSettings::UserScope, settingDir);
+		QString qsSetPath = qs.fileName();
+
+		s_winPosSet = new QSettings(QSettings::IniFormat, QSettings::UserScope, settingDir);
+		s_winPosSet->setIniCodec("UTF-8");
+	}
+}

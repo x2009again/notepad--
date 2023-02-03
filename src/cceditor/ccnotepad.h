@@ -33,12 +33,15 @@ class CompareDirs;
 class CompareWin;
 struct HexFileMgr;
 struct TextFileMgr;
+struct BigTextEditFileMgr;
 
 
 enum OpenAttr {
 	Text = 1,
 	HexReadOnly,
 	BigTextReadOnly,
+	BigTextReadWrite,
+	SuperBigTextReadOnly,
 	TextReadOnly
 };
 
@@ -58,7 +61,24 @@ enum LINE_SORT_TYPE {
 	SORTLINES_REVERSE_ORDER,
 };
 
+struct FileExtLexer
+{
+	QString ext;
+	LangType id;
+};
 
+const int FileExtMapLexerIdLen = L_EXTERNAL;
+
+//1 文本 2 hex
+enum NddDocType {
+	TXT_TYPE = 1,
+	//BIG_TEXT_RO_TYPE,//大文本，只读模式 BIG_TEXT_RO_TYPE。是只读模式
+	BIG_TEXT_RO_TYPE,//大文本，只读模式,可以显示行号，可以跳转。理论上4G-8G比较合适。再大就属于超大文本
+	BIG_EDIT_RW_TYPE,//大文本，读写模式。目前还不支持
+	SUPER_BIG_TEXT_RO_TYPE,//超大文本，只读模式，理论上任意多大文件都可以。不一定支持行号。4G以上的文件。
+
+	HEX_TYPE,
+};
 
 //打开模式。1 文本 2 二进制 3 大文本只读 4 文本只读
 //const char* Open_Attr = "openid";
@@ -93,7 +113,8 @@ public:
 #endif
 	
 	bool openFile(QString filePath);
-	
+	bool tryRestoreFile(QString filePath);
+
 	void initTabNewOne();
 
 	void setShareMem(QSharedMemory* v)
@@ -132,9 +153,11 @@ public:
 	void setGlobalFont(int style);
 
 	void changeMarkColor(int sytleId);
+	void setUserDefShortcutKey(int shortcutId);
 signals:
 	void signSendRegisterKey(QString key);
 	void signRegisterReplay(int code);
+	void signLinkNetServer();
 public slots:
 	void slot_changeChinese();
 	void slot_changeEnglish();
@@ -324,10 +347,13 @@ private slots:
 	void slot_showToolBar(bool);
 	void slot_dynamicLoadToolMenu();
 	void slot_batchFind();
+#ifdef NO_PLUGIN
 	void slot_pluginMgr();
-	void slot_showWebAddr(bool check);
 	void onPlugWork(bool check);
-
+#endif
+	void slot_showWebAddr(bool check);
+	void slot_langFileSuffix();
+	void slot_shortcutManager();
 
 private:
 	void initFindResultDockWin();
@@ -345,6 +371,7 @@ private:
 	void initReceneOpenFileMenu();
 	
 	int findFileIsOpenAtPad(QString filePath);
+	bool isNewFileNameExist(QString& fileName);
 	void updateCurTabSaveStatus();
 	void setSaveButtonStatus(bool needSave);
 	void setSaveAllButtonStatus(bool needSave);
@@ -359,7 +386,7 @@ private:
 
 	void cmpSelectFile();
 
-	void autoSetDocLexer(ScintillaEditView * pEdit);
+	void autoSetDocLexer(ScintillaEditView * pEdit, int defLexerId=-1);
 
 	void updateTitleToCurDocFilePath();
 	void addWatchFilePath(QString filePath);
@@ -367,7 +394,7 @@ private:
 
 	bool checkRoladFile(ScintillaEditView * pEdit);
 	void reloadEditFile(ScintillaEditView * pEidt);
-	void initFindWindow();
+	void initFindWindow(FindTabIndex type= FIND_TAB);
 
 	void setToFileRightMenu();
 
@@ -375,15 +402,19 @@ private:
 
 	bool reloadTextFileWithCode(CODE_ID code);
 
-	bool openBigTextFile(QString filePath);
+	bool openSuperBigTextFile(QString filePath);
+
+	bool openBigTextRoFile(QString filePath);
 
 	void setWindowTitleMode(QString filePath, OpenAttr attr);
 
 	bool openTextFile(QString filePath, bool isCheckHex = true, CODE_ID code=CODE_ID::UNKOWN);
 	bool openHexFile(QString filePath);
+	
 	bool showHexFile(ScintillaHexEditView * pEdit, HexFileMgr * hexFile);
 
 	bool showBigTextFile(ScintillaEditView * pEdit, TextFileMgr * hexFile);
+	bool showBigTextFile(ScintillaEditView* pEdit, BigTextEditFileMgr* txtFile, int blockIndex);
 
 	void initNotePadSqlOptions();
 	void saveNotePadSqlOptions();
@@ -419,9 +450,15 @@ private:
 	void tabClose(QWidget* pEdit);
 
 	void init_toolsMenu();
+
+#ifdef NO_PLUGIN
 	void loadPluginLib();
 	void loadPluginProcs(QString strLibDir, QMenu* pMenu);
 	void onPlugFound(NDD_PROC_DATA& procData, QMenu* pUserData);
+#endif
+
+	void setUserDefShortcutKey();
+	void setNormalTextEditInitPro(ScintillaEditView* pEdit, QString filePath, CODE_ID code, RC_LINE_FORM lineEnd, bool isReadOnly, bool isModifyed);
 private:
 	Ui::CCNotePad ui;
 
@@ -507,6 +544,7 @@ private:
 	static int s_showblank; //显示空白
 	static int s_zoomValue;
 	
+	
 	QTranslator* m_translator;
 	QTimer * m_timerAutoSave;
 
@@ -538,6 +576,9 @@ private:
 
 	QToolButton* m_transcode;
 	QToolButton* m_rename;
+
+	QAction* m_formatXml;
+	QAction* m_formatJson;
 
 
 	QPointer<QMainWindow> m_batchFindWin;

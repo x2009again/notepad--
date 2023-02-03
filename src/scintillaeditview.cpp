@@ -6,11 +6,14 @@
 #include "styleset.h"
 #include "qtlangset.h"
 #include "findwin.h"
+#include "filemanager.h"
+
 #include <Scintilla.h>
 #include <SciLexer.h>
 #include <QImage>
 #include <Qsci/qscilexerpython.h>
-#include <Qsci/qscilexeravs.h>
+//#include <Qsci/qscilexeravs.h>
+#include <Qsci/qscilexerasm.h>
 #include <Qsci/qscilexerbash.h>
 #include <Qsci/qscilexerbatch.h>
 #include <Qsci/qscilexercmake.h>
@@ -87,6 +90,8 @@ const int ScintillaEditView::_SC_MARGE_FOLDER = 2;
 const int SC_BIGTEXT_LINES = 0;
 
 const int MAX_PRE_NEXT_TIMES = 30;
+
+const int INIT_BIG_RO_TEXT_LINE_WIDTH = 8;
 
 #ifdef Q_OS_WIN
 LanguageName ScintillaEditView::langNames[L_EXTERNAL + 1] = {
@@ -190,7 +195,7 @@ LanguageName ScintillaEditView::langNames[L_EXTERNAL + 1] = {
 #endif
 
 ScintillaEditView::ScintillaEditView(QWidget *parent,bool isBigText)
-	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false), m_bookmarkPng(nullptr), m_styleColorMenu(nullptr), m_isBigText(isBigText)
+	: QsciScintilla(parent), m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false), m_bookmarkPng(nullptr), m_styleColorMenu(nullptr), m_isBigText(isBigText), m_curBlockLineStartNum(0)
 {
 	init();
 }
@@ -232,6 +237,12 @@ void ScintillaEditView::setNoteWidget(QWidget * win)
 	if (pv != nullptr)
 	{
 		m_NoteWin = pv;
+
+		if (m_styleColorMenu != nullptr)
+		{
+			m_styleColorMenu->addAction(tr("Clear Select"), m_NoteWin, &CCNotePad::slot_clearWordHighlight);
+			m_styleColorMenu->addAction(tr("Clear All"), m_NoteWin, &CCNotePad::slot_clearMark);
+}
 }
 }
 
@@ -251,7 +262,7 @@ void ScintillaEditView::updateLineNumbersMargin(bool forcedToHide) {
 //根据现有滚动条来决定是否更新屏幕线宽长度。每滚动200个单位必须调整line宽
 void ScintillaEditView::autoAdjustLineWidth(int xScrollValue)
 {
-	//如果是大文本模式，是没有行号的，直接返回
+	//如果是大文本模式，行号长度目前是固定不变的，不需要动态调整。
 	if (m_isBigText)
 	{
 		return;
@@ -297,8 +308,7 @@ void ScintillaEditView::updateLineNumberWidth(int lineNumberMarginDynamicWidth)
 	}
 	else
 	{
-		int nbDigits = 9;
-		int pixelWidth = 6 + nbDigits * execute(SCI_TEXTWIDTH, STYLE_LINENUMBER, reinterpret_cast<sptr_t>("8"));
+		int pixelWidth = 6 + INIT_BIG_RO_TEXT_LINE_WIDTH * execute(SCI_TEXTWIDTH, STYLE_LINENUMBER, reinterpret_cast<sptr_t>("8"));
 		execute(SCI_SETMARGINWIDTHN, SC_BIGTEXT_LINES, pixelWidth);
 	}
 	
@@ -334,6 +344,246 @@ sptr_t ScintillaEditView::execute(quint32 Msg, uptr_t wParam, sptr_t lParam) con
 		return -1;
 	}
 };
+
+
+QString ScintillaEditView::getTagByLexerId(int lexerId)
+{
+	switch (lexerId)
+	{
+	case L_PHP:
+		return "php";
+
+	case L_HTML:
+		return ("html");
+
+	case L_ASP:
+		return ("asp");
+
+	case L_JSP:
+		return("jsp");
+
+	case L_C:
+		return("c");
+
+	case L_RC:
+		return("rc");
+
+	case L_CPP:
+		return "cpp";
+
+	case L_OBJC:
+		return ("objc");
+	
+	case L_CS:
+		return ("csharp");
+
+	case L_JAVA:
+		return ("java");
+
+	case L_XML:
+		return "xml";
+
+	case L_MAKEFILE:
+		return "makefile";
+
+	case L_PASCAL:
+		return "pascal";
+
+	case L_BATCH:
+		return "batch";
+
+	case L_INI:
+		return("ini");
+
+	case L_ASCII:
+		break;
+
+	case L_USER:
+		break;
+
+	case L_SQL:
+		return "sql";
+		
+	case L_VB:
+		return "vb";
+
+	case L_CSS:
+		return "css";
+
+	case L_PERL:
+		return "perl";
+
+	case L_PYTHON:
+		return "python";
+
+	case L_LUA:
+		return "lua";
+
+	case L_TEX:
+		break;
+	case L_FORTRAN:
+		return "fortran";
+
+	case L_BASH:
+		return "bash";
+
+	case L_FLASH:
+		return("flash");
+
+	case L_NSIS:
+		return "nsis";
+
+	case L_TCL:
+		return "tcl";
+
+	case L_LISP:
+		break;
+	case L_SCHEME:
+		break;
+	case L_ASM:
+		break;
+	case L_DIFF:
+		return "diff";
+
+	case L_PROPS:
+		return "props";
+
+	case L_PS:
+		break;
+	case L_RUBY:
+		return "ruby";
+
+	case L_SMALLTALK:
+		break;
+	case L_VHDL:
+		return "vhdl";
+
+	case L_KIX:
+		break;
+	case L_AU3:
+		break;
+	case L_CAML:
+		break;
+	case L_ADA:
+		break;
+	case L_VERILOG:
+		return "verilog";
+
+	case L_MATLAB:
+		return "matlab";
+
+	case L_HASKELL:
+		break;
+	case L_INNO:
+		break;
+	case L_SEARCHRESULT:
+		break;
+	case L_CMAKE:
+		return "cmake";
+
+	case L_YAML:
+		return "yaml";
+
+	case L_COBOL:
+		break;
+	case L_GUI4CLI:
+		break;
+	case L_D:
+		break;
+	case L_POWERSHELL:
+		break;
+
+	case L_COFFEESCRIPT:
+		return "coffeescript";
+
+	case L_JSON:
+		return "json";
+
+	case L_JAVASCRIPT:
+		return ("javascript");
+
+	case L_FORTRAN_77:
+		return "fortran77";
+
+	case L_BAANC:
+		break;
+	case L_SREC:
+		break;
+	case L_IHEX:
+		break;
+	case L_TEHEX:
+		break;
+	case L_SWIFT:
+		break;
+	case L_ASN1:
+		break;
+	//case L_AVS:
+	//	return "avs";
+
+	case L_BLITZBASIC:
+		break;
+	case L_PUREBASIC:
+		break;
+	case L_FREEBASIC:
+		break;
+	case L_CSOUND:
+		break;
+	case L_ERLANG:
+		break;
+	case L_ESCRIPT:
+		break;
+	case L_FORTH:
+		break;
+	case L_LATEX:
+		break;
+	case L_MMIXAL:
+		break;
+	case L_NIM:
+		break;
+	case L_NNCRONTAB:
+		break;
+	case L_OSCRIPT:
+		break;
+	case L_REBOL:
+		break;
+	case L_REGISTRY:
+		break;
+	case L_RUST:
+		return "rust";
+	case L_SPICE:
+		return "spice";
+	case L_TXT2TAGS:
+		break;
+	case L_VISUALPROLOG:
+		break;
+	case L_TYPESCRIPT:
+		return("typescript");
+
+	case L_EXTERNAL:
+		break;
+	case L_IDL:
+		return("idl");
+
+	case L_GO:
+		return("go");
+
+	case L_GLOBAL:
+		return("AllGlobal");
+
+	case L_TXT:
+		return("txt");
+
+	case L_USER_TXT:
+		break;
+	case L_USER_CPP:
+
+		break;
+	default:
+		break;
+	}
+	
+	return "";
+}
 
 //status : true 表示存在， false 表示不存在
 //tag，只有在用户自定义语法是，才需要给出。内部自带的语法不需要给出
@@ -444,6 +694,7 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId, QString tag, bool isOrigi
 	case L_SCHEME:
 		break;
 	case L_ASM:
+		ret = new QsciLexerAsm();
 		break;
 	case L_DIFF:
 		ret = new QsciLexerDiff();
@@ -522,7 +773,7 @@ QsciLexer* ScintillaEditView::createLexer(int lexerId, QString tag, bool isOrigi
 	case L_ASN1:
 		break;
 	case L_AVS:
-		ret = new QsciLexerAVS();
+		//ret = new QsciLexerAVS();
 		break;
 	case L_BLITZBASIC:
 		break;
@@ -800,18 +1051,6 @@ void ScintillaEditView::init()
 	execute(SCI_SETWHITESPACESIZE,3);
 
 	setCaretLineVisible(true);
-	
-
-	//execute(SCI_INDICSETHOVERFORE, URL_INDIC, 0x80ffff);
-
-	//if (StyleSet::m_curStyleId != BLACK_SE)
-	//{
-	//	setCaretLineBackgroundColor(QColor(0xe8e8ff));
-	//}
-	//else
-	//{
-	//	setCaretLineBackgroundColor(QColor(0x333333));
-	//}
 
 	//统一设置全局前景、背景、字体大小三个要素
 	updateThemes();
@@ -876,7 +1115,7 @@ void ScintillaEditView::showBigTextLineAddr(qint64 fileOffset)
 		memset(lineString, 0, 17);
 
 		lineLength = this->lineLength(i);
-	
+
 		if (fileOffset < 0xffffffff)
 		{
 			sprintf(lineString, "%08llX ", fileOffset);
@@ -889,6 +1128,196 @@ void ScintillaEditView::showBigTextLineAddr(qint64 fileOffset)
 		QString num(lineString);
 
 		fileOffset += lineLength;
+		this->setMarginText(i, num, style);
+	}
+
+	delete[]lineString;
+}
+
+void ScintillaEditView::clearSuperBitLineCache()
+{
+	m_addrLineNumMap.clear();
+}
+//20230116新增，尽可能的还是显示行号。如果发生了跳转，则没有办法计算前面的行号，
+//则只能显示地址。如果没跳转，而是动态顺序翻页，则可以显示行号
+//20230201发现一个问题。底层qscint是按照utf8字节流来计算字符大小的。如果原始文件的编码
+//不是utf8,比如GBK LE等，则大小是不能统一的。这是一个显示问题，但是不影响什么。
+//通过this->lineLength(i);来计算是以utf8计算。
+void ScintillaEditView::showBigTextLineAddr(qint64 fileOffset, qint64 fileEndOffset)
+{
+	int nbDigits = 0;
+
+	if (fileOffset < 0xffffffff)
+	{
+		nbDigits = INIT_BIG_RO_TEXT_LINE_WIDTH;
+	}
+	else
+	{
+		nbDigits = 12;
+	}
+	char* lineString = new char[17];
+	memset(lineString, 0, 17);
+
+	auto pixelWidth = 6 + nbDigits * execute(SCI_TEXTWIDTH, STYLE_LINENUMBER, reinterpret_cast<sptr_t>("8"));
+	this->execute(SCI_SETMARGINWIDTHN, SC_BIGTEXT_LINES, pixelWidth);
+
+	int lineNums = this->lines();
+	int lineLength = 0;
+
+	qint64 curLineAddr = fileOffset;
+
+	int style = STYLE_LINENUMBER;
+
+	quint32 startLineNumOffset = 0;
+	quint32 endLineNumOffset = 0;
+
+	bool isShowLineNum = false; //显示行号还是地址
+	bool startLineExist = false;
+	bool endLineExist = false;
+
+
+	if (fileOffset == 0)
+	{
+		isShowLineNum = true;
+		startLineExist = true;
+		m_addrLineNumMap.insert(0, 1); //0地址对应第1行
+		m_addrLineNumMap.insert(fileEndOffset, lineNums+1); //fileEndOffset地址对应最后一行
+	}
+
+	if (lineNums >= 1)
+	{
+		if (m_addrLineNumMap.contains(fileOffset))
+		{
+			isShowLineNum = true;
+			startLineExist = true;
+
+			startLineNumOffset = m_addrLineNumMap.value(fileOffset);
+		}
+		else if (m_addrLineNumMap.contains(fileEndOffset))
+		{
+			isShowLineNum = true;
+			endLineExist = true;
+
+			endLineNumOffset = m_addrLineNumMap.value(fileEndOffset);
+		}
+	}
+
+	//不存在行号，只能显示地址
+	if (!isShowLineNum)
+	{
+		for (int i = 0; i < lineNums; ++i)
+		{
+			memset(lineString, 0, 17);
+
+			lineLength = this->lineLength(i);
+
+			if (fileOffset < 0xffffffff)
+			{
+				sprintf(lineString, "%08llX ", fileOffset);
+			}
+			else
+			{
+				sprintf(lineString, "%012llX ", fileOffset);
+			}
+
+			QString num(lineString);
+
+			fileOffset += lineLength;
+			this->setMarginText(i, num, style);
+		}
+	}
+	else
+	{
+		//首行地址存在，从头到尾增加行号
+		if (startLineExist)
+		{
+	
+			for (int i = 0; i < lineNums; ++i)
+			{
+				if (i == (lineNums - 1))
+				{
+					//m_addrLineNumMap.insert(fileOffset, startLineNumOffset + i);
+					m_addrLineNumMap.insert(fileEndOffset, startLineNumOffset + i);
+				}
+
+				memset(lineString, 0, 17);
+				//lineLength = this->lineLength(i);
+				sprintf(lineString, "%08lld ", startLineNumOffset + i);
+				QString num(lineString);
+
+				//fileOffset += lineLength;
+				this->setMarginText(i, num, style);
+			}
+		}
+		else if (endLineExist)
+		{
+
+			startLineNumOffset = endLineNumOffset - lineNums;
+
+			for (int i = 0; i < lineNums; ++i)
+			{
+				if (i == 0)
+				{
+					//m_addrLineNumMap.insert(fileOffset, startLineNumOffset + i);
+					m_addrLineNumMap.insert(fileOffset, startLineNumOffset + i);
+				}
+
+				memset(lineString, 0, 17);
+				//lineLength = this->lineLength(i);
+				sprintf(lineString, "%08lld ", startLineNumOffset + i);
+				QString num(lineString);
+
+				//fileOffset += lineLength;
+				this->setMarginText(i, num, style);
+			}
+		}
+	}
+
+	delete[]lineString;
+}
+
+//大文本只读模式下，显示其文本
+void ScintillaEditView::showBigTextRoLineNum(BigTextEditFileMgr* txtFile, int blockIndex)
+{
+
+	BlockIndex bi = txtFile->blocks.at(blockIndex);
+
+	int nbDigits = 0;
+
+	if (bi.fileOffset < 0xffffffff)
+	{
+		nbDigits = INIT_BIG_RO_TEXT_LINE_WIDTH;
+	}
+	else
+	{
+		nbDigits = 12;
+	}
+	char* lineString = new char[17];
+	memset(lineString, 0, 17);
+
+	auto pixelWidth = 6 + nbDigits * execute(SCI_TEXTWIDTH, STYLE_LINENUMBER, reinterpret_cast<sptr_t>("8"));
+	this->execute(SCI_SETMARGINWIDTHN, SC_BIGTEXT_LINES, pixelWidth);
+
+	int lineNums = this->lines();
+
+	qint64 curLineNum = bi.lineNumStart + 1;//行号从1开始
+
+	int style = STYLE_LINENUMBER;
+
+	for (int i = 0; i < lineNums; ++i)
+	{
+		memset(lineString, 0, 17);
+
+		if (bi.fileOffset < 0xffffffff)
+		{
+			sprintf(lineString, "%08lld ", curLineNum+i);
+		}
+		else
+		{
+			sprintf(lineString, "%012lld ", curLineNum + i);
+		}
+
+		QString num(lineString);
 		this->setMarginText(i, num, style);
 	}
 
@@ -1395,9 +1824,12 @@ void ScintillaEditView::initStyleColorMenu()
 
 		m_styleColorMenu->addSeparator();
 
+		if (m_NoteWin != nullptr)
+		{
 		m_styleColorMenu->addAction(tr("Clear Select"), m_NoteWin, &CCNotePad::slot_clearWordHighlight);
 		m_styleColorMenu->addAction(tr("Clear All"), m_NoteWin, &CCNotePad::slot_clearMark);
 	}
+}
 }
 
 void ScintillaEditView::contextUserDefineMenuEvent(QMenu* menu)
@@ -1799,7 +2231,7 @@ bool ScintillaEditView::undoStreamComment(bool tryBlockComment)
 	// BlockToStreamComment: If there is no stream-comment symbol and we came not from doBlockComment, try the block comment:
 	if (commentStart.isEmpty() || commentEnd.isEmpty())
 	{
-		if (!(commentLineSymbol.isEmpty() && tryBlockComment))
+		if (!commentLineSymbol.isEmpty() && tryBlockComment)
 			return doBlockComment(cm_uncomment);
 		else
 			return false;
@@ -3029,6 +3461,16 @@ bool isUrl(QString& text, int textLen, int start, int* segmentLen)
 	}
 	*segmentLen = dist;
 	return false;
+}
+
+quint32 ScintillaEditView::getBigTextBlockStartLine()
+{
+	return m_curBlockLineStartNum;
+}
+
+void ScintillaEditView::setBigTextBlockStartLine(quint32 line)
+{
+	m_curBlockLineStartNum = line;
 }
 
 void ScintillaEditView::addHotSpot()

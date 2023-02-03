@@ -100,11 +100,11 @@ QString QsciLexerGlobal::description(int style) const
 QFont QsciLexerGlobal::defaultFont(int style) const
 {
 #if defined(Q_OS_WIN)
-	QFont f("Courier New", 14);
+	QFont f("Courier New", s_defaultFontSize);
 #elif defined(Q_OS_MAC)
 	QFont f("Menlo", s_defaultFontSize);
 #else
-	QFont f("Courier 10 Pitch", 14);
+	QFont f("Courier 10 Pitch", s_defaultFontSize);
 #endif
 
 	switch (style)

@@ -1,4 +1,5 @@
 #pragma once
+#include "ccnotepad.h"
 
 #include <QWidget>
 #include <QDialog>
@@ -12,6 +13,7 @@ public:
 	BigFileMessage(QWidget *parent = nullptr);
 	~BigFileMessage();
 	void setTip(QString msg);
+	void setDefOpenMode(NddDocType defMode);
 
 private slots:
 	void slot_okBt();

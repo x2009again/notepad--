@@ -2,6 +2,7 @@
 #include "scintillaeditview.h"
 #include "ccnotepad.h"
 #include "progresswin.h"
+#include "nddsetting.h"
 
 #include <QTableWidgetItem>
 #include <QFileDialog>
@@ -15,7 +16,15 @@ BatchFindReplace::BatchFindReplace(QWidget *parent)
 }
 
 BatchFindReplace::~BatchFindReplace()
-{}
+{
+
+}
+
+void BatchFindReplace::closeEvent(QCloseEvent* event)
+{
+	QByteArray curGeo = this->saveGeometry();
+	NddSetting::updataWinPos(BATCH_FIND_REPLACE_POS, curGeo);
+}
 
 void BatchFindReplace::setTabWidget(QTabWidget* editTabWidget)
 {

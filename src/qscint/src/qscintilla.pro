@@ -103,7 +103,7 @@ HEADERS = \
     ./Qsci/qscicommandset.h \
     ./Qsci/qscidocument.h \
     ./Qsci/qscilexer.h \
-    ./Qsci/qscilexeravs.h \
+    ./Qsci/qscilexerasm.h \
     ./Qsci/qscilexerbash.h \
     ./Qsci/qscilexerbatch.h \
     ./Qsci/qscilexercmake.h \
@@ -234,7 +234,7 @@ SOURCES = \
     qscicommandset.cpp \
     qscidocument.cpp \
     qscilexer.cpp \
-    qscilexeravs.cpp \
+    qscilexerasm.cpp \
     qscilexerbash.cpp \
     qscilexerbatch.cpp \
     qscilexercmake.cpp \
