@@ -305,7 +305,7 @@
         <location filename="cceditor/ccnotepad.ui" line="110"/>
         <location filename="ui_ccnotepad.h" line="1597"/>
         <source>Format Conversion</source>
-        <translation type="unfinished">格式转换</translation>
+        <translation type="unfinished">换行符转换</translation>
     </message>
     <message>
         <source>Search</source>
