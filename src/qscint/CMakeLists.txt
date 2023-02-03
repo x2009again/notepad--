@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.16)
 project(qscintilla2_qt5 CXX)
 
 set(CMAKE_AUTOMOC ON)

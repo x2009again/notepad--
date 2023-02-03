@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.16)
 project(notepad--)
 
 set(CMAKE_AUTOMOC ON)
@@ -12,8 +12,8 @@ find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Concurrent Network PrintSu
 find_library(QSCINTILLA_LIB_PATH qscintilla2_qt5)
 find_path(QSCINTILLA_INC_PATH qsciscintilla.h PATHS /usr/include/)
 find_path(SCINTILLA_INC_PATH Scintilla.h PATHS /usr/include/)
-if((${QSCINTILLA_LIB_PATH}  EQUAL "QSCINTILLA_LIB_PATH-NOTFOUND") OR 
-   (${QSCINTILLA_INC_PATH}  EQUAL "QSCINTILLA_INC_PATH-NOTFOUND") OR 
+if((${QSCINTILLA_LIB_PATH} STREQUAL "QSCINTILLA_LIB_PATH-NOTFOUND") OR 
+   (${QSCINTILLA_INC_PATH} STREQUAL "QSCINTILLA_INC_PATH-NOTFOUND") OR 
    (${SCINTILLA_INC_PATH}  STREQUAL "SCINTILLA_INC_PATH-NOTFOUND") )
 set(NOTEPAD_USE_SYS_LIB OFF)
 message("system libraries or header not found,build from local")
