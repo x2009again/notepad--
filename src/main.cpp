@@ -352,16 +352,20 @@ drop_old:
 
 	if (arguments.size() == 2)
 	{
+#ifdef Q_OS_WIN
 		if (!s_isAdminAuth)
 		{
-		pMainNotepad->openFile(arguments[1]);
-	}
+			pMainNotepad->openFile(arguments[1]);
+		}
 		else
 		{
 			//如果是管理员，还不能直接打开文件，需要恢复之前文件的修改内容
 			//恢复不了，再直接打开
 			pMainNotepad->tryRestoreFile(arguments[1]);
 		}
+#else
+		pMainNotepad->openFile(arguments[1]);
+#endif
 	}
 #ifdef Q_OS_WIN
 	pMainNotepad->checkAppFont();
