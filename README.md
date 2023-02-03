@@ -45,5 +45,3 @@ yay -S notepad---git
 ![输入图片说明](png/3.png)
 
 ![输入图片说明](png/7.png)
-
-![输入图片说明](png/8.png)
