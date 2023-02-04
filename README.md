@@ -21,6 +21,24 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 
 ![输入图片说明](6688.png)
 
+**Linux编译说明:**
+
+## Ubuntu
+
+1. 安装编译环境 `sudo apt-get install g++ make cmake`
+1. 安装qt工具和库 `sudo apt-get install qtbase5-dev qt5-qmake qtbase5-dev-tools libqt5printsupport5 libqt5xmlpatterns5-dev `
+1. 配置 `cmake -B build -DCMAKE_BUILD_TYPE=Release`
+1. 编译 `cd build && make -j` 
+1. 打包 `cpack`
+
+## ArchLinux
+
+1. 安装编译环境 `sudo pacman -S gcc cmake make `
+1. 安装qt工具和库 `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns `
+1. 配置 `cmake -B build -DCMAKE_BUILD_TYPE=Release`
+1. 编译 `cd build && make -j` 
+1. 打包:使用aur
+
  **编译说明：** 
 
 1）使用qtcreator 或 vs  先打开qscint/src/qscintilla.pro 。先编译出这个qscintlla的依赖库。
