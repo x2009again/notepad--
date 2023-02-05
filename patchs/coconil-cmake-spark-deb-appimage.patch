@@ -1,7 +1,7 @@
-From 25e3419aa28a77a1ff24a53a1e43f877412fdcc2 Mon Sep 17 00:00:00 2001
+From 89bf9397dd2cb22ab130154bb178aeb02b6a56b9 Mon Sep 17 00:00:00 2001
 From: coconil <coconil@foxmail.com>
 Date: Tue, 31 Jan 2023 22:17:32 +0800
-Subject: [PATCH 01/11] add cmake support
+Subject: [PATCH 01/12] add cmake support
 
 ---
  CMakeLists.txt            | 2 ++
@@ -44,10 +44,10 @@ index b114614..f132dc6 100644
 2.20.1
 
 
-From fd25cc015e42f42f3529008a56e473b8ecad1d8a Mon Sep 17 00:00:00 2001
+From 9fb717fbc4762011e6e9af3b9c5ec2d4a9235d3a Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:04:05 +0800
-Subject: [PATCH 02/11] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 02/12] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20deb?=
 MIME-Version: 1.0
@@ -937,10 +937,10 @@ index 0000000..e7c3b18
 2.20.1
 
 
-From dc048016f2ac8a8ff20e99aaa0859239984730aa Mon Sep 17 00:00:00 2001
+From 24b61f0bab5a3f4f1221b11966993505a665a297 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:09:49 +0800
-Subject: [PATCH 03/11] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 03/12] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20Appimage?=
 MIME-Version: 1.0
@@ -1171,10 +1171,10 @@ index 0000000..0ca2577
 2.20.1
 
 
-From 9826eba36f58b099d93918e9fd23bd8a63aaeca4 Mon Sep 17 00:00:00 2001
+From b4f833acb4cbc009e961f35fcd85aeaf6733cb98 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 13:58:29 +0800
-Subject: [PATCH 04/11] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20?=
+Subject: [PATCH 04/12] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20?=
  =?UTF-8?q?=E6=B7=BB=E5=8A=A0=E6=96=87=E6=9C=AC=E6=96=87=E4=BB=B6=E7=9A=84?=
  =?UTF-8?q?=E7=9B=B8=E5=85=B3=20MimeType?=
 MIME-Version: 1.0
@@ -1213,10 +1213,10 @@ index e7c3b18..e33c74e 100644
 2.20.1
 
 
-From 011c115d38eda8bf101ce0164eb5657e8c96d35d Mon Sep 17 00:00:00 2001
+From 365d0971a551a9355b6e086eafa62bb2a8fc8eac Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 14:00:54 +0800
-Subject: [PATCH 05/11] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
+Subject: [PATCH 05/12] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
  =?UTF-8?q?=E4=BB=B6=E6=B7=BB=E5=8A=A0=20%F=20=E5=8F=82=E6=95=B0=EF=BC=8C?=
  =?UTF-8?q?=E4=BB=A5=E4=BF=9D=E8=AF=81=E5=8F=AF=E6=AD=A3=E7=A1=AE=E4=BC=A0?=
  =?UTF-8?q?=E5=85=A5=E5=8F=82=E6=95=B0?=
@@ -1246,10 +1246,10 @@ index a8f27aa..63e878c 100644
 2.20.1
 
 
-From 2e3eeac09c6bc18d863eee28f7a352acdbcfc3b7 Mon Sep 17 00:00:00 2001
+From 604823b6745436f4c05de2167df8f36e26c91098 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 14:47:56 +0800
-Subject: [PATCH 06/11] =?UTF-8?q?cmake-version:=20=E5=B0=86=E7=89=88?=
+Subject: [PATCH 06/12] =?UTF-8?q?cmake-version:=20=E5=B0=86=E7=89=88?=
  =?UTF-8?q?=E6=9C=AC=E9=99=8D=E5=88=B0=203.22=20=E4=BB=A5=E9=80=82?=
  =?UTF-8?q?=E7=94=A8=E4=BA=8E=20cmake=20=E6=9E=84=E5=BB=BA?=
 MIME-Version: 1.0
@@ -1285,10 +1285,10 @@ index f132dc6..77f02f2 100644
 2.20.1
 
 
-From edcd7b2df99e30d6e6253d8df10126603f269dbc Mon Sep 17 00:00:00 2001
+From 49746538100d7dd4da0aa3107fccdefffd58892e Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Sun, 5 Feb 2023 12:55:38 +0800
-Subject: [PATCH 07/11] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 07/12] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E7=8E=B0=E6=9C=89=E5=AE=8C=E6=95=B4=E6=9E=84=E5=BB=BA=E6=A8=A1?=
  =?UTF-8?q?=E5=9D=97?=
 MIME-Version: 1.0
@@ -2034,10 +2034,10 @@ index 0000000..bd15f0d
 2.20.1
 
 
-From 40e0220709909a649ad9d912a6d4d2d4d1839cf4 Mon Sep 17 00:00:00 2001
+From b611c25abc6445a93287f58d3920ff8b3ea22bc8 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Sun, 5 Feb 2023 13:00:22 +0800
-Subject: [PATCH 08/11] =?UTF-8?q?repo:=20=E5=B0=86=E7=8E=B0=E6=9C=89?=
+Subject: [PATCH 08/12] =?UTF-8?q?repo:=20=E5=B0=86=E7=8E=B0=E6=9C=89?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=E8=BD=AC=E4=B8=BA=20spark=20=E5=8C=96?=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -2182,10 +2182,10 @@ index 60e9171..d990b1d 100644
 2.20.1
 
 
-From 64d0cae716e28770916bf3c6376b458ca716fed2 Mon Sep 17 00:00:00 2001
+From fcab235ce53e400e6da96f57fb682a913cf79e53 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Sun, 5 Feb 2023 16:58:53 +0800
-Subject: [PATCH 09/11] =?UTF-8?q?repo:=20=E9=A2=84=E7=95=99=E9=85=8D?=
+Subject: [PATCH 09/12] =?UTF-8?q?repo:=20=E9=A2=84=E7=95=99=E9=85=8D?=
  =?UTF-8?q?=E7=BD=AE=E4=B8=BA=E6=8F=92=E4=BB=B6=E7=9B=B8=E5=85=B3=E6=94=AF?=
  =?UTF-8?q?=E6=8C=81=E9=83=A8=E5=88=86?=
 MIME-Version: 1.0
@@ -2221,10 +2221,10 @@ index d990b1d..c18417f 100644
 2.20.1
 
 
-From 2d518ad7500692ce558076efd14722ef363ae299 Mon Sep 17 00:00:00 2001
+From 4dce41dee6d30dc1804fbf0967bc23628f2b3066 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Mon, 6 Feb 2023 01:10:42 +0800
-Subject: [PATCH 10/11] =?UTF-8?q?linux/plugin-support:=20=E6=B7=BB?=
+Subject: [PATCH 10/12] =?UTF-8?q?linux/plugin-support:=20=E6=B7=BB?=
  =?UTF-8?q?=E5=8A=A0=20Notepad--=20=E6=8F=92=E4=BB=B6=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=E6=A8=A1=E5=9D=97=E6=94=AF=E6=8C=81?=
 MIME-Version: 1.0
@@ -2453,10 +2453,10 @@ index 1f8939b..204d16a 100644
 2.20.1
 
 
-From c0da9de36fd4b9ff075afb15aa3c3cbb0466495a Mon Sep 17 00:00:00 2001
+From 8cefa82cf1339dcc0230be955047fab350de2685 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Mon, 6 Feb 2023 01:11:26 +0800
-Subject: [PATCH 11/11] =?UTF-8?q?linux/plugin-doc:=20=E6=B7=BB=E5=8A=A0=20?=
+Subject: [PATCH 11/12] =?UTF-8?q?linux/plugin-doc:=20=E6=B7=BB=E5=8A=A0=20?=
  =?UTF-8?q?Notepad--=20=E6=8F=92=E4=BB=B6=E6=9E=84=E5=BB=BA=E6=8F=8F?=
  =?UTF-8?q?=E8=BF=B0=E6=96=87=E6=A1=A3?=
 MIME-Version: 1.0
@@ -2639,6 +2639,78 @@ index 0000000..c642fc7
 +
 +    ```
 \ No newline at end of file
+-- 
+2.20.1
+
+
+From 7026d476770c9d35dd3d06721805b83b3b554a73 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Mon, 6 Feb 2023 01:37:46 +0800
+Subject: [PATCH 12/12] =?UTF-8?q?fix-plugin-cmake:=20=E4=BF=AE=E5=A4=8D?=
+ =?UTF-8?q?=E6=8F=92=E4=BB=B6=20CMake=20=E9=83=A8=E5=88=86=E5=AE=9A?=
+ =?UTF-8?q?=E4=B9=89=E7=9A=84=E9=94=99=E8=AF=AF?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ cmake/NotepadPluginConfig.cmake.in | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
+
+diff --git a/cmake/NotepadPluginConfig.cmake.in b/cmake/NotepadPluginConfig.cmake.in
+index 58e0bd7..37ad692 100644
+--- a/cmake/NotepadPluginConfig.cmake.in
++++ b/cmake/NotepadPluginConfig.cmake.in
+@@ -30,11 +30,11 @@ set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY @NOTEPAD_PLUGIN_EXTERNAL_PL
+ set(NOTEPAD_BUILD_BY_QT5          @NOTEPAD_BUILD_BY_QT5@)
+ set(NOTEPAD_BUILD_BY_QT6          @NOTEPAD_BUILD_BY_QT6@)
+ 
+-if(NOTEPAD_PLUGIN_BY_QT5)
++if(NOTEPAD_BUILD_BY_QT5)
+     set(CMAKE_AUTOMOC ON)
+     set(CMAKE_AUTOUIC ON)
+     find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+-endif(NOTEPAD_PLUGIN_BY_QT5)
++endif(NOTEPAD_BUILD_BY_QT5)
+ 
+ if(NOTEPAD_BUILD_BY_QT6)
+     set(CMAKE_AUTOMOC ON)
+@@ -42,8 +42,6 @@ if(NOTEPAD_BUILD_BY_QT6)
+     find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+ endif(NOTEPAD_BUILD_BY_QT6)
+ 
+-
+-
+ add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
+ set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
+     IMPORTED_LOCATION 
+@@ -69,13 +67,13 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
+     target_include_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
+     target_link_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_LIBDIR})
+     target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
+-    if(NOTEPAD_PLUGIN_QT5)
++    if(NOTEPAD_BUILD_BY_QT5)
+         target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
+-    endif(NOTEPAD_PLUGIN_QT5)
++    endif(NOTEPAD_BUILD_BY_QT5)
+ 
+-    if(NOTEPAD_PLUGIN_QT5)
++    if(NOTEPAD_BUILD_BY_QT6)
+         target_link_libraries(${PLUGIN_VAR} Qt6::Core Qt6::Widgets)
+-    endif(NOTEPAD_PLUGIN_QT5)
++    endif(NOTEPAD_BUILD_BY_QT6)
+     
+ endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
+ 
+@@ -84,7 +82,7 @@ macro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
+     execute_process(COMMAND git clone ${GIT_REPO_URL} ${PLUGIN_VAR}_git
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         ERROR_QUIET)
+-    aux_source_directory(${CMAKE_BINARY_DIR}/$${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
++    aux_source_directory(${CMAKE_BINARY_DIR}/${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
+     add_notepad_plugin(${PLUGIN_VAR} ${${PLUGIN_VAR}_RESOURCES})
+ endmacro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
+ 
 -- 
 2.20.1
 
