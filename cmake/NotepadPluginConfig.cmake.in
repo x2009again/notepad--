@@ -30,19 +30,17 @@ set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY @NOTEPAD_PLUGIN_EXTERNAL_PL
 set(NOTEPAD_BUILD_BY_QT5          @NOTEPAD_BUILD_BY_QT5@)
 set(NOTEPAD_BUILD_BY_QT6          @NOTEPAD_BUILD_BY_QT6@)
 
-if(NOTEPAD_PLUGIN_BY_QT5)
+if(NOTEPAD_BUILD_BY_QT5)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTOUIC ON)
     find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
-endif(NOTEPAD_PLUGIN_BY_QT5)
+endif(NOTEPAD_BUILD_BY_QT5)
 
 if(NOTEPAD_BUILD_BY_QT6)
     set(CMAKE_AUTOMOC ON)
     set(CMAKE_AUTOUIC ON)
     find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 endif(NOTEPAD_BUILD_BY_QT6)
-
-
 
 add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
 set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
@@ -69,13 +67,13 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     target_include_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
     target_link_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_LIBDIR})
     target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
-    if(NOTEPAD_PLUGIN_QT5)
+    if(NOTEPAD_BUILD_BY_QT5)
         target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
-    endif(NOTEPAD_PLUGIN_QT5)
+    endif(NOTEPAD_BUILD_BY_QT5)
 
-    if(NOTEPAD_PLUGIN_QT5)
+    if(NOTEPAD_BUILD_BY_QT6)
         target_link_libraries(${PLUGIN_VAR} Qt6::Core Qt6::Widgets)
-    endif(NOTEPAD_PLUGIN_QT5)
+    endif(NOTEPAD_BUILD_BY_QT6)
     
 endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 
@@ -84,7 +82,7 @@ macro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
     execute_process(COMMAND git clone ${GIT_REPO_URL} ${PLUGIN_VAR}_git
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         ERROR_QUIET)
-    aux_source_directory(${CMAKE_BINARY_DIR}/$${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
+    aux_source_directory(${CMAKE_BINARY_DIR}/${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
     add_notepad_plugin(${PLUGIN_VAR} ${${PLUGIN_VAR}_RESOURCES})
 endmacro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
 
