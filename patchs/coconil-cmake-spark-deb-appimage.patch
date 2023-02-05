@@ -1,208 +1,53 @@
-From d8b90bb4d709d643c7490ce8a79534769185e24e Mon Sep 17 00:00:00 2001
+From 98323da5e5410ba2a3c98f2aaa1af4aa4ada45ca Mon Sep 17 00:00:00 2001
 From: coconil <coconil@foxmail.com>
 Date: Tue, 31 Jan 2023 22:17:32 +0800
-Subject: [PATCH 1/6] add cmake support
+Subject: [PATCH 1/8] add cmake support
 
 ---
- CMakeLists.txt            | 31 +++++++++++++++++++++++++++++++
- src/findcmpwin.h          | 24 ++++++++++++++----------
- src/findwin.h             | 29 ++++++++++++++++-------------
- src/qscint/CMakeLists.txt | 35 +++++++++++++++++++++++++++++++++++
- 4 files changed, 96 insertions(+), 23 deletions(-)
- create mode 100644 CMakeLists.txt
- create mode 100644 src/qscint/CMakeLists.txt
+ CMakeLists.txt            | 2 ++
+ src/qscint/CMakeLists.txt | 6 +++---
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-new file mode 100644
-index 0000000..4dd3768
---- /dev/null
+index f1d6eea..f1c6d25 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -0,0 +1,31 @@
-+cmake_minimum_required(VERSION 3.24)
-+project(notepad--)
-+
-+set(CMAKE_AUTOMOC ON)
-+set(CMAKE_AUTOUIC ON)
-+set(CMAKE_AUTORCC ON)
-+
-+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Concurrent Network PrintSupport XmlPatterns)
-+
-+add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
-+
-+
-+file(GLOB UI_SRC ${PROJECT_SOURCE_DIR}/src/*.ui)
-+set(UI_SRC ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/cceditor/ccnotepad.ui)
-+aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
-+aux_source_directory(${PROJECT_SOURCE_DIR}/src/cceditor SRC)
-+
-+add_executable(${PROJECT_NAME} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
-+target_include_directories(${PROJECT_NAME} PRIVATE
-+${PROJECT_SOURCE_DIR}/src
-+${PROJECT_SOURCE_DIR}/src/cceditor
-+
-+${PROJECT_SOURCE_DIR}/src/qscint/src
-+${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci
-+${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
-+${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
-+${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
-+${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
-+)
+@@ -53,3 +53,5 @@ install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
+ 
+ include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake) 
+ include(CPack)
 +
 +target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
 \ No newline at end of file
-diff --git a/src/findcmpwin.h b/src/findcmpwin.h
-index 4432e85..70deee3 100755
---- a/src/findcmpwin.h
-+++ b/src/findcmpwin.h
-@@ -4,16 +4,20 @@
- #include <QTabWidget>
- #include <QVector>
- 
--#include "ui_findcmpwin.h"
--#include "rcglobal.h"
--
--enum FindTabIndex {
--	FIND_TAB,
--	REPLACE_TAB,
--};
--class ScintillaEditView;
--
--//struct FindCmpRecord {
-+#include "ui_findcmpwin.h"
-+#include "rcglobal.h"
-+
-+#ifndef DEF_FIND_TAB_INDEX
-+#define DEF_FIND_TAB_INDEX
-+
-+enum FindTabIndex {
-+	FIND_TAB,
-+	REPLACE_TAB,
-+};
-+#endif
-+class ScintillaEditView;
-+
-+//struct FindCmpRecord {
- //	int lineNum;
- //	int pos;
- //	QString lineContents;
-diff --git a/src/findwin.h b/src/findwin.h
-index c32a7d4..be82deb 100755
---- a/src/findwin.h
-+++ b/src/findwin.h
-@@ -3,19 +3,22 @@
- #include <QMainWindow>
- #include <QTabWidget>
- #include <QVector>
--
--
--#include "ui_findwin.h"
--
--enum FindTabIndex {
--	FIND_TAB =0,
--	REPLACE_TAB,
--	DIR_FIND_TAB,
--	MARK_TAB,
--};
--class ScintillaEditView;
--class QsciScintilla;
--
-+
-+
-+#include "ui_findwin.h"
-+#ifndef DEF_FIND_TAB_INDEX
-+#define DEF_FIND_TAB_INDEX
-+enum FindTabIndex {
-+	FIND_TAB =0,
-+	REPLACE_TAB,
-+	DIR_FIND_TAB,
-+	MARK_TAB,
-+};
-+#endif
-+
-+class ScintillaEditView;
-+class QsciScintilla;
-+
- struct FindRecord {
- 	int lineNum;
- 	int lineStartPos; //行开始位置
 diff --git a/src/qscint/CMakeLists.txt b/src/qscint/CMakeLists.txt
-new file mode 100644
-index 0000000..f132dc6
---- /dev/null
+index b114614..f132dc6 100644
+--- a/src/qscint/CMakeLists.txt
 +++ b/src/qscint/CMakeLists.txt
-@@ -0,0 +1,35 @@
+@@ -1,5 +1,5 @@
+-cmake_minimum_required(VERSION 3.16)
+-project(qscintilla2_qt5 CXX)
 +cmake_minimum_required(VERSION 3.24)
 +project(qscint CXX)
-+
-+set(CMAKE_AUTOMOC ON)
-+set(CMAKE_AUTOUIC ON)
-+set(CMAKE_AUTORCC ON)
-+
-+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets PrintSupport)
-+
-+aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
-+aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/lexers SRC)
-+aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/lexlib SRC)
-+aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/src SRC)
-+aux_source_directory(${PROJECT_SOURCE_DIR}/scintilla/boostregex SRC)
-+
-+file(GLOB MOC_HEADER ${PROJECT_SOURCE_DIR}/src/Qsci/*.h)
-+
-+#message(${MOC_HEADER})
-+
-+add_library(${PROJECT_NAME} STATIC ${SRC} ${MOC_HEADER})
-+
-+target_compile_definitions(${PROJECT_NAME} PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES)
-+
-+target_include_directories(${PROJECT_NAME} PRIVATE
-+${PROJECT_SOURCE_DIR}/scintilla/lexlib
-+${PROJECT_SOURCE_DIR}/scintilla/boostregex
-+)
-+
-+target_include_directories(${PROJECT_NAME} PUBLIC
-+${PROJECT_SOURCE_DIR}/src
+ 
+ set(CMAKE_AUTOMOC ON)
+ set(CMAKE_AUTOUIC ON)
+@@ -28,7 +28,7 @@ ${PROJECT_SOURCE_DIR}/scintilla/boostregex
+ 
+ target_include_directories(${PROJECT_NAME} PUBLIC
+ ${PROJECT_SOURCE_DIR}/src
+-${PROJECT_SOURCE_DIR}/src/Qsci 
 +${PROJECT_SOURCE_DIR}/src/Qsci
-+${PROJECT_SOURCE_DIR}/scintilla/src
-+${PROJECT_SOURCE_DIR}/scintilla/include)
-+
-+target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network Qt5::PrintSupport)
+ ${PROJECT_SOURCE_DIR}/scintilla/src
+ ${PROJECT_SOURCE_DIR}/scintilla/include)
+ 
 -- 
 2.20.1
 
 
-From af0785b1f7060ac535900f159173153d2028d1a7 Mon Sep 17 00:00:00 2001
-From: coconil <coconil@foxmail.com>
-Date: Tue, 31 Jan 2023 22:49:55 +0800
-Subject: [PATCH 2/6] add cmake build doc
-
----
- cmake.md | 8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 cmake.md
-
-diff --git a/cmake.md b/cmake.md
-new file mode 100644
-index 0000000..b5f9785
---- /dev/null
-+++ b/cmake.md
-@@ -0,0 +1,8 @@
-+# cmake构建说明
-+
-+## Ubuntu
-+
-+1. 安装编译环境 `sudo apt-get install g++ make cmake`
-+1. 安装qt工具和库 `sudo apt-get install qtbase5-dev qt5-qmake qtbase5-dev-tools libqt5printsupport5 libqt5xmlpatterns5-dev `
-+1. 配置 `cmake path_to_src`
-+1. 编译 `make -j`
-\ No newline at end of file
--- 
-2.20.1
-
-
-From 44ef7d609c77688c46a0334bc08d863114b46998 Mon Sep 17 00:00:00 2001
+From 486ece6437385cf06cf99feba504a990ff5c2c6e Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:04:05 +0800
-Subject: [PATCH 3/6] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 2/8] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20deb?=
 MIME-Version: 1.0
@@ -210,8 +55,8 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 ---
- .gitignore                           |  36 ++-
- CMakeLists.txt                       |  34 ++-
+ .gitignore                           |  48 +++-
+ CMakeLists.txt                       |  36 ++-
  Makefile                             |  61 +++++
  assets/spark.png                     | Bin 0 -> 4959 bytes
  cmake/DebPackageConfig.cmake         | 323 +++++++++++++++++++++++++++
@@ -219,7 +64,7 @@ Content-Transfer-Encoding: 8bit
  cmake/SparkInstallMacrosConfig.cmake | 131 +++++++++++
  cmake/package-deb.descript           |  45 ++++
  cmake/spark-desktop.desktop.in       |  12 +
- 9 files changed, 672 insertions(+), 5 deletions(-)
+ 9 files changed, 679 insertions(+), 12 deletions(-)
  create mode 100644 Makefile
  create mode 100644 assets/spark.png
  create mode 100644 cmake/DebPackageConfig.cmake
@@ -229,16 +74,28 @@ Content-Transfer-Encoding: 8bit
  create mode 100644 cmake/spark-desktop.desktop.in
 
 diff --git a/.gitignore b/.gitignore
-index 8d723bc..30bcfd5 100644
+index 8d723bc..bf38a86 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -393,6 +393,36 @@ FodyWeavers.xsd
- *.msix
- *.msm
- *.msp
+@@ -387,12 +387,42 @@ FodyWeavers.xsd
+ # Local History for Visual Studio Code
+ .history/
+ 
+-# Windows Installer files from build outputs
+-*.cab
+-*.msi
+-*.msix
+-*.msm
+-*.msp
 -
 -# JetBrains Rider
 -*.sln.iml
++# Windows Installer files from build outputs
++*.cab
++*.msi
++*.msix
++*.msm
++*.msp
 +
 +# JetBrains Rider
 +*.sln.iml
@@ -273,19 +130,20 @@ index 8d723bc..30bcfd5 100644
 +# End of https://www.toptal.com/developers/gitignore/api/cmake
 +!/Makefile
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4dd3768..a48badb 100644
+index f1c6d25..666fbdb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,5 +1,5 @@
- cmake_minimum_required(VERSION 3.24)
+-cmake_minimum_required(VERSION 3.16)
 -project(notepad--)
++cmake_minimum_required(VERSION 3.24)
 +project(notepad-- VERSION 1.22.0)
  
  set(CMAKE_AUTOMOC ON)
  set(CMAKE_AUTOUIC ON)
-@@ -28,4 +28,34 @@ ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
- ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
- )
+@@ -54,4 +54,34 @@ install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
+ include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake) 
+ include(CPack)
  
 -target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
 \ No newline at end of file
@@ -1073,10 +931,10 @@ index 0000000..e7c3b18
 2.20.1
 
 
-From b2c247073dfaf9539af26cb5372f8ba16c297cdc Mon Sep 17 00:00:00 2001
+From 7aa88bae1182ba087631ad0bd0e336c6dda9699b Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:09:49 +0800
-Subject: [PATCH 4/6] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 3/8] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20Appimage?=
 MIME-Version: 1.0
@@ -1093,10 +951,10 @@ Content-Transfer-Encoding: 8bit
  create mode 100644 cmake/spark-appimage.desktop.in
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a48badb..364adaa 100644
+index 666fbdb..a8f27aa 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -54,6 +54,14 @@ if(CMAKE_HOST_UNIX)
+@@ -80,6 +80,14 @@ if(CMAKE_HOST_UNIX)
      spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
      spark_install_target(/usr/bin/ ${PROJECT_NAME})
  
@@ -1307,10 +1165,10 @@ index 0000000..0ca2577
 2.20.1
 
 
-From bee93666ed61aa5f605ccf98aa79585708ea098a Mon Sep 17 00:00:00 2001
+From 138dc3b7f574b9fd44054d2f1397ff737ce4f41c Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 13:58:29 +0800
-Subject: [PATCH 5/6] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20=E6=B7=BB?=
+Subject: [PATCH 4/8] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20=E6=B7=BB?=
  =?UTF-8?q?=E5=8A=A0=E6=96=87=E6=9C=AC=E6=96=87=E4=BB=B6=E7=9A=84=E7=9B=B8?=
  =?UTF-8?q?=E5=85=B3=20MimeType?=
 MIME-Version: 1.0
@@ -1349,10 +1207,10 @@ index e7c3b18..e33c74e 100644
 2.20.1
 
 
-From d4d07795f09d33b4995e34c1f86a03c678025f96 Mon Sep 17 00:00:00 2001
+From c75654ae45f30f8039fcf44b42ecb873aef69ddd Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 14:00:54 +0800
-Subject: [PATCH 6/6] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
+Subject: [PATCH 5/8] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
  =?UTF-8?q?=E4=BB=B6=E6=B7=BB=E5=8A=A0=20%F=20=E5=8F=82=E6=95=B0=EF=BC=8C?=
  =?UTF-8?q?=E4=BB=A5=E4=BF=9D=E8=AF=81=E5=8F=AF=E6=AD=A3=E7=A1=AE=E4=BC=A0?=
  =?UTF-8?q?=E5=85=A5=E5=8F=82=E6=95=B0?=
@@ -1365,10 +1223,10 @@ Content-Transfer-Encoding: 8bit
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 364adaa..fed2a51 100644
+index a8f27aa..63e878c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,7 +44,8 @@ if(CMAKE_HOST_UNIX)
+@@ -70,7 +70,8 @@ if(CMAKE_HOST_UNIX)
          # 应用类型: Type=
          "Application"
          # 执行程序: Exec=
@@ -1378,6 +1236,942 @@ index 364adaa..fed2a51 100644
          # 图标路径: Icon=
          "/usr/share/notepad--/icons/spark.png"
          # 应用分类: Category=
+-- 
+2.20.1
+
+
+From c47eb80929921e9f94ab9e176304b3c4fb1de157 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Thu, 2 Feb 2023 14:47:56 +0800
+Subject: [PATCH 6/8] =?UTF-8?q?cmake-version:=20=E5=B0=86=E7=89=88?=
+ =?UTF-8?q?=E6=9C=AC=E9=99=8D=E5=88=B0=203.22=20=E4=BB=A5=E9=80=82?=
+ =?UTF-8?q?=E7=94=A8=E4=BA=8E=20cmake=20=E6=9E=84=E5=BB=BA?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt            | 2 +-
+ src/qscint/CMakeLists.txt | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 63e878c..60e9171 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.24)
++cmake_minimum_required(VERSION 3.22)
+ project(notepad-- VERSION 1.22.0)
+ 
+ set(CMAKE_AUTOMOC ON)
+diff --git a/src/qscint/CMakeLists.txt b/src/qscint/CMakeLists.txt
+index f132dc6..77f02f2 100644
+--- a/src/qscint/CMakeLists.txt
++++ b/src/qscint/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.24)
++cmake_minimum_required(VERSION 3.22)
+ project(qscint CXX)
+ 
+ set(CMAKE_AUTOMOC ON)
+-- 
+2.20.1
+
+
+From 653b68b44490ba0afbf99a95300aa46d96c4ec33 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Sun, 5 Feb 2023 12:55:38 +0800
+Subject: [PATCH 7/8] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+ =?UTF-8?q?=E7=8E=B0=E6=9C=89=E5=AE=8C=E6=95=B4=E6=9E=84=E5=BB=BA=E6=A8=A1?=
+ =?UTF-8?q?=E5=9D=97?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ cmake/SparkEnvConfig.cmake          |   8 +
+ cmake/SparkFindQt5Config.cmake      | 153 ++++++++++++++++++
+ cmake/SparkFindQt6Config.cmake      | 130 +++++++++++++++
+ cmake/SparkMacrosConfig.cmake       | 161 +++++++++++++++++++
+ cmake/SparkMacrosExtendConfig.cmake | 237 ++++++++++++++++++++++++++++
+ 5 files changed, 689 insertions(+)
+ create mode 100644 cmake/SparkEnvConfig.cmake
+ create mode 100644 cmake/SparkFindQt5Config.cmake
+ create mode 100644 cmake/SparkFindQt6Config.cmake
+ create mode 100644 cmake/SparkMacrosConfig.cmake
+ create mode 100644 cmake/SparkMacrosExtendConfig.cmake
+
+diff --git a/cmake/SparkEnvConfig.cmake b/cmake/SparkEnvConfig.cmake
+new file mode 100644
+index 0000000..3690f1a
+--- /dev/null
++++ b/cmake/SparkEnvConfig.cmake
+@@ -0,0 +1,8 @@
++cmake_minimum_required(VERSION 3.5.1)
++
++set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
++# set(CMAKE_INCLUDE_CURRENT_DIR ON)
++set(CMAKE_AUTOMOC ON)
++set(CMAKE_AUTOUIC ON)
++set(CMAKE_AUTORCC ON)
++# set(CMAKE_BUILD_TYPE "Debug")
+\ No newline at end of file
+diff --git a/cmake/SparkFindQt5Config.cmake b/cmake/SparkFindQt5Config.cmake
+new file mode 100644
+index 0000000..ad2db4c
+--- /dev/null
++++ b/cmake/SparkFindQt5Config.cmake
+@@ -0,0 +1,153 @@
++cmake_minimum_required(VERSION 3.5.1)
++
++set(SPARK_FIND_QT5 TRUE)
++
++find_package(Qt5 COMPONENTS Core Widgets Network REQUIRED)
++
++# function(target_link_qt5 NAME)
++#     target_link_libraries(${NAME}
++#         Qt5::Core
++#         Qt5::Widgets
++#         Qt5::Network)
++# endfunction(target_link_qt5 NAME)
++
++# 使用 spark_add_link 生成 target_link_qt5 以替代上面内容
++spark_add_link(qt5 Qt5::Core Qt5::Widgets Qt5::Network)
++
++
++# spark_add_link_qt5
++# 自定义宏 spark_add_link_qt5 以扩展 target_link_qt5_<name> 结构
++    # _IN_NAME: 此宏使用嵌套宏 spark_add_link 时追加 <name> 名称
++    # 同等于 spark_add_link(qt_<name> ${ARGN})
++macro(spark_add_link_qt5 _IN_NAME)
++    spark_add_link(qt5_${_IN_NAME} ${ARGN})
++endmacro(spark_add_link_qt5 _IN_NAME)
++
++# 使用 spark_add_link_qt5 生成 target_link_qt5_<name> 的宏
++# spark_add_link_qt5(Concurrent Qt5::Concurrent)
++
++# 高级自定义
++# spark_add_links_qt5
++# 自定义宏 spark_add_links_qt5 以扩展 spark_add_link_qt5 宏配置组
++    # 特点: 任意长度参数
++    # qt5_item: 为进行遍历后的单项，类似于 python3 中的 (for item in items:)
++    # 例如: qt5_item 为 Core：
++        # spark_add_link_qt5(${qt5_item} Qt5::${qt5_item})
++        # 展开为 spark_add_link_qt5(Core Qt5::Core)
++        # 展开为 spark_add_link(qt5_Core Qt5::Core)
++        # 展开为 spark_add_link(qt5_Core Qt5::Core)
++        # 特性: 增加 qt5_Core 转 qt5_core
++            # string(TOLOWER <string> <output_variable>)
++macro(spark_add_links_qt5)
++    set(qt5_items ${ARGN})
++    foreach(qt5_item IN LISTS qt5_items)
++        find_package(Qt5${qt5_item})
++        spark_add_link_qt5(${qt5_item} Qt5::${qt5_item})
++
++        string(TOLOWER "${qt5_item}" qt5_lower_item)
++        spark_add_link_qt5(${qt5_lower_item} Qt5::${qt5_item})
++        message("add_target_link_qt5_${qt5_item} or add_target_link_qt5_${qt5_lower_item}")
++    endforeach(qt5_item IN LISTS qt5_items)
++endmacro(spark_add_links_qt5)
++
++
++# Core	                用于其它模块的核心非图形类。
++# GUI	                图形用户界面 GUI 组件基类。包括 OpenGL。
++# Multimedia	        音频 视频 无线电 摄像头功能类。
++# Multimedia Widgets	用于实现多媒体功能，基于 Widget 的类。
++# Network	            使网络编程更容易和更可移植的类。
++
++# QML	                QML 和 JavaScript 语言类。
++# Quick	                以自定义用户界面 UI 构建高动态应用程序的声明性框架。
++# Quick Controls	    为桌面、嵌入式及移动设备创建高性能用户界面提供轻量 QML 类型。这些类型运用简单样式化体系结构且非常高效。
++# Quick Dialogs	        用于从 Qt Quick 应用程序创建系统对话框，并与之交互的类型。
++# Quick Layouts	        布局是用于在用户界面中排列基于 Qt Quick 2 项的项。
++# Quick Test	        用于 QML 应用程序的单元测试框架，其测试案例被编写成 JavaScript 函数。
++                        # 注意： 二进制保证不兼容 Qt Quick Test，但源代码仍兼容。
++
++# Qt SQL	            集成使用 SQL 数据库的类。
++# Qt Test	            单元测试 Qt 应用程序和库的类。
++                        # 注意： 二进制保证不兼容 Qt Test，但源代码仍兼容。
++# Qt Widgets	        以 C++ 小部件扩展 Qt GUI 的类。
++
++
++
++# 找出所有 Qt5 模板
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt5@Qt5@;' | grep ^Qt5
++
++# 掐头去尾，洗一次
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt5@Qt5@;' | grep ^Qt5 | sed 's@^Qt5@@; s@Config.cmake$@@; /^\s*$/d'
++
++# 排序
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt5@Qt5@;' | grep ^Qt5 | sed 's@^Qt5@@; s@Config.cmake$@@; /^\s*$/d' | sort | pr -t -3
++
++spark_add_links_qt5(
++    # AccessibilitySupport
++    # AttributionsScannerTools
++    Concurrent
++    # Core
++    # DBus
++    # Designer
++    # DesignerComponents
++    # DeviceDiscoverySupport
++    # DocTools
++    # EdidSupport
++    # EglFSDeviceIntegration
++    # EglFsKmsSupport
++    # EglSupport
++    # EventDispatcherSupport
++    # FbSupport
++    # FontDatabaseSupport
++    # GlxSupport
++    Gui
++    # Help
++    # InputSupport
++    # KmsSupport
++    # LinguistTools
++    # LinuxAccessibilitySupport
++    # Network
++    # OpenGL
++    # OpenGLExtensions
++    # PacketProtocol
++    # PlatformCompositorSupport
++    # Positioning
++    # PositioningQuick
++    PrintSupport
++    # Qml
++    # QmlDebug
++    # QmlDevTools
++    # QmlImportScanner
++    # QmlModels
++    # QmlWorkerScript
++    # Quick
++    # QuickCompiler
++    # QuickControls2
++    # QuickParticles
++    # QuickShapes
++    # QuickTemplates2
++    # QuickTest
++    # QuickWidgets
++    # SerialBus
++    # SerialPort
++    # ServiceSupport
++    # Sql
++    # Svg
++    # Test
++    # ThemeSupport
++    # UiPlugin
++    # UiTools
++    # VulkanSupport
++    # WebChannel
++    # WebEngine
++    # WebEngineCore
++    # WebEngineWidgets
++    # WebKit
++    # WebKitWidgets
++    # WebSockets
++    # Widgets
++    # X11Extras
++    # XcbQpa
++    # XkbCommonSupport
++    # Xml
++    XmlPatterns
++)
+\ No newline at end of file
+diff --git a/cmake/SparkFindQt6Config.cmake b/cmake/SparkFindQt6Config.cmake
+new file mode 100644
+index 0000000..fb2d741
+--- /dev/null
++++ b/cmake/SparkFindQt6Config.cmake
+@@ -0,0 +1,130 @@
++cmake_minimum_required(VERSION 3.5.1)
++
++set(SPARK_FIND_QT6 TRUE)
++
++find_package(Qt6 COMPONENTS Core Widgets Network REQUIRED)
++
++# function(target_link_qt6 NAME)
++#     target_link_libraries(${NAME}
++#         Qt6::Core
++#         Qt6::Widgets
++#         Qt6::Network)
++# endfunction(target_link_qt6 NAME)
++
++# 使用 spark_add_link 生成 target_link_qt6 以替代上面内容
++spark_add_link(qt6 Qt6::Core Qt6::Widgets Qt6::Network)
++
++
++# spark_add_link_qt6
++# 自定义宏 spark_add_link_qt6 以扩展 target_link_qt6_<name> 结构
++    # _IN_NAME: 此宏使用嵌套宏 spark_add_link 时追加 <name> 名称
++    # 同等于 spark_add_link(qt_<name> ${ARGN})
++macro(spark_add_link_qt6 _IN_NAME)
++    spark_add_link(qt6_${_IN_NAME} ${ARGN})
++endmacro(spark_add_link_qt6 _IN_NAME)
++
++# 使用 spark_add_link_qt6 生成 target_link_qt6_<name> 的宏
++# spark_add_link_qt5(Concurrent Qt6::Concurrent)
++
++# 高级自定义
++# spark_add_links_qt6
++# 自定义宏 spark_add_links_qt6 以扩展 spark_add_link_qt6 宏配置组
++    # 特点: 任意长度参数
++    # qt6_item: 为进行遍历后的单项，类似于 python3 中的 (for item in items:)
++    # 例如: qt6_item 为 Core：
++        # spark_add_link_qt6(${qt6_item} Qt6::${qt6_item})
++        # 展开为 spark_add_link_qt6(Core Qt6::Core)
++        # 展开为 spark_add_link(qt6_Core Qt6::Core)
++        # 展开为 spark_add_link(qt6_Core Qt6::Core)
++        # 特性: 增加 qt6_Core 转 qt6_core
++            # string(TOLOWER <string> <output_variable>)
++macro(spark_add_links_qt6)
++    set(qt6_items ${ARGN})
++    foreach(qt6_item IN LISTS qt6_items)
++        find_package(Qt6${qt6_item})
++        spark_add_link_qt6(${qt6_item} Qt6::${qt6_item})
++
++        string(TOLOWER "${qt6_item}" qt6_lower_item)
++        spark_add_link_qt6(${qt6_lower_item} Qt6::${qt6_item})
++        message("add_target_link_qt6_${qt6_item} or add_target_link_qt6_${qt6_lower_item}")
++    endforeach(qt6_item IN LISTS qt6_items)
++endmacro(spark_add_links_qt6)
++
++# 找出所有 Qt6 模板
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt6@Qt6@;' | grep ^Qt6
++
++# 掐头去尾，洗一次
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt5@Qt5@;' | grep ^Qt5 | sed 's@^Qt5@@; s@Config.cmake$@@; /^\s*$/d'
++
++# 排序
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt5@Qt5@;' | grep ^Qt5 | sed 's@^Qt5@@; s@Config.cmake$@@; /^\s*$/d' | sort | pr -t -3
++# find /usr/lib/x86_64-linux-gnu/cmake/ -name "*Config.cmake" | sed 's@^.*/Qt6@Qt6@;' | grep ^Qt6 | sed 's@^Qt6@@; s@Config.cmake$@@; /^\s*$/d' | sort | pr -t -3
++
++spark_add_links_qt6(
++    # BuildInternals
++    # BuildInternals/StandaloneTests/Qt5CompatTests
++    # BuildInternals/StandaloneTests/QtBaseTests
++    Concurrent
++    # Core
++    Core5Compat
++    # CoreTools
++    # DBus
++    # DBusTools
++    # DeviceDiscoverySupportPrivate
++    # EglFSDeviceIntegrationPrivate
++    # EglFsKmsGbmSupportPrivate
++    # EglFsKmsSupportPrivate
++    # FbSupportPrivate
++    # Gui
++    # GuiTools
++    # HostInfo
++    # InputSupportPrivate
++    # KmsSupportPrivate
++    # Network
++    # OpenGL
++    # OpenGLWidgets
++    PrintSupport
++    # QComposePlatformInputContextPlugin
++    # QCupsPrinterSupportPlugin
++    # QEglFSEmulatorIntegrationPlugin
++    # QEglFSIntegrationPlugin
++    # QEglFSKmsEglDeviceIntegrationPlugin
++    # QEglFSKmsGbmIntegrationPlugin
++    # QEglFSX11IntegrationPlugin
++    # QEvdevKeyboardPlugin
++    # QEvdevMousePlugin
++    # QEvdevTabletPlugin
++    # QEvdevTouchScreenPlugin
++    # QGifPlugin
++    # QGtk3ThemePlugin
++    # QIBaseDriverPlugin
++    # QIbusPlatformInputContextPlugin
++    # QICOPlugin
++    # QJpegPlugin
++    # QLibInputPlugin
++    # QLinuxFbIntegrationPlugin
++    # QMinimalEglIntegrationPlugin
++    # QMinimalIntegrationPlugin
++    # QMYSQLDriverPlugin
++    # QNetworkManagerNetworkInformationPlugin
++    # QODBCDriverPlugin
++    # QOffscreenIntegrationPlugin
++    # QPSQLDriverPlugin
++    # QSQLiteDriverPlugin
++    # QTlsBackendCertOnlyPlugin
++    # QTlsBackendOpenSSLPlugin
++    # QTsLibPlugin
++    # QTuioTouchPlugin
++    # QVkKhrDisplayIntegrationPlugin
++    # QVncIntegrationPlugin
++    # QXcbEglIntegrationPlugin
++    # QXcbGlxIntegrationPlugin
++    # QXcbIntegrationPlugin
++    # QXdgDesktopPortalThemePlugin
++    # Sql
++    # Test
++    # Widgets
++    # WidgetsTools
++    # XcbQpaPrivate
++    # Xml
++)
+\ No newline at end of file
+diff --git a/cmake/SparkMacrosConfig.cmake b/cmake/SparkMacrosConfig.cmake
+new file mode 100644
+index 0000000..4f68ce1
+--- /dev/null
++++ b/cmake/SparkMacrosConfig.cmake
+@@ -0,0 +1,161 @@
++cmake_minimum_required(VERSION 3.5.1)
++
++# 定义一些 macro 用于自动生成构建结构
++
++# spark_add_library <lib_name> [files]...
++# 构建一个库，基于指定的源文件
++    # 并根据库名生成 target_link_<lib_name> 函数
++macro(spark_add_library _lib_name)
++    message("================ ${_lib_name} Library ================")
++    add_library(${_lib_name} ${ARGN})
++
++    set(SRCS ${ARGN})
++    foreach(item IN LISTS SRCS)
++        message(" -> ${item}")
++    endforeach(item IN LISTS SRCS)
++
++    function(target_link_${_lib_name} TARGET)
++        message("${_lib_name}")
++        target_link_libraries(${TARGET} ${_lib_name})
++    endfunction(target_link_${_lib_name} TARGET)
++
++endmacro(spark_add_library _lib_name)
++
++# spark_add_library_path <lib_name> <lib_path>
++# 构建一个库，基于指定的路径
++    # 并根据库名生成 target_link_<lib_name> 函数
++        # 函数内增加以 <lib_path> 头文件搜索路径
++macro(spark_add_library_path _lib_name _lib_path)
++
++    set(${_lib_name}_SOURCE_PATH ${_lib_path})
++    set(${_lib_name}_TYPE)
++    if(${${_lib_name}_SOURCE_PATH} STREQUAL SHARED OR ${${_lib_name}_SOURCE_PATH} STREQUAL STATIC)
++        set(${_lib_name}_SOURCE_PATH ${ARGV2})
++        set(${_lib_name}_TYPE ${_lib_path})
++        message("_lib_path: ${${_lib_name}_SOURCE_PATH}(${ARGV2})[${${_lib_name}_TYPE}]")
++
++        if(${ARGC} LESS 3)
++            message(FATAL_ERROR "Missing parameter, library path not specified.")
++        endif(${ARGC} LESS 3)
++    endif(${${_lib_name}_SOURCE_PATH} STREQUAL SHARED OR ${${_lib_name}_SOURCE_PATH} STREQUAL STATIC)
++
++    aux_source_directory(${${_lib_name}_SOURCE_PATH} ${_lib_name}_SOURCES)
++
++    message("================ spark_add_library_path: ${_lib_name} ================")
++    file(GLOB UI_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${${_lib_name}_SOURCE_PATH}/*.ui)
++    add_library(${_lib_name} ${${_lib_name}_TYPE} ${${_lib_name}_SOURCES} ${UI_LIST})
++    message("${_lib_name}_SOURCES: ${${_lib_name}_SOURCES}, ${${_lib_name}_SOURCE_PATH}")
++    foreach(item IN LISTS ${_lib_name}_SOURCES)
++        message(" -> ${item}")
++    endforeach(item IN LISTS ${_lib_name}_SOURCES)
++
++    function(target_link_${_lib_name} TARGET)
++        # message("target_link_${_lib_name}")
++        message(" -> (include): ${${_lib_name}_SOURCE_PATH}")
++        target_include_directories(${TARGET} PUBLIC "${${_lib_name}_SOURCE_PATH}")
++        target_link_libraries(${TARGET} ${_lib_name})
++    endfunction(target_link_${_lib_name} TARGET)
++
++    function(target_include_${_lib_name} TARGET)
++        # message("target_link_${_lib_name}")
++        message(" -> (include): ${${_lib_name}_SOURCE_PATH}")
++        target_include_directories(${TARGET} PUBLIC "${${_lib_name}_SOURCE_PATH}")
++        # target_link_libraries(${TARGET} ${_lib_name})
++    endfunction(target_include_${_lib_name} TARGET)
++
++    # file(GLOB HEADER_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${${_lib_name}_SOURCE_PATH}/*.h)
++    target_include_directories(${_lib_name} PUBLIC "${${_lib_name}_SOURCE_PATH}")
++
++    # 如果想用以下操作手动实现 target_link_include_directories
++        # 请注意对 LIST 类型使用 "" 进行包围
++        # target_link_include_directories 的 PUBLIC 将会填充(追加)目标的 INCLUDE_DIRECTORIES 属性
++        # target_link_include_directories 支持 cmake 生成大表达式，更容易操作，手动将无法实现此类能力
++        # target_link_include_directories 支持相对路径和绝对路径参数
++            # 手动操作将必须使用绝对路径，这是不好的地方
++    # get_target_property(_lib_include_directories ${_lib_name} INCLUDE_DIRECTORIES)
++    # list(APPEND _lib_include_directories "${CMAKE_CURRENT_LIST_DIR}/${${_lib_name}_SOURCE_PATH}")
++    # message("----> ${CMAKE_CURRENT_LIST_DIR}/${${_lib_name}_SOURCE_PATH}")
++    # message("----> ${_lib_include_directories}")
++    # set_target_properties(${_lib_name} PROPERTIES
++    #     INCLUDE_DIRECTORIES "${_lib_include_directories}"
++        # INTERFACE_INCLUDE_DIRECTORIES "${_lib_include_directories}"
++    # )
++
++endmacro(spark_add_library_path _lib_name _lib_path)
++
++# spark_add_executable <exec_name> [files]...
++# 构建一个可执行文件，基于指定的源文件
++    # Qt编译时源文件包括很多类型，需要指定 *.h/*.cpp/*.qrc/*.qm/... 等
++macro(spark_add_executable _exec_name)
++
++    message("================ ${_exec_name} Executable ================")
++    add_executable(${_exec_name} ${ARGN})
++
++endmacro(spark_add_executable _exec_name)
++
++macro(spark_add_executable_path _exec_name _exec_path)
++    aux_source_directory(${_exec_path} ${_exec_name}_SOURCES)
++
++    message("================ ${_exec_name} Executable ================")
++    file(GLOB UI_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${_exec_path}/*.ui)
++    add_executable(${_exec_name} ${${_exec_name}_SOURCES} ${ARGN} ${UI_LIST})
++    foreach(item IN LISTS ${_exec_name}_SOURCES)
++        message(" -> ${item}")
++    endforeach(item IN LISTS ${_exec_name}_SOURCES)
++
++    # function(target_link_${_exec_name} TARGET)
++    #     message("target_link_${_lib_name}")
++    message(" -> (include): ${_exec_path}")
++    target_include_directories(${_exec_name} PUBLIC "${_exec_path}")
++        # target_link_libraries(${TARGET} ${_lib_name})
++    # endfunction(target_link_${_exec_name} TARGET)
++    # target_link_${_exec_name}(${_exec_name})
++
++endmacro(spark_add_executable_path _exec_name _exec_path)
++
++# spark_find_library
++# 搜索一个库，基于指定的库名，调用 pkg-config 搜索库
++    # 并根据库名生成一个 target_link_<prefix> 函数
++macro(spark_find_library _prefix)
++    find_package(PkgConfig REQUIRED)
++
++    # libnotify
++    pkg_check_modules(${_prefix} ${ARGN})
++    function(target_link_${_prefix} TARGET)
++        target_include_directories(${TARGET} PUBLIC
++            ${${_prefix}_INCLUDE_DIRS})
++        target_link_libraries(${TARGET}
++            ${${_prefix}_LIBRARIES})
++    endfunction(target_link_${_prefix} TARGET)
++
++endmacro(spark_find_library _prefix)
++
++
++# spark_add_executable_paths
++# 自定义构建宏，基于指定的前缀名称，处理后续参数为子目录
++    # item: 为进行遍历后的单项，类似于 python3 中的 (for item in items:)
++    # file: 为在目录中不以递归(GLOB_RECURSE)方式寻找 qrc 文件，需要将其参与编译才能被 rcc
++    # 并根据 prefix-<item> 生成构建目标，
++macro(spark_add_executable_paths _prefix_path)
++    set(PATHS ${ARGN})
++    foreach(item IN LISTS PATHS)
++        file(GLOB QRCS "${item}/*.qrc")
++        message(">>> add_executable: " "${_prefix_path}-${item} ${item} + ${QRCS}")
++        spark_add_executable_path(${_prefix_path}-${item} ${item} ${QRCS})
++        target_link_qt5(${_prefix_path}-${item})
++    endforeach(item IN LISTS PATHS)
++endmacro(spark_add_executable_paths _prefix_path)
++
++# spark_add_link
++# 自定义宏以代替当前使用 fucntion 定义 target_link_<name> 结构
++    # _IN_NAME: 此宏生成 target_link_<name> 的要求参数
++    # ARGN: 此宏剩余的参数列表
++        # 在使用 target_link_<name> 时
++        # _NAME: 用于此 fucntion 中的要求参数: <_NAME>目标将要连接此库
++macro(spark_add_link _IN_NAME)
++    function(target_link_${_IN_NAME} _NAME)
++        message("LINK ${_NAME} ${ARGN}")
++        target_link_libraries(${_NAME}
++            ${ARGN})
++    endfunction(target_link_${_IN_NAME} _NAME)
++endmacro(spark_add_link _IN_NAME)
+diff --git a/cmake/SparkMacrosExtendConfig.cmake b/cmake/SparkMacrosExtendConfig.cmake
+new file mode 100644
+index 0000000..bd15f0d
+--- /dev/null
++++ b/cmake/SparkMacrosExtendConfig.cmake
+@@ -0,0 +1,237 @@
++
++# find_plus
++# 寻找 INVAl 传入的字符串，如果存在 + 字符将写入位置到 OUTVAL
++function(find_plus INVAL OUTVAL)
++    string(FIND "${INVAL}" "+" plus_index)
++    set(${OUTVAL} ${plus_index} PARENT_SCOPE)
++    # if(plus_index LESS 0)
++    #     set(${OUTVAL} -1 PARENT_SCOPE)
++    # else()
++    #     set(${OUTVAL} ${plus_index} PARENT_SCOPE)
++    # endif(plus_index LESS 0)
++endfunction(find_plus INVAL OUTVAL)
++
++# find_plus("FF" FFFF)
++# message("--> FFFF ${FFFF}")  # --> FFFF -1
++# find_plus("F+F" FFFF)
++# message("--> FFFF ${FFFF}")  # --> FFFF 1
++# find_plus("+F+F" FFFF)
++# message("--> FFFF ${FFFF}")  # --> FFFF 0
++
++# set(FFF)
++# list(APPEND FFFF )
++# list(APPEND FFFF "F")
++# list(APPEND FFFF "FA")
++# message("--> FFFF: ${FFFF}")  # --> FFFF: F;FA
++
++# set(FFFFS "")
++# list(APPEND FFFFS ${FFFF})
++# message("--> FFFFS: ${FFFFS}")  # --> FFFFS: F;FA
++
++# set(FFFF "+AA+BB+CC+DD")
++# string(REPLACE "+" ";" FFFFL "${FFFF}")
++# list(LENGTH FFFFL FFFFLEN)
++# message("--> FFFFL: ${FFFFL} --> ${FFFFLEN}") # --> FFFFL: F;
++
++# plus_list
++# 将传入的 "+AAA+BBB+CCC" 类型数据变成一个 列表(list)
++# 适用于不使用 string 进行替换 + 为 ";" 的情况下使用直接变成 list
++function(plus_list INVAL OUTVAL OUTVALLEN)
++    # set(${OUTVAL} "..." PARENT_SCOPE)
++    # set(${OUTVALLEN} 0 PARENT_SCOPE)
++
++    set(_tmps "")       # 设置为空的
++
++    # 寻找下一个 + 位置
++    find_plus(${INVAL} RIGHT_PLUS)
++
++    string(LENGTH "${INVAL}" INVALLEN)
++    message("--> 传入的 INVAL: --> 内容: ${INVAL}")
++    message("--> 传入的 INVAL: --> 长度: ${INVALLEN}")
++    message("--> 传入的 INVAL: --> +位置: ${RIGHT_PLUS}")
++
++    # 判断是否有右侧 + 号
++    if(RIGHT_PLUS LESS 0)
++        message("--> 传入的 INVAL: --> 无需计算新的+位置")
++        # message("--> 计算新的 + 位置: ${_PLUSINDEX}")
++        list(APPEND _tmps ${INVAL})
++    else()
++        math(EXPR _PLUSINDEX "${RIGHT_PLUS}+1")
++        message("--> 传入的 INVAL: --> 需计算+位置 --> 右移: ${_PLUSINDEX}")
++
++        string(SUBSTRING "${INVAL}" ${_PLUSINDEX} ${INVALLEN} NewVal)
++        message("--> 传入的 INVAL: --> 需计算+位置 --> 右移: ${_PLUSINDEX} -> 内容: ${NewVal}")
++        # string(REPLACE "+" ";" _tmps "${NewVal}")
++        # list(LENGTH FFFFL FFFFLEN)
++
++        # message("--> 计算新的 + 位置: ${_PLUSINDEX} --> 后面的 NewVal: ${NewVal}")
++
++        # find_plus(${NewVal} _NextPlus)
++        # if(_NextPlus LESS 0)
++            # list(APPEND _tmps ${NewVal})
++            # message("--> 追加新的 + 位置: ${_PLUSINDEX} --> 后面的")
++        # else()
++        #     message("--> 追加新的 + 位置: ${_PLUSINDEX} --> 后面的")
++        #     # 重新
++        #     # plus_list(${NewVal} NewValS )
++        #     # foreach(item)
++        #         # list(APPEND _tmps ${item})
++        #     # endforeach(item)
++        # endif(_NextPlus LESS 0)
++    endif(RIGHT_PLUS LESS 0)
++
++    set(${OUTVAL} ${_tmps} PARENT_SCOPE)
++    list(LENGTH _tmps _tmps_len)
++    set(${OUTVALLEN} ${_tmps_len} PARENT_SCOPE)
++
++endfunction(plus_list INVAL OUTVAL OUTVALLEN)
++
++# plus_list("+AAA+BBB+CCC+DDD" FFF FFLEN)
++# message("--------> ${FFF}: -> ${FFLEN}")
++
++# spark_add_library_realpaths
++# 基于传入的项进行构建
++# 可接受的值为: 路径列表
++# 可接受的值为: 路径列表+依赖库A+依赖库B
++macro(spark_add_library_realpaths)
++    message("---> 基于传入的项进行构建 <---")
++    # message("--> src/unclassified/ItemDelegates/NdStyledItemDelegate")
++    # string(FIND <string> <substring> <output_variable> [REVERSE])
++    # string(SUBSTRING <string> <begin> <length> <output_variable>)
++    # math(EXPR value "100 * 0xA" OUTPUT_FORMAT DECIMAL)      # value is set to "1000"
++
++    set(REALPATHS ${ARGN})
++    foreach(REALPATH IN LISTS REALPATHS)
++        message("---> 传入路径: ${REALPATH} <--- ")
++        string(LENGTH "${REALPATH}" REALPATH_LENGTH)
++        message("---> 计算传入路径长度: --> 长度: ${REALPATH_LENGTH}")
++
++        string(FIND "${REALPATH}" "/" LASTINDEX REVERSE)
++        message("---> 计算传入路径末尾/位置: --> 长度: ${LASTINDEX}")
++        math(EXPR LASTINDEX "${LASTINDEX}+1")
++        message("---> 计算传入路径末尾/右移: --> 长度: ${LASTINDEX}")
++        string(SUBSTRING "${REALPATH}" ${LASTINDEX} ${REALPATH_LENGTH} REALNAME_Dependency)
++
++        # 找 + 号下标，这是找+号的函数
++        find_plus(${REALPATH} RIGHT_PLUS)
++
++        # 判断是否有找到 + 号下标，值为 -1 或 正整数
++        if(RIGHT_PLUS LESS 0) # 小于0: 不存在 + 号
++            set(REALNAME "${REALNAME_Dependency}")
++            message("---> 传入路径末尾/右移部分: --> ${REALNAME} <-- 无依赖+")
++
++            message("---> 构建 ${REALNAME} -> ${REALNAME} ${REALPATH} ")
++
++            spark_add_library_path(${REALNAME} ${REALPATH})
++
++            if(SPARK_FIND_QT5)
++                target_link_qt5(${REALNAME})
++            endif(SPARK_FIND_QT5)
++
++            if(SPARK_FIND_QT6)
++                target_link_qt6(${REALNAME})
++            endif(SPARK_FIND_QT6)
++
++        else()
++            message("---> 传入路径末尾/右移部分: --> ${REALNAME_Dependency} <-- 依赖+")
++
++            # 存在+号，将截取从 / 到 + 号之间的内容作为目标名称
++            # 例如 src/unclassified/widgets/DocTypeListView+JsonDeploy
++            #                             ^(LASTINDEX)    ^(RIGHT_PLUS)
++            # 将 RIGHT_PLUS - LASTINDEX 计算出 DocTypeListView 字符长度
++            math(EXPR REALNAME_LENGTH "${RIGHT_PLUS}-${LASTINDEX}")
++
++            message("---> 计算传入路径末尾/右移部分: --> 位置: ${RIGHT_PLUS}")
++            # message("---> 计算传入路径末尾/右移部分: --> 长度: ${REALNAME_Dependency}")
++
++            # 目标名称为 DocTypeListView
++            # 依赖为    JsonDeploy
++            # set(REALNAME "")
++            string(SUBSTRING "${REALPATH}" 0 ${RIGHT_PLUS} _REALPATH_DIR)
++            string(SUBSTRING "${REALPATH}" ${LASTINDEX} ${REALNAME_LENGTH} REALNAME)
++
++            message("---> 计算传入路径末尾/右移部分: --> 库名: ${REALNAME}")
++
++            string(SUBSTRING "${REALPATH}" ${RIGHT_PLUS} ${REALPATH_LENGTH} Dependency)
++            message("---> 计算传入路径末尾/右移部分: --> 库名: ${REALNAME} --> +部分: ${Dependency}")
++
++            # plus_list(${Dependency} dependencies dependencies_len)
++            string(REPLACE "+" ";" dependencies "${Dependency}")
++            message("---> 计算传入路径末尾/右移部分: --> 库名: ${REALNAME} --> +部分: ${Dependency} --> 列表: ${dependencies} <-- ")
++
++
++            message("---> 构建 ${REALNAME} -> ${REALNAME} ${_REALPATH_DIR}")
++
++            spark_add_library_path(${REALNAME} ${_REALPATH_DIR})
++            # target_link_qt5(${REALNAME}) # 使用依赖的依赖或许也不错
++
++            target_include_directories(${REALNAME} PUBLIC ${_REALPATH_DIR})
++            target_link_libraries(${REALNAME} ${dependencies})
++
++        endif(RIGHT_PLUS LESS 0)
++    endforeach(REALPATH IN LISTS REALPATHS)
++
++endmacro(spark_add_library_realpaths)
++
++
++# spark_aux_source_paths
++# 将指定路径中的文件变成可用的AUX源文件列表
++macro(spark_aux_source_paths AUX_VAR)
++    set(${AUX_VAR} "")
++    set(${AUX_VAR}_PATHS ${ARGN})
++
++    foreach(aux_path IN LISTS ${AUX_VAR}_PATHS)
++        # message("aux_path: ${aux_path}")
++        aux_source_directory(${aux_path} ${AUX_VAR})
++    endforeach(aux_path IN LISTS ${AUX_VAR}_PATHS)
++
++endmacro(spark_aux_source_paths AUX_VAR)
++
++# spark_file_glob
++#
++macro(spark_file_glob FGLOB_VAR)
++    set(${FGLOB_VAR} "")
++    set(${FGLOB_VAR}_PATHS ${ARGN})
++
++    foreach(fglob_path IN LISTS ${FGLOB_VAR}_PATHS)
++
++        file(GLOB FGLOB_PATH_SRCS ${fglob_path})
++        foreach(fglob_path_src IN LISTS FGLOB_PATH_SRCS)
++            # message(" -> ${item}")
++            list(APPEND ${FGLOB_VAR} ${fglob_path_src})
++        endforeach(fglob_path_src IN LISTS FGLOB_PATH_SRCS)
++
++    endforeach(fglob_path IN LISTS ${FGLOB_VAR}_PATHS)
++
++endmacro(spark_file_glob FGLOB_VAR)
++
++
++# spark_add_source_paths
++# 将指定路径中的文件变成可用的源文件列表
++#
++macro(spark_add_source_paths SOURCE_VAR)
++    set(${SOURCE_VAR} "")
++    set(${SOURCE_VAR}_PATHS ${ARGN})
++
++    spark_aux_source_paths(${SOURCE_VAR} ${ARGN})
++    foreach(source_path IN LISTS ${SOURCE_VAR}_PATHS)
++        # list(APPEND ${SOURCE_VAR}_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/${SOURCE_PATH})
++        # aux_source_directory(${SOURCE_PATH} _SOURCES)
++        # foreach(item IN LISTS _SOURCES)
++        #     # message(" -> ${item}")
++        #     list(APPEND ${SOURCE_VAR} ${item})
++        # endforeach(item IN LISTS _SOURCES)
++
++        # file(GLOB HEADER_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${SOURCE_PATH}/*.h)
++        # foreach(item IN LISTS HEADER_LIST)
++        #     # message(" -> ${item}")
++        #     list(APPEND ${SOURCE_VAR} ${item})
++        # endforeach(item IN LISTS HEADER_LIST)
++
++        file(GLOB UI_SRCS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${source_path}/*.ui)
++        foreach(ui_src IN LISTS UI_SRCS)
++            # message(" -> ${item}")
++            list(APPEND ${SOURCE_VAR} ${ui_src})
++        endforeach(ui_src IN LISTS UI_SRCS)
++    endforeach(source_path IN LISTS ${SOURCE_VAR}_PATHS)
++endmacro(spark_add_source_paths SOURCE_VAR)
+-- 
+2.20.1
+
+
+From fe8a5e0bd891cc978c8fae6f43e34c9457e282a3 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Sun, 5 Feb 2023 13:00:22 +0800
+Subject: [PATCH 8/8] =?UTF-8?q?repo:=20=E5=B0=86=E7=8E=B0=E6=9C=89?=
+ =?UTF-8?q?=E6=9E=84=E5=BB=BA=E8=BD=AC=E4=B8=BA=20spark=20=E5=8C=96?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt | 120 +++++++++++++++++++++++++++----------------------
+ 1 file changed, 66 insertions(+), 54 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 60e9171..d990b1d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,60 +1,72 @@
+ cmake_minimum_required(VERSION 3.22)
++
+ project(notepad-- VERSION 1.22.0)
+ 
+-set(CMAKE_AUTOMOC ON)
+-set(CMAKE_AUTOUIC ON)
+-set(CMAKE_AUTORCC ON)
+-
+-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Concurrent Network PrintSupport XmlPatterns)
+-
+-# TODO: use system provided libraries to build 
+-# current status: some header can not be found,for example: Scintilla.h
+-find_library(QSCINTILLA_LIB_PATH qscintilla2_qt5)
+-find_path(QSCINTILLA_INC_PATH qsciscintilla.h PATHS /usr/include/)
+-find_path(SCINTILLA_INC_PATH Scintilla.h PATHS /usr/include/)
+-if((${QSCINTILLA_LIB_PATH} STREQUAL "QSCINTILLA_LIB_PATH-NOTFOUND") OR 
+-   (${QSCINTILLA_INC_PATH} STREQUAL "QSCINTILLA_INC_PATH-NOTFOUND") OR 
+-   (${SCINTILLA_INC_PATH}  STREQUAL "SCINTILLA_INC_PATH-NOTFOUND") )
+-set(NOTEPAD_USE_SYS_LIB OFF)
+-message("system libraries or header not found,build from local")
+-add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
+-else()
+-set(NOTEPAD_USE_SYS_LIB ON)
+-message("use system libraries")
+-message("QSCINTILLA_LIB_PATH:" ${QSCINTILLA_LIB_PATH})
+-message("QSCINTILLA_INC_PATH:" ${QSCINTILLA_INC_PATH})
+-message("SCINTILLA_INC_PATH:" ${SCINTILLA_INC_PATH})
+-endif()
+-
+-file(GLOB UI_SRC ${PROJECT_SOURCE_DIR}/src/*.ui)
+-set(UI_SRC ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/cceditor/ccnotepad.ui)
+-aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
+-aux_source_directory(${PROJECT_SOURCE_DIR}/src/cceditor SRC)
+-
+-add_executable(${PROJECT_NAME} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
+-target_include_directories(${PROJECT_NAME} PRIVATE 
+-${PROJECT_SOURCE_DIR}/src
+-${PROJECT_SOURCE_DIR}/src/cceditor
+-)
+-
+-if(NOTEPAD_USE_SYS_LIB)
+-target_include_directories(${PROJECT_NAME} PRIVATE ${QSCINTILLA_INC_PATH} ${SCINTILLA_INC_PATH})
+-endif()
+-
+-target_link_libraries(${PROJECT_NAME} qscintilla2_qt5 Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+-
+-install(
+-    TARGETS ${PROJECT_NAME}
+-    DESTINATION "bin"
+-)
+-
+-install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
+-        DESTINATION "/")
+-
+-include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake) 
+-include(CPack)
+-
+-target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
++include(cmake/SparkEnvConfig.cmake)
++include(cmake/SparkMacrosConfig.cmake)
++include(cmake/SparkFindQt5Config.cmake)
++# include(cmake/SparkFindQt6Config.cmake)
++include(cmake/SparkMacrosExtendConfig.cmake)
++
++# ----------------- Build QScint ----------------- #
++if(TRUE)
++    # add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
++    # file(GLOB MOC_HEADER src/qscint/src/Qsci/*.h)
++    spark_file_glob(MOC_HEADER "src/qscint/src/Qsci/*.h")
++
++    spark_add_source_paths(QSciSources
++        src/qscint/src
++        src/qscint/scintilla/lexers
++        src/qscint/scintilla/lexlib
++        src/qscint/scintilla/src
++        src/qscint/scintilla/boostregex
++
++        # src/qscint/src/Qsci
++        # FAIL: only *.ui will spark_file_glob(MOC_HEADER ...)
++    )
++    spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})
++    target_compile_definitions(QSci PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES)
++    target_include_directories(QSci PRIVATE
++        src/qscint/scintilla/boostregex
++        src/qscint/scintilla/lexlib)
++    target_include_directories(QSci PUBLIC
++        src/qscint/src
++        src/qscint/src/Qsci
++        src/qscint/scintilla/src
++        src/qscint/scintilla/include)
++    target_link_qt5(QSci)
++    target_link_qt5_PrintSupport(QSci)
++    target_link_qt5_Concurrent(QSci)
++endif(TRUE)
++
++
++# ----------------- Build CCEditor ----------------- #
++if(TRUE)
++
++    # 准备构建 CCEditor
++    set(QRC_SOURCES src/RealCompare.qrc)
++    spark_aux_source_paths(CCEditorSources
++        src
++        src/cceditor
++    )
++    spark_add_executable(${PROJECT_NAME} ${CCEditorSources} ${QRC_SOURCES})
++    target_include_directories(${PROJECT_NAME} PRIVATE
++        ${PROJECT_SOURCE_DIR}/src
++        ${PROJECT_SOURCE_DIR}/src/cceditor
++
++        ${PROJECT_SOURCE_DIR}/src/qscint/src
++        ${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
++    )
++    # target_link_libraries(${PROJECT_NAME} QSci)
++    target_link_QSci(${PROJECT_NAME})
++    target_link_qt5_XmlPatterns(${PROJECT_NAME})
++
++endif(TRUE)
++
+ 
+ if(CMAKE_HOST_UNIX)
+     include(cmake/SparkInstallMacrosConfig.cmake)
 -- 
 2.20.1
 
