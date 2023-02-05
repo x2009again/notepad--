@@ -67,6 +67,16 @@ if(TRUE)
 
 endif(TRUE)
 
+# ----------------- CCEditor Plugin Support or Other  ----------------- #
+if(TRUE)
+    
+    # 开启插件支持
+    # target_compile_definitions(${PROJECT_NAME} PUBLIC NO_PLUGIN=0)
+
+    # 其它有关插件的部分处理...
+
+endif(TRUE)
+
 
 if(CMAKE_HOST_UNIX)
     include(cmake/SparkInstallMacrosConfig.cmake)
