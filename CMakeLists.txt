@@ -1,60 +1,72 @@
 cmake_minimum_required(VERSION 3.22)
+
 project(notepad-- VERSION 1.22.0)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
+include(cmake/SparkEnvConfig.cmake)
+include(cmake/SparkMacrosConfig.cmake)
+include(cmake/SparkFindQt5Config.cmake)
+# include(cmake/SparkFindQt6Config.cmake)
+include(cmake/SparkMacrosExtendConfig.cmake)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Concurrent Network PrintSupport XmlPatterns)
+# ----------------- Build QScint ----------------- #
+if(TRUE)
+    # add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
+    # file(GLOB MOC_HEADER src/qscint/src/Qsci/*.h)
+    spark_file_glob(MOC_HEADER "src/qscint/src/Qsci/*.h")
 
-# TODO: use system provided libraries to build 
-# current status: some header can not be found,for example: Scintilla.h
-find_library(QSCINTILLA_LIB_PATH qscintilla2_qt5)
-find_path(QSCINTILLA_INC_PATH qsciscintilla.h PATHS /usr/include/)
-find_path(SCINTILLA_INC_PATH Scintilla.h PATHS /usr/include/)
-if((${QSCINTILLA_LIB_PATH} STREQUAL "QSCINTILLA_LIB_PATH-NOTFOUND") OR 
-   (${QSCINTILLA_INC_PATH} STREQUAL "QSCINTILLA_INC_PATH-NOTFOUND") OR 
-   (${SCINTILLA_INC_PATH}  STREQUAL "SCINTILLA_INC_PATH-NOTFOUND") )
-set(NOTEPAD_USE_SYS_LIB OFF)
-message("system libraries or header not found,build from local")
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
-else()
-set(NOTEPAD_USE_SYS_LIB ON)
-message("use system libraries")
-message("QSCINTILLA_LIB_PATH:" ${QSCINTILLA_LIB_PATH})
-message("QSCINTILLA_INC_PATH:" ${QSCINTILLA_INC_PATH})
-message("SCINTILLA_INC_PATH:" ${SCINTILLA_INC_PATH})
-endif()
+    spark_add_source_paths(QSciSources
+        src/qscint/src
+        src/qscint/scintilla/lexers
+        src/qscint/scintilla/lexlib
+        src/qscint/scintilla/src
+        src/qscint/scintilla/boostregex
 
-file(GLOB UI_SRC ${PROJECT_SOURCE_DIR}/src/*.ui)
-set(UI_SRC ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/cceditor/ccnotepad.ui)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src/cceditor SRC)
+        # src/qscint/src/Qsci
+        # FAIL: only *.ui will spark_file_glob(MOC_HEADER ...)
+    )
+    spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})
+    target_compile_definitions(QSci PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES)
+    target_include_directories(QSci PRIVATE
+        src/qscint/scintilla/boostregex
+        src/qscint/scintilla/lexlib)
+    target_include_directories(QSci PUBLIC
+        src/qscint/src
+        src/qscint/src/Qsci
+        src/qscint/scintilla/src
+        src/qscint/scintilla/include)
+    target_link_qt5(QSci)
+    target_link_qt5_PrintSupport(QSci)
+    target_link_qt5_Concurrent(QSci)
+endif(TRUE)
 
-add_executable(${PROJECT_NAME} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
-target_include_directories(${PROJECT_NAME} PRIVATE 
-${PROJECT_SOURCE_DIR}/src
-${PROJECT_SOURCE_DIR}/src/cceditor
-)
 
-if(NOTEPAD_USE_SYS_LIB)
-target_include_directories(${PROJECT_NAME} PRIVATE ${QSCINTILLA_INC_PATH} ${SCINTILLA_INC_PATH})
-endif()
+# ----------------- Build CCEditor ----------------- #
+if(TRUE)
 
-target_link_libraries(${PROJECT_NAME} qscintilla2_qt5 Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
+    # 准备构建 CCEditor
+    set(QRC_SOURCES src/RealCompare.qrc)
+    spark_aux_source_paths(CCEditorSources
+        src
+        src/cceditor
+    )
+    spark_add_executable(${PROJECT_NAME} ${CCEditorSources} ${QRC_SOURCES})
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/src/cceditor
 
-install(
-    TARGETS ${PROJECT_NAME}
-    DESTINATION "bin"
-)
+        ${PROJECT_SOURCE_DIR}/src/qscint/src
+        ${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
+    )
+    # target_link_libraries(${PROJECT_NAME} QSci)
+    target_link_QSci(${PROJECT_NAME})
+    target_link_qt5_XmlPatterns(${PROJECT_NAME})
 
-install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
-        DESTINATION "/")
+endif(TRUE)
 
-include(${PROJECT_SOURCE_DIR}/cmake/package_config.cmake) 
-include(CPack)
-
-target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
 
 if(CMAKE_HOST_UNIX)
     include(cmake/SparkInstallMacrosConfig.cmake)
