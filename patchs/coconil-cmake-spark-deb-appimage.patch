@@ -1,7 +1,7 @@
-From 98323da5e5410ba2a3c98f2aaa1af4aa4ada45ca Mon Sep 17 00:00:00 2001
+From 25e3419aa28a77a1ff24a53a1e43f877412fdcc2 Mon Sep 17 00:00:00 2001
 From: coconil <coconil@foxmail.com>
 Date: Tue, 31 Jan 2023 22:17:32 +0800
-Subject: [PATCH 1/8] add cmake support
+Subject: [PATCH 01/11] add cmake support
 
 ---
  CMakeLists.txt            | 2 ++
@@ -44,10 +44,10 @@ index b114614..f132dc6 100644
 2.20.1
 
 
-From 486ece6437385cf06cf99feba504a990ff5c2c6e Mon Sep 17 00:00:00 2001
+From fd25cc015e42f42f3529008a56e473b8ecad1d8a Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:04:05 +0800
-Subject: [PATCH 2/8] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 02/11] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20deb?=
 MIME-Version: 1.0
@@ -55,7 +55,7 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 ---
- .gitignore                           |  48 +++-
+ .gitignore                           |  54 ++++-
  CMakeLists.txt                       |  36 ++-
  Makefile                             |  61 +++++
  assets/spark.png                     | Bin 0 -> 4959 bytes
@@ -64,7 +64,7 @@ Content-Transfer-Encoding: 8bit
  cmake/SparkInstallMacrosConfig.cmake | 131 +++++++++++
  cmake/package-deb.descript           |  45 ++++
  cmake/spark-desktop.desktop.in       |  12 +
- 9 files changed, 679 insertions(+), 12 deletions(-)
+ 9 files changed, 682 insertions(+), 15 deletions(-)
  create mode 100644 Makefile
  create mode 100644 assets/spark.png
  create mode 100644 cmake/DebPackageConfig.cmake
@@ -74,13 +74,16 @@ Content-Transfer-Encoding: 8bit
  create mode 100644 cmake/spark-desktop.desktop.in
 
 diff --git a/.gitignore b/.gitignore
-index 8d723bc..bf38a86 100644
+index 8d723bc..72fb977 100644
 --- a/.gitignore
 +++ b/.gitignore
-@@ -387,12 +387,42 @@ FodyWeavers.xsd
- # Local History for Visual Studio Code
- .history/
+@@ -384,15 +384,45 @@ FodyWeavers.xsd
+ !.vscode/extensions.json
+ *.code-workspace
  
+-# Local History for Visual Studio Code
+-.history/
+-
 -# Windows Installer files from build outputs
 -*.cab
 -*.msi
@@ -90,6 +93,9 @@ index 8d723bc..bf38a86 100644
 -
 -# JetBrains Rider
 -*.sln.iml
++# Local History for Visual Studio Code
++.history/
++
 +# Windows Installer files from build outputs
 +*.cab
 +*.msi
@@ -931,10 +937,10 @@ index 0000000..e7c3b18
 2.20.1
 
 
-From 7aa88bae1182ba087631ad0bd0e336c6dda9699b Mon Sep 17 00:00:00 2001
+From dc048016f2ac8a8ff20e99aaa0859239984730aa Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Wed, 1 Feb 2023 20:09:49 +0800
-Subject: [PATCH 3/8] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 03/11] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=EF=BC=8C=E6=94=AF=E6=8C=81=E6=9E=84=E5=BB=BA?=
  =?UTF-8?q?=20Appimage?=
 MIME-Version: 1.0
@@ -1165,12 +1171,12 @@ index 0000000..0ca2577
 2.20.1
 
 
-From 138dc3b7f574b9fd44054d2f1397ff737ce4f41c Mon Sep 17 00:00:00 2001
+From 9826eba36f58b099d93918e9fd23bd8a63aaeca4 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 13:58:29 +0800
-Subject: [PATCH 4/8] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20=E6=B7=BB?=
- =?UTF-8?q?=E5=8A=A0=E6=96=87=E6=9C=AC=E6=96=87=E4=BB=B6=E7=9A=84=E7=9B=B8?=
- =?UTF-8?q?=E5=85=B3=20MimeType?=
+Subject: [PATCH 04/11] =?UTF-8?q?desktop:=20=E4=B8=BA=20desktop=20?=
+ =?UTF-8?q?=E6=B7=BB=E5=8A=A0=E6=96=87=E6=9C=AC=E6=96=87=E4=BB=B6=E7=9A=84?=
+ =?UTF-8?q?=E7=9B=B8=E5=85=B3=20MimeType?=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -1207,10 +1213,10 @@ index e7c3b18..e33c74e 100644
 2.20.1
 
 
-From c75654ae45f30f8039fcf44b42ecb873aef69ddd Mon Sep 17 00:00:00 2001
+From 011c115d38eda8bf101ce0164eb5657e8c96d35d Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 14:00:54 +0800
-Subject: [PATCH 5/8] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
+Subject: [PATCH 05/11] =?UTF-8?q?repo:=20=E5=AF=B9=20desktop=20=E6=96=87?=
  =?UTF-8?q?=E4=BB=B6=E6=B7=BB=E5=8A=A0=20%F=20=E5=8F=82=E6=95=B0=EF=BC=8C?=
  =?UTF-8?q?=E4=BB=A5=E4=BF=9D=E8=AF=81=E5=8F=AF=E6=AD=A3=E7=A1=AE=E4=BC=A0?=
  =?UTF-8?q?=E5=85=A5=E5=8F=82=E6=95=B0?=
@@ -1240,10 +1246,10 @@ index a8f27aa..63e878c 100644
 2.20.1
 
 
-From c47eb80929921e9f94ab9e176304b3c4fb1de157 Mon Sep 17 00:00:00 2001
+From 2e3eeac09c6bc18d863eee28f7a352acdbcfc3b7 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Thu, 2 Feb 2023 14:47:56 +0800
-Subject: [PATCH 6/8] =?UTF-8?q?cmake-version:=20=E5=B0=86=E7=89=88?=
+Subject: [PATCH 06/11] =?UTF-8?q?cmake-version:=20=E5=B0=86=E7=89=88?=
  =?UTF-8?q?=E6=9C=AC=E9=99=8D=E5=88=B0=203.22=20=E4=BB=A5=E9=80=82?=
  =?UTF-8?q?=E7=94=A8=E4=BA=8E=20cmake=20=E6=9E=84=E5=BB=BA?=
 MIME-Version: 1.0
@@ -1279,10 +1285,10 @@ index f132dc6..77f02f2 100644
 2.20.1
 
 
-From 653b68b44490ba0afbf99a95300aa46d96c4ec33 Mon Sep 17 00:00:00 2001
+From edcd7b2df99e30d6e6253d8df10126603f269dbc Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Sun, 5 Feb 2023 12:55:38 +0800
-Subject: [PATCH 7/8] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
+Subject: [PATCH 07/11] =?UTF-8?q?repo:=20=E5=BC=95=E5=85=A5=20Spark=20?=
  =?UTF-8?q?=E7=8E=B0=E6=9C=89=E5=AE=8C=E6=95=B4=E6=9E=84=E5=BB=BA=E6=A8=A1?=
  =?UTF-8?q?=E5=9D=97?=
 MIME-Version: 1.0
@@ -2028,10 +2034,10 @@ index 0000000..bd15f0d
 2.20.1
 
 
-From fe8a5e0bd891cc978c8fae6f43e34c9457e282a3 Mon Sep 17 00:00:00 2001
+From 40e0220709909a649ad9d912a6d4d2d4d1839cf4 Mon Sep 17 00:00:00 2001
 From: zinface <zinface@163.com>
 Date: Sun, 5 Feb 2023 13:00:22 +0800
-Subject: [PATCH 8/8] =?UTF-8?q?repo:=20=E5=B0=86=E7=8E=B0=E6=9C=89?=
+Subject: [PATCH 08/11] =?UTF-8?q?repo:=20=E5=B0=86=E7=8E=B0=E6=9C=89?=
  =?UTF-8?q?=E6=9E=84=E5=BB=BA=E8=BD=AC=E4=B8=BA=20spark=20=E5=8C=96?=
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -2172,6 +2178,467 @@ index 60e9171..d990b1d 100644
  
  if(CMAKE_HOST_UNIX)
      include(cmake/SparkInstallMacrosConfig.cmake)
+-- 
+2.20.1
+
+
+From 64d0cae716e28770916bf3c6376b458ca716fed2 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Sun, 5 Feb 2023 16:58:53 +0800
+Subject: [PATCH 09/11] =?UTF-8?q?repo:=20=E9=A2=84=E7=95=99=E9=85=8D?=
+ =?UTF-8?q?=E7=BD=AE=E4=B8=BA=E6=8F=92=E4=BB=B6=E7=9B=B8=E5=85=B3=E6=94=AF?=
+ =?UTF-8?q?=E6=8C=81=E9=83=A8=E5=88=86?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d990b1d..c18417f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -67,6 +67,16 @@ if(TRUE)
+ 
+ endif(TRUE)
+ 
++# ----------------- CCEditor Plugin Support or Other  ----------------- #
++if(TRUE)
++    
++    # 开启插件支持
++    # target_compile_definitions(${PROJECT_NAME} PUBLIC NO_PLUGIN=0)
++
++    # 其它有关插件的部分处理...
++
++endif(TRUE)
++
+ 
+ if(CMAKE_HOST_UNIX)
+     include(cmake/SparkInstallMacrosConfig.cmake)
+-- 
+2.20.1
+
+
+From 2d518ad7500692ce558076efd14722ef363ae299 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Mon, 6 Feb 2023 01:10:42 +0800
+Subject: [PATCH 10/11] =?UTF-8?q?linux/plugin-support:=20=E6=B7=BB?=
+ =?UTF-8?q?=E5=8A=A0=20Notepad--=20=E6=8F=92=E4=BB=B6=E6=9E=84=E5=BB=BA?=
+ =?UTF-8?q?=E6=A8=A1=E5=9D=97=E6=94=AF=E6=8C=81?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ CMakeLists.txt                       | 71 +++++++++++++++++++-
+ cmake/NotepadPluginConfig.cmake.in   | 96 ++++++++++++++++++++++++++++
+ cmake/SparkInstallMacrosConfig.cmake |  3 +-
+ 3 files changed, 167 insertions(+), 3 deletions(-)
+ create mode 100644 cmake/NotepadPluginConfig.cmake.in
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c18417f..28b3007 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -71,13 +71,14 @@ endif(TRUE)
+ if(TRUE)
+     
+     # 开启插件支持
+-    # target_compile_definitions(${PROJECT_NAME} PUBLIC NO_PLUGIN=0)
++    target_compile_definitions(${PROJECT_NAME} PUBLIC NO_PLUGIN=0)
+ 
+     # 其它有关插件的部分处理...
+ 
+ endif(TRUE)
+ 
+-
++# 可能需要变更为 CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" ??
++# 并使用 Linux.cmake 维护?
+ if(CMAKE_HOST_UNIX)
+     include(cmake/SparkInstallMacrosConfig.cmake)
+     include(cmake/SparkDesktopMacros.cmake)
+@@ -103,6 +104,72 @@ if(CMAKE_HOST_UNIX)
+     spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
+     spark_install_target(/usr/bin/ ${PROJECT_NAME})
+ 
++    # TODO：如果主线已经将 linux/destkop 的PR合入，即可移除此部分以上部分，而使用以下部分
++    # spark_install_directory(/usr   src/linux/usr/*)    # 完整的 Linux 资源文件
++
++    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
++    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
++    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
++    include(CMakePackageConfigHelpers)
++    include(GNUInstallDirs)
++    
++    # 定义插件配置安装位置
++    set(CMAKE_INSTALL_PREFIX "/usr")
++    set(NOTEPAD_PLUGIN NotepadPlugin)
++    
++    # 定义开发插件时的配置目录与 CMake 模块文件名称
++    set(NOTEPAD_PLUGIN_CONFIG       ${NOTEPAD_PLUGIN}Config.cmake)
++    set(NOTEPAD_PLUGIN_INCLUDEDIR   ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/${NOTEPAD_PLUGIN})
++    set(NOTEPAD_PLUGIN_LIBDIR       ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${NOTEPAD_PLUGIN})
++    
++    # 定义一些扩展内容，主要是提供给 CMake 模块文件填充
++    set(NOTEPAD_PLUGIN_CORELIB QSci)
++    set(NOTEPAD_PLUGIN_EXTERNAL_INCLUDES 
++        ${NOTEPAD_PLUGIN_INCLUDEDIR}/Qsci)
++
++    # 定义在插件开发的 CMake 模块中，Notepad-- 是否是基于 QT5 实现
++        # 并自动为插件开发层自动开启相关 Qt 依赖组件
++        # 此部分逻辑将自动提供给 add_notepad_plugin 自行处理
++    set(NOTEPAD_BUILD_BY_QT5 TRUE)
++    set(NOTEPAD_BUILD_BY_QT6 FALSE)
++
++    # 定义在插件开发的 CMake 模块中，Notepad-- 是否将提供 "插件安装目录(位置)"
++    set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY "")
++
++    # 将 NOTEPAD_PLUGIN_INCLUDEDIR NOTEPAD_PLUGIN_LIBDIR 填充到 cmake 文件
++    configure_package_config_file(cmake/NotepadPluginConfig.cmake.in
++        ${CMAKE_BINARY_DIR}/${NOTEPAD_PLUGIN_CONFIG}
++        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${NOTEPAD_PLUGIN})
++    # 安装 cmake 文件
++    spark_install_file(${CMAKE_INSTALL_LIBDIR}/cmake/${NOTEPAD_PLUGIN} 
++        ${CMAKE_BINARY_DIR}/${NOTEPAD_PLUGIN_CONFIG})
++    # 安装头插件接口文件
++    spark_install_file(${NOTEPAD_PLUGIN_INCLUDEDIR} 
++        src/include/pluginGl.h)
++    # 安装插件所需要的Qsci文件
++    spark_install_directory(${NOTEPAD_PLUGIN_INCLUDEDIR} 
++        src/qscint/src/Qsci)
++    
++    # 导出 QSci 的头文件(从插件实现层面来看，目前是使用*.h 与 pluginGl.h
++        # 但从 Qsci 层面来看，*.h 使用的是 #include <Qsci/*.h> ，所以此部分不被使用)
++    # spark_file_glob(QSci_HEADERS src/qscint/src/Qsci/*.h src/include/pluginGl.h)
++    # set_target_properties(QSci PROPERTIES PUBLIC_HEADER "${QSci_HEADERS}")
++
++    # 导出 Notepad-- 的接口文件(从逻辑层面来看，目前已经在前面安装了接口文件，所以此部分不被使用)
++    # spark_file_glob(Notepad_HEADERS src/include/pluginGl.h)
++    # set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${QSci_HEADERS}")
++
++    # 安装项目文件与 QSci 文件
++    install(TARGETS ${PROJECT_NAME} QSci
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION ${NOTEPAD_PLUGIN_LIBDIR}
++        ARCHIVE DESTINATION ${NOTEPAD_PLUGIN_LIBDIR}
++        PUBLIC_HEADER DESTINATION ${NOTEPAD_PLUGIN_INCLUDEDIR}
++    )
++    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
++    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
++    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
++
+ 
+     # 1. 在顶层构建中导入 Appimage 的构建
+     include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
+diff --git a/cmake/NotepadPluginConfig.cmake.in b/cmake/NotepadPluginConfig.cmake.in
+new file mode 100644
+index 0000000..58e0bd7
+--- /dev/null
++++ b/cmake/NotepadPluginConfig.cmake.in
+@@ -0,0 +1,96 @@
++# NotepadPluginConfig.cmake
++# 用于 Notepad-- 插件实现的 CMake 模块初级定义
++
++# 在 Linux 中，它的布局应该如下：
++# /usr/lib/x86_64-linux-gnu/cmake/NotepadPlugin/NotepadPluginConfig.cmake
++
++# 在 插件开发层中，它的使用如下：
++    # 1. 查找 NotepadPlugin 模块
++        # find_package(NotepadPlugin)
++    # 2. 使用 add_notepad_plugin(<模块名称> <源代码、资源文件> [...])
++        # add_notepad_plugin(<plugin_name> <plugin_srcs> ...)
++
++# 一些无关紧要的部分，如果需要实现插件安装操作时，即可进行使用
++# include(CMakePackageConfigHelpers)
++# include(GNUInstallDirs)
++
++# 
++set(NOTEPAD_PLUGIN              @NOTEPAD_PLUGIN@)
++set(NOTEPAD_PLUGIN_INCLUDEDIR   @NOTEPAD_PLUGIN_INCLUDEDIR@)
++set(NOTEPAD_PLUGIN_LIBDIR       @NOTEPAD_PLUGIN_LIBDIR@)
++set(NOTEPAD_PLUGIN_CORELIB      @NOTEPAD_PLUGIN_CORELIB@)
++
++# 一些扩展内容，主要是 CMake 模块文件的填充
++set(NOTEPAD_PLUGIN_EXTERNAL_INCLUDES
++        @NOTEPAD_PLUGIN_EXTERNAL_INCLUDES@)
++
++# 由插件开发者进行参考的 "Notepad 提供的插件安装目录(位置)" 
++set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY @NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_DIRECTORY@)
++
++set(NOTEPAD_BUILD_BY_QT5          @NOTEPAD_BUILD_BY_QT5@)
++set(NOTEPAD_BUILD_BY_QT6          @NOTEPAD_BUILD_BY_QT6@)
++
++if(NOTEPAD_PLUGIN_BY_QT5)
++    set(CMAKE_AUTOMOC ON)
++    set(CMAKE_AUTOUIC ON)
++    find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
++endif(NOTEPAD_PLUGIN_BY_QT5)
++
++if(NOTEPAD_BUILD_BY_QT6)
++    set(CMAKE_AUTOMOC ON)
++    set(CMAKE_AUTOUIC ON)
++    find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
++endif(NOTEPAD_BUILD_BY_QT6)
++
++
++
++add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
++set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
++    IMPORTED_LOCATION 
++        ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.so
++    
++    INCLUDE_DIRECTORIES 
++        "${NOTEPAD_PLUGIN_INCLUDEDIR};${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES}"
++)
++
++# add_notepad_plugin(<PLUGIN_VAR> <PLUGIN_SRC> [...])
++# 
++macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
++    # aux_source_directory(${PLUGIN_VAR}_SOURCES  ${ARGN})
++    add_library(${PLUGIN_VAR} SHARED ${PLUGIN_SRC} ${ARGN})
++    if(CMAKE_HOST_WIN32)
++        # Win32 已提供宏判断
++        # target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
++    endif(CMAKE_HOST_WIN32)
++
++    if(CMAKE_HOST_UNIX)
++        target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
++    endif(CMAKE_HOST_UNIX)
++    target_include_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
++    target_link_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_LIBDIR})
++    target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
++    if(NOTEPAD_PLUGIN_QT5)
++        target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
++    endif(NOTEPAD_PLUGIN_QT5)
++
++    if(NOTEPAD_PLUGIN_QT5)
++        target_link_libraries(${PLUGIN_VAR} Qt6::Core Qt6::Widgets)
++    endif(NOTEPAD_PLUGIN_QT5)
++    
++endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
++
++# support git plugin
++macro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
++    execute_process(COMMAND git clone ${GIT_REPO_URL} ${PLUGIN_VAR}_git
++        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
++        ERROR_QUIET)
++    aux_source_directory(${CMAKE_BINARY_DIR}/$${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
++    add_notepad_plugin(${PLUGIN_VAR} ${${PLUGIN_VAR}_RESOURCES})
++endmacro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
++
++message("- >>>>>>>>>>>>>>>>>> NotepadPlugin: <<<<<<<<<<<<<<<<<<")
++message("  - ${CMAKE_CURRENT_LIST_FILE}")
++message("  - ${NOTEPAD_PLUGIN_INCLUDEDIR}")
++message("  - ${NOTEPAD_PLUGIN_LIBDIR}")
++message("  - ${NOTEPAD_PLUGIN_CORELIB}")
++message("- >>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")
+\ No newline at end of file
+diff --git a/cmake/SparkInstallMacrosConfig.cmake b/cmake/SparkInstallMacrosConfig.cmake
+index 1f8939b..204d16a 100644
+--- a/cmake/SparkInstallMacrosConfig.cmake
++++ b/cmake/SparkInstallMacrosConfig.cmake
+@@ -79,7 +79,8 @@ macro(spark_install_directory INSTALL_DIRECTORY_DIR INSTALL_DIRECOTRY)
+         # message(FATAL_ERROR " directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST_LENGTH}")
+ 
+     else()
+-        message(FATAL_ERROR "install： ${INSTALL_DIRECTORY_DIR}")
++        # ISSUES： You Must check here
++        # message(FATAL_ERROR "install： ${INSTALL_DIRECTORY_DIR}")
+ 
+         install(DIRECTORY
+             ${INSTALL_DIRECOTRY} ${ARGN}
+-- 
+2.20.1
+
+
+From c0da9de36fd4b9ff075afb15aa3c3cbb0466495a Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Mon, 6 Feb 2023 01:11:26 +0800
+Subject: [PATCH 11/11] =?UTF-8?q?linux/plugin-doc:=20=E6=B7=BB=E5=8A=A0=20?=
+ =?UTF-8?q?Notepad--=20=E6=8F=92=E4=BB=B6=E6=9E=84=E5=BB=BA=E6=8F=8F?=
+ =?UTF-8?q?=E8=BF=B0=E6=96=87=E6=A1=A3?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ cmake/NoteadPlugin-Linux-Development.md | 164 ++++++++++++++++++++++++
+ 1 file changed, 164 insertions(+)
+ create mode 100644 cmake/NoteadPlugin-Linux-Development.md
+
+diff --git a/cmake/NoteadPlugin-Linux-Development.md b/cmake/NoteadPlugin-Linux-Development.md
+new file mode 100644
+index 0000000..c642fc7
+--- /dev/null
++++ b/cmake/NoteadPlugin-Linux-Development.md
+@@ -0,0 +1,164 @@
++# NotepadPlugin 开发说明
++
++> 当前插件实现的提供 Linux 层开发说明
++
++- 引用 NotepadPluginConfig.cmake 中的说明
++
++    ```cmake
++    # NotepadPluginConfig.cmake
++    # 用于 Notepad-- 插件实现的 CMake 模块初级定义
++
++    # 在 Linux 中，它的布局应该如下：
++    # /usr/lib/x86_64-linux-gnu/cmake/NotepadPlugin/NotepadPluginConfig.cmake
++
++    # 在 插件开发层中，它的使用如下：
++        # 1. 查找 NotepadPlugin 模块
++            # find_package(NotepadPlugin)
++        # 2. 使用 add_notepad_plugin(<模块名称> <源代码、资源文件> [...])
++            # add_notepad_plugin(<plugin_name> <plugin_srcs> ...)
++    ```
++
++- 着手进行实现插件
++
++    > 将项目中的 src/plugin/helloworld 复制为单个项目，并使用 CMake 进行构建
++
++    ```cmake
++    cmake_minimum_required(VERSION 3.5.1)
++
++    project(template LANGUAGES CXX VERSION 0.0.1)
++
++    # 1. 查找 NotepadPlugin 模块
++    find_package(NotepadPlugin REQUIRED)
++
++    # 2. 使用 add_notepad_plugin(<模块名称> <源代码、资源文件> [...])
++    add_notepad_plugin(Helloworld
++        helloworld/helloworldexport.cpp
++        helloworld/qttestclass.cpp
++        helloworld/qttestclass.h
++        helloworld/qttestclass.ui
++    )
++
++    # 以上将会构建出一个名叫 libHelloworld.so 的插件扩展
++    ```
++
++- 一些 NotepadPluginConfig.cmake 中的变量声明
++
++    ```cmake
++
++    # NOTEPAD_PLUGIN                                   [不重要]CMake 模块名称
++    # NOTEPAD_PLUGIN_CONFIG                            [不重要]CMake 模块文件名名称
++    # NOTEPAD_PLUGIN_INCLUDEDIR                        [插件 头文件目录]插件开发者可自行使用
++    # NOTEPAD_PLUGIN_LIBDIR                            [插件 库存放目录]插件开发者可自行使用
++    # NOTEPAD_PLUGIN_CORELIB                           [插件 核心库名称]插件开发者可自行使用
++    # NOTEPAD_PLUGIN_EXTERNAL_INCLUDES                 [插件 扩展的头文件目录]插件开发者可自行使用
++    # NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY [插件 扩展插件安装目录(位置)]插件开发者可自行使用
++
++    # NOTEPAD_BUILD_BY_QT5     
++    # NOTEPAD_BUILD_BY_QT6     
++        [NOTEPAD_BUILD_BY_约定]如果在构建 Notepad-- 时开启了此项，将会向 CMake 构建系统询问相关模块
++
++    例如:
++        询问 Qt5 基本模块： 将会在 find_package(NotepadPlugin REQUIRED) 时自动加入
++            set(CMAKE_AUTOMOC ON)
++            set(CMAKE_AUTOUIC ON)
++            find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
++
++        为开发者自动添加 Qt5 模块依赖: 将会在 add_notepad_plugin 时自动加入
++            if(NOTEPAD_PLUGIN_QT5)
++                target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
++            endif(NOTEPAD_PLUGIN_QT5)
++
++    ```
++
++- 当前提供插件的 Linux 目录结构
++
++    ```
++    build/_CPack_Packages/Linux/DEB/notepad---1.22.0-Linux
++    ├── control
++    ├── control.tar.gz
++    ├── data.tar.gz
++    ├── debian-binary
++    ├── md5sums
++    └── usr
++        ├── bin
++        │   └── notepad--
++        ├── include
++        │   └── NotepadPlugin
++        │       ├── pluginGl.h
++        │       └── Qsci
++        │           ├── qsciabstractapis.h
++        │           ├── qsciapis.h
++        │           ├── qscicommand.h
++        │           ├── qscicommandset.h
++        │           ├── qscidocument.h
++        │           ├── qsciglobal.h
++        │           ├── qscilexerasm.h
++        │           ├── qscilexeravs.h
++        │           ├── qscilexerbash.h
++        │           ├── qscilexerbatch.h
++        │           ├── qscilexercmake.h
++        │           ├── qscilexercoffeescript.h
++        │           ├── qscilexercpp.h
++        │           ├── qscilexercsharp.h
++        │           ├── qscilexercss.h
++        │           ├── qscilexercustom.h
++        │           ├── qscilexerd.h
++        │           ├── qscilexerdiff.h
++        │           ├── qscilexeredifact.h
++        │           ├── qscilexerfortran77.h
++        │           ├── qscilexerfortran.h
++        │           ├── qscilexerglobal.h
++        │           ├── qscilexergo.h
++        │           ├── qscilexer.h
++        │           ├── qscilexerhtml.h
++        │           ├── qscilexeridl.h
++        │           ├── qscilexerjava.h
++        │           ├── qscilexerjavascript.h
++        │           ├── qscilexerjson.h
++        │           ├── qscilexerlua.h
++        │           ├── qscilexermakefile.h
++        │           ├── qscilexermarkdown.h
++        │           ├── qscilexermatlab.h
++        │           ├── qscilexernsis.h
++        │           ├── qscilexeroctave.h
++        │           ├── qscilexerpascal.h
++        │           ├── qscilexerperl.h
++        │           ├── qscilexerpo.h
++        │           ├── qscilexerpostscript.h
++        │           ├── qscilexerpov.h
++        │           ├── qscilexerproperties.h
++        │           ├── qscilexerpython.h
++        │           ├── qscilexerruby.h
++        │           ├── qscilexerrust.h
++        │           ├── qscilexerspice.h
++        │           ├── qscilexersql.h
++        │           ├── qscilexertcl.h
++        │           ├── qscilexertex.h
++        │           ├── qscilexertext.h
++        │           ├── qscilexervb.h
++        │           ├── qscilexerverilog.h
++        │           ├── qscilexervhdl.h
++        │           ├── qscilexerxml.h
++        │           ├── qscilexeryaml.h
++        │           ├── qscimacro.h
++        │           ├── qsciprinter.h
++        │           ├── qsciscintillabase.h
++        │           ├── qsciscintilla.h
++        │           ├── qscistyledtext.h
++        │           └── qscistyle.h
++        ├── lib
++        │   ├── cmake
++        │   │   └── NotepadPlugin
++        │   │       └── NotepadPluginConfig.cmake
++        │   └── NotepadPlugin
++        │       └── libQSci.a
++        └── share
++            ├── applications
++            │   └── notepad--.desktop
++            └── notepad--
++                └── icons
++                    └── spark.png
++
++    13 directories, 71 files
++
++    ```
+\ No newline at end of file
 -- 
 2.20.1
 
