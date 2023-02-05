@@ -1,0 +1,96 @@
+# NotepadPluginConfig.cmake
+# 用于 Notepad-- 插件实现的 CMake 模块初级定义
+
+# 在 Linux 中，它的布局应该如下：
+# /usr/lib/x86_64-linux-gnu/cmake/NotepadPlugin/NotepadPluginConfig.cmake
+
+# 在 插件开发层中，它的使用如下：
+    # 1. 查找 NotepadPlugin 模块
+        # find_package(NotepadPlugin)
+    # 2. 使用 add_notepad_plugin(<模块名称> <源代码、资源文件> [...])
+        # add_notepad_plugin(<plugin_name> <plugin_srcs> ...)
+
+# 一些无关紧要的部分，如果需要实现插件安装操作时，即可进行使用
+# include(CMakePackageConfigHelpers)
+# include(GNUInstallDirs)
+
+# 
+set(NOTEPAD_PLUGIN              @NOTEPAD_PLUGIN@)
+set(NOTEPAD_PLUGIN_INCLUDEDIR   @NOTEPAD_PLUGIN_INCLUDEDIR@)
+set(NOTEPAD_PLUGIN_LIBDIR       @NOTEPAD_PLUGIN_LIBDIR@)
+set(NOTEPAD_PLUGIN_CORELIB      @NOTEPAD_PLUGIN_CORELIB@)
+
+# 一些扩展内容，主要是 CMake 模块文件的填充
+set(NOTEPAD_PLUGIN_EXTERNAL_INCLUDES
+        @NOTEPAD_PLUGIN_EXTERNAL_INCLUDES@)
+
+# 由插件开发者进行参考的 "Notepad 提供的插件安装目录(位置)" 
+set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY @NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_DIRECTORY@)
+
+set(NOTEPAD_BUILD_BY_QT5          @NOTEPAD_BUILD_BY_QT5@)
+set(NOTEPAD_BUILD_BY_QT6          @NOTEPAD_BUILD_BY_QT6@)
+
+if(NOTEPAD_PLUGIN_BY_QT5)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+endif(NOTEPAD_PLUGIN_BY_QT5)
+
+if(NOTEPAD_BUILD_BY_QT6)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+endif(NOTEPAD_BUILD_BY_QT6)
+
+
+
+add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
+set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
+    IMPORTED_LOCATION 
+        ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.so
+    
+    INCLUDE_DIRECTORIES 
+        "${NOTEPAD_PLUGIN_INCLUDEDIR};${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES}"
+)
+
+# add_notepad_plugin(<PLUGIN_VAR> <PLUGIN_SRC> [...])
+# 
+macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
+    # aux_source_directory(${PLUGIN_VAR}_SOURCES  ${ARGN})
+    add_library(${PLUGIN_VAR} SHARED ${PLUGIN_SRC} ${ARGN})
+    if(CMAKE_HOST_WIN32)
+        # Win32 已提供宏判断
+        # target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
+    endif(CMAKE_HOST_WIN32)
+
+    if(CMAKE_HOST_UNIX)
+        target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
+    endif(CMAKE_HOST_UNIX)
+    target_include_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
+    target_link_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_LIBDIR})
+    target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
+    if(NOTEPAD_PLUGIN_QT5)
+        target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
+    endif(NOTEPAD_PLUGIN_QT5)
+
+    if(NOTEPAD_PLUGIN_QT5)
+        target_link_libraries(${PLUGIN_VAR} Qt6::Core Qt6::Widgets)
+    endif(NOTEPAD_PLUGIN_QT5)
+    
+endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
+
+# support git plugin
+macro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
+    execute_process(COMMAND git clone ${GIT_REPO_URL} ${PLUGIN_VAR}_git
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        ERROR_QUIET)
+    aux_source_directory(${CMAKE_BINARY_DIR}/$${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
+    add_notepad_plugin(${PLUGIN_VAR} ${${PLUGIN_VAR}_RESOURCES})
+endmacro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
+
+message("- >>>>>>>>>>>>>>>>>> NotepadPlugin: <<<<<<<<<<<<<<<<<<")
+message("  - ${CMAKE_CURRENT_LIST_FILE}")
+message("  - ${NOTEPAD_PLUGIN_INCLUDEDIR}")
+message("  - ${NOTEPAD_PLUGIN_LIBDIR}")
+message("  - ${NOTEPAD_PLUGIN_CORELIB}")
+message("- >>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")

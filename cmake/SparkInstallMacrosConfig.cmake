@@ -79,7 +79,8 @@ macro(spark_install_directory INSTALL_DIRECTORY_DIR INSTALL_DIRECOTRY)
         # message(FATAL_ERROR " directory: ${INSTALL_DIRECTORY_FIND_INDEX_SUBSTRING_FILE_GLOB_LIST_LENGTH}")
 
     else()
-        message(FATAL_ERROR "install： ${INSTALL_DIRECTORY_DIR}")
+        # ISSUES： You Must check here
+        # message(FATAL_ERROR "install： ${INSTALL_DIRECTORY_DIR}")
 
         install(DIRECTORY
             ${INSTALL_DIRECOTRY} ${ARGN}
