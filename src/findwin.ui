@@ -40,7 +40,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_find">
        <attribute name="title">
@@ -1462,8 +1462,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>572</x>
-     <y>251</y>
+     <x>674</x>
+     <y>288</y>
     </hint>
     <hint type="destinationlabel">
      <x>169</x>
@@ -1510,8 +1510,8 @@
    <slot>slot_replaceFindNext()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>60</y>
+     <x>448</x>
+     <y>69</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -1526,8 +1526,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>45</y>
+     <x>448</x>
+     <y>213</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -1542,8 +1542,8 @@
    <slot>slot_replace()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>64</y>
+     <x>448</x>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -1558,8 +1558,8 @@
    <slot>slot_replaceAll()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>67</y>
+     <x>448</x>
+     <y>137</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -1574,8 +1574,8 @@
    <slot>slot_replaceAllInOpenDoc()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>76</y>
+     <x>448</x>
+     <y>180</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -1638,8 +1638,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>572</x>
-     <y>142</y>
+     <x>674</x>
+     <y>171</y>
     </hint>
     <hint type="destinationlabel">
      <x>564</x>
@@ -1718,8 +1718,8 @@
    <slot>slot_findPrev()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>484</x>
-     <y>73</y>
+     <x>674</x>
+     <y>103</y>
     </hint>
     <hint type="destinationlabel">
      <x>294</x>

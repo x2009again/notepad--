@@ -79,7 +79,7 @@
      <x>0</x>
      <y>0</y>
      <width>1458</width>
-     <height>23</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -87,7 +87,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="title">
-     <string>File(&amp;F)</string>
+     <string>File (&amp;F)</string>
     </property>
     <addaction name="actionNewFile"/>
     <addaction name="actionOpenFile"/>
@@ -103,7 +103,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="title">
-     <string>Edit(&amp;E)</string>
+     <string>Edit (&amp;E)</string>
     </property>
     <widget class="QMenu" name="menuformat_conversion">
      <property name="title">
@@ -180,11 +180,11 @@
    </widget>
    <widget class="QMenu" name="menuSearch">
     <property name="title">
-     <string>Search(&amp;S)</string>
+     <string>Search (&amp;S)</string>
     </property>
     <widget class="QMenu" name="menuBook_Mark">
      <property name="title">
-      <string>Book Mark</string>
+      <string>Bookmark</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuMark_Color">
@@ -204,7 +204,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View(&amp;V)</string>
+     <string>View (&amp;V)</string>
     </property>
     <widget class="QMenu" name="menudisplay_symbols">
      <property name="title">
@@ -232,7 +232,7 @@
    </widget>
    <widget class="QMenu" name="menuCode">
     <property name="title">
-     <string>Encoding(&amp;N)</string>
+     <string>Encoding (&amp;N)</string>
     </property>
     <widget class="QMenu" name="menuASNI">
      <property name="title">
@@ -263,7 +263,7 @@
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
-     <string>Language(&amp;L)</string>
+     <string>Language (&amp;L)</string>
     </property>
     <widget class="QMenu" name="menuP">
      <property name="title">
@@ -466,7 +466,7 @@
    </widget>
    <widget class="QMenu" name="menuSet">
     <property name="title">
-     <string>Set(&amp;T)</string>
+     <string>Set (&amp;T)</string>
     </property>
     <widget class="QMenu" name="menuLanguage_2">
      <property name="title">
@@ -495,7 +495,7 @@
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools(&amp;O)</string>
+     <string>Tools (&amp;O)</string>
     </property>
    </widget>
    <addaction name="menuFile"/>
@@ -1575,11 +1575,6 @@
     <string>Chinese</string>
    </property>
   </action>
-  <action name="actionRegister">
-   <property name="text">
-    <string>Register</string>
-   </property>
-  </action>
   <action name="actionLanguage_Format">
    <property name="text">
     <string>Theme Style</string>
@@ -1904,7 +1899,7 @@
   </action>
   <action name="actioninfo">
    <property name="text">
-    <string>AboutNdd</string>
+    <string>About Notepad--</string>
    </property>
   </action>
   <action name="action1">
@@ -2684,22 +2679,6 @@
    <signal>triggered()</signal>
    <receiver>CCNotePad</receiver>
    <slot>slot_changeChinese()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>601</x>
-     <y>394</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionRegister</sender>
-   <signal>triggered()</signal>
-   <receiver>CCNotePad</receiver>
-   <slot>slot_register()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
@@ -3497,7 +3476,6 @@
   <slot>slot_toMistyRose()</slot>
   <slot>slot_changeEnglish()</slot>
   <slot>slot_changeChinese()</slot>
-  <slot>slot_register()</slot>
   <slot>slot_langFormat()</slot>
   <slot>slot_reOpenTextMode()</slot>
   <slot>slot_reOpenHexMode()</slot>

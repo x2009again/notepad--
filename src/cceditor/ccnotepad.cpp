@@ -3464,7 +3464,7 @@ void CCNotePad::tabClose(int index, bool isInQuit)
 	{
 		QApplication::beep();
 
-		int ret = QMessageBox::question(this, tr("Save File?"), tr("if save file %1 ?").arg(filePath), tr("Yes"), tr("No"), tr("Cancel"));
+		int ret = QMessageBox::question(this, tr("Do you want to save changes to « %1 » before closing?").arg(filePath), tr("If you don't save the changes you made, you'll lose them forever."), tr("Yes"), tr("No"), tr("Cancel"));
 	
 		//保存
 		if (ret == 0)
@@ -7333,24 +7333,25 @@ void CCNotePad::slot_aboutNdd()
 {
 	AboutNdd* pWin = new AboutNdd();
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
-	QString title = tr("Ndd Version %1").arg(VersionStr);
+	QString title = tr("Notepad-- Version %1").arg(VersionStr);
 	pWin->setWindowTitle(title);
 	pWin->appendText(title);
-	int status = NddSetting::getKeyValueFromNumSets(SOFT_STATUS);
-	if (1 == status)
-	{
-		pWin->appendText(tr("Registered Version"));
-	}
-	else
-	{
-		pWin->appendText(tr("Free Trial"));
-	}
+//	int status = NddSetting::getKeyValueFromNumSets(SOFT_STATUS);
+//	if (1 == status)
+//	{
+//		pWin->appendText(tr("Registered Version"));
+//	}
+//	else
+//	{
+//		pWin->appendText(tr("Free Trial"));
+//	}
 	pWin->show();
 	registerEscKeyShort(pWin);
 #ifdef uos
 	adjustWInPos(pWin);
 #endif
 }
+
 
 void CCNotePad::addWatchFilePath(QString filePath)
 {
@@ -7646,25 +7647,25 @@ void CCNotePad::slot_donate()
 #endif
 }
 
-void CCNotePad::slot_registerCmd(int cmd, int code)
-{
-	if (cmd == 1)
-	{
-		//服务器返回注册码的消息。	//0 试用 1 正版 2 正版过期 3 错误key
-		int status = NddSetting::getKeyValueFromNumSets(SOFT_STATUS);
-		if (status != code)
-		{
-			NddSetting::updataKeyValueFromNumSets(SOFT_STATUS, code);
-		}
-
-		emit signRegisterReplay(code);
-	}
-}
+// void CCNotePad::slot_registerCmd(int cmd, int code)
+// {
+//	if (cmd == 1)
+//	{
+//		//服务器返回注册码的消息。	//0 试用 1 正版 2 正版过期 3 错误key
+//		int status = NddSetting::getKeyValueFromNumSets(SOFT_STATUS);
+//		if (status != code)
+//		{
+//			NddSetting::updataKeyValueFromNumSets(SOFT_STATUS, code);
+//		}
+//
+//		emit signRegisterReplay(code);
+//	}
+//}
 
 //获取注册码
-void CCNotePad::slot_register()
-{
-}
+//void CCNotePad::slot_register()
+//{
+//}
 
 //当前正在使用的所有语言的tags
 void CCNotePad::getCurUseLexerTags(QVector<QString>& tags)
@@ -8921,4 +8922,3 @@ void CCNotePad::slot_shortcutManager()
 #endif
 	pWin->show();
 }
-
