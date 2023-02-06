@@ -100,12 +100,14 @@ if(CMAKE_HOST_UNIX)
         # 应用分类: Category=
         "Development"
     )
-    spark_install_file(/usr/share/applications/    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop)
-    spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
-    spark_install_target(/usr/bin/ ${PROJECT_NAME})
+    # spark_install_file(/usr/share/applications/    ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.desktop)
+    # spark_install_file(/usr/share/notepad--/icons/ assets/spark.png)
+    # spark_install_target(/usr/bin/ ${PROJECT_NAME})
 
-    # TODO：如果主线已经将 linux/destkop 的PR合入，即可移除此部分以上部分，而使用以下部分
-    # spark_install_directory(/usr   src/linux/usr/*)    # 完整的 Linux 资源文件
+    # 完成：如果主线已经将 linux/destkop 的PR合入，即可移除此部分以上部分，而使用以下部分
+        # 但 spark_desktop_macros 不能移除，因为它被 Appimage 构建部分依赖
+        # Appimage 构建部分，要求(使用来自 Spark 构建的 Desktop 构建中配置的信息(必须要求 spark-desktop))
+    spark_install_directory(/usr   src/linux/usr/*)    # 完整的 Linux 资源文件
 
     # ------------------ INSTALL PLUGIN CONFIG ------------------ #
     # ------------------ INSTALL PLUGIN CONFIG ------------------ #
