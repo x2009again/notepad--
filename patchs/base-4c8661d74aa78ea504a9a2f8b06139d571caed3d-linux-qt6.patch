@@ -1,0 +1,890 @@
+From 34d458cf82810609bee2c85f1eb772bbef40a152 Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Mon, 6 Feb 2023 16:40:36 +0800
+Subject: [PATCH] =?UTF-8?q?linux-qt6:=20=E6=B7=BB=E5=8A=A0=E7=94=A8?=
+ =?UTF-8?q?=E4=BA=8E=20Qt6=20=E7=BC=96=E8=AF=91=E7=9A=84=E7=9B=B8=E5=85=B3?=
+ =?UTF-8?q?=E5=8F=98=E6=9B=B4?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ src/CmpareMode.cpp            |  4 +-
+ src/Encode.cpp                |  2 +-
+ src/RealCompare.pro           | 44 ++++++++++----------
+ src/batchfindreplace.cpp      |  6 +--
+ src/cceditor/ccnotepad.cpp    | 64 ++++++++++++++--------------
+ src/columnedit.cpp            |  4 +-
+ src/ctipwin.cpp               |  2 +-
+ src/draglineedit.cpp          |  1 +
+ src/encodeconvert.cpp         |  2 +-
+ src/findresultwin.cpp         | 26 +++++++-----
+ src/findwin.cpp               |  4 +-
+ src/langstyledefine.cpp       |  8 ++--
+ src/nddsetting.cpp            |  2 +-
+ src/qscint/src/qscilexer.cpp  |  4 +-
+ src/qscint/src/qscintilla.pro | 18 ++------
+ src/qtlangset.cpp             | 78 +++++++++++++++++------------------
+ src/scintillaeditview.cpp     |  8 ++--
+ src/userlexdef.cpp            |  6 +--
+ 18 files changed, 139 insertions(+), 144 deletions(-)
+
+diff --git a/src/CmpareMode.cpp b/src/CmpareMode.cpp
+index b8fb335..1245275 100755
+--- a/src/CmpareMode.cpp
++++ b/src/CmpareMode.cpp
+@@ -181,7 +181,7 @@ quint32 CmpareMode::readLineFromFileWithUnicodeLe(uchar* m_fileFpr, const int fi
+ 		else if (mode == 2)
+ 		{
+ 			QString temp = lineInfo.unicodeStr;
+-			md4.addData(temp.replace(QRegExp("\\s"), QString("")).toUtf8());
++            md4.addData(temp.replace(QRegularExpression("\\s"), QString("")).toUtf8());
+ 		}
+ 	};
+ 
+@@ -429,7 +429,7 @@ CODE_ID CmpareMode::readLineFromFile(uchar* m_fileFpr, const int fileLength, con
+ 		else if (mode == 2)
+ 		{
+ 			QString temp = lineInfo.unicodeStr;
+-			md4.addData(temp.replace(QRegExp("\\s"), QString("")).toUtf8());
++            md4.addData(temp.replace(QRegularExpression("\\s"), QString("")).toUtf8());
+ 		}
+ 	};
+ 
+diff --git a/src/Encode.cpp b/src/Encode.cpp
+index 2164880..9fd8af1 100755
+--- a/src/Encode.cpp
++++ b/src/Encode.cpp
+@@ -1,6 +1,6 @@
+ ﻿#include "Encode.h"
+ #include <QTextCodec>
+-#include <QtDebug>
++#include <QDebug>
+ 
+ /* 检查字符串编码的类。看了大量文献，结论如下：
+ *如果是UTF BOM格式，或者UNICODE格式，其文件头部前几个字节（2-3）有一定的标识。由此标识直接按对应编码处理。
+diff --git a/src/RealCompare.pro b/src/RealCompare.pro
+index 1035414..0da717e 100755
+--- a/src/RealCompare.pro
++++ b/src/RealCompare.pro
+@@ -3,9 +3,9 @@ LANGUAGE = C++
+ 
+ TARGET = Notepad--
+ 
+-CONFIG	+= qt warn_on Debug
++CONFIG	+= qt warn_on
+ 
+-QT += core gui widgets concurrent network xmlpatterns
++QT += core gui widgets concurrent network core5compat
+ 
+ 
+ HEADERS	+= *.h \
+@@ -33,47 +33,47 @@ INCLUDEPATH += cceditor
+ 
+ TRANSLATIONS += realcompare_zh.ts
+ 
+- if(contains(QMAKE_HOST.arch, x86_64)){
+-    CONFIG(Debug, Debug|Release){
++ if(contains(QMAKE_HOST.arch, x86_64|loongarch64)){
++    CONFIG(debug, debug|release){
+         DESTDIR = x64/Debug
+-		LIBS	+= -Lx64/Debug
+-		LIBS += -lqmyedit_qt5d
++                LIBS += -Lx64/Debug
++                LIBS += -lqmyedit_qt6d
+     }else{
+         DESTDIR = x64/Release
+ 		LIBS	+= -Lx64/Release
+-		LIBS += -lqmyedit_qt5
++                LIBS += -lqmyedit_qt6
+         #QMAKE_CXXFLAGS += /openmp
+     }
+-   }
++}
++
+ unix{
+-if(CONFIG(debug, Debug|Release)){
+-          LIBS += -L/home/yzw/build/CCNotePad/x64/Debug -lqmyedit_qt5
++    if(CONFIG(debug, debug|release)){
++        LIBS += -L/home/yzw/build/CCNotePad/x64/Debug -lqmyedit_qt6
+ 
+-QMAKE_CXXFLAGS += -fopenmp
+-LIBS += -lgomp -lpthread
++        QMAKE_CXXFLAGS += -fopenmp
++        LIBS += -lgomp -lpthread
+     }else{
+-          LIBS += -L/home/yzw/build/CCNotePad/x64/Release -lqmyedit_qt5
++        LIBS += -L/home/yzw/build/CCNotePad/x64/Release -lqmyedit_qt6
+         DESTDIR = x64/Release
+ 
+         QMAKE_CXXFLAGS += -fopenmp -O2
+         LIBS += -lgomp -lpthread
+     }
+-   }
+-
++}
+ 
+ RC_FILE += RealCompare.rc
++
+ unix
+ {
+-
+-INCLUDEPATH += $$PWD/.
+-DEPENDPATH += $$PWD/.
++    INCLUDEPATH += $$PWD/.
++    DEPENDPATH += $$PWD/.
+ 
+ 
+-unix:!macx: LIBS += -L$$PWD/x64/Release/ -lqmyedit_qt5
++    unix:!macx: LIBS += -L$$PWD/x64/Release/ -lqmyedit_qt6
+ 
+-INCLUDEPATH += $$PWD/x64/Release
+-DEPENDPATH += $$PWD/x64/Release
++    INCLUDEPATH += $$PWD/x64/Release
++    DEPENDPATH += $$PWD/x64/Release
+ 
+-unix:!macx: PRE_TARGETDEPS += $$PWD/x64/Release/libqmyedit_qt5.a
++    unix:!macx: PRE_TARGETDEPS += $$PWD/x64/Release/libqmyedit_qt6.a
+ }
+ 
+diff --git a/src/batchfindreplace.cpp b/src/batchfindreplace.cpp
+index cb071c3..2602e3c 100755
+--- a/src/batchfindreplace.cpp
++++ b/src/batchfindreplace.cpp
+@@ -89,7 +89,7 @@ void BatchFindReplace::appendToFindReplaceTable(QStringList& findKeyword)
+ bool BatchFindReplace::tranInputKeyword(QString& findKeyWord, QStringList& outputKeyWordList)
+ {
+ 	//�ѿհ��ַ����ո����\t \r\n ���ַ������滻Ϊ�ո�
+-	QRegExp re("\\s");
++    QRegularExpression re("\\s");
+ 	findKeyWord.replace(re, QString(" "));
+ 
+ 	//�ٽ��пո�ָ�����
+@@ -257,7 +257,7 @@ void BatchFindReplace::on_export()
+ 	if (!fileName.isEmpty())
+ 	{
+ 		QSettings setting(fileName, QSettings::IniFormat);
+-		setting.setIniCodec("UTF-8");
++//		setting.setIniCodec("UTF-8");
+ 
+ 		int rowNums = ui.findReplaceTable->rowCount();
+ 
+@@ -303,7 +303,7 @@ void BatchFindReplace::on_import()
+ 		QFileInfo fi(fileNameList[0]);
+ 
+ 		QSettings setting(fi.filePath(), QSettings::IniFormat);
+-		setting.setIniCodec("UTF-8");
++//		setting.setIniCodec("UTF-8");
+ 
+ 		ui.findKeywordEdit->setPlainText(setting.value("find").toStringList().join(" "));
+ 		ui.replaceKeywordEdit->setPlainText(setting.value("replace").toStringList().join(" "));
+diff --git a/src/cceditor/ccnotepad.cpp b/src/cceditor/ccnotepad.cpp
+index 1f04879..5efe091 100755
+--- a/src/cceditor/ccnotepad.cpp
++++ b/src/cceditor/ccnotepad.cpp
+@@ -507,7 +507,7 @@ void initFileTypeLangMap()
+ 		//把新语言tagName,和关联ext单独存放起来ext_tag.ini。只读取一个文件就能获取所有，避免遍历慢
+ 		QString extsFile = QString("notepad/userlang/ext_tag");//ext_tag是存在所有tag ext的文件
+ 		QSettings qs(QSettings::IniFormat, QSettings::UserScope, extsFile);
+-		qs.setIniCodec("UTF-8");
++//		qs.setIniCodec("UTF-8");
+ 
+ 		QStringList keys = qs.allKeys();
+ 		//LangType lexId = L_USER_TXT;
+@@ -3981,7 +3981,7 @@ void  CCNotePad::initFileListDockWin()
+ 			}
+ 		});
+ 		m_dockFileListWin->setAttribute(Qt::WA_DeleteOnClose);
+-		m_dockFileListWin->layout()->setMargin(0);
++        m_dockFileListWin->layout()->setContentsMargins(0, 0, 0, 0);
+ 		m_dockFileListWin->layout()->setSpacing(0);
+ 
+ 		//暂时不提供关闭，因为关闭后需要同步菜单的check状态
+@@ -4312,7 +4312,7 @@ void CCNotePad::slot_actionSaveFile_toggle(bool /*checked*/)
+ 	if (pEdit != nullptr)
+ 	{
+ 		//如果是新建的文件，则弹出保存对话框，进行保存
+-		if (pEdit->property(Edit_File_New) >= 0)
++        if (pEdit->property(Edit_File_New).toString().length() >= 0)
+ 		{
+ 			QString filter("Text files (*.txt);;XML files (*.xml);;h files (*.h);;cpp file(*.cpp);;All types(*.*)");
+ 			QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), QString(), filter);
+@@ -4472,7 +4472,7 @@ void CCNotePad::slot_actionSaveAsFile_toggle(bool /*checked*/)
+ 	if (pEdit != nullptr)
+ 	{
+ 		//如果是新建的文件，则弹出保存对话框，进行保存
+-		if (pEdit->property(Edit_File_New) >= 0)
++        if (pEdit->property(Edit_File_New).toString().length() >= 0)
+ 		{
+ 			QString filter("Text files (*.txt);;XML files (*.xml);;h files (*.h);;cpp file(*.cpp);;All types(*.*)");
+ 			QString fileName = QFileDialog::getSaveFileName(this, tr("Save File As ..."),QString(), filter);
+@@ -4763,7 +4763,7 @@ void CCNotePad::saveTempFile(ScintillaEditView* pEdit,int index, QSettings& qs)
+ 		return;
+ 	}
+ 
+-	QVariant v = pEdit->property(Edit_Text_Change);
++    QVariant v = pEdit->property(Edit_Text_Change);
+ 	bool isDirty = v.toBool();
+ 
+ 	//不脏则不需要保存，直接跳过。不脏的文件，只记录1个名称，下次打开时恢复
+@@ -4773,7 +4773,7 @@ void CCNotePad::saveTempFile(ScintillaEditView* pEdit,int index, QSettings& qs)
+ 		//把文件记录到qs中去
+ 		//index一定不能重复。n表示新建
+ 		//如果是新建的文件
+-		if (pEdit->property(Edit_File_New) >= 0)
++        if (pEdit->property(Edit_File_New).toInt() >= 0)
+ 		{
+ 			qs.setValue(QString("%1").arg(index), QString("%1|1").arg(fileName));
+ 		}
+@@ -4792,7 +4792,7 @@ void CCNotePad::saveTempFile(ScintillaEditView* pEdit,int index, QSettings& qs)
+ 	}
+ 
+ 	//如果是新建的文件
+-	if (pEdit->property(Edit_File_New) >= 0)
++    if (pEdit->property(Edit_File_New).toInt() >= 0)
+ 	{
+ 		QString qsSavePath = qs.fileName();
+ 
+@@ -4963,7 +4963,7 @@ void CCNotePad::closeAllFileStatic()
+ {
+ 	QString tempFileList = QString("notepad/temp/list");
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, tempFileList);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 	qs.clear();
+ 
+ 	//从尾部开始依次调用保存所有文件。没修改的不需要保存
+@@ -5047,7 +5047,7 @@ void CCNotePad::closeEvent(QCloseEvent * event)
+ #else
+ 	if ((s_restoreLastFile == 1) && m_isMainWindows)
+ 	{
+-		closeAllFileStatic();
++		closeAllFileStatic();
+ 		m_isQuitCancel = false;
+ 	}
+ 	else
+@@ -5094,9 +5094,9 @@ void CCNotePad::closeEvent(QCloseEvent * event)
+ 			{
+ 				c->showNormal();
+ 			}
+-		qlonglong winId = (qlonglong)c->effectiveWinId();
+-		m_shareMem->lock();
+-		memcpy(m_shareMem->data(), &winId, sizeof(qlonglong));
++		qlonglong winId = (qlonglong)c->effectiveWinId();
++		m_shareMem->lock();
++		memcpy(m_shareMem->data(), &winId, sizeof(qlonglong));
+ 		m_shareMem->unlock();
+ 			c->m_isMainWindows = true;
+ 	}
+@@ -5480,7 +5480,7 @@ void CCNotePad::initFindWindow()
+ 			//从历史查找记录文件中加载
+ 			QString searchHistory = QString("notepad/searchHistory");//历史查找记录
+ 			QSettings qs(QSettings::IniFormat, QSettings::UserScope, searchHistory);
+-			qs.setIniCodec("UTF-8");
++//			qs.setIniCodec("UTF-8");
+ 
+ 			if (qs.contains("keys"))
+ 			{
+@@ -5545,7 +5545,7 @@ void CCNotePad::slot_saveSearchHistory()
+ 	//从历史查找记录文件中加载
+ 	QString searchHistory = QString("notepad/searchHistory");//历史查找记录
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, searchHistory);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 
+ 	if (s_findHistroy.count() > 15)
+ 	{
+@@ -5772,7 +5772,7 @@ void  CCNotePad::initFindResultDockWin()
+ 		m_dockSelectTreeWin = new QDockWidget(tr("Find result"), this);
+ 		connect(m_dockSelectTreeWin, &QDockWidget::dockLocationChanged, this, &CCNotePad::slot_findResultPosChangeed);
+ 
+-		m_dockSelectTreeWin->layout()->setMargin(0);
++        m_dockSelectTreeWin->layout()->setContentsMargins(0, 0, 0, 0);
+ 		m_dockSelectTreeWin->layout()->setSpacing(0);
+ 
+ 		//暂时不提供关闭，因为关闭后需要同步菜单的check状态
+@@ -6573,7 +6573,7 @@ bool CCNotePad::eventFilter(QObject * watched, QEvent * event)
+ 	}
+ 	return false;
+ }
+-
++
+ 
+ #ifdef Q_OS_WIN
+ static const ULONG_PTR CUSTOM_TYPE = 10000;
+@@ -6581,16 +6581,16 @@ static const ULONG_PTR OPEN_NOTEPAD_TYPE = 10001;
+ 
+ bool CCNotePad::nativeEvent(const QByteArray & eventType, void * message, long * result)
+ {
+-	MSG *param = static_cast<MSG *>(message);
+-
+-	switch (param->message)
+-	{
+-		case WM_COPYDATA:
+-		{
+-			COPYDATASTRUCT *cds = reinterpret_cast<COPYDATASTRUCT*>(param->lParam);
+-			if (cds->dwData == CUSTOM_TYPE)
+-			{
+-				QString openFilePath = QString::fromUtf8(reinterpret_cast<char*>(cds->lpData), cds->cbData);
++	MSG *param = static_cast<MSG *>(message);
++
++	switch (param->message)
++	{
++		case WM_COPYDATA:
++		{
++			COPYDATASTRUCT *cds = reinterpret_cast<COPYDATASTRUCT*>(param->lParam);
++			if (cds->dwData == CUSTOM_TYPE)
++			{
++				QString openFilePath = QString::fromUtf8(reinterpret_cast<char*>(cds->lpData), cds->cbData);
+ 				
+ 				int retIndex = findFileIsOpenAtPad(openFilePath);
+ 				if (-1 == retIndex)
+@@ -6622,9 +6622,9 @@ bool CCNotePad::nativeEvent(const QByteArray & eventType, void * message, long *
+ 				
+ 				
+ 				this->activateWindow();
+-				*result = 1;
+-				return true;
+-			}
++				*result = 1;
++				return true;
++			}
+ 			else if (cds->dwData == OPEN_NOTEPAD_TYPE)
+ 			{
+ 				activateWindow();
+@@ -6632,8 +6632,8 @@ bool CCNotePad::nativeEvent(const QByteArray & eventType, void * message, long *
+ 
+ 				*result = 1;
+ 				return true;
+-		}
+-	}
++		}
++	}
+ 	}
+ 
+ 	return QWidget::nativeEvent(eventType, message, result);
+@@ -7124,7 +7124,7 @@ int CCNotePad::restoreLastFiles()
+ 
+ 	QString tempFileList = QString("notepad/temp/list");
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, tempFileList);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 
+ 	QStringList fileList = qs.allKeys();
+ 	//从小到大排序一下
+diff --git a/src/columnedit.cpp b/src/columnedit.cpp
+index 50fd9ae..aaf93f1 100755
+--- a/src/columnedit.cpp
++++ b/src/columnedit.cpp
+@@ -216,13 +216,13 @@ void ColumnEdit::slot_ok()
+ 		{
+ 			QByteArray s_space(cursorCol - lineEndCol, ' ');
+ 			lineData.append(s_space);
+-			lineData.append(text);
++            lineData.append(text.toLatin1());
+ 		}
+ 		else
+ 		{
+ 			int posAbs2Start = pEdit->execute(SCI_FINDCOLUMN, i, cursorCol);
+ 			int posRelative2Start = posAbs2Start - lineBegin;
+-			lineData.insert(posRelative2Start, text);
++            lineData.insert(posRelative2Start, text.toLatin1());
+ 		}
+ 
+ 		pEdit->SendScintilla(SCI_SETTARGETRANGE, lineBegin, lineEnd);
+diff --git a/src/ctipwin.cpp b/src/ctipwin.cpp
+index 9412777..5bf16a9 100755
+--- a/src/ctipwin.cpp
++++ b/src/ctipwin.cpp
+@@ -9,7 +9,7 @@ CTipWin::CTipWin(QWidget *parent)
+ 	this->setWindowFlags(Qt::ToolTip);
+ 
+ 	QPalette  palette(this->palette());
+-	palette.setColor(QPalette::Background, QColor(0xfff29d));
++    palette.setColor(QPalette::Window, QColor(0xfff29d));
+ 	this->setPalette(palette);
+ }
+ 
+diff --git a/src/draglineedit.cpp b/src/draglineedit.cpp
+index c21f3de..d8a8513 100755
+--- a/src/draglineedit.cpp
++++ b/src/draglineedit.cpp
+@@ -1,4 +1,5 @@
+ #include "draglineedit.h"
++#include <QFile>
+ 
+ DragLineEdit::DragLineEdit(QWidget *parent)
+ 	: QLineEdit(parent)
+diff --git a/src/encodeconvert.cpp b/src/encodeconvert.cpp
+index c17022e..7bbcfc5 100755
+--- a/src/encodeconvert.cpp
++++ b/src/encodeconvert.cpp
+@@ -11,7 +11,7 @@
+ #include <QtConcurrent>
+ #include <QInputDialog>
+ #include <QDragEnterEvent>
+-
++#include <QTextCodec>
+ 
+ const int ITEM_CODE = Qt::UserRole + 1;
+ 
+diff --git a/src/findresultwin.cpp b/src/findresultwin.cpp
+index 7d86701..ad01b46 100755
+--- a/src/findresultwin.cpp
++++ b/src/findresultwin.cpp
+@@ -5,7 +5,7 @@
+ #include <QTreeWidgetItem>
+ #include <QStyleFactory>
+ #include <QToolButton>
+-#include <qtreeview.h>
++#include <QTreeView>>
+ #include <QStandardItem> 
+ #include <QStandardItemModel>
+ #include <QClipboard>
+@@ -151,8 +151,8 @@ void FindResultWin::slot_selectAll()
+ 		QModelIndex pMi = curSelItem.parent();
+ 		if (pMi.isValid())
+ 		{
+-			curSelItem = pMi;
+-}
++            curSelItem = pMi;
++        }
+ 		else
+ 		{
+ 			break;
+@@ -176,12 +176,13 @@ void FindResultWin::slot_selectAll()
+ 		//遍历下面的子节点
+ 		int i = 0;
+ 		QModelIndex childMi;
+-		childMi = sectionItem.child(i, 0);
++        const QAbstractItemModel *const sectionItemModel = sectionItem.model();
++        childMi = sectionItemModel->index(i, 0);
+ 		while (childMi.isValid())
+ 		{
+ 			++i;
+ 			ui.resultTreeView->selectionModel()->select(childMi, QItemSelectionModel::Select);
+-			childMi = sectionItem.child(i, 0);
++            childMi = sectionItemModel->index(i, 0);
+ 		}
+ 		return i+1;
+ 	};
+@@ -189,17 +190,20 @@ void FindResultWin::slot_selectAll()
+ 	QModelIndex rootItem = firstRootItem;
+ 	int j = 0;
+ 	int selectCount = 0;
++    const QAbstractItemModel *const rootItemModel = rootItem.model();
++    const QAbstractItemModel *const firstRootItemModel = firstRootItem.model();
++
+ 	while (rootItem.isValid())
+ 	{
+ 		//遍历根节点下面每一个section
+ 		{
+ 			int i = 0;
+-			QModelIndex section = rootItem.child(i, 0);
++            QModelIndex section = rootItemModel->index(i, 0);
+ 			while (section.isValid() && !section.data(ResultItemEditor).isNull())
+ 			{
+ 				++i;
+ 				selectCount += selectSection(section);
+-				section = firstRootItem.child(i, 0);
++                section = firstRootItemModel->index(i, 0);
+ 			}
+ 		}
+ 
+@@ -223,12 +227,12 @@ void FindResultWin::slot_selectSection()
+ 		//遍历下面的子节点
+ 		int i = 0;
+ 		QModelIndex childMi;
+-		childMi = sectionItem.child(i, 0);
++        childMi = sectionItem.model()->index(i, 0);
+ 		while (childMi.isValid())
+ 		{
+ 			++i;
+ 			ui.resultTreeView->selectionModel()->select(childMi, QItemSelectionModel::Select);
+-			childMi = sectionItem.child(i, 0);
++            childMi = sectionItem.model()->index(i, 0);
+ 		}
+ 		return i+1;
+ 	};
+@@ -420,7 +424,7 @@ QString FindResultWin::highlightFindText(FindRecord& record)
+ 			}
+ 		src = QString("<font style='background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+ 			tail = QString(utf8bytes.mid(tailStart));
+-			if (tail > MAX_TAIL_LENGTH)
++            if (tail.size() > MAX_TAIL_LENGTH)
+ 			{
+ 				tail = (tail.mid(0, MAX_TAIL_LENGTH) + "...").toHtmlEscaped();
+ 			}
+@@ -454,7 +458,7 @@ QString FindResultWin::highlightFindText(FindRecord& record)
+ 			src = QString("<font style='font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
+ 
+ 			QString tailContens = QString(utf8bytes.mid(tailStart));
+-			if (tailContens > MAX_TAIL_LENGTH)
++            if (tailContens.size() > MAX_TAIL_LENGTH)
+ 			{
+ 				tailContens = (tailContens.mid(0, MAX_TAIL_LENGTH) + "...").toHtmlEscaped();
+ 			}
+diff --git a/src/findwin.cpp b/src/findwin.cpp
+index 7a55059..8fe891e 100755
+--- a/src/findwin.cpp
++++ b/src/findwin.cpp
+@@ -559,8 +559,8 @@ bool readBase(const QChar * str, int * value, int base, int size)
+ 		current = str[i];
+ 		if (current >= 'A')
+ 		{
+-			current = current.digitValue() & 0xdf;
+-			current = current.digitValue() - ('A' - '0' - 10);
++            current = static_cast<QChar>(current.digitValue() & 0xdf);
++            current = static_cast<QChar>(current.digitValue() - ('A' - '0' - 10));
+ 		}
+ 		else if (current > '9')
+ 			return false;
+diff --git a/src/langstyledefine.cpp b/src/langstyledefine.cpp
+index 2df3a4f..f667f09 100755
+--- a/src/langstyledefine.cpp
++++ b/src/langstyledefine.cpp
+@@ -30,7 +30,7 @@ bool LangStyleDefine::readLangSetFile(QString langName, bool isLoadToUI)
+ {
+ 	QString userLangFile = QString("notepad/userlang/%1").arg(langName);//自定义语言中不能有.字符，否则可能有错，后续要检查
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 	qDebug() << qs.fileName();
+ 
+ 	if (!qs.contains("mz"))
+@@ -160,7 +160,7 @@ void LangStyleDefine::slot_save()
+ 	//把新语言tagName,和关联ext单独存放起来。后面只读取一个文件就能获取所有，避免遍历慢
+ 	QString extsFile = QString("notepad/userlang/ext_tag");//ext_tag是存在所有tag ext的文件
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, extsFile);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 
+ 	QStringList extList = ui.extNameLe->text().trimmed().split(" ");
+ 	extList.append(QString::number(motherLangs)); //最后一个是mother lexer
+@@ -201,7 +201,7 @@ void LangStyleDefine::slot_delete()
+ 	{
+ 		QString userLangFile = QString("notepad/userlang/%1").arg(name);//自定义语言中不能有.字符，否则可能有错，后续要检查
+ 		QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+-		qs.setIniCodec("UTF-8");
++//		qs.setIniCodec("UTF-8");
+ 
+ 		//删除userlang下面的tag.ini
+ 		QFile::remove(qs.fileName());
+@@ -211,7 +211,7 @@ void LangStyleDefine::slot_delete()
+ 		//把新语言在ext_tag中的关联文件记录也删除
+ 		QString extsFile = QString("notepad/userlang/ext_tag");//ext_tag是存在所有tag ext的文件
+ 		QSettings qs(QSettings::IniFormat, QSettings::UserScope, extsFile);
+-		qs.setIniCodec("UTF-8");
++//		qs.setIniCodec("UTF-8");
+ 
+ 		QStringList extList = qs.value(name).toStringList();
+ 		//更新当前ExtLexerManager::getInstance()。如果不更新，就要重启软件才能生效
+diff --git a/src/nddsetting.cpp b/src/nddsetting.cpp
+index ed20f73..7e2070a 100755
+--- a/src/nddsetting.cpp
++++ b/src/nddsetting.cpp
+@@ -50,7 +50,7 @@ void NddSetting::init()
+ 	QString qsSetPath = qs.fileName();
+ 
+ 	s_nddSet = new QSettings(QSettings::IniFormat, QSettings::UserScope, settingDir);
+-	s_nddSet->setIniCodec("UTF-8");
++//	s_nddSet->setIniCodec("UTF-8");
+ 	bool initOk = true;
+ 
+ 	auto initNddSet = []() {
+diff --git a/src/qscint/src/qscilexer.cpp b/src/qscint/src/qscilexer.cpp
+index b49fdc5..f21fff8 100755
+--- a/src/qscint/src/qscilexer.cpp
++++ b/src/qscint/src/qscilexer.cpp
+@@ -896,7 +896,7 @@ const char* QsciLexer::getUserDefineKeywords()
+ 
+ 	QString userLangFile = QString("notepad/userlang/%1").arg(m_tagName);//自定义语言中不能有.字符，否则可能有错，后续要检查
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 
+ 	if (!qs.contains("mz"))
+ 	{
+@@ -948,4 +948,4 @@ void QsciLexer::setCommentEnd(QByteArray commentEnd)
+ void QsciLexer::setCurThemes(int themesId)
+ {
+     m_themesId = themesId;
+-}
+\ No newline at end of file
++}
+diff --git a/src/qscint/src/qscintilla.pro b/src/qscint/src/qscintilla.pro
+index 2704d72..9ef4520 100755
+--- a/src/qscint/src/qscintilla.pro
++++ b/src/qscint/src/qscintilla.pro
+@@ -21,24 +21,14 @@
+ !win32:VERSION = 15.1.0
+ 
+ TEMPLATE = lib
+-CONFIG += qt warn_off thread exceptions hide_symbols debug staticlib
++CONFIG += qt warn_off thread exceptions hide_symbols staticlib
+ 
+ CONFIG(debug, debug|release) {
+-    mac: {
+-        TARGET = qmyedit_qt$${QT_MAJOR_VERSION}_debug
+-    } else {
+-        win32: {
+-            TARGET = qmyedit_qt$${QT_MAJOR_VERSION}d
+-        } else {
+-            TARGET = qmyedit_qt$${QT_MAJOR_VERSION}
+-        }
+-    }
+-	
+-	DESTDIR = ../../x64/Debug
++    TARGET = qmyedit_qt$${QT_MAJOR_VERSION}
++    DESTDIR = ../../x64/Debug
+ } else {
+     TARGET = qmyedit_qt$${QT_MAJOR_VERSION}
+-	
+-	DESTDIR = ../../x64/Release
++    DESTDIR = ../../x64/Release
+ }
+ 
+ macx:!CONFIG(staticlib) {
+diff --git a/src/qtlangset.cpp b/src/qtlangset.cpp
+index e88d132..99b6258 100755
+--- a/src/qtlangset.cpp
++++ b/src/qtlangset.cpp
+@@ -36,8 +36,8 @@ enum LangType {
+ 	// Don't use L_JS, use L_JAVASCRIPT instead
+ 	// The end of enumated language type, so it should be always at the end
+ 	L_EXTERNAL = 100, L_USER_DEFINE = 200
+-};
+-#endif
++};
++#endif
+ 
+ //static const QColor blackColor(Qt::black);
+ //static const QColor lightColor(0xdedede);
+@@ -421,14 +421,14 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+ 		QsciLexer *pLexer = ScintillaEditView::createLexer(index);
+ 		if (nullptr != pLexer)
+ 		{
+-
++
+ 			switch (flag)
+ 			{
+ 			case GLOBAL_FONT:
+ 			{
+-				for (int i = 0; i <= 255; ++i)
+-				{
+-					if (!pLexer->description(i).isEmpty())
++				for (int i = 0; i <= 255; ++i)
++				{
++					if (!pLexer->description(i).isEmpty())
+ 					{
+ 						oldfont = pLexer->font(i);
+ 						oldfont.setFamily(m_curStyleData.font.family());
+@@ -439,9 +439,9 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+ 			break;
+ 			case GLOBAL_FONT_SIZE:
+ 			{
+-				for (int i = 0; i <= 255; ++i)
+-				{
+-					if (!pLexer->description(i).isEmpty())
++				for (int i = 0; i <= 255; ++i)
++				{
++					if (!pLexer->description(i).isEmpty())
+ 					{
+ 						oldfont = pLexer->font(i);
+ 						oldfont.setPointSize(m_curStyleData.font.pointSize());
+@@ -452,9 +452,9 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+ 			break;
+ 			case GLOBAL_FONT_BOLD:
+ 			{
+-				for (int i = 0; i <= 255; ++i)
+-				{
+-					if (!pLexer->description(i).isEmpty())
++				for (int i = 0; i <= 255; ++i)
++				{
++					if (!pLexer->description(i).isEmpty())
+ 					{
+ 						oldfont = pLexer->font(i);
+ 						oldfont.setBold(m_curStyleData.font.bold());
+@@ -465,9 +465,9 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+ 			break;
+ 			case GLOBAL_FONT_UNDERLINE:
+ 			{
+-				for (int i = 0; i <= 255; ++i)
+-				{
+-					if (!pLexer->description(i).isEmpty())
++				for (int i = 0; i <= 255; ++i)
++				{
++					if (!pLexer->description(i).isEmpty())
+ 					{
+ 						oldfont = pLexer->font(i);
+ 						oldfont.setUnderline(m_curStyleData.font.underline());
+@@ -478,9 +478,9 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+ 			break;
+ 			case GLOBAL_FONT_ITALIC:
+ 			{
+-				for (int i = 0; i <= 255; ++i)
+-				{
+-					if (!pLexer->description(i).isEmpty())
++				for (int i = 0; i <= 255; ++i)
++				{
++					if (!pLexer->description(i).isEmpty())
+ 					{
+ 						oldfont = pLexer->font(i);
+ 						oldfont.setItalic(m_curStyleData.font.italic());
+@@ -503,10 +503,10 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
+ 			break;
+ 			default:
+ 				break;
+-			}
++			}
+ 			
+ 			saveLangeSet(pLexer);
+-		}
++		}
+ 		delete pLexer;
+ 	}
+ }
+@@ -537,7 +537,7 @@ void  QtLangSet::restoreOriginLangAllStyle()
+ 		{
+ 			QFile::remove(qs.fileName());
+ 		}
+-
++
+ 		delete pLexer;
+ 		pLexer = nullptr;
+ 	}
+@@ -578,12 +578,12 @@ void QtLangSet::restoreOriginLangOneStyle(GLOBAL_STYLE_SET flag)
+ 		QsciLexer *pLexer = ScintillaEditView::createLexer(index);
+ 		QsciLexer *pOriginLexer = ScintillaEditView::createLexer(index,"",true);
+ 		if (nullptr != pLexer)
+-		{
+-			for (int i = 0; i <= 255; ++i)
+-			{
+-				if (!pLexer->description(i).isEmpty())
+-				{
+-
++		{
++			for (int i = 0; i <= 255; ++i)
++			{
++				if (!pLexer->description(i).isEmpty())
++				{
++
+ 					switch (flag)
+ 					{
+ 					case GLOBAL_FONT:
+@@ -649,11 +649,11 @@ void QtLangSet::restoreOriginLangOneStyle(GLOBAL_STYLE_SET flag)
+ 					break;
+ 					default:
+ 						break;
+-					}
+-				}
++					}
++				}
+ 			}
+ 			saveLangeSet(pLexer);
+-		}
++		}
+ 		delete pLexer;
+ 		delete pOriginLexer;
+ 	}
+@@ -795,7 +795,7 @@ bool QtLangSet::readLangSetFile(QString langName,QString &keyword, QString &moth
+ {
+ 	QString userLangFile = QString("notepad/userlang/%1").arg(langName);//�Զ��������в�����.�ַ�����������д�������Ҫ���
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 	//qDebug() << qs.fileName();
+ 
+ 	if (!qs.contains("mz"))
+@@ -917,15 +917,15 @@ void QtLangSet::slot_itemSelect(QListWidgetItem *item)
+ 		ui.keywordTe->setPlainText(keyword);
+ 		ui.motherLangCb->setCurrentIndex(0);
+ 
+-		for (int i = 0; i <= 255; ++i)
+-		{
+-			QString desc = pLexer->description(i);
+-			if (!desc.isEmpty())
+-			{
++		for (int i = 0; i <= 255; ++i)
++		{
++			QString desc = pLexer->description(i);
++			if (!desc.isEmpty())
++			{
+ 				QListWidgetItem *itemtemp = new QListWidgetItem(desc);
+-				itemtemp->setData(Qt::UserRole, i);
+-				ui.styleListWidget->addItem(itemtemp);
+-			}
++				itemtemp->setData(Qt::UserRole, i);
++				ui.styleListWidget->addItem(itemtemp);
++			}
+ 		}
+ 	}
+ 
+diff --git a/src/scintillaeditview.cpp b/src/scintillaeditview.cpp
+index 60181dd..fac3648 100755
+--- a/src/scintillaeditview.cpp
++++ b/src/scintillaeditview.cpp
+@@ -2155,7 +2155,7 @@ void ScintillaEditView::changeCase(const TextCaseType & caseToConvert, QString&
+ 				else if (caseToConvert == TITLECASE_FORCE)
+ 					strToConvert[i] = strToConvert[i].toLower();
+ 				//An exception
+-				if ((i < 2) ? false : (strToConvert[i - 1] == L'\'' && (strToConvert[i - 2].isLetter())))
++                if ((i < 2) ? false : (strToConvert[i - 1] == QChar(L'\'') && (strToConvert[i - 2].isLetter())))
+ 					strToConvert[i] = strToConvert[i].toLower();
+ 			}
+ 		}
+@@ -2183,11 +2183,11 @@ void ScintillaEditView::changeCase(const TextCaseType & caseToConvert, QString&
+ 				wasEolR = false;
+ 				wasEolN = false;
+ 				//An exception
+-				if (strToConvert[i] == L'i' &&
++                if (strToConvert[i] == static_cast<QChar>(L'i') &&
+ 					((i < 1) ? false : (strToConvert[i - 1].isSpace() || strToConvert[i - 1] == '(' || strToConvert[i - 1] == '"')) && \
+ 					((i + 1 == nbChars) ? false : (strToConvert[i + 1].isSpace() || strToConvert[i + 1] == '\'')))
+ 				{
+-					strToConvert[i] = L'I';
++                    strToConvert[i] = static_cast<QChar>(L'I');
+ 				}
+ 			}
+ 			else if (strToConvert[i] == '.' || strToConvert[i] == '!' || strToConvert[i] == '?')
+@@ -2856,7 +2856,7 @@ bool isUrlQueryDelimiter(QChar const c)
+ void scanToUrlEnd(QString & text, int textLen, int start, int* distance)
+ {
+ 	int p = start;
+-	QChar q = 0;
++    QChar q;
+ 	enum { sHostAndPath, sQuery, sQueryAfterDelimiter, sQueryQuotes, sQueryAfterQuotes, sFragment } s = sHostAndPath;
+ 	while (p < textLen)
+ 	{
+diff --git a/src/userlexdef.cpp b/src/userlexdef.cpp
+index 6b8c7d2..86e238b 100755
+--- a/src/userlexdef.cpp
++++ b/src/userlexdef.cpp
+@@ -24,7 +24,7 @@ bool UserLexDef::readUserSettings(QString langTagName)
+ 
+ 	QString userLangFile = QString("notepad/userlang/%1").arg(langTagName);
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 
+ 	if (!qs.contains(QString("mz")))
+ 	{
+@@ -93,13 +93,13 @@ bool UserLexDef::writeUserSettings(QString langTagName)
+ 
+ 	QString userLangFile = QString("notepad/userlang/%1").arg(langTagName);
+ 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+-	qs.setIniCodec("UTF-8");
++//	qs.setIniCodec("UTF-8");
+ 	qs.clear();
+ 
+ 	qs.setValue("mz", langTagName);
+ 	qs.setValue("mother", m_motherLang); 
+ 	qs.setValue("ext", m_extTypes);
+-	qs.setValue("keyword", m_keyword.data());
++    qs.setValue("keyword", m_keyword.toStdString().c_str());
+ 
+ 	return true;
+ }
+-- 
+2.20.1
+
