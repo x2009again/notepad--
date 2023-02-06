@@ -1,5 +1,7 @@
 # notepad--
 
+[中文 ](README.md) | [English](README_EN.md)
+
 ## 项目简介
 
 这是一个使用C++编写的文本编辑器Notepad--,可以支持Win/Linux/Mac平台。
