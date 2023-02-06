@@ -1,4 +1,4 @@
-﻿#include <memory>
+#include <memory>
 #include "ccnotepad.h"
 #include "filemanager.h"
 #include "Encode.h"
@@ -3464,7 +3464,7 @@ void CCNotePad::tabClose(int index, bool isInQuit)
 	{
 		QApplication::beep();
 
-		int ret = QMessageBox::question(this, tr("Save File?"), tr("if save file %1 ?").arg(filePath), tr("Yes"), tr("No"), tr("Cancel"));
+		int ret = QMessageBox::question(this, tr("Do you want to save changes to « %1 » before closing?").arg(filePath), tr("If you don't save the changes you made, you'll lose them forever."), tr("Yes"), tr("No"), tr("Cancel"));
 	
 		//保存
 		if (ret == 0)
