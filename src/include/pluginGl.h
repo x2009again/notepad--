@@ -4,11 +4,13 @@
 #define NDD_EXPORTDLL
 
 #if defined(Q_OS_WIN)
-#if defined(NDD_EXPORTDLL)
-#define NDD_EXPORT __declspec(dllexport)
+	#if defined(NDD_EXPORTDLL)
+		#define NDD_EXPORT __declspec(dllexport)
+	#else
+		#define NDD_EXPORT __declspec(dllimport)
+	#endif
 #else
-#define NDD_EXPORT __declspec(dllimport)
-#endif
+	#define NDD_EXPORT __attribute__((visibility("default")))
 #endif
 
 struct ndd_proc_data
