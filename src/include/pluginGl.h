@@ -13,11 +13,11 @@
 
 struct ndd_proc_data
 {
-	QString m_strPlugName; //²å¼şÃû³Æ ±ØÑ¡
-	QString m_strFilePath; //lib ²å¼şµÄÈ«¾ÖÂ·¾¶¡£±ØÑ¡
-	QString m_strComment; //²å¼şËµÃ÷
-	QString m_version; //°æ±¾ºÅÂë¡£¿ÉÑ¡
-	QString m_auther;//×÷ÕßÃû³Æ¡£¿ÉÑ¡
+	QString m_strPlugName; //æ’ä»¶åç§° å¿…é€‰
+	QString m_strFilePath; //lib æ’ä»¶çš„å…¨å±€è·¯å¾„ã€‚å¿…é€‰
+	QString m_strComment; //æ’ä»¶è¯´æ˜
+	QString m_version; //ç‰ˆæœ¬å·ç ã€‚å¯é€‰
+	QString m_auther;//ä½œè€…åç§°ã€‚å¯é€‰
 };
 
 
@@ -25,3 +25,32 @@ typedef struct ndd_proc_data NDD_PROC_DATA;
 
 typedef bool (*NDD_PROC_IDENTIFY_CALLBACK)(NDD_PROC_DATA* pProcData);
 typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserData);
+
+
+/***********åœ¨ç¼–è¯‘æ’ä»¶æ—¶æä¾›çš„å†…å®¹**************/
+
+#ifdef  NOTEPAD_PLUGIN_MANAGER
+
+#if defined(Q_OS_WIN)
+#if defined(NDD_EXPORTDLL)
+#define NDD_EXPORT __declspec(dllexport)
+#else
+#define NDD_EXPORT __declspec(dllimport)
+#endif
+#endif
+
+#include <Qsci/qsciscintilla.h>
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+	NDD_EXPORT bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData);
+	NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit);
+
+#ifdef __cplusplus
+	}
+#endif
+
+#endif  //NOTEPAD_PLUGIN_MANAGER
+/***********åœ¨ç¼–è¯‘æ’ä»¶æ—¶æä¾›çš„å†…å®¹**************/
