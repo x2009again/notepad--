@@ -87,7 +87,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="title">
-     <string>File(&amp;F)</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="actionNewFile"/>
     <addaction name="actionOpenFile"/>
@@ -103,7 +103,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="title">
-     <string>Edit(&amp;E)</string>
+     <string>&amp;Edit</string>
     </property>
     <widget class="QMenu" name="menuformat_conversion">
      <property name="title">
@@ -180,7 +180,7 @@
    </widget>
    <widget class="QMenu" name="menuSearch">
     <property name="title">
-     <string>Search(&amp;S)</string>
+     <string>&amp;Search</string>
     </property>
     <widget class="QMenu" name="menuBook_Mark">
      <property name="title">
@@ -204,7 +204,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View(&amp;V)</string>
+     <string>&amp;View</string>
     </property>
     <widget class="QMenu" name="menudisplay_symbols">
      <property name="title">
@@ -232,7 +232,7 @@
    </widget>
    <widget class="QMenu" name="menuCode">
     <property name="title">
-     <string>Encoding(&amp;N)</string>
+     <string>E&amp;ncoding</string>
     </property>
     <widget class="QMenu" name="menuASNI">
      <property name="title">
@@ -263,7 +263,7 @@
    </widget>
    <widget class="QMenu" name="menuLanguage">
     <property name="title">
-     <string>Language(&amp;L)</string>
+     <string>&amp;Language</string>
     </property>
     <widget class="QMenu" name="menuP">
      <property name="title">
@@ -466,7 +466,7 @@
    </widget>
    <widget class="QMenu" name="menuSet">
     <property name="title">
-     <string>Set(&amp;T)</string>
+     <string>Se&amp;t</string>
     </property>
     <widget class="QMenu" name="menuLanguage_2">
      <property name="title">
@@ -495,7 +495,7 @@
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools(&amp;O)</string>
+     <string>T&amp;ools</string>
     </property>
    </widget>
    <addaction name="menuFile"/>
