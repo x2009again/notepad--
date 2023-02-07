@@ -56,6 +56,7 @@ set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES
 macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     # aux_source_directory(${PLUGIN_VAR}_SOURCES  ${ARGN})
     add_library(${PLUGIN_VAR} SHARED ${PLUGIN_SRC} ${ARGN})
+    
     if(CMAKE_HOST_WIN32)
         # Win32 已提供宏判断
         # target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
@@ -64,8 +65,12 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     if(CMAKE_HOST_UNIX)
         target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
     endif(CMAKE_HOST_UNIX)
-    target_include_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
-    target_link_directories(${PLUGIN_VAR} PUBLIC ${NOTEPAD_PLUGIN_LIBDIR})
+
+    # Notepad-- 插件开发时应该使用的 头文件安装目录、库文件安装目录
+    target_include_directories(${PLUGIN_VAR} PUBLIC 
+        ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
+    target_link_directories(${PLUGIN_VAR} PUBLIC 
+        ${NOTEPAD_PLUGIN_LIBDIR})
     target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
     if(NOTEPAD_BUILD_BY_QT5)
         target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
@@ -74,6 +79,10 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     if(NOTEPAD_BUILD_BY_QT6)
         target_link_libraries(${PLUGIN_VAR} Qt6::Core Qt6::Widgets)
     endif(NOTEPAD_BUILD_BY_QT6)
+
+    # 这是插件实现接口中增加的 NOTEPAD_PLUGIN_MANAGER 宏开关
+        # 来处理减少 Notepad-- 在编译时不需要，但在插件编译时所需要的模板内容
+    target_compile_definitions(${PLUGIN_VAR} PUBLIC NOTEPAD_PLUGIN_MANAGER=)
     
 endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 
