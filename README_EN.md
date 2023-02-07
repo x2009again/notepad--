@@ -34,11 +34,14 @@ Creating a free text editor requires support from users like you. If you'd like 
 
 - ArchLinux
 
-1. Install compilation environment `sudo pacman -S gcc cmake make `
+1. Install compilation environment `sudo pacman -S gcc cmake make ninja`
 1. Install qt tools and libraries `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns `
-1. Configure `cmake -B build -DCMAKE_BUILD_TYPE=Release`
-1. Compile `cd build && make -j`
-1. Package: use aur
+1. Configure `cmake -S . -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -W no-dev`
+1. Compile `ninja -C build && ninja -C build install`
+1. Package: use [AUR/notepad---git](https://aur.archlinux.org/packages/notepad---git) `yay -S notepad---git`
+1. Installation:
+    - Pre-compiled package add [ArchLinuxCN/notepad---git](https://github.com/archlinuxcn/repo) mirror `yay -S archlinuxcn/notepad---git`
+    - Pre-compiled package [Debuginfod/notepad---git-debug](https://wiki.archlinux.org/title/Debuginfod) package `yay -S archlinuxcn/notepad---git-debug`
 
 **Qt Project Compilation Instructions:** 
 

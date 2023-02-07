@@ -41,11 +41,14 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 
 - ArchLinux
 
-1. 安装编译环境 `sudo pacman -S gcc cmake make `
-1. 安装qt工具和库 `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns `
-1. 配置 `cmake -B build -DCMAKE_BUILD_TYPE=Release`
-1. 编译 `cd build && make -j` 
-1. 打包:使用aur
+1. 安装编译环境 `sudo pacman -S gcc cmake make ninja`
+1. 安装 qt 工具和库 `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns`
+1. 配置 `cmake -S . -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -W no-dev`
+1. 编译 `ninja -C build && ninja -C build install`
+1. 打包: 使用 [AUR/notepad---git](https://aur.archlinux.org/packages/notepad---git) `yay -S notepad---git`
+1. 安装：
+    - 预编译包添加 [ArchLinuxCN/notepad---git](https://github.com/archlinuxcn/repo) 镜像 `yay -S archlinuxcn/notepad---git`
+    - 预编译包 [Debuginfod/notepad---git-debug](https://wiki.archlinux.org/title/Debuginfod) 包 `yay -S archlinuxcn/notepad---git-debug`
 
 - openSUSE Tumbleweed
 
