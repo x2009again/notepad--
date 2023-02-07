@@ -8,7 +8,7 @@ include(cmake/SparkFindQt5Config.cmake)
 # include(cmake/SparkFindQt6Config.cmake)
 include(cmake/SparkMacrosExtendConfig.cmake)
 
-# ----------------- Build QScint ----------------- #
+# ----------------- 构建 QSci 静态库 ----------------- #
 if(TRUE)
     # add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
     # file(GLOB MOC_HEADER src/qscint/src/Qsci/*.h)
@@ -40,7 +40,7 @@ if(TRUE)
 endif(TRUE)
 
 
-# ----------------- Build CCEditor ----------------- #
+# ----------------- 构建 Notepad-- 程序 ----------------- #
 if(TRUE)
 
     # 准备构建 CCEditor
@@ -67,7 +67,7 @@ if(TRUE)
 
 endif(TRUE)
 
-# ----------------- CCEditor Plugin Support or Other  ----------------- #
+# ----------------- Notepad-- 插件支持相关  ----------------- #
 if(TRUE)
     
     # 开启插件支持
