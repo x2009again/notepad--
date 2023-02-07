@@ -1,15 +1,16 @@
 
 macro(spark_desktop_macros _APP_NAME _APP_NAME_ZH_CN _APP_COMMENT _APP_TYPE _APP_EXECUTE_PATH _APP_EXECUTE_ICON_PATH _APP_CATEGORIES)
-    set(APP_NAME ${_APP_NAME})
-    set(APP_NAME_ZH_CN ${_APP_NAME_ZH_CN})
-    set(APP_COMMENT ${_APP_COMMENT})
-    set(APP_TYPE ${_APP_TYPE})
-    set(APP_EXECUTE_PATH ${_APP_EXECUTE_PATH})
-    set(APP_EXECUTE_ICON_PATH ${_APP_EXECUTE_ICON_PATH})
-    set(APP_CATEGORIES ${_APP_CATEGORIES})
+    set(APP_NAME               ${_APP_NAME})
+    set(APP_NAME_ZH_CN         ${_APP_NAME_ZH_CN})
+    set(APP_COMMENT            ${_APP_COMMENT})
+    set(APP_TYPE               ${_APP_TYPE})
+    set(APP_EXECUTE_PATH       ${_APP_EXECUTE_PATH})
+    set(APP_EXECUTE_ICON_PATH  ${_APP_EXECUTE_ICON_PATH})
+    set(APP_CATEGORIES         ${_APP_CATEGORIES})
     configure_file(cmake/spark-desktop.desktop.in
         ${CMAKE_BINARY_DIR}/${_APP_NAME}.desktop
     )
+    set(SPARK_DESKTOP_FILE ${CMAKE_BINARY_DIR}/${_APP_NAME}.desktop)
 endmacro(spark_desktop_macros _APP_NAME _APP_NAME_ZH_CN _APP_COMMENT _APP_TYPE _APP_EXECUTE_PATH _APP_EXECUTE_ICON_PATH _APP_CATEGORIES)
 
 # include(cmake/SparkDesktopMacros.cmake)
