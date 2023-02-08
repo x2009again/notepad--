@@ -178,7 +178,7 @@ public slots:
 	void slot_batch_rename();
 	void slot_options();
 	void slot_donate();
-	void slot_registerCmd(int cmd, int code);
+    //	void slot_registerCmd(int cmd, int code);
 	void slot_viewStyleChange(QString tag, int styleId, QColor & fgColor, QColor & bkColor, QFont & font, bool fontChange);
 	void slot_viewLexerChange(QString tag);
 	void slot_findInDir();
@@ -278,7 +278,7 @@ private slots:
 	void slot_toDarkStyle();
 	void slot_toLavenderBlush();
 	void slot_toMistyRose();*/
-	void slot_register();
+	//void slot_register();
 
 	void slot_slectionChanged();
 	void slot_preHexPage();
