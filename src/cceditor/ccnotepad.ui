@@ -232,7 +232,7 @@
    </widget>
    <widget class="QMenu" name="menuCode">
     <property name="title">
-     <string>E&amp;ncoding</string>
+     <string>Encoding (&amp;N)</string>
     </property>
     <widget class="QMenu" name="menuASNI">
      <property name="title">
