@@ -1575,6 +1575,11 @@
     <string>Chinese</string>
    </property>
   </action>
+
+
+
+
+
   <action name="actionLanguage_Format">
    <property name="text">
     <string>Theme Style</string>
@@ -2691,6 +2696,22 @@
    </hints>
   </connection>
   <connection>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    <sender>actionLanguage_Format</sender>
    <signal>triggered()</signal>
    <receiver>CCNotePad</receiver>
@@ -3476,6 +3497,7 @@
   <slot>slot_toMistyRose()</slot>
   <slot>slot_changeEnglish()</slot>
   <slot>slot_changeChinese()</slot>
+
   <slot>slot_langFormat()</slot>
   <slot>slot_reOpenTextMode()</slot>
   <slot>slot_reOpenHexMode()</slot>

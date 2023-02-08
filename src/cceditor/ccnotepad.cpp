@@ -1,4 +1,4 @@
-﻿#include <memory>
+#include <memory>
 #include "ccnotepad.h"
 #include "filemanager.h"
 #include "Encode.h"
@@ -7317,14 +7317,19 @@ void CCNotePad::slot_hexGotoFile(qint64 addr)
 void CCNotePad::slot_about()
 {
 	QMessageBox msgBox(this);
+	QString msg = tr(R"(
+		<a href="https://github.com/cxasm/notepad--">Github repo: cxasm/notepad--</a>
+		<br/>
+		<a href="https://gitee.com/cxasm/notepad--">China Gitee: cxasm/notepad--</a>
+	)");
+
 #if defined (Q_OS_MAC)
-	msgBox.setText(tr("bugfix: https://github.com/cxasm/notepad-- \nchina: https://gitee.com/cxasm/notepad--"));
-    msgBox.setDetailedText(QString("Notepad-- %1").arg(VersionStr));
+	msgBox.setText(msg);
+	msgBox.setDetailedText(QString("Notepad-- %1").arg(VersionStr));
 #else
 	msgBox.setWindowTitle(QString("Notepad-- %1").arg(VersionStr));
-	msgBox.setText(tr("bugfix: https://github.com/cxasm/notepad-- \nchina: https://gitee.com/cxasm/notepad--"));
+	msgBox.setText(msg);
 #endif
-	msgBox.setTextInteractionFlags(Qt::TextSelectableByMouse);
 
 	msgBox.exec();
 }

@@ -1,5 +1,7 @@
 # notepad--
 
+[中文 ](README.md) | [English](README_EN.md)
+
 ## 项目简介
 
 这是一个使用C++编写的文本编辑器Notepad--,可以支持Win/Linux/Mac平台。
@@ -39,11 +41,21 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 
 - ArchLinux
 
-1. 安装编译环境 `sudo pacman -S gcc cmake make `
-1. 安装qt工具和库 `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns `
-1. 配置 `cmake -B build -DCMAKE_BUILD_TYPE=Release`
-1. 编译 `cd build && make -j` 
-1. 打包:使用aur
+1. 安装编译环境 `sudo pacman -S gcc cmake make ninja`
+1. 安装 qt 工具和库 `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns`
+1. 配置 `cmake -S . -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -W no-dev`
+1. 编译 `ninja -C build && ninja -C build install`
+1. 打包: 使用 [AUR/notepad---git](https://aur.archlinux.org/packages/notepad---git) `yay -S notepad---git`
+1. 安装：
+    - 预编译包添加 [ArchLinuxCN/notepad---git](https://github.com/archlinuxcn/repo) 镜像 `yay -S archlinuxcn/notepad---git`
+    - 预编译包 [Debuginfod/notepad---git-debug](https://wiki.archlinux.org/title/Debuginfod) 包 `yay -S archlinuxcn/notepad---git-debug`
+
+- openSUSE Tumbleweed
+
+1. 安装编译环境和Qt工具库 `sudo zypper in -t pattern devel_C_C++ devel_basis devel_qt5 `
+1. 配置 `cmake -B build -DCMAKE_BUILD_TYPE=Release `
+1. 编译 `cd build && make -j `
+1. 打包使用 OBS (Open Build Service)
 
 **Qt工程编译说明：** 
 
@@ -59,6 +71,11 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 ```
 yay -S notepad---git
 ```
+## 联络方式
+
+QQ群：959439826 用户群，做NDD的问题反馈、功能建议等。
+
+QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献的开发人士加入。
 
 ## 效果预览
 
