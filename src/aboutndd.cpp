@@ -6,8 +6,8 @@ AboutNdd::AboutNdd(QWidget *parent)
 	ui.setupUi(this);
 
 	ui.label->setOpenExternalLinks(true);
-    // 隐藏最大化、最小化按钮
-    setWindowFlags(windowFlags() & ~Qt::WindowMinMaxButtonsHint);
+	// 隐藏最大化、最小化按钮
+	setWindowFlags(windowFlags() & ~Qt::WindowMinMaxButtonsHint);
 }
 
 AboutNdd::~AboutNdd()
