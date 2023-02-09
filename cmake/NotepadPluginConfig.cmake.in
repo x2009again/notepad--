@@ -13,22 +13,47 @@
 # 一些无关紧要的部分，如果需要实现插件安装操作时，即可进行使用
 # include(CMakePackageConfigHelpers)
 # include(GNUInstallDirs)
-
-# 
+ 
+# 主要内容，在构建时的填充
 set(NOTEPAD_PLUGIN              @NOTEPAD_PLUGIN@)
-set(NOTEPAD_PLUGIN_INCLUDEDIR   @NOTEPAD_PLUGIN_INCLUDEDIR@)
-set(NOTEPAD_PLUGIN_LIBDIR       @NOTEPAD_PLUGIN_LIBDIR@)
+set(NOTEPAD_BUILD_BY_QT5        @NOTEPAD_BUILD_BY_QT5@)
+set(NOTEPAD_BUILD_BY_QT6        @NOTEPAD_BUILD_BY_QT6@)
+set(NOTEPAD_BUILD_BY_SHARED     FALSE)
 set(NOTEPAD_PLUGIN_CORELIB      @NOTEPAD_PLUGIN_CORELIB@)
-
-# 一些扩展内容，主要是 CMake 模块文件的填充
-set(NOTEPAD_PLUGIN_EXTERNAL_INCLUDES
-        @NOTEPAD_PLUGIN_EXTERNAL_INCLUDES@)
-
 # 由插件开发者进行参考的 "Notepad 提供的插件安装目录(位置)" 
-set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY @NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_DIRECTORY@)
+set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY 
+        @NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_DIRECTORY@)
 
-set(NOTEPAD_BUILD_BY_QT5          @NOTEPAD_BUILD_BY_QT5@)
-set(NOTEPAD_BUILD_BY_QT6          @NOTEPAD_BUILD_BY_QT6@)
+# 这些是被废除的内容
+# set(NOTEPAD_PLUGIN_INCLUDEDIR   @NOTEPAD_PLUGIN_INCLUDEDIR@)
+# set(NOTEPAD_PLUGIN_LIBDIR       @NOTEPAD_PLUGIN_LIBDIR@)
+
+# 一些核心位置设定参考
+# ./usr/bin/
+# ./usr/bin/notepad--
+# ./usr/include/
+# ./usr/include/NotepadPlugin/
+# ./usr/include/NotepadPlugin/Qsci/
+# ./usr/include/NotepadPlugin/Qsci/...
+# ./usr/include/NotepadPlugin/qscint/
+# ./usr/include/NotepadPlugin/qscint/scintilla/src/XPM.cp
+# ./usr/lib/
+# ./usr/lib/NotepadPlugin/
+# ./usr/lib/NotepadPlugin/libQSci.a
+# ./usr/lib/cmake/
+# ./usr/lib/cmake/NotepadPlugin/
+# ./usr/lib/cmake/NotepadPlugin/NotepadPluginConfig.cmake
+#                              ^ 以此文件目录位置开始，Linux/Windows中都相同，但不是写死路径
+#                                ../                为 /usr/lib/cmake 目录
+#                                ../../             为 /usr/lib 目录
+#                                ../../../          为 /usr 目录
+#                                ../../../include   为 /usr/include 目录
+#                                ../../../include/NotepadPlugin  # 头文件目录
+set(NOTEPAD_PLUGIN_INCLUDEDIR
+    ${CMAKE_CURRENT_LIST_DIR}/../../../include/${NOTEPAD_PLUGIN}
+    ${CMAKE_CURRENT_LIST_DIR}/../../../include/${NOTEPAD_PLUGIN}/Qsci)
+set(NOTEPAD_PLUGIN_LIBDIR       
+    ${CMAKE_CURRENT_LIST_DIR}/../../${NOTEPAD_PLUGIN})
 
 if(NOTEPAD_BUILD_BY_QT5)
     set(CMAKE_AUTOMOC ON)
@@ -42,17 +67,28 @@ if(NOTEPAD_BUILD_BY_QT6)
     find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 endif(NOTEPAD_BUILD_BY_QT6)
 
-add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
-set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
-    IMPORTED_LOCATION 
-        ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.so
-    
-    INCLUDE_DIRECTORIES 
-        "${NOTEPAD_PLUGIN_INCLUDEDIR};${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES}"
-)
+if(NOTEPAD_BUILD_BY_SHARED)
+    set(NOTEPAD_IMPORTED_CORELIB_PATH ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.so)
+    add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
+    set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
+        IMPORTED_LOCATION 
+            ${NOTEPAD_IMPORTED_CORELIB_PATH}
+        INCLUDE_DIRECTORIES 
+            "${NOTEPAD_PLUGIN_INCLUDEDIR}"
+    )
+else()
+    set(NOTEPAD_IMPORTED_CORELIB_PATH ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.a)
+    add_library(${NOTEPAD_PLUGIN} STATIC IMPORTED)
+    set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
+        IMPORTED_LOCATION 
+            ${NOTEPAD_IMPORTED_CORELIB_PATH}
+        INCLUDE_DIRECTORIES 
+            "${NOTEPAD_PLUGIN_INCLUDEDIR}"
+    )
+endif()
 
 # add_notepad_plugin(<PLUGIN_VAR> <PLUGIN_SRC> [...])
-# 
+# 此宏定义了，基于源代码文件构建 Notepad-- 插件时所需要的一系列流程内容
 macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     # aux_source_directory(${PLUGIN_VAR}_SOURCES  ${ARGN})
     add_library(${PLUGIN_VAR} SHARED ${PLUGIN_SRC} ${ARGN})
@@ -68,7 +104,7 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 
     # Notepad-- 插件开发时应该使用的 头文件安装目录、库文件安装目录
     target_include_directories(${PLUGIN_VAR} PUBLIC 
-        ${NOTEPAD_PLUGIN_INCLUDEDIR} ${NOTEPAD_PLUGIN_EXTERNAL_INCLUDES})
+        ${NOTEPAD_PLUGIN_INCLUDEDIR})
     target_link_directories(${PLUGIN_VAR} PUBLIC 
         ${NOTEPAD_PLUGIN_LIBDIR})
     target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
@@ -87,10 +123,11 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 
 # support git plugin
+# add_notepad_plugin_with_git <plugin_name> <git_repo_url> <plugin_sources_path>
+# 该宏定义了从指定的 git 仓库中获取插件源代码，并进行简单的构建
 macro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
     execute_process(COMMAND git clone ${GIT_REPO_URL} ${PLUGIN_VAR}_git
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        ERROR_QUIET)
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
     aux_source_directory(${CMAKE_BINARY_DIR}/${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
     add_notepad_plugin(${PLUGIN_VAR} ${${PLUGIN_VAR}_RESOURCES})
 endmacro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
@@ -100,4 +137,5 @@ message("  - ${CMAKE_CURRENT_LIST_FILE}")
 message("  - ${NOTEPAD_PLUGIN_INCLUDEDIR}")
 message("  - ${NOTEPAD_PLUGIN_LIBDIR}")
 message("  - ${NOTEPAD_PLUGIN_CORELIB}")
+message("  - ${NOTEPAD_IMPORTED_CORELIB_PATH}")
 message("- >>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")
