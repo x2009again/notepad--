@@ -13,11 +13,11 @@
 
 struct ndd_proc_data
 {
-	QString m_strPlugName; //插件名称 必选
-	QString m_strFilePath; //lib 插件的全局路径。必选
-	QString m_strComment; //插件说明
-	QString m_version; //版本号码。可选
-	QString m_auther;//作者名称。可选
+	QString m_strPlugName;       // [必选]插件名称
+	QString m_strFilePath;       // [必选]插件的全局路径
+	QString m_strComment;        // [可选]插件说明
+	QString m_version;           // [可选]版本号码
+	QString m_auther;            // [可选]作者名称
 };
 
 
@@ -51,6 +51,18 @@ typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserDat
 #ifdef __cplusplus
 	}
 #endif
+
+#define NOTEPAD_PLUGIN_METADATA(name, version, author, comment, filepath)\
+        pProcData->m_strPlugName = QString(name);       \
+        pProcData->m_version     = QString(version);    \
+        pProcData->m_strComment  = QString(comment);    \
+        pProcData->m_auther      = QString(author);     \
+        pProcData->m_strFilePath = QString(filepath);   \
+
+#define NOTEPAD_PLUGIN_IMPLEMENT(imp_class)                        \
+    imp_class *imp = new imp_class(pNotepad, getCurEdit()); \
+    imp->setWindowFlag(Qt::Window);                         \
+    imp->show();
 
 #endif  //NOTEPAD_PLUGIN_MANAGER
 /***********在编译插件时提供的内容**************/
