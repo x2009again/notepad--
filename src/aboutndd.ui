@@ -51,11 +51,7 @@
         <bool>true</bool>
        </property>
        <property name="plainText">
-        <string>This software is licensed under the terms of the GNU General Public License version 3 (GPLv3). You are free to redistribute and modify the software in accordance with the license.
-
-This software is distributed with the hope that it will be useful, but without any warranties, including the implied warranties of merchantability or fitness for a particular purpose. Please see the GNU General Public License for more information.
-
-A copy of the GPLv3 license should have been provided along with this software. If you have not received a copy, it can be found at https://www.gnu.org/licenses/.</string>
+        <string>This software is licensed under the terms of the GNU General Public License version 3 (GPLv3). You are free to redistribute and modify the software in accordance with the license.</string>
        </property>
       </widget>
      </item>

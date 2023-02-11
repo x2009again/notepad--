@@ -111,6 +111,8 @@ private:
 
 	void dealWithZeroFoundShowTip(QsciScintilla * pEdit, bool isShowTip=true);
 
+	void adjustSearchStartPosChange(QsciScintilla* pEdit);
+
 	void dofindNext();
 
 	bool replaceFindNext(QsciScintilla* pEdit, bool showZeroFindTip);
