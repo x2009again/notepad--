@@ -1475,21 +1475,14 @@ void CCNotePad::setUserDefShortcutKey(int shortcutId)
 			ui.actionGoline->setShortcut(keySeq);
 		
 		break;
+
 	case File_Compare_ID:
-		keySeq = ShortcutKeyMgr::getUserDefShortcutKey(File_Compare);
-		m_fileCompare->setShortcut(keySeq);
-	
 		break;
 	case Dir_Compare_ID:
-		keySeq = ShortcutKeyMgr::getUserDefShortcutKey(Dir_Compare);
-		m_dirCompare->setShortcut(keySeq);
-		
 		break;
 	case Bin_Compare_ID:
-		keySeq = ShortcutKeyMgr::getUserDefShortcutKey(Bin_Compare);
-		m_binCompare->setShortcut(keySeq);
-		
 		break;
+
 	case Trans_code_ID:
 		keySeq = ShortcutKeyMgr::getUserDefShortcutKey(Trans_code);
 			m_transcode->setShortcut(keySeq);
@@ -1545,7 +1538,7 @@ void CCNotePad::slot_dynamicLoadToolMenu()
 		m_isToolMenuLoaded = true;
 
 #ifdef NO_PLUGIN
-		ui.menuTools->addAction(tr("Plugin Manager"), this, &CCNotePad::slot_pluginMgr);
+		connect(ui.actionPlugin_Manager, &QAction::triggered, this, &CCNotePad::slot_pluginMgr);
 #endif
 
 		QMenu* formatMenu = new QMenu(tr("Format Language"), this);
@@ -1581,7 +1574,7 @@ void CCNotePad::loadPluginLib()
 	{
 		strDir = dir.absolutePath();
 
-		loadPluginProcs(strDir,ui.menuTools);
+		loadPluginProcs(strDir,ui.menuPlugin);
 	}
 }
 
@@ -1594,11 +1587,31 @@ void CCNotePad::onPlugFound(NDD_PROC_DATA& procData, QMenu* pUserData)
 		return;
 	}
 
-	QAction* pAction = new QAction(pMenu);
+	//创建action
+	if (procData.m_menuType == 0)
+	{
+		QAction* pAction = new QAction(procData.m_strPlugName, pMenu);
+		pMenu->addAction(pAction);
 	pAction->setText(procData.m_strPlugName);
 	pAction->setData(procData.m_strFilePath);
-	pMenu->addAction(pAction);
 	connect(pAction, &QAction::triggered, this, &CCNotePad::onPlugWork);
+	}
+	else if (procData.m_menuType == 1)
+	{
+		//创建二级菜单
+		QMenu* pluginMenu = new QMenu(procData.m_strPlugName, pMenu);
+		pMenu->addMenu(pluginMenu);
+
+		//菜单句柄通过procData传递到插件中
+		procData.m_rootMenu = pluginMenu;
+		sendParaToPlugin(procData);
+	}
+	else
+	{
+		return;
+	}
+
+	
 
 	m_pluginList.append(procData);
 }
@@ -1620,7 +1633,7 @@ void CCNotePad::onPlugWork(bool check)
 		{
 			std::function<QsciScintilla* ()> foundCallBack = std::bind(&CCNotePad::getCurEditView, this);
 
-			pMainCallBack(this, plugPath, foundCallBack);
+			pMainCallBack(this, plugPath, foundCallBack, nullptr);
 		}
 		else
 		{
@@ -1630,21 +1643,36 @@ void CCNotePad::onPlugWork(bool check)
 	}
 }
 
+//把插件需要的参数，传递到插件中去
+void CCNotePad::sendParaToPlugin(NDD_PROC_DATA& procData)
+{
+	QString plugPath = procData.m_strFilePath;
+
+	QLibrary* pLib = new QLibrary(plugPath);
+
+	NDD_PROC_MAIN_CALLBACK pMainCallBack;
+	pMainCallBack = (NDD_PROC_MAIN_CALLBACK)pLib->resolve("NDD_PROC_MAIN");
+
+		if (pMainCallBack != NULL)
+		{
+			std::function<QsciScintilla* ()> foundCallBack = std::bind(&CCNotePad::getCurEditView, this);
+
+			pMainCallBack(this, plugPath, foundCallBack, &procData);
+		}
+		else
+		{
+			ui.statusBar->showMessage(tr("plugin %1 load failed !").arg(plugPath), 10000);
+		}
+}
+
 void CCNotePad::loadPluginProcs(QString strLibDir, QMenu* pMenu)
 {
-	QMenu* pSubMenu = new QMenu(tr("Plugin"), pMenu);
-
 	std::function<void(NDD_PROC_DATA&, QMenu*)> foundCallBack = std::bind(&CCNotePad::onPlugFound, this, std::placeholders::_1, std::placeholders::_2);
 
-	int nRet = loadProc(strLibDir, foundCallBack, pSubMenu);
-
+	int nRet = loadProc(strLibDir, foundCallBack, pMenu);
 	if (nRet > 0)
 	{
-		pMenu->addMenu(pSubMenu);
-	}
-	else
-	{
-		delete pSubMenu;
+		ui.statusBar->showMessage(tr("load plugin in dir %1 success, plugin num %2").arg(strLibDir).arg(nRet));
 	}
 }
 #endif

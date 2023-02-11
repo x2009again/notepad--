@@ -341,6 +341,7 @@ private slots:
 #ifdef NO_PLUGIN
 	void slot_pluginMgr();
 	void onPlugWork(bool check);
+	void sendParaToPlugin(NDD_PROC_DATA& procData);
 #endif
 	void slot_showWebAddr(bool check);
 	void slot_langFileSuffix();
