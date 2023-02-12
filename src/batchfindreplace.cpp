@@ -1,4 +1,4 @@
-#include "batchfindreplace.h"
+ï»¿#include "batchfindreplace.h"
 #include "scintillaeditview.h"
 #include "ccnotepad.h"
 #include "progresswin.h"
@@ -31,7 +31,7 @@ void BatchFindReplace::setTabWidget(QTabWidget* editTabWidget)
 	m_editTabWidget = editTabWidget;
 }
 
-//×Ô¶¯µ÷Õûµ±Ç°´°¿ÚµÄ×´Ì¬£¬Èç¹û·¢ÉúÁË±ä»¯£¬ÔòĞèÒªÈÏ¶¨ÎªÊÇÊ×´Î²éÕÒ
+//è‡ªåŠ¨è°ƒæ•´å½“å‰çª—å£çš„çŠ¶æ€ï¼Œå¦‚æœå‘ç”Ÿäº†å˜åŒ–ï¼Œåˆ™éœ€è¦è®¤å®šä¸ºæ˜¯é¦–æ¬¡æŸ¥æ‰¾
 QWidget* BatchFindReplace::autoAdjustCurrentEditWin()
 {
 	QWidget* pw = m_editTabWidget->currentWidget();
@@ -53,7 +53,7 @@ void BatchFindReplace::appendToFindTable(QString findKeyword)
 	ui.findReplaceTable->setItem(rNum, 1, new QTableWidgetItem());
 }
 
-//ÕâÀï²»ÄÜ×·¼Ó£¬¶øÊÇ²åÈë£¬¼´¶ÔÓ¦µÄItem±ØĞëÒÑ¾­´æÔÚ¡£·ñÔò²»²åÈë
+//è¿™é‡Œä¸èƒ½è¿½åŠ ï¼Œè€Œæ˜¯æ’å…¥ï¼Œå³å¯¹åº”çš„Itemå¿…é¡»å·²ç»å­˜åœ¨ã€‚å¦åˆ™ä¸æ’å…¥
 void BatchFindReplace::insertToReplaceTable(int row, QString replaceKeyword)
 {
 	QTableWidgetItem* item = ui.findReplaceTable->item(row, 1);
@@ -97,11 +97,11 @@ void BatchFindReplace::appendToFindReplaceTable(QStringList& findKeyword)
 
 bool BatchFindReplace::tranInputKeyword(QString& findKeyWord, QStringList& outputKeyWordList)
 {
-	//°Ñ¿Õ°××Ö·û£¬¿Õ¸ñ»òÕß\t \r\n µÈ×Ö·û½øĞĞÌæ»»Îª¿Õ¸ñ
+	//æŠŠç©ºç™½å­—ç¬¦ï¼Œç©ºæ ¼æˆ–è€…\t \r\n ç­‰å­—ç¬¦è¿›è¡Œæ›¿æ¢ä¸ºç©ºæ ¼
 	QRegExp re("\\s");
 	findKeyWord.replace(re, QString(" "));
 
-	//ÔÙ½øĞĞ¿Õ¸ñ·Ö¸ô´¦Àí
+	//å†è¿›è¡Œç©ºæ ¼åˆ†éš”å¤„ç†
 	outputKeyWordList = findKeyWord.split(" ");
 
 	if (outputKeyWordList.size() > 20000)
@@ -110,7 +110,7 @@ bool BatchFindReplace::tranInputKeyword(QString& findKeyWord, QStringList& outpu
 		return false;
 	}
 
-	//É¾³ıÃ¿Ò»¸ö¿ÕµÄÔªËØ
+	//åˆ é™¤æ¯ä¸€ä¸ªç©ºçš„å…ƒç´ 
 	for (int i = outputKeyWordList.size() - 1; i >= 0; --i)
 	{
 		if (outputKeyWordList[i].trimmed().isEmpty())
@@ -166,7 +166,7 @@ void BatchFindReplace::on_freshBtClick()
 	}
 }
 
-//½øĞĞÅúÁ¿²éÕÒ¹¤×÷
+//è¿›è¡Œæ‰¹é‡æŸ¥æ‰¾å·¥ä½œ
 void BatchFindReplace::on_findBtClick()
 {
 	if (m_mainNotepad != nullptr && m_mainNotepad)
@@ -213,7 +213,7 @@ void BatchFindReplace::on_findBtClick()
 	}
 }
 
-//½øĞĞÅúÁ¿Ìæ»»¹¤×÷
+//è¿›è¡Œæ‰¹é‡æ›¿æ¢å·¥ä½œ
 void BatchFindReplace::on_replaceBtClick()
 {
 	if (m_mainNotepad != nullptr && m_mainNotepad)
@@ -306,9 +306,9 @@ void BatchFindReplace::on_import()
 	QFileDialog fd(this, QString(), CCNotePad::s_lastOpenDirPath);
 	fd.setFileMode(QFileDialog::ExistingFile);
 
-	if (fd.exec() == QDialog::Accepted)   //Èç¹û³É¹¦µÄÖ´ĞĞ
+	if (fd.exec() == QDialog::Accepted)   //å¦‚æœæˆåŠŸçš„æ‰§è¡Œ
 	{
-		QStringList fileNameList = fd.selectedFiles();      //·µ»ØÎÄ¼şÁĞ±íµÄÃû³Æ
+		QStringList fileNameList = fd.selectedFiles();      //è¿”å›æ–‡ä»¶åˆ—è¡¨çš„åç§°
 		QFileInfo fi(fileNameList[0]);
 
 		QSettings setting(fi.filePath(), QSettings::IniFormat);

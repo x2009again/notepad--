@@ -1,4 +1,4 @@
-#include "findresultwin.h"
+﻿#include "findresultwin.h"
 #include "findwin.h"
 #include "common.h"
 #include "styleset.h"

@@ -1,4 +1,4 @@
-#include "findwin.h"
+﻿#include "findwin.h"
 #include "scintillaeditview.h"
 #include "ccnotepad.h"
 #include "progresswin.h"

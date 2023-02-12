@@ -1,4 +1,4 @@
-#include <memory>
+﻿#include <memory>
 #include "ccnotepad.h"
 #include "filemanager.h"
 #include "Encode.h"

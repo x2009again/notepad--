@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #pragma once
 // This defines the interface to the QsciLexerR class.
 //

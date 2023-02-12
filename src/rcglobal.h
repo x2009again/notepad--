@@ -15,7 +15,7 @@ static const char* VersionStr = "v1.22.2";
 #endif // TEST_PRE
 
 
-//#define NO_PLUGIN 1
+#define NO_PLUGIN 1
 
 #define CMP_CODE_NOEQUAL
 

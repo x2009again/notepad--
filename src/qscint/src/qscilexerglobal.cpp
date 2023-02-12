@@ -1,4 +1,4 @@
-#include "Qsci/qscilexerglobal.h"
+﻿#include "Qsci/qscilexerglobal.h"
 #include "Qsci/qsciscintilla.h"
 #include "Scintilla.h"
 #include "SciLexer.h"

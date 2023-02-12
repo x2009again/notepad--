@@ -1,4 +1,4 @@
-#include "CmpareMode.h"
+﻿#include "CmpareMode.h"
 #include "Encode.h"
 #include "rcglobal.h"
 

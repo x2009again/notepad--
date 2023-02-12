@@ -1,4 +1,4 @@
-#include <qobject.h>
+﻿#include <qobject.h>
 #include <qstring.h>
 #include <pluginGl.h>
 #include <functional>
