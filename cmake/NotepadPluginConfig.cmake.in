@@ -108,8 +108,68 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     endif(CMAKE_HOST_WIN32)
 
     if(CMAKE_HOST_UNIX)
-        target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
+        target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=)
     endif(CMAKE_HOST_UNIX)
+    
+    # ------------ 为在不同平台构建的插件定义输出名称(尾巴) ------------- #
+    # <OS>          平台：  Windows/MacOS/Linux
+    # <ARCH>        架构：  X86_64、AMD64、ARM64、....
+    # <COMPILER>    编译器：MinGW、Cygwin、MSVC、GNU、Clang、Intel....
+    # <QT>          Qt版本:
+    set(${PLUGIN_VAR}_OUTPUT_NAME ${PLUGIN_VAR})
+
+    # <OS> ------- 确定平台 Apple/Linux/Windows ------------------- #
+    if(APPLE)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MacOS")
+    elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Linux")
+    elseif(WIN32)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Win32")
+    endif()
+
+    # <ARCH> ------- 确定架构 X86_64/AMD64/ARM64/... -------------- #
+    string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    # if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
+    #     if(CMAKE_APPLE_SILICON_PROCESSOR)
+    #         string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Silicon")
+    #     endif(CMAKE_APPLE_SILICON_PROCESSOR)
+    # endif(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
+    
+    # <COMPILER> ----- 确定编译器类型 
+    # string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MinGW")
+    if(WIN32)
+        if(MINGW)
+            string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MinGW")
+        elseif(CYGWIN)
+            string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Cygwin")
+        elseif(MSVC)
+            string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MSVC")
+        else() # 如果不是 MinGW、 Cygwin 、MSVC
+            if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "")
+                string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Unknow")
+            else() # 如果不是 CMAKE_CXX_COMPILER_ID 不为空
+                string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${CMAKE_CXX_COMPILER_ID}")
+            endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "")
+        endif()
+    else()
+        # 此处：如果不提前进行 MINGW 判断，MINGW 也将会是 GNU
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${CMAKE_CXX_COMPILER_ID}")
+    endif()
+
+    # 预留: GNU Compiler 系列并不清楚如何区分
+    # if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+        # string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_GCC")
+    # endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+
+    # <Qt 版本尾巴规划：待确定>
+    # if(NOT "${Qt5_}" STREQUAL "")
+    #     string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${QT_VERSION}")
+    # endif(NOT "${QT_VERSION}" STREQUAL "")
+    
+    set_property(TARGET ${PLUGIN_VAR}
+            PROPERTY
+                OUTPUT_NAME "${${PLUGIN_VAR}_OUTPUT_NAME}")
+    # ------------ 为构建的插件配置尾巴 ------------- #
 
     # Notepad-- 插件开发时应该使用的 头文件安装目录、库文件安装目录
     target_include_directories(${PLUGIN_VAR} PUBLIC 
