@@ -2,10 +2,16 @@ cmake_minimum_required(VERSION 3.22)
 
 project(Notepad-- VERSION 1.22.0)
 
+# -------------- Notepad -- 全局构建配置 ------------- #
+option(USE_QT6 "使用 Qt6 进行编译本项目与随带所有内容" OFF)
+
 include(cmake/SparkEnvConfig.cmake)
 include(cmake/SparkMacrosConfig.cmake)
-include(cmake/SparkFindQt5Config.cmake)
-# include(cmake/SparkFindQt6Config.cmake)
+if(USE_QT6)
+    include(cmake/SparkFindQt6Config.cmake)
+else()
+    include(cmake/SparkFindQt5Config.cmake)
+endif(USE_QT6)
 include(cmake/SparkMacrosExtendConfig.cmake)
 
 
