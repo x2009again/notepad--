@@ -32,11 +32,11 @@ typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserDat
 #ifdef  NOTEPAD_PLUGIN_MANAGER
 
 #if defined(Q_OS_WIN)
-#if defined(NDD_EXPORTDLL)
-#define NDD_EXPORT __declspec(dllexport)
-#else
-#define NDD_EXPORT __declspec(dllimport)
-#endif
+#   if defined(NDD_EXPORTDLL)
+#       define NDD_EXPORT __declspec(dllexport)
+#   else
+#       define NDD_EXPORT __declspec(dllimport)
+#   endif
 #endif
 
 #include <Qsci/qsciscintilla.h>
