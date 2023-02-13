@@ -8,6 +8,13 @@ include(cmake/SparkFindQt5Config.cmake)
 # include(cmake/SparkFindQt6Config.cmake)
 include(cmake/SparkMacrosExtendConfig.cmake)
 
+
+# ----------------- 构建之前 全局定义 ----------------- #
+# 在 Windows 中开启 UNICODE 以支持 TCHAR 功能
+if(WIN32)
+    add_compile_definitions(-D_UNICODE -DUNICODE)
+endif()
+
 # ----------------- 构建 QSci 静态库 ----------------- #
 if(TRUE)
     # add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
