@@ -1,4 +1,4 @@
-#include "nddsetting.h"
+ï»¿#include "nddsetting.h"
 #include <QObject>
 #include <QtDebug>
 #include <QCoreApplication>
@@ -7,8 +7,8 @@
 #include <QStorageInfo>
 #include <QSettings>
 
-static short version_num = 29; //1.22.0 ÊÇ29
-//ÅäÖÃÎÄ¼şÊÇ·ñ´æÔÚ¡£Èç¹û³õÊ¼»¯Ê§°Ü£¬Ôò²»´æÔÚ
+static short version_num = 29; //1.22.0 æ˜¯29
+//é…ç½®æ–‡ä»¶æ˜¯å¦å­˜åœ¨ã€‚å¦‚æœåˆå§‹åŒ–å¤±è´¥ï¼Œåˆ™ä¸å­˜åœ¨
 bool NddSetting::s_isExistDb = false;
 int NddSetting::s_reference = 0;
 bool NddSetting::s_isContentChanged = false;
@@ -17,10 +17,10 @@ QSettings* NddSetting::s_nddSet = nullptr;
 
 QSettings* NddSetting::s_winPosSet = nullptr;
 
-//Èç¹ûkey²»´æÔÚ£¬ÔòĞÂÔökey-value¡£´æÔÚ£º·µ»Øtrue
+//å¦‚æœkeyä¸å­˜åœ¨ï¼Œåˆ™æ–°å¢key-valueã€‚å­˜åœ¨ï¼šè¿”å›true
 bool NddSetting::checkNoExistAdd(QString key, QVariant& value)
 {
-	//Ã¿´ÎĞÂ¼Ó×Ö¶Îºó£¬ÕâÀïÒª¼ì²éÒ»ÏÂ£¬²»´æÔÚÔòĞÂÔö
+	//æ¯æ¬¡æ–°åŠ å­—æ®µåï¼Œè¿™é‡Œè¦æ£€æŸ¥ä¸€ä¸‹ï¼Œä¸å­˜åœ¨åˆ™æ–°å¢
 	if (!s_nddSet->contains(key))
 	{
 		s_nddSet->setValue(key, value);
@@ -34,13 +34,13 @@ bool NddSetting::checkNoExistAdd(QString key, QVariant& value)
 	return true;
 }
 
-//20220402ÕâÀïÒşº¬ÁËÒ»¸öÇ°ÖÃÌõ¼ş£ºÊı¾İ¿â¾ä±úÊÇÔÚÖ÷Ïß³Ì´´½¨µÄ£¬×îºÃ²»ÒªÔÚ×ÓÏß³ÌÖĞµ÷ÓÃ¡£
-//±ÜÃâÒòÎª¿çÏß³Ì·ÃÎÊºÍ¶àÏß³Ì³åÍ»·ÃÎÊÒı·¢µÄÉÁÍËÎÊÌâ¡£ËùÒÔ×îºÃÅäÖÃÎÄ¼şµÄ¶ÁĞ´¶¼ÔÚÖ÷Ïß³ÌÖĞ½øĞĞ
+//20220402è¿™é‡Œéšå«äº†ä¸€ä¸ªå‰ç½®æ¡ä»¶ï¼šæ•°æ®åº“å¥æŸ„æ˜¯åœ¨ä¸»çº¿ç¨‹åˆ›å»ºçš„ï¼Œæœ€å¥½ä¸è¦åœ¨å­çº¿ç¨‹ä¸­è°ƒç”¨ã€‚
+//é¿å…å› ä¸ºè·¨çº¿ç¨‹è®¿é—®å’Œå¤šçº¿ç¨‹å†²çªè®¿é—®å¼•å‘çš„é—ªé€€é—®é¢˜ã€‚æ‰€ä»¥æœ€å¥½é…ç½®æ–‡ä»¶çš„è¯»å†™éƒ½åœ¨ä¸»çº¿ç¨‹ä¸­è¿›è¡Œ
 void NddSetting::init()
 {
 	++s_reference;
 
-	//Èç¹ûÒÑ¾­³õÊ¼»¯¹ıÁË£¬ÔòÖ±½Ó·µ»Ø
+	//å¦‚æœå·²ç»åˆå§‹åŒ–è¿‡äº†ï¼Œåˆ™ç›´æ¥è¿”å›
 	if (s_isExistDb)
 	{
 		return;
@@ -56,42 +56,42 @@ void NddSetting::init()
 	auto initNddSet = []() {
 		QString key = "signdate";
 		//QString date = QDate::currentDate().toString(QString("yyyy/M/d"));
-		//²»Ğ´½ñÌìµÄÊ±¼ä£¬·ñÔòµÚÒ»´ÎÔËĞĞ£¬ÎŞÌõ¼ş²»»á·¢ËÍĞÄÌø¡£
-		//Ö±½ÓĞ´Ò»¸ö¹ıÈ¥µÄÊ±¼ä£¬ÈÃµÚÒ»´ÎÔËĞĞ£¬×ÜÊÇÒªÇ©µ½
+		//ä¸å†™ä»Šå¤©çš„æ—¶é—´ï¼Œå¦åˆ™ç¬¬ä¸€æ¬¡è¿è¡Œï¼Œæ— æ¡ä»¶ä¸ä¼šå‘é€å¿ƒè·³ã€‚
+		//ç›´æ¥å†™ä¸€ä¸ªè¿‡å»çš„æ—¶é—´ï¼Œè®©ç¬¬ä¸€æ¬¡è¿è¡Œï¼Œæ€»æ˜¯è¦ç­¾åˆ°
 		addKeyValueToSets(key, "2022/2/20");
 
 		QString str;
 
-		//tabµÄ³¤¶È£¬Ä¬ÈÏÎª4
+		//tabçš„é•¿åº¦ï¼Œé»˜è®¤ä¸º4
 		addKeyValueToNumSets("tablens", 4);
-		//space replace tab¿Õ¸ñÌæ»»tab£¬Ä¬ÈÏ0, 1Îªtrue,0Îªfalse
+		//space replace tabç©ºæ ¼æ›¿æ¢tabï¼Œé»˜è®¤0, 1ä¸ºtrue,0ä¸ºfalse
 		addKeyValueToNumSets("tabnouse", 0);
 
 		addKeyValueToSets("mac", "0");
 		addKeyValueToNumSets("padtimes", 0);
 		addKeyValueToNumSets("serverip", 0);
 
-		//ÊÇ·ñ¸ßÁÁ²»Í¬´¦±³¾°
+		//æ˜¯å¦é«˜äº®ä¸åŒå¤„èƒŒæ™¯
 		addKeyValueToNumSets("hexhigh", 1);
 
 		addKeyValueToNumSets(VERSION, version_num);
 
-		//Æ¤·ôid
+		//çš®è‚¤id
         addKeyValueToNumSets(SKIN_KEY, 0);
 
-		//ÓïÑÔindex 0:×Ô¶¯Ñ¡Ôñ 1:ÖĞÎÄ 2 Ó¢ÎÄ
+		//è¯­è¨€index 0:è‡ªåŠ¨é€‰æ‹© 1:ä¸­æ–‡ 2 è‹±æ–‡
 		addKeyValueToNumSets(LANGS_KEY, 0);
 
-		//¿ªÆô×Ô¶¯»»ĞĞ
+		//å¼€å¯è‡ªåŠ¨æ¢è¡Œ
 		addKeyValueToNumSets(AUTOWARP_KEY, 0);
 
-		//¿ªÆô×Ô¶¯Ëõ½ø
+		//å¼€å¯è‡ªåŠ¨ç¼©è¿›
 		addKeyValueToNumSets(INDENT_KEY, 0);
 
-		//ÏÔÊ¾¿Õ°×
+		//æ˜¾ç¤ºç©ºç™½
 		addKeyValueToNumSets(SHOWSPACE_KEY, 0);
 
-		//×î´óÎÄ±¾ÎÄ¼şµÄÃÅÏŞ¡£Ä¬ÈÏ100M.(50-300)
+		//æœ€å¤§æ–‡æœ¬æ–‡ä»¶çš„é—¨é™ã€‚é»˜è®¤100M.(50-300)
 		addKeyValueToNumSets(MAX_BIG_TEXT, 100);
 
 		addKeyValueToSets(SOFT_KEY, "0");
@@ -107,22 +107,22 @@ void NddSetting::init()
 
 		addKeyValueToNumSets(FILELISTPOS, Qt::LeftDockWidgetArea);
 
-		//Ä¬ÈÏ0²»ÏÔÊ¾
+		//é»˜è®¤0ä¸æ˜¾ç¤º
 		addKeyValueToNumSets(FILELISTSHOW, 0);
 
-		//Ä¬ÈÏÏÔÊ¾¹¤¾ßÀ¸
+		//é»˜è®¤æ˜¾ç¤ºå·¥å…·æ 
 		addKeyValueToNumSets(TOOLBARSHOW, 1);
 
-		//´ò¿ªÍøÒ³£¬Ä¬ÈÏ²»¹´Ñ¡£¬×ÊÔ´ºÄ·Ñ¶à
+		//æ‰“å¼€ç½‘é¡µï¼Œé»˜è®¤ä¸å‹¾é€‰ï¼Œèµ„æºè€—è´¹å¤š
 		addKeyValueToNumSets(SHOWWEBADDR, 0);
 
-		//²éÕÒ½á¹û¿òµÄÄ¬ÈÏ×ÖÌå´óĞ¡
+		//æŸ¥æ‰¾ç»“æœæ¡†çš„é»˜è®¤å­—ä½“å¤§å°
 		addKeyValueToNumSets(FIND_RESULT_FONT_SIZE, 14);
 	};
 
 	if (!s_nddSet->contains(VERSION))
 	{
-		//²»´æÔÚ×ß³õÊ¼»¯Á÷³Ì
+		//ä¸å­˜åœ¨èµ°åˆå§‹åŒ–æµç¨‹
 		initNddSet();
 		s_isContentChanged = true;
 	}
@@ -133,7 +133,7 @@ void NddSetting::init()
 				QVariant v(VERSION);
 				if (checkNoExistAdd(VERSION, v))
 				{
-					//Èç¹û´æÔÚ£¬¶øÇÒ°æ±¾ÊÇ×îĞÂ,²»ĞèÒª×ßºóÃæ×Ô¶¯¼ì²éÁ÷³ÌÁË
+					//å¦‚æœå­˜åœ¨ï¼Œè€Œä¸”ç‰ˆæœ¬æ˜¯æœ€æ–°,ä¸éœ€è¦èµ°åé¢è‡ªåŠ¨æ£€æŸ¥æµç¨‹äº†
 					int curVersion = s_nddSet->value(VERSION).toInt();
 					if (curVersion == version_num)
 					{
@@ -141,12 +141,12 @@ void NddSetting::init()
 					}
 					else if (curVersion < version_num)
 					{
-						//¸üĞÂ°æ±¾µ½×îĞÂ
+						//æ›´æ–°ç‰ˆæœ¬åˆ°æœ€æ–°
 						updataKeyValueFromNumSets(VERSION, version_num);
 					}
 				}
 			}
-			//Ã¿´ÎĞÂ¼Ó×Ö¶Îºó£¬ÕâÀïÒª¼ì²éÒ»ÏÂ£¬²»´æÔÚÔòĞÂÔö
+			//æ¯æ¬¡æ–°åŠ å­—æ®µåï¼Œè¿™é‡Œè¦æ£€æŸ¥ä¸€ä¸‹ï¼Œä¸å­˜åœ¨åˆ™æ–°å¢
 			{
 				QVariant v(1);
 				checkNoExistAdd(SKIN_KEY, v);
@@ -237,7 +237,7 @@ void NddSetting::init()
 
 
 
-//Ğ´Ò»¸ö×ÜµÄ»ñÈ¡ÅäÖÃµÄ½Ó¿Ú£¬±ÜÃâÒÔºóÃ¿¸ö×Ö¶Î¶¼ĞèÒªĞ´Ò»¸ö¶ÁĞ´½Ó¿Ú
+//å†™ä¸€ä¸ªæ€»çš„è·å–é…ç½®çš„æ¥å£ï¼Œé¿å…ä»¥åæ¯ä¸ªå­—æ®µéƒ½éœ€è¦å†™ä¸€ä¸ªè¯»å†™æ¥å£
 QString NddSetting::getKeyValueFromSets(QString key)
 {
 	return s_nddSet->value(key,"").toString();
@@ -250,7 +250,7 @@ bool NddSetting::updataKeyValueFromSets(QString key, QString value)
 	return true;
 }
 
-//Ğ´Ò»¸ö×ÜµÄ»ñÈ¡ÅäÖÃµÄ½Ó¿Ú£¬±ÜÃâÒÔºóÃ¿¸ö×Ö¶Î¶¼ĞèÒªĞ´Ò»¸ö¶ÁĞ´½Ó¿Ú
+//å†™ä¸€ä¸ªæ€»çš„è·å–é…ç½®çš„æ¥å£ï¼Œé¿å…ä»¥åæ¯ä¸ªå­—æ®µéƒ½éœ€è¦å†™ä¸€ä¸ªè¯»å†™æ¥å£
 QByteArray NddSetting::getKeyByteArrayValue(QString key)
 {
 	return s_nddSet->value(key, "").toByteArray();
@@ -262,14 +262,14 @@ void NddSetting::updataKeyByteArrayValue(QString key, QByteArray& value)
 	s_isContentChanged = true;
 }
 
-//µÚÒ»´Î¼ÓÒ»Ìõ¼ÇÂ¼£¬ÓÃÓÚ³õÊ¼»¯
+//ç¬¬ä¸€æ¬¡åŠ ä¸€æ¡è®°å½•ï¼Œç”¨äºåˆå§‹åŒ–
 void NddSetting::addKeyValueToSets(QString key, QString value)
 {
 	s_nddSet->setValue(key, QVariant(value));
 }
 
 
-//Ğ´Ò»¸ö×ÜµÄ»ñÈ¡ÅäÖÃµÄ½Ó¿Ú£¬±ÜÃâÒÔºóÃ¿¸ö×Ö¶Î¶¼ĞèÒªĞ´Ò»¸ö¶ÁĞ´½Ó¿Ú.0×öÄ¬ÈÏÖµ£¬Íâ²¿×îºÃ²»ÓÃ0×ö³õÊ¼»¯Öµ
+//å†™ä¸€ä¸ªæ€»çš„è·å–é…ç½®çš„æ¥å£ï¼Œé¿å…ä»¥åæ¯ä¸ªå­—æ®µéƒ½éœ€è¦å†™ä¸€ä¸ªè¯»å†™æ¥å£.0åšé»˜è®¤å€¼ï¼Œå¤–éƒ¨æœ€å¥½ä¸ç”¨0åšåˆå§‹åŒ–å€¼
 int NddSetting::getKeyValueFromNumSets(const QString key)
 {
 	QVariant v = s_nddSet->value(key, QVariant(0));
@@ -283,7 +283,7 @@ bool NddSetting::updataKeyValueFromNumSets(const QString key, int value)
 }
 
 
-//µÚÒ»´Î¼ÓÒ»Ìõ¼ÇÂ¼£¬ÓÃÓÚ³õÊ¼»¯
+//ç¬¬ä¸€æ¬¡åŠ ä¸€æ¡è®°å½•ï¼Œç”¨äºåˆå§‹åŒ–
 void NddSetting::addKeyValueToNumSets(QString key, int value)
 {
 	s_nddSet->setValue(key, QVariant(value));
@@ -300,7 +300,7 @@ void NddSetting::close()
 		{
 			s_isExistDb = false;
 
-			//×öÒ»´ÎÕæÕıµÄ±£´æ
+			//åšä¸€æ¬¡çœŸæ­£çš„ä¿å­˜
 			if (s_isContentChanged)
 			{
 				s_nddSet->sync();
@@ -309,7 +309,7 @@ void NddSetting::close()
 				s_isContentChanged = false;	
 			}
 
-			//ÔÚÕâÀï±£´æÒ»ÏÂ×Ó´°¿ÚµÄÎ»ÖÃ¡£²»ÅÅ³ıÓĞ¿ÉÄÜ×Ó´°¿Ú»¹ÔÚ£¬Ö÷´°¿ÚÒÑ¾­ÍË³öµÄÇé¿ö£¬²»¹ıÎÊÌâ²»´ó¡£
+			//åœ¨è¿™é‡Œä¿å­˜ä¸€ä¸‹å­çª—å£çš„ä½ç½®ã€‚ä¸æ’é™¤æœ‰å¯èƒ½å­çª—å£è¿˜åœ¨ï¼Œä¸»çª—å£å·²ç»é€€å‡ºçš„æƒ…å†µï¼Œä¸è¿‡é—®é¢˜ä¸å¤§ã€‚
 			if (s_winPosSet != nullptr)
 			{
 				s_winPosSet->sync();
@@ -319,7 +319,7 @@ void NddSetting::close()
 }
 }
 
-//×Ó´°¿ÚµÄÎ»ÖÃ£¬µ¥¶À·ÅÔÚÒ»¸öwinpos.iniÎÄ¼şÖĞ£¬¶øÇÒÆô¶¯³ÌĞòÊ±£¬²»ĞèÒª¶ÁÈ¡£¬¿É±ÜÃâÆô¶¯Ê±ÍÏÂıËÙ¶È
+//å­çª—å£çš„ä½ç½®ï¼Œå•ç‹¬æ”¾åœ¨ä¸€ä¸ªwinpos.iniæ–‡ä»¶ä¸­ï¼Œè€Œä¸”å¯åŠ¨ç¨‹åºæ—¶ï¼Œä¸éœ€è¦è¯»å–ï¼Œå¯é¿å…å¯åŠ¨æ—¶æ‹–æ…¢é€Ÿåº¦
 QByteArray NddSetting::getWinPos(QString key)
 {
 	winPosInit();

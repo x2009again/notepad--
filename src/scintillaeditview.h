@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <qsciscintilla.h>
 #include <Scintilla.h>
 #include <SciLexer.h>

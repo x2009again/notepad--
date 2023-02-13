@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <qobject.h>
 #include<QVector>
 #include<QMap>

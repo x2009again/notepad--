@@ -1,4 +1,4 @@
-
+﻿
 #include "Qsci/qsciLexerr.h"
 
 #include <qcolor.h>

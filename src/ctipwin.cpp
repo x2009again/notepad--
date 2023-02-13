@@ -1,4 +1,4 @@
-#include "ctipwin.h"
+﻿#include "ctipwin.h"
 
 #include <QTimer>
 

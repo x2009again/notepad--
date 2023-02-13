@@ -1,4 +1,4 @@
-#include "scintillaeditview.h"
+﻿#include "scintillaeditview.h"
 
 #include "common.h"
 #include "rgba_icons.h"

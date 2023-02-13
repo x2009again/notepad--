@@ -507,6 +507,12 @@
      <string>T&amp;ools</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuPlugin">
+    <property name="title">
+     <string>Plugin</string>
+    </property>
+    <addaction name="actionPlugin_Manager"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
    <addaction name="menuSearch"/>
@@ -515,6 +521,7 @@
    <addaction name="menuLanguage"/>
    <addaction name="menuSet"/>
    <addaction name="menuTools"/>
+   <addaction name="menuPlugin"/>
    <addaction name="menuCompare"/>
    <addaction name="menuAbout"/>
    <addaction name="menuAbout_2"/>
@@ -2048,6 +2055,11 @@
     <string>test</string>
    </property>
   </action>
+  <action name="actionPlugin_Manager">
+   <property name="text">
+    <string>Plugin Manager</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
@@ -2711,22 +2723,6 @@
    </hints>
   </connection>
   <connection>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
    <sender>actionLanguage_Format</sender>
    <signal>triggered()</signal>
    <receiver>CCNotePad</receiver>

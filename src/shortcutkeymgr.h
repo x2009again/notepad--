@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <QMainWindow>
 #include "ui_shortcutkeymgr.h"
@@ -38,7 +38,7 @@ enum Shortcut_Key_ID {
 	Format_Json_ID,
 
 
-	Shortcut_End_ID,//×ÜÊÇÔÚ×îµ×ÏÂ
+	Shortcut_End_ID,//æ€»æ˜¯åœ¨æœ€åº•ä¸‹
 };
 
 static const char* New_File = "newfile";

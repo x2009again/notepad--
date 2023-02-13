@@ -1,4 +1,4 @@
-#include "pluginmgr.h"
+﻿#include "pluginmgr.h"
 #include "rcglobal.h"
 
 

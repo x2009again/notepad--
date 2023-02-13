@@ -1,4 +1,4 @@
-#include "bigfilemessage.h"
+﻿#include "bigfilemessage.h"
 
 BigFileMessage::BigFileMessage(QWidget *parent)
 	: QDialog(parent), m_result(-1)

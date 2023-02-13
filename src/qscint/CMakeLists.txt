@@ -37,7 +37,7 @@ ${PROJECT_SOURCE_DIR}/scintilla/include)
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network Qt5::PrintSupport)
 
-if(($ENV{CMAKE_BUILD_TYPE}) STREQUAL "Release")
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "qmyedit_qt5")
 else()
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "qmyedit_qt5d")
