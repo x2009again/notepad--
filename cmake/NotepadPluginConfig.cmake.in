@@ -163,10 +163,16 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
         # string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_GCC")
     # endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
 
-    # <Qt 版本尾巴规划：待确定>
+    # <Qt 版本尾巴规划：待确定，目前使用 Qt5/Qt6 进行区分>
     # if(NOT "${Qt5_}" STREQUAL "")
     #     string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${QT_VERSION}")
     # endif(NOT "${QT_VERSION}" STREQUAL "")
+    if(NOTEPAD_BUILD_BY_QT5)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Qt5")
+    else()
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Qt6")
+    endif(NOTEPAD_BUILD_BY_QT5)
+    
     
     set_property(TARGET ${PLUGIN_VAR}
             PROPERTY
