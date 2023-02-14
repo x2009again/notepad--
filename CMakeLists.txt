@@ -12,7 +12,7 @@ include(cmake/SparkMacrosExtendConfig.cmake)
 # ----------------- 构建之前 全局定义 ----------------- #
 # 在 Windows 中开启 UNICODE 以支持 TCHAR 功能
 if(WIN32)
-    add_compile_definitions(-D_UNICODE -DUNICODE)
+    add_compile_definitions(_UNICODE= UNICODE=)
 endif()
 
 # ----------------- 构建 QSci 静态库 ----------------- #
