@@ -1,5 +1,5 @@
-﻿
-#include "Qsci/qsciLexerr.h"
+
+#include "Qsci/qscilexerr.h"
 
 #include <qcolor.h>
 #include <qfont.h>
