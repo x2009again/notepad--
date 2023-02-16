@@ -57,7 +57,7 @@ elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
 
         # 通用 Linux 平台的 Debian deb 构建
         if(USE_LINUX_DEBIAN)    
-            # include(cmake/platforms/linux-debian.cmake)
+            include(cmake/platforms/linux-debian.cmake)
         endif()
 
         # 通用 Linux 平台的  Appimage  构建
