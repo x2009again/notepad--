@@ -53,14 +53,14 @@ elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
 
     # 通用 Linux 平台构建，一切的起始
     if(USE_LINUX_UNIVERSAL)
-        # include(cmake/platforms/linux-universal.cmake)
+        include(cmake/platforms/linux-universal.cmake)
 
-        # 通用平台的 Debian deb 构建
+        # 通用 Linux 平台的 Debian deb 构建
         if(USE_LINUX_DEBIAN)    
             # include(cmake/platforms/linux-debian.cmake)
         endif()
 
-        # 通用平台的  Appimage  构建
+        # 通用 Linux 平台的  Appimage  构建
         if(USE_LINUX_APPIMGE)  
             # include(cmake/platforms/linux-appimage.cmake)
         endif()
