@@ -4,7 +4,7 @@ include linux-universal.mk
 
 CPUS=$(shell nproc)
 
-# builddir  := build
+builddir  := build/linux-appimage
 # sourcedir := .
 # CMAKE_DEBUG     := -DCMAKE_BUILD_TYPE=Debug
 # CMAKE_RELEASE   := -DCMAKE_BUILD_TYPE=Release
@@ -19,7 +19,7 @@ CMAKE_OPTIONS   := -DUSE_LINUX_APPIMAGE=ON $(CMAKE_OPTIONS)
 # 来自于 https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git  托管存储的工具
 
 # 或指定你所想存放克隆项目的位置
-BUNDLE_LINUXDEPLOYQT := $(shell pwd)/build/bundle-linuxdeployqt
+BUNDLE_LINUXDEPLOYQT := $(shell pwd)/$(builddir)/bundle-linuxdeployqt
 
 download-bundle-linuxdeploytools:
 	-git clone https://gitlink.org.cn/zinface/bundle-linuxdeployqt.git $(BUNDLE_LINUXDEPLOYQT)

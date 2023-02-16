@@ -4,7 +4,7 @@ include linux-universal.mk
 
 CPUS=$(shell nproc)
 
-# builddir  := build
+builddir  := build/linux-debian
 # sourcedir := .
 # CMAKE_DEBUG     := -DCMAKE_BUILD_TYPE=Debug
 # CMAKE_RELEASE   := -DCMAKE_BUILD_TYPE=Release
