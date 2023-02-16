@@ -67,7 +67,7 @@ elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
 
         # 独立 Linux 平台的 Uos 构建
     elseif(USE_LINUX_UOS)
-        # include(cmake/platforms/linux-uos.cmake)
+        include(cmake/platforms/linux-uos.cmake)
 
         # 其它 Linux 平台的构建
     else()
