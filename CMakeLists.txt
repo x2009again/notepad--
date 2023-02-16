@@ -31,7 +31,7 @@ option(USE_MACOS_UNIVERSAL   "通用 MacOS 平台构建"            OFF)
 #
 option(USE_LINUX_UNIVERSAL   "通用 Linux 平台构建"            OFF)
 option(USE_LINUX_DEBIAN      "通用 Debian Linux 平台构建"     OFF)
-option(USE_LINUX_APPIMGE     "通用 Appimage Linux 平台构建"   OFF)
+option(USE_LINUX_APPIMAGE    "通用 Appimage Linux 平台构建"   OFF)
 #
 option(USE_LINUX_UOS         "独立 Linux 平台的 Uos 构建"      OFF)
 #
@@ -61,8 +61,8 @@ elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
         endif()
 
         # 通用 Linux 平台的  Appimage  构建
-        if(USE_LINUX_APPIMGE)  
-            # include(cmake/platforms/linux-appimage.cmake)
+        if(USE_LINUX_APPIMAGE)  
+            include(cmake/platforms/linux-appimage.cmake)
         endif()
 
         # 独立 Linux 平台的 Uos 构建
