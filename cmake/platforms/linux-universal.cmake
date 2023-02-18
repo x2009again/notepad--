@@ -1,0 +1,110 @@
+# linux-universal.cmake 
+
+# 此构建表示，在 Linux 中以通用平台的构建方式进行构建此内容
+# 
+# /usr/bin/         在 Linux 中标准的程序位置
+#       Notepad--
+#
+# /usr/inculde/       在 Linux 中提供一系列可提供插件开发的头文件
+#       NotepadPlugin/
+#           pluginGl.h
+#           QSci/
+#           qscint/scintilla/
+#
+# /usr/lib/           在 Linux 中提供一个用于插件开发的核心依赖文件
+#       NotepadPlugin/
+#               libQSci.so
+# 
+# /usr/lib/cmake/         在 Linux 中提供一个用于插件开发的核心开发配置
+#           NotepadPlugin/
+#               NotepadPluginConfig.cmake
+#   
+# /usr/share/Notepad--/     在 Linux 中提供一个用于随带资源文件的目录
+#                   plugin/
+#                   themes/
+# 
+
+
+# 可能需要变更为 CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" ??
+# 并使用 Linux.cmake 维护?
+if(CMAKE_HOST_UNIX)
+    include(cmake/SparkInstallMacrosConfig.cmake)
+
+    # 当使用 Linux 构建应用时，可执行程序的资源文件应该存放在此处
+    set(LINUX_APPLICATION_DIR /usr/share/${PROJECT_NAME})
+
+    # 通用的 Linux 资源文件
+    spark_install_directory(/usr   cmake/platforms/linux/universal/usr/*)    
+    
+    # 如何安装 themes ？ 安装到该程序的资源目录/themes
+    # 如何准备 plugin ?  安装到该程序的资源目录/plugin
+    spark_install_directory(${LINUX_APPLICATION_DIR}   src/themes)
+
+    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
+    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
+    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
+    include(CMakePackageConfigHelpers)
+    include(GNUInstallDirs)
+    
+    # 定义插件配置安装位置
+    set(CMAKE_INSTALL_PREFIX "/usr")
+    set(NOTEPAD_PLUGIN NotepadPlugin)
+    
+    # 定义开发插件时的配置目录与 CMake 模块文件名称
+    set(NOTEPAD_PLUGIN_CONFIG       ${NOTEPAD_PLUGIN}Config.cmake)
+    # 定义一些扩展内容，主要是提供给 CMake 模块文件填充
+    set(NOTEPAD_PLUGIN_CORELIB QSci) # QSci 为构建的 QScintllia 库
+
+    # 定义在插件开发的 CMake 模块中，Notepad-- 是否是基于 QT5 实现
+        # 并自动为插件开发层自动开启相关 Qt 依赖组件
+        # 此部分逻辑将自动提供给 add_notepad_plugin 自行处理
+    set(NOTEPAD_BUILD_BY_QT5 TRUE)
+    set(NOTEPAD_BUILD_BY_QT6 FALSE)
+
+    # 定义在平台中插件应该安装的位置(待确定)
+        # 定义在插件开发的 CMake 模块中，Notepad-- 是否将提供 "插件安装目录(位置)"
+    set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY "")
+
+    # 这些是在此部分安装时使用，但不被用于填充 NotepadPlugin.cmake.in 的内容
+    set(NOTEPAD_PLUGIN_INCLUDEDIR   ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/${NOTEPAD_PLUGIN})
+    set(NOTEPAD_PLUGIN_LIBDIR       ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/${NOTEPAD_PLUGIN})
+    
+
+    # 将 NOTEPAD_PLUGIN_INCLUDEDIR NOTEPAD_PLUGIN_LIBDIR 填充到 cmake 文件
+    configure_package_config_file(cmake/NotepadPluginConfig.cmake.in
+        ${CMAKE_BINARY_DIR}/${NOTEPAD_PLUGIN_CONFIG}
+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${NOTEPAD_PLUGIN})
+    # 安装 cmake 文件
+    spark_install_file(${CMAKE_INSTALL_LIBDIR}/cmake/${NOTEPAD_PLUGIN} 
+        ${CMAKE_BINARY_DIR}/${NOTEPAD_PLUGIN_CONFIG})
+    # 安装头插件接口文件
+    spark_install_file(${NOTEPAD_PLUGIN_INCLUDEDIR} 
+        src/include/pluginGl.h)
+    # 安装插件所需要的Qsci文件
+    spark_install_directory(${NOTEPAD_PLUGIN_INCLUDEDIR} 
+        src/qscint/src/Qsci)
+    # 安装开发插件高级功能所需要的内容
+    spark_install_directory(${NOTEPAD_PLUGIN_INCLUDEDIR}/qscint
+        src/qscint/scintilla)
+
+    # 导出 QSci 的头文件(从插件实现层面来看，目前是使用*.h 与 pluginGl.h
+        # 但从 Qsci 层面来看，*.h 使用的是 #include <Qsci/*.h> ，所以此部分不被使用)
+    # spark_file_glob(QSci_HEADERS src/qscint/src/Qsci/*.h src/include/pluginGl.h)
+    # set_target_properties(QSci PROPERTIES PUBLIC_HEADER "${QSci_HEADERS}")
+
+    # 导出 Notepad-- 的接口文件(从逻辑层面来看，目前已经在前面安装了接口文件，所以此部分不被使用)
+    # spark_file_glob(Notepad_HEADERS src/include/pluginGl.h)
+    # set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER "${QSci_HEADERS}")
+
+    # 安装项目文件与 QSci 文件
+    install(TARGETS ${PROJECT_NAME} QSci
+        RUNTIME DESTINATION         bin
+        LIBRARY DESTINATION         ${NOTEPAD_PLUGIN_LIBDIR}
+        ARCHIVE DESTINATION         ${NOTEPAD_PLUGIN_LIBDIR}
+        PUBLIC_HEADER DESTINATION   ${NOTEPAD_PLUGIN_INCLUDEDIR}
+    )
+    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
+    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
+    # ------------------ INSTALL PLUGIN CONFIG ------------------ #
+
+endif(CMAKE_HOST_UNIX)

@@ -1,90 +1,106 @@
-cmake_minimum_required(VERSION 3.16)
-project(NotePad-- VERSION 1.22.0)
+cmake_minimum_required(VERSION 3.22)
 
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_AUTORCC ON)
+project(Notepad-- VERSION 1.22.0)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Concurrent Network PrintSupport XmlPatterns)
+include(cmake/SparkEnvConfig.cmake)
+include(cmake/SparkMacrosConfig.cmake)
+include(cmake/SparkFindQt5Config.cmake)
+# include(cmake/SparkFindQt6Config.cmake)
+include(cmake/SparkMacrosExtendConfig.cmake)
 
-# qscint 关键依赖库
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
 
-# 插件库包含
-# helloworld 动态插件库
-add_subdirectory(${PROJECT_SOURCE_DIR}/src/plugin/helloworld)
-
-# win下需要开启UNICODE进行支持TCHAR
-if(CMAKE_HOST_WIN32)
-    add_definitions(-D_UNICODE -DUNICODE)
+# ----------------- 构建之前 全局定义 ----------------- #
+# 在 Windows 中开启 UNICODE 以支持 TCHAR 功能
+if(WIN32)
+    add_compile_definitions(_UNICODE= UNICODE=)
 endif()
 
+# ----------------- 构建 QSci 静态库 ----------------- #
+if(TRUE)
+    include(cmake/modules/QScint.cmake)
+endif(TRUE)
 
-if(${PLUGIN_EN})
-    if(${PLUGIN_EN}  STREQUAL on)
-        add_definitions(-DNO_PLUGIN=1)
-    endif(${PLUGIN_EN})    
+
+# ----------------- 构建 Notepad-- 程序 ----------------- #
+if(TRUE)
+    include(cmake/modules/Notepad--.cmake)
+endif(TRUE)
+
+# ----------------- Notepad-- 其它主线构建相关  ----------------- #
+option(USE_MACOS_UNIVERSAL   "通用 MacOS 平台构建"            OFF)
+#
+option(USE_LINUX_UNIVERSAL   "通用 Linux 平台构建"            OFF)
+option(USE_LINUX_DEBIAN      "通用 Debian Linux 平台构建"     OFF)
+option(USE_LINUX_APPIMAGE    "通用 Appimage Linux 平台构建"   OFF)
+#
+option(USE_LINUX_UOS         "独立 Linux 平台的 Uos 构建"      OFF)
+#
+option(USE_WINDOWS_UNIVERSAL "通用 Windows 平台构建"          OFF)
+option(USE_WINDOWS_MINGW     "通用 Windows 平台 MinGW 构建"   OFF)
+option(USE_WINDOWS_MSVC      "通用 Windows 平台 MSVC 构建"    OFF)
+#
+option(WINDOWS_DEPLOY_QT     "通用 Windows 平台 Qt 部署" OFF)
+option(WINDOWS_DEPLOY_QT5    "通用 Windows 平台指定 Qt5 部署 windeployqt" OFF)
+option(WINDOWS_DEPLOY_QT6    "通用 Windows 平台指定 Qt6 部署 windeployqt" OFF)
+
+
+# 使用 macos.cmake / linux.cmake / windows.cmake 维护构建.
+if(APPLE)
+    # 通用 MacOS 平台的构建(一个无具体实现的空构建)
+    # include(cmake/platforms/macos.cmake)
+
+    # 在 Linux 中此处将由通用构建、Debian 打包构建、Appimage 打包构建、Uos 打包构建组成
+elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
+
+    # 通用 Linux 平台构建，一切的起始
+    if(USE_LINUX_UNIVERSAL)
+        include(cmake/platforms/linux-universal.cmake)
+
+        # 通用 Linux 平台的 Debian deb 构建
+        if(USE_LINUX_DEBIAN)    
+            include(cmake/platforms/linux-debian.cmake)
+        endif()
+
+        # 通用 Linux 平台的  Appimage  构建
+        if(USE_LINUX_APPIMAGE)  
+            include(cmake/platforms/linux-appimage.cmake)
+        endif()
+
+        # 独立 Linux 平台的 Uos 构建
+    elseif(USE_LINUX_UOS)
+        include(cmake/platforms/linux-uos.cmake)
+
+        # 其它 Linux 平台的构建
+    else()
+        # include(cmake/platforms/linux.cmake)
+    endif(USE_LINUX_UNIVERSAL)
+    
+    # 在 Windows 中此处将由通用构建、MinGW 构建、MSVC 构建组成
+elseif(WIN32)
+    
+    # 通用 Windows 平台构建，一切的起始
+    if(USE_WINDOWS_UNIVERSAL)
+        include(cmake/platforms/windows-universal.cmake)
+
+        # 为 Windows 中构建的应用进行 windeployqt 的配方
+        include(cmake/platforms/windows-deployqt.cmake)
+    
+        # 通用平台的  Windows MinGW 构建
+        if(USE_WINDOWS_MINGW)
+            # include(cmake/platforms/windows-mingw.cmake)
+        endif()
+        
+        # 通用平台的  Windows MSVC 构建
+        if(USE_WINDOWS_MSVC)
+            # include(cmake/platforms/windows-msvc.cmake)
+        endif()
+
+        # 其它 Windows 平台的构建
+    else()
+        # include(cmake/platforms/windows-other.cmake)
+    endif(USE_WINDOWS_UNIVERSAL)
+
 endif()
 
+# ----------------- Notepad-- 其它主线构建相关  ----------------- #
 
-
-file(GLOB UI_SRC ${PROJECT_SOURCE_DIR}/src/*.ui)
-set(UI_SRC ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/cceditor/ccnotepad.ui)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src SRC)
-aux_source_directory(${PROJECT_SOURCE_DIR}/src/cceditor SRC)
-
-
-if(CMAKE_HOST_WIN32)
-# 添加 WIN32 保证主程序启动没有命令行
-    list(APPEND WIN_RCS ${PROJECT_SOURCE_DIR}/src/RealCompareToMinGw.rc)
-    add_executable(${PROJECT_NAME} WIN32 ${WIN_RCS} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
-else()
-    add_executable(${PROJECT_NAME} ${SRC} ${UI_SRC} ${PROJECT_SOURCE_DIR}/src/RealCompare.qrc)
-endif()
-
-target_include_directories(${PROJECT_NAME} PRIVATE
-${PROJECT_SOURCE_DIR}/src
-${PROJECT_SOURCE_DIR}/src/cceditor
-
-${PROJECT_SOURCE_DIR}/src/qscint/src
-${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci
-${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
-${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
-${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
-${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
-)
-
-target_link_libraries(${PROJECT_NAME} qscint Qt5::Core Qt5::Gui Qt5::Widgets Qt5::Concurrent Qt5::Network  Qt5::PrintSupport Qt5::XmlPatterns)
-
-# set(PROJECT_BINARY_DIR "${PROJECT_BINARY_DIR}/bin")
-# set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-
-if(CMAKE_HOST_UNIX)
-    install(
-        TARGETS ${PROJECT_NAME}
-        DESTINATION "bin"
-    )
-
-    install(DIRECTORY  ${PROJECT_SOURCE_DIR}/src/linux/usr
-            DESTINATION "/")
-
-    include(${PROJECT_SOURCE_DIR}/cmake/deb_package_config.cmake) 
-    include(CPack)
-elseif(CMAKE_HOST_WIN32)
-    install(TARGETS ${PROJECT_NAME}
-            DESTINATION "/")
-
-    install(DIRECTORY  ${PROJECT_SOURCE_DIR}/build/bin/
-            DESTINATION "/")
-    # 设置软件版本
-    set(CPACK_PACKAGE_NAME "NotePad--")
-    set(CPACK_PACKAGE_DESCRIPTION "NotePad--")
-    set(CPACK_PACKAGE_COPYRIGHT "Copyright (c) 2023")
-    set(CPACK_PACKAGE_VERSION "1.22.0")
-    set(CPACK_PACKAGE_VERSION_MAJOR "1")
-    set(CPACK_PACKAGE_VERSION_MINOR "22")
-    set(CPACK_PACKAGE_VERSION_PATCH "0")
-
-    include(${PROJECT_SOURCE_DIR}/cmake/nsis_package_config.cmake) 
-    include(CPack)
-endif()

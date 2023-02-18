@@ -1,0 +1,38 @@
+From 3ced487bd23b92a6f35eb590123bc510c9e2429c Mon Sep 17 00:00:00 2001
+From: zinface <zinface@163.com>
+Date: Mon, 6 Feb 2023 21:13:23 +0800
+Subject: [PATCH] =?UTF-8?q?fix:=20=E5=9C=A8=20Windows=20QtCreator=20?=
+ =?UTF-8?q?=E4=B8=AD=E5=AD=97=E7=AC=A6=E4=B8=B2=E5=A4=84=E7=90=86=E5=AF=BC?=
+ =?UTF-8?q?=E8=87=B4=E7=BC=96=E8=AF=91=E5=A4=B1=E8=B4=A5=E7=9A=84=E9=97=AE?=
+ =?UTF-8?q?=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ src/cceditor/ccnotepad.cpp | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/src/cceditor/ccnotepad.cpp b/src/cceditor/ccnotepad.cpp
+index ae615be..b2071d3 100755
+--- a/src/cceditor/ccnotepad.cpp
++++ b/src/cceditor/ccnotepad.cpp
+@@ -983,11 +983,12 @@ int CCNotePad::runAsAdmin(const QString& filePath)
+ 	//}
+ 	QString argStr = QString("-muti %1").arg(filePath);
+ 
+-	std::basic_string<TCHAR> args = StringToWString(argStr.toStdString());
+-	size_t shellExecRes = (size_t)::ShellExecute(NULL, TEXT("runas"), nddFullPath, args.c_str(), TEXT("."), SW_SHOW);
++//	std::basic_string<TCHAR> args = StringToWString(argStr.toStdString());
++//	size_t shellExecRes = (size_t)::ShellExecute(NULL, TEXT("runas"), nddFullPath, args.c_str(), TEXT("."), SW_SHOW);
++    size_t shellExecRes = (size_t)::ShellExecute(NULL, TEXT("runas"), nddFullPath, argStr.toUtf8(), TEXT("."), SW_SHOW);
+ 
+ 	// If the function succeeds, it returns a value greater than 32. If the function fails,
+-	// it returns an error value that indicates the cause of the failure.
++    // it returns an error value that indicates the cause of the failure.
+ 	// https://msdn.microsoft.com/en-us/library/windows/desktop/bb762153%28v=vs.85%29.aspx
+ 
+ 	if (shellExecRes < 32)
+-- 
+2.39.1.windows.1
+
