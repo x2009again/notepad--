@@ -39,8 +39,9 @@ option(USE_WINDOWS_UNIVERSAL "通用 Windows 平台构建"          OFF)
 option(USE_WINDOWS_MINGW     "通用 Windows 平台 MinGW 构建"   OFF)
 option(USE_WINDOWS_MSVC      "通用 Windows 平台 MSVC 构建"    OFF)
 #
-option(WINDOWS_DEPLOY_QT5    "通用 Windows Qt5 构建 windeployqt" OFF)
-option(WINDOWS_DEPLOY_QT6    "通用 Windows Qt6 构建 windeployqt" OFF)
+option(WINDOWS_DEPLOY_QT     "通用 Windows 平台 Qt 部署" OFF)
+option(WINDOWS_DEPLOY_QT5    "通用 Windows 平台指定 Qt5 部署 windeployqt" OFF)
+option(WINDOWS_DEPLOY_QT6    "通用 Windows 平台指定 Qt6 部署 windeployqt" OFF)
 
 
 # 使用 macos.cmake / linux.cmake / windows.cmake 维护构建.
@@ -79,7 +80,10 @@ elseif(WIN32)
     
     # 通用 Windows 平台构建，一切的起始
     if(USE_WINDOWS_UNIVERSAL)
-        # include(cmake/platforms/windows.cmake)
+        include(cmake/platforms/windows-universal.cmake)
+
+        # 为 Windows 中构建的应用进行 windeployqt 的配方
+        include(cmake/platforms/windows-deployqt.cmake)
     
         # 通用平台的  Windows MinGW 构建
         if(USE_WINDOWS_MINGW)
@@ -93,7 +97,7 @@ elseif(WIN32)
 
         # 其它 Windows 平台的构建
     else()
-        # include(cmake/platforms/windows.cmake)
+        # include(cmake/platforms/windows-other.cmake)
     endif(USE_WINDOWS_UNIVERSAL)
 
 endif()
