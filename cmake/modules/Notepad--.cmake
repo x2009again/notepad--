@@ -1,3 +1,10 @@
+# Notepad--.cmake
+
+# Notepad-- 核心构建
+# 在模块化构建中，这个部分代表着构建 Notepad-- 
+# 1. 默认构建时产出的目标为 Notepad--
+# 2. 在此处可对 Notepad-- 目标进行详细的构建计划
+
 if(TRUE)
     # 准备构建 Notepad-- 主程序
     set(QRC_SOURCES src/RealCompare.qrc)
@@ -31,3 +38,4 @@ if(TRUE)
 endif(TRUE)
 
 
+# Notepad-- 目标在构建时依赖了一些其它内容，像先前构建的 QSci 目标、Qt5::XmlPatterns 
