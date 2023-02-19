@@ -15,8 +15,11 @@
 #           qscint/scintilla/
 # 
 # /lib/             在 Windows 中提供一个用于插件开发的核心依赖文件
+#   cmake/
+#       NotepadPlugin/
+#           NotepadPluginConfig.cmake
 #   NotepadPlugin/
-#       libQSci.so
+#       QSci.lib
 # 
 
 
