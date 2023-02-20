@@ -20,7 +20,7 @@ if(TRUE)
         # FAIL: only *.ui will spark_file_glob(MOC_HEADER ...)
     )
     spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})
-    target_compile_definitions(QSci PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES)
+    target_compile_definitions(QSci PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES QSCINTILLA_MAKE_DLL)
     target_include_directories(QSci PRIVATE
         src/qscint/scintilla/boostregex
         src/qscint/scintilla/lexlib)
