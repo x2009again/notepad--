@@ -24,9 +24,10 @@
 #ifdef Q_OS_WIN
 #pragma comment(lib, "user32.lib")
 #if _DEBUG
-#pragma comment(lib, "qmyedit_qt5d.lib")
+// Bug: 在 Visual Studio 中引发无法构建的问题，此处为无法找到 qmyedit_x 库
+//#pragma comment(lib, "qmyedit_qt5d.lib")
 #else
-#pragma comment(lib, "qmyedit_qt5.lib")
+//#pragma comment(lib, "qmyedit_qt5.lib")
 #endif
 #include <qt_windows.h>
 const ULONG_PTR CUSTOM_TYPE = 10000;
