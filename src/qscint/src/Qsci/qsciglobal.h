@@ -37,14 +37,17 @@
 // Define QSCINTILLA_MAKE_DLL to create a QScintilla shared library, or
 // define QSCINTILLA_DLL to link against a QScintilla shared library, or define
 // neither to either build or link against a static QScintilla library.
-#define QSCINTILLA_DLL
+
+// Bug: 在 Visual Studio 中引发无法构建的问题，此处被锁定构建为动态库
+// Unassign as Q_DECL_IMPORT.
+// #define QSCINTILLA_DLL 
 
 #if defined(QSCINTILLA_DLL)
-#define QSCINTILLA_EXPORT       Q_DECL_IMPORT
+#   define QSCINTILLA_EXPORT       Q_DECL_IMPORT
 #elif defined(QSCINTILLA_MAKE_DLL)
-#define QSCINTILLA_EXPORT       Q_DECL_EXPORT
+#   define QSCINTILLA_EXPORT       Q_DECL_EXPORT
 #else
-#define QSCINTILLA_EXPORT
+#   define QSCINTILLA_EXPORT
 #endif
 
 

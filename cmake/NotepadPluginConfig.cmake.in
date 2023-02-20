@@ -1,0 +1,218 @@
+# NotepadPluginConfig.cmake
+# 用于 Notepad-- 插件实现的 CMake 模块初级定义
+
+# 在 Linux 中，它的布局应该如下：
+# /usr/lib/x86_64-linux-gnu/cmake/NotepadPlugin/NotepadPluginConfig.cmake
+
+# 在 插件开发层中，它的使用如下：
+    # 1. 查找 NotepadPlugin 模块
+        # find_package(NotepadPlugin)
+    # 2. 使用 add_notepad_plugin(<模块名称> <源代码、资源文件> [...])
+        # add_notepad_plugin(<plugin_name> <plugin_srcs> ...)
+
+# 一些无关紧要的部分，如果需要实现插件安装操作时，即可进行使用
+# include(CMakePackageConfigHelpers)
+# include(GNUInstallDirs)
+ 
+# 主要内容，在构建时的填充
+set(NOTEPAD_PLUGIN              @NOTEPAD_PLUGIN@)
+set(NOTEPAD_BUILD_BY_QT5        @NOTEPAD_BUILD_BY_QT5@)
+set(NOTEPAD_BUILD_BY_QT6        @NOTEPAD_BUILD_BY_QT6@)
+set(NOTEPAD_BUILD_BY_SHARED     FALSE)
+set(NOTEPAD_PLUGIN_CORELIB      @NOTEPAD_PLUGIN_CORELIB@)
+# 由插件开发者进行参考的 "Notepad 提供的插件安装目录(位置)" 
+set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY 
+        @NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_DIRECTORY@)
+
+# 这些是被废除的内容
+# set(NOTEPAD_PLUGIN_INCLUDEDIR   @NOTEPAD_PLUGIN_INCLUDEDIR@)
+# set(NOTEPAD_PLUGIN_LIBDIR       @NOTEPAD_PLUGIN_LIBDIR@)
+
+# 一些核心位置设定参考
+# ./usr/bin/
+# ./usr/bin/notepad--
+# ./usr/include/
+# ./usr/include/NotepadPlugin/
+# ./usr/include/NotepadPlugin/Qsci/
+# ./usr/include/NotepadPlugin/Qsci/...
+# ./usr/include/NotepadPlugin/qscint/
+# ./usr/include/NotepadPlugin/qscint/scintilla/src/XPM.cp
+# ./usr/lib/
+# ./usr/lib/NotepadPlugin/
+# ./usr/lib/NotepadPlugin/libQSci.a
+# ./usr/lib/cmake/
+# ./usr/lib/cmake/NotepadPlugin/
+# ./usr/lib/cmake/NotepadPlugin/NotepadPluginConfig.cmake
+#                              ^ 以此文件目录位置开始，Linux/Windows中都相同，但不是写死路径
+#                                ../                为 /usr/lib/cmake 目录
+#                                ../../             为 /usr/lib 目录
+#                                ../../../          为 /usr 目录
+#                                ../../../include   为 /usr/include 目录
+#                                ../../../lib       为 /usr/lib 目录
+
+#                                ../../../include/NotepadPlugin     # (/usr)头文件目录(NOTEPAD_PLUGIN_INCLUDEDIR)
+#                                ../../NotepadPlugin                # (/usr/lib)库文件目录(NOTEPAD_PLUGIN_LIBDIR)
+#                                ../../cmake                        # (/usr/lib)cmake文件目录(无需关心)
+set(NOTEPAD_PLUGIN_INCLUDEDIR
+    ${CMAKE_CURRENT_LIST_DIR}/../../../include/${NOTEPAD_PLUGIN}
+    ${CMAKE_CURRENT_LIST_DIR}/../../../include/${NOTEPAD_PLUGIN}/Qsci)
+set(NOTEPAD_PLUGIN_LIBDIR       
+    ${CMAKE_CURRENT_LIST_DIR}/../../${NOTEPAD_PLUGIN})
+
+if(NOTEPAD_BUILD_BY_QT5)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+    find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
+endif(NOTEPAD_BUILD_BY_QT5)
+
+if(NOTEPAD_BUILD_BY_QT6)
+    set(CMAKE_AUTOMOC ON)
+    set(CMAKE_AUTOUIC ON)
+    set(CMAKE_AUTORCC ON)
+    find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+endif(NOTEPAD_BUILD_BY_QT6)
+
+if(NOTEPAD_BUILD_BY_SHARED)
+    set(NOTEPAD_IMPORTED_CORELIB_PATH ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.so)
+    add_library(${NOTEPAD_PLUGIN} SHARED IMPORTED)
+    set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
+        IMPORTED_LOCATION 
+            ${NOTEPAD_IMPORTED_CORELIB_PATH}
+        INCLUDE_DIRECTORIES 
+            "${NOTEPAD_PLUGIN_INCLUDEDIR}"
+    )
+else()
+    set(NOTEPAD_IMPORTED_CORELIB_PATH ${NOTEPAD_PLUGIN_LIBDIR}/lib${NOTEPAD_PLUGIN_CORELIB}.a)
+    add_library(${NOTEPAD_PLUGIN} STATIC IMPORTED)
+    set_target_properties(${${NOTEPAD_PLUGIN}} PROPERTIES 
+        IMPORTED_LOCATION 
+            ${NOTEPAD_IMPORTED_CORELIB_PATH}
+        INCLUDE_DIRECTORIES 
+            "${NOTEPAD_PLUGIN_INCLUDEDIR}"
+    )
+endif()
+
+if(CMAKE_HOST_UNIX)
+    # 在 Linux 中开启 compile_commands.json 文件输出，增强 clangd 能力
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)   
+endif(CMAKE_HOST_UNIX)
+
+# add_notepad_plugin(<PLUGIN_VAR> <PLUGIN_SRC> [...])
+# 此宏定义了，基于源代码文件构建 Notepad-- 插件时所需要的一系列流程内容
+macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
+    # aux_source_directory(${PLUGIN_VAR}_SOURCES  ${ARGN})
+    add_library(${PLUGIN_VAR} SHARED ${PLUGIN_SRC} ${ARGN})
+    
+    if(CMAKE_HOST_WIN32)
+        # Win32 已提供宏判断
+        # target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=export)
+    endif(CMAKE_HOST_WIN32)
+
+    if(CMAKE_HOST_UNIX)
+        target_compile_definitions(${PLUGIN_VAR} PUBLIC NDD_EXPORT=)
+    endif(CMAKE_HOST_UNIX)
+    
+    # ------------ 为在不同平台构建的插件定义输出名称(尾巴) ------------- #
+    # <OS>          平台：  Windows/MacOS/Linux
+    # <ARCH>        架构：  X86_64、AMD64、ARM64、....
+    # <COMPILER>    编译器：MinGW、Cygwin、MSVC、GNU、Clang、Intel....
+    # <QT>          Qt版本:
+    set(${PLUGIN_VAR}_OUTPUT_NAME ${PLUGIN_VAR})
+
+    # <OS> ------- 确定平台 Apple/Linux/Windows ------------------- #
+    if(APPLE)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MacOS")
+    elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Linux")
+    elseif(WIN32)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Win32")
+    endif()
+
+    # <ARCH> ------- 确定架构 X86_64/AMD64/ARM64/... -------------- #
+    string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${CMAKE_HOST_SYSTEM_PROCESSOR}")
+    # if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
+    #     if(CMAKE_APPLE_SILICON_PROCESSOR)
+    #         string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Silicon")
+    #     endif(CMAKE_APPLE_SILICON_PROCESSOR)
+    # endif(CMAKE_VERSION VERSION_GREATER_EQUAL 3.19)
+    
+    # <COMPILER> ----- 确定编译器类型 
+    # string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MinGW")
+    if(WIN32)
+        if(MINGW)
+            string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MinGW")
+        elseif(CYGWIN)
+            string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Cygwin")
+        elseif(MSVC)
+            string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_MSVC")
+        else() # 如果不是 MinGW、 Cygwin 、MSVC
+            if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "")
+                string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Unknow")
+            else() # 如果不是 CMAKE_CXX_COMPILER_ID 不为空
+                string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${CMAKE_CXX_COMPILER_ID}")
+            endif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "")
+        endif()
+    else()
+        # 此处：如果不提前进行 MINGW 判断，MINGW 也将会是 GNU
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${CMAKE_CXX_COMPILER_ID}")
+    endif()
+
+    # 预留: GNU Compiler 系列并不清楚如何区分
+    # if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+        # string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_GCC")
+    # endif(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+
+    # <Qt 版本尾巴规划：待确定，目前使用 Qt5/Qt6 进行区分>
+    # if(NOT "${Qt5_}" STREQUAL "")
+    #     string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_${QT_VERSION}")
+    # endif(NOT "${QT_VERSION}" STREQUAL "")
+    if(NOTEPAD_BUILD_BY_QT5)
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Qt5")
+    else()
+        string(APPEND ${PLUGIN_VAR}_OUTPUT_NAME "_Qt6")
+    endif(NOTEPAD_BUILD_BY_QT5)
+    
+    
+    set_property(TARGET ${PLUGIN_VAR}
+            PROPERTY
+                OUTPUT_NAME "${${PLUGIN_VAR}_OUTPUT_NAME}")
+    # ------------ 为构建的插件配置尾巴 ------------- #
+
+    # Notepad-- 插件开发时应该使用的 头文件安装目录、库文件安装目录
+    target_include_directories(${PLUGIN_VAR} PUBLIC 
+        ${NOTEPAD_PLUGIN_INCLUDEDIR})
+    target_link_directories(${PLUGIN_VAR} PUBLIC 
+        ${NOTEPAD_PLUGIN_LIBDIR})
+    target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
+    if(NOTEPAD_BUILD_BY_QT5)
+        target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
+    endif(NOTEPAD_BUILD_BY_QT5)
+
+    if(NOTEPAD_BUILD_BY_QT6)
+        target_link_libraries(${PLUGIN_VAR} Qt6::Core Qt6::Widgets)
+    endif(NOTEPAD_BUILD_BY_QT6)
+
+    # 这是插件实现接口中增加的 NOTEPAD_PLUGIN_MANAGER 宏开关
+        # 来处理减少 Notepad-- 在编译时不需要，但在插件编译时所需要的模板内容
+    target_compile_definitions(${PLUGIN_VAR} PUBLIC NOTEPAD_PLUGIN_MANAGER=)
+    
+endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
+
+# support git plugin
+# add_notepad_plugin_with_git <plugin_name> <git_repo_url> <plugin_sources_path>
+# 该宏定义了从指定的 git 仓库中获取插件源代码，并进行简单的构建
+macro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
+    execute_process(COMMAND git clone ${GIT_REPO_URL} ${PLUGIN_VAR}_git
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    aux_source_directory(${CMAKE_BINARY_DIR}/${PLUGIN_VAR}_git/${GIT_REPO_PLUGIN_PATH} ${PLUGIN_VAR}_RESOURCES)
+    add_notepad_plugin(${PLUGIN_VAR} ${${PLUGIN_VAR}_RESOURCES})
+endmacro(add_notepad_plugin_with_git PLUGIN_VAR GIT_REPO_URL GIT_REPO_PLUGIN_PATH)
+
+message("- >>>>>>>>>>>>>>>>>> NotepadPlugin: <<<<<<<<<<<<<<<<<<")
+message("  - ${CMAKE_CURRENT_LIST_FILE}")
+message("  - ${NOTEPAD_PLUGIN_INCLUDEDIR}")
+message("  - ${NOTEPAD_PLUGIN_LIBDIR}")
+message("  - ${NOTEPAD_PLUGIN_CORELIB}")
+message("  - ${NOTEPAD_IMPORTED_CORELIB_PATH}")
+message("- >>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<")

@@ -1,42 +1,14 @@
-CPUS=$(shell nproc)
-CALENDAR=$(shell date '+%Y%m%d')
-OSID=$(shell lsb_release -si)
-OSRELEASE=$(shell lsb_release -sr)
-SUFFIX=
-ifneq ("$(OSID)", "")
-SUFFIX=_$(OSID)$(OSRELEASE)
-endif
+Msg   := 'Build with the following configuration:'
+One   := '1. make -f linux-universal.mk'
+Two   := '2. make -f linux-debian.mk package'
+Three := '3. make -f linux-appimage.mk package'
+Four  := '4. make -f linux-uos.mk package'
 
-PROJECT_NAME=notepad--
-PACKAGE_NAME=com.hmja.notepad
 
 all:
-	mkdir -p build
-	cd build && cmake ..
-	cd build && make -j$(CPUS)
-
-run: all
-	exec $(shell find build/ -maxdepth 1 -type f -executable | grep $(PROJECT_NAME))
-
-debug:
-	mkdir -p build
-	cd build && cmake -DCMAKE_BUILD_TYPE=Debug ..
-	cd build && make -j$(CPUS)
-
-release:
-	mkdir -p build
-	cd build && cmake -DCMAKE_BUILD_TYPE=Release -DPLUGIN_EN=off -DPACKAGE_SUFFIX="$(SUFFIX)" ..
-	cd build && make -j$(CPUS)
-
-package: release
-	cd build && make package
-	tree build/_CPack_Packages/Linux/DEB/$(PROJECT_NAME)-*
-# 	dpkg-deb --contents build/$(PROJECT_NAME)$(SUFFIX).deb
-
-builddeps:
-	cd build && make builddeps
-
-cpus:
-	@echo "CPU数量: $(CPUS)"
-
+	@echo $(Msg)
+	@echo $(One)    "\n\t默认的通用 Linux 平台构建."
+	@echo $(Two)    "\n\t通用 Linux 平台的 Debian deb 构建."
+	@echo $(Three)  "\n\t通用 Linux 平台的 Appimage 构建."
+	@echo $(Four)   "\n\t独立 Linux 平台的 Uos 构建."
 
