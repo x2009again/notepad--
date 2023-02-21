@@ -129,6 +129,12 @@ function(set_package_vars _IN_KEY _IN_VAL)
         message("--> 日历化版本: ${_IN_VAL}")
     endif(_CalVer EQUAL "0")
 
+    find_str("${_IN_KEY}" "OSD" _OSDVer)
+    if(_OSDVer EQUAL "0")
+        set(OSDVer "${_IN_VAL}" PARENT_SCOPE)
+        message("--> 声明发行版号: ${_IN_VAL}")
+    endif(_OSDVer EQUAL "0")
+
     find_str("${_IN_KEY}" "Architecture" _Architecture)
     if(_Architecture EQUAL "0")
         set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_IN_VAL}" PARENT_SCOPE)
@@ -264,6 +270,19 @@ function(add_package_descript IN_DES)
     endif("${CalVer}" STREQUAL "true")
 
 
+    ####################### OS Release ######################
+    if("${OSDVer}" STREQUAL "true")
+        exec_program(lsb_release ARGS -si
+            OUTPUT_VARIABLE _OSI
+        )
+        exec_program(lsb_release ARGS -sr
+            OUTPUT_VARIABLE _OSR
+        )
+        if(NOT "${_OSI}" STREQUAL "" AND NOT "${_OSR}" STREQUAL "")
+            set(PACKAGE_SUFFIX "${PACKAGE_SUFFIX}_${_OSI}${_OSR}")
+        endif(NOT "${_OSI}" STREQUAL "" AND NOT "${_OSR}" STREQUAL "")
+    endif("${OSDVer}" STREQUAL "true")
+    
 
     ##################### deb file name #####################
     set(_Package      "${CPACK_DEBIAN_PACKAGE_NAME}")

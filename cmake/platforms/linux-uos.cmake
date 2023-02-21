@@ -63,7 +63,7 @@ if(USE_LINUX_UOS)
 
     # ------------------ 最终打包 deb 部分 ------------------ #
     # 1. 为即将构建的 Uos 增加 Uos 后缀
-    set(PACKAGE_SUFFIX "_Uos") 
+    # set(PACKAGE_SUFFIX "_onlyUos") 
 
     # 2. 使用同样来自 debian 系列的 deb 构建能力
     find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
