@@ -19,8 +19,7 @@ if(TRUE)
         # src/qscint/src/Qsci
         # FAIL: only *.ui will spark_file_glob(MOC_HEADER ...)
     )
-    spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})
-    target_compile_definitions(QSci PRIVATE SCINTILLA_QT SCI_LEXER INCLUDE_DEPRECATED_FEATURES QSCINTILLA_MAKE_DLL)
+    spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})    
     target_include_directories(QSci PRIVATE
         src/qscint/scintilla/boostregex
         src/qscint/scintilla/lexlib)
@@ -36,4 +35,30 @@ endif(TRUE)
 
 
 # QSci 库构建时依赖了一些其它内容，像 PrintSupport，Concurrent 等
-# QSci 库构建...
+# QSci 库构建...配置
+
+if(WIN32)
+    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
+    target_compile_definitions(QSci 
+        PRIVATE 
+            SCINTILLA_QT                # 
+            SCI_LEXER                   # 
+            INCLUDE_DEPRECATED_FEATURES # 
+            QSCINTILLA_MAKE_DLL         # 在 Windows 中构建此库时应该采用 Q_DECL_EXPORT
+                                        # 并且在 Windows 中使用此库时应该采用 Q_DECL_IMPORT
+                                        # 控制 QSCINTILLA_EXPORT 符号应为：
+                                        # 构建时(导出)，由外部使用时(导入)
+    )
+endif(WIN32)
+
+if(UNIX)
+    # 在 Linux 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
+    target_compile_definitions(QSci 
+        PRIVATE 
+            SCINTILLA_QT                # 
+            SCI_LEXER                   # 
+            INCLUDE_DEPRECATED_FEATURES # 
+            # QSCINTILLA_MAKE_DLL       # 在 Linux 未使用 Q_DECL_EXPORT 、 Q_DECL_IMPORT
+                                        # 控制 QSCINTILLA_EXPORT 符号应为留空
+    )
+endif(UNIX)

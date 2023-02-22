@@ -32,10 +32,31 @@ endif(TRUE)
 
 # ----------------- Notepad-- 插件支持相关  ----------------- #
 if(TRUE)
-    # 开启插件支持
-    target_compile_definitions(${PROJECT_NAME} PUBLIC NO_PLUGIN=0)
+    # 开启插件支持 - 此处废弃，并由构建宏支持部分处理
+    # target_compile_definitions(${PROJECT_NAME} PUBLIC NO_PLUGIN)
     # 其它有关插件的部分处理...
 endif(TRUE)
 
 
 # Notepad-- 目标在构建时依赖了一些其它内容，像先前构建的 QSci 目标、Qt5::XmlPatterns 
+# Notepad-- 程序构建...配置
+
+# ----------------- Notepad-- 构建宏支持相关  ----------------- #
+
+if(WIN32)
+    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
+    target_compile_definitions(${PROJECT_NAME} 
+        PRIVATE 
+            NO_PLUGIN       # 开启插件支持
+            QSCINTILLA_DLL  # 目前在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
+                            # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
+    )
+endif(WIN32)
+
+if(UNIX)
+    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
+    target_compile_definitions(${PROJECT_NAME} 
+        PRIVATE 
+            NO_PLUGIN       # 开启插件支持
+    )
+endif(UNIX)

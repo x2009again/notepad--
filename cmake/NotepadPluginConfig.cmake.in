@@ -185,6 +185,7 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
     target_link_directories(${PLUGIN_VAR} PUBLIC 
         ${NOTEPAD_PLUGIN_LIBDIR})
     target_link_libraries(${PLUGIN_VAR} ${NOTEPAD_PLUGIN_CORELIB})
+
     if(NOTEPAD_BUILD_BY_QT5)
         target_link_libraries(${PLUGIN_VAR} Qt5::Core Qt5::Widgets)
     endif(NOTEPAD_BUILD_BY_QT5)
@@ -195,7 +196,17 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 
     # 这是插件实现接口中增加的 NOTEPAD_PLUGIN_MANAGER 宏开关
         # 来处理减少 Notepad-- 在编译时不需要，但在插件编译时所需要的模板内容
-    target_compile_definitions(${PLUGIN_VAR} PUBLIC NOTEPAD_PLUGIN_MANAGER=)
+    if(WIN32)
+        target_compile_definitions(${PLUGIN_VAR} 
+            PUBLIC 
+                NOTEPAD_PLUGIN_MANAGER
+                QSCINTILLA_DLL      # 在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
+                                    # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
+        )
+    else()
+        target_compile_definitions(${PLUGIN_VAR} 
+            PUBLIC NOTEPAD_PLUGIN_MANAGER)
+    endif(WIN32)
     
 endmacro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
 
