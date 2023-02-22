@@ -124,7 +124,7 @@ if(WINDOWS_DEPLOY_QT)
                         --dir ${WINDOWS_APPLICATION_DEPLOY_PATH}
             )
 
-            add_custom_target(TARGET windows-deployqt
+            add_custom_command(TARGET windows-deployqt
                 POST_BUILD
                     COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
                         # 
