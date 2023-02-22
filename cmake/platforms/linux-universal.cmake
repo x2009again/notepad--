@@ -55,6 +55,12 @@ if(CMAKE_HOST_UNIX)
     # 定义一些扩展内容，主要是提供给 CMake 模块文件填充
     set(NOTEPAD_PLUGIN_CORELIB QSci) # QSci 为构建的 QScintllia 库
 
+    # 将当前平台构建的目标转为平台下的库名称
+    include(cmake/platforms/utils.cmake)
+    get_current_platform_lib_name(NOTEPAD_PLUGIN_CORELIB_NAME 
+        ${NOTEPAD_BUILD_BY_SHARED}
+        QSci)
+
     # 定义在插件开发的 CMake 模块中，Notepad-- 是否是基于 QT5 实现
         # 并自动为插件开发层自动开启相关 Qt 依赖组件
         # 此部分逻辑将自动提供给 add_notepad_plugin 自行处理
@@ -108,3 +114,4 @@ if(CMAKE_HOST_UNIX)
     # ------------------ INSTALL PLUGIN CONFIG ------------------ #
 
 endif(CMAKE_HOST_UNIX)
+

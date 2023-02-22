@@ -4,6 +4,8 @@
 # 1. 静态化构建库时产出的目标为 libQSci.a
 # 2. 在此处可对 QSci 目标进行详细的构建计划
 
+option(NOTEPAD_BUILD_BY_SHARED "指定 Notepad 将构建为动态库" OFF)
+
 if(TRUE)
     # add_subdirectory(${PROJECT_SOURCE_DIR}/src/qscint)
     # file(GLOB MOC_HEADER src/qscint/src/Qsci/*.h)
@@ -19,7 +21,11 @@ if(TRUE)
         # src/qscint/src/Qsci
         # FAIL: only *.ui will spark_file_glob(MOC_HEADER ...)
     )
-    spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})    
+    if(NOTEPAD_BUILD_BY_SHARED)
+        spark_add_library(QSci SHARED ${QSciSources} ${MOC_HEADER})
+    else()
+        spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})
+    endif(NOTEPAD_BUILD_BY_SHARED)
     target_include_directories(QSci PRIVATE
         src/qscint/scintilla/boostregex
         src/qscint/scintilla/lexlib)
