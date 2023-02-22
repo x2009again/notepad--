@@ -15,7 +15,7 @@ if(WIN32)
     add_compile_definitions(_UNICODE= UNICODE=)
 endif()
 
-# ----------------- 构建 QSci 静态库 ----------------- #
+# ----------------- 构建 QSci 库 ----------------- #
 if(TRUE)
     include(cmake/modules/QScint.cmake)
 endif(TRUE)
@@ -27,7 +27,13 @@ if(TRUE)
 endif(TRUE)
 
 # ----------------- Notepad-- 其它主线构建相关  ----------------- #
-option(USE_MACOS_UNIVERSAL   "通用 MacOS 平台构建"            OFF)
+option(USE_WINDOWS_UNIVERSAL "通用 Windows 平台构建"          OFF)
+option(USE_WINDOWS_MINGW     "通用 Windows 平台 MinGW 构建"   OFF)
+option(USE_WINDOWS_MSVC      "通用 Windows 平台 MSVC 构建"    OFF)
+#
+option(WINDOWS_DEPLOY_QT     "通用 Windows 平台 Qt 部署"                 OFF)
+option(WINDOWS_DEPLOY_QT5    "通用 Windows 平台指定 Qt5 部署 windeployqt" OFF)
+option(WINDOWS_DEPLOY_QT6    "通用 Windows 平台指定 Qt6 部署 windeployqt" OFF)
 #
 option(USE_LINUX_UNIVERSAL   "通用 Linux 平台构建"            OFF)
 option(USE_LINUX_DEBIAN      "通用 Debian Linux 平台构建"     OFF)
@@ -35,19 +41,34 @@ option(USE_LINUX_APPIMAGE    "通用 Appimage Linux 平台构建"   OFF)
 #
 option(USE_LINUX_UOS         "独立 Linux 平台的 Uos 构建"      OFF)
 #
-option(USE_WINDOWS_UNIVERSAL "通用 Windows 平台构建"          OFF)
-option(USE_WINDOWS_MINGW     "通用 Windows 平台 MinGW 构建"   OFF)
-option(USE_WINDOWS_MSVC      "通用 Windows 平台 MSVC 构建"    OFF)
-#
-option(WINDOWS_DEPLOY_QT     "通用 Windows 平台 Qt 部署" OFF)
-option(WINDOWS_DEPLOY_QT5    "通用 Windows 平台指定 Qt5 部署 windeployqt" OFF)
-option(WINDOWS_DEPLOY_QT6    "通用 Windows 平台指定 Qt6 部署 windeployqt" OFF)
+option(USE_MACOS_UNIVERSAL   "通用 MacOS 平台构建"            OFF)
 
+# 使用 windows.cmake / linux.cmake / macos.cmake 维护构建.
 
-# 使用 macos.cmake / linux.cmake / windows.cmake 维护构建.
-if(APPLE)
-    # 通用 MacOS 平台的构建(一个无具体实现的空构建)
-    # include(cmake/platforms/macos.cmake)
+    # 在 Windows 中此处将由通用构建、MinGW 构建、MSVC 构建组成
+if(WIN32)
+    
+    # 通用 Windows 平台构建，一切的起始
+    if(USE_WINDOWS_UNIVERSAL)
+        include(cmake/platforms/windows-universal.cmake)
+
+        # 为 Windows 中构建的应用进行 windeployqt 的配方
+        include(cmake/platforms/windows-deployqt.cmake)
+    
+        # 通用平台的  Windows MinGW 构建
+        if(USE_WINDOWS_MINGW)
+            # include(cmake/platforms/windows-mingw.cmake)
+        endif()
+        
+        # 通用平台的  Windows MSVC 构建
+        if(USE_WINDOWS_MSVC)
+            # include(cmake/platforms/windows-msvc.cmake)
+        endif()
+
+        # 其它 Windows 平台的构建
+    else()
+        # include(cmake/platforms/windows-other.cmake)
+    endif(USE_WINDOWS_UNIVERSAL)
 
     # 在 Linux 中此处将由通用构建、Debian 打包构建、Appimage 打包构建、Uos 打包构建组成
 elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
@@ -72,34 +93,13 @@ elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
 
         # 其它 Linux 平台的构建
     else()
-        # include(cmake/platforms/linux.cmake)
+        # include(cmake/platforms/linux-other.cmake)
     endif(USE_LINUX_UNIVERSAL)
-    
-    # 在 Windows 中此处将由通用构建、MinGW 构建、MSVC 构建组成
-elseif(WIN32)
-    
-    # 通用 Windows 平台构建，一切的起始
-    if(USE_WINDOWS_UNIVERSAL)
-        include(cmake/platforms/windows-universal.cmake)
 
-        # 为 Windows 中构建的应用进行 windeployqt 的配方
-        include(cmake/platforms/windows-deployqt.cmake)
-    
-        # 通用平台的  Windows MinGW 构建
-        if(USE_WINDOWS_MINGW)
-            # include(cmake/platforms/windows-mingw.cmake)
-        endif()
-        
-        # 通用平台的  Windows MSVC 构建
-        if(USE_WINDOWS_MSVC)
-            # include(cmake/platforms/windows-msvc.cmake)
-        endif()
+    # 通用 MacOS 平台的构建(一个无具体实现的空构建)
+elseif(APPLE)
 
-        # 其它 Windows 平台的构建
-    else()
-        # include(cmake/platforms/windows-other.cmake)
-    endif(USE_WINDOWS_UNIVERSAL)
-
+    # include(cmake/platforms/macos.cmake)
 endif()
 
 # ----------------- Notepad-- 其它主线构建相关  ----------------- #
