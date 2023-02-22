@@ -201,7 +201,7 @@ macro(add_notepad_plugin PLUGIN_VAR PLUGIN_SRC)
         target_compile_definitions(${PLUGIN_VAR} 
             PUBLIC 
                 NOTEPAD_PLUGIN_MANAGER
-                # QSCINTILLA_DLL    # 废弃，插件构建中不需要明确显式声明此宏
+                QSCINTILLA_DLL    # 取消废弃，一些插件的构建中测试为需要明确显式声明此宏
         )
     else()
         target_compile_definitions(${PLUGIN_VAR} 
