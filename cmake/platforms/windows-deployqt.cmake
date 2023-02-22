@@ -23,8 +23,8 @@ if(WINDOWS_DEPLOY_QT)
     endif()
 
     if (WINDOWS_DEPLOY_QT5 OR WINDOWS_DEPLOY_QT6)
-        message(" -------- ${CMAKE_INSTALL_PREFIX} ---------- ")
-        message("${WINDOWS_QT_DIR}/../../../bin/windeployqt")
+        message("[windows-deployqt.cmake]: find windployqt tool")
+        message("    ${WINDOWS_QT_DIR}/../../../bin/windeployqt")
 
         # install(TARGETS ${PROJECT_NAME} 
         #     DESTINATION ${CMAKE_BINARY_DIR}/windows-deployqt)
@@ -48,7 +48,22 @@ if(WINDOWS_DEPLOY_QT)
                 # LIBRARY_OUTPUT_DIRECTORY ""
                 # 可执行文件生成目录
                 RUNTIME_OUTPUT_DIRECTORY ${WINDOWS_APPLICATION_DEPLOY_PATH})
-        
+
+        # 如果 QSci 构建为动态库，那么它生成的位置也应该是与 Notepad-- 输出到同一个位置
+        # 用于支撑 Notepad-- 的 Debug 运行时
+        if(NOTEPAD_BUILD_BY_SHARED)
+            set_target_properties(QSci
+                PROPERTIES
+                    # 这是一个 WIN32 程序，即可执行文件不再出现黑窗口，转而使用 WinMain(某种 Windows 内部特性)
+                    WIN32_EXECUTABLE true
+                    # 静态库生成目录
+                    # ARCHIVE_OUTPUT_DIRECTORY ""
+                    # 动态库生成目录
+                    # LIBRARY_OUTPUT_DIRECTORY ""
+                    # 可执行文件生成目录
+                    RUNTIME_OUTPUT_DIRECTORY ${WINDOWS_APPLICATION_DEPLOY_PATH})
+        endif(NOTEPAD_BUILD_BY_SHARED)
+
         # 自动化构建 Windows Deploy Qt Application
         # 参考: windeployqt --qmldir <path-to-app-qml-files> <path-to-app-binary>
         add_custom_command(TARGET ${PROJECT_NAME}
