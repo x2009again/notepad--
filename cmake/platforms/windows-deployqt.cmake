@@ -49,21 +49,6 @@ if(WINDOWS_DEPLOY_QT)
                 # 可执行文件生成目录
                 RUNTIME_OUTPUT_DIRECTORY ${WINDOWS_APPLICATION_DEPLOY_PATH})
 
-        # 如果 QSci 构建为动态库，那么它生成的位置也应该是与 Notepad-- 输出到同一个位置
-        # 用于支撑 Notepad-- 的 Debug 运行时
-        if(NOTEPAD_BUILD_BY_SHARED)
-            set_target_properties(QSci
-                PROPERTIES
-                    # 这是一个 WIN32 程序，即可执行文件不再出现黑窗口，转而使用 WinMain(某种 Windows 内部特性)
-                    WIN32_EXECUTABLE true
-                    # 静态库生成目录
-                    # ARCHIVE_OUTPUT_DIRECTORY ""
-                    # 动态库生成目录
-                    # LIBRARY_OUTPUT_DIRECTORY ""
-                    # 可执行文件生成目录
-                    RUNTIME_OUTPUT_DIRECTORY ${WINDOWS_APPLICATION_DEPLOY_PATH})
-        endif(NOTEPAD_BUILD_BY_SHARED)
-
         # 自动化构建 Windows Deploy Qt Application
         # 参考: windeployqt --qmldir <path-to-app-qml-files> <path-to-app-binary>
         add_custom_command(TARGET ${PROJECT_NAME}
@@ -103,6 +88,59 @@ if(WINDOWS_DEPLOY_QT)
                     # 部署运行时使用指定的目录
                     --dir ${CMAKE_INSTALL_PREFIX}/bin
         )
+
+        # ---------------------------------- QSci ---------------------------------- #
+
+        # 当 QSci 需要构建为动态库时，就已经开始导致了关联性错误，这个与原始分支上的预期的方案不符
+        # 1. 需要处理运行时生成位置，将运行时与 Notepad-- 保持在一个目录下
+        # 2. 处理此动态库的依赖问题，将依赖进行导出，由于 windeployqt 未解析出 Notepad-- 间接的动态库依赖
+            # 需要以 QSci 为主体进行部署生成缺失的部分
+        # 3. 在安装时，依然需要将动态库生成部署生成，这是一个非常让构建者烦恼的问题
+
+        if(NOTEPAD_BUILD_BY_SHARED)
+            # 如果 QSci 构建为动态库，那么它生成的位置也应该是与 Notepad-- 输出到同一个位置
+            # 用于支撑 Notepad-- 的 Debug 运行时, 以及安装的续接操作
+            set_target_properties(QSci
+                PROPERTIES
+                    RUNTIME_OUTPUT_DIRECTORY ${WINDOWS_APPLICATION_DEPLOY_PATH})
+
+            add_custom_command(TARGET QSci
+                # 在构建之后计划进行执行以下命令
+                POST_BUILD
+                    # 即将在构建目录中
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                    # 执行以下命令进行 windeployqt
+                    COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
+                        # 
+                        ${WINDOWS_APPLICATION_DEPLOY_PATH}/QSci.dll
+
+                        # 扫描QML-从目录开始导入。
+                        --qmlimport ${WINDOWS_QT_DIR}/../../../qml
+                        # 部署编译器运行时(仅限桌面)。
+                        --compiler-runtime  
+                        # 详细级别(0-2)
+                        --verbose 2
+                        # 部署运行时使用指定的目录
+                        --dir ${WINDOWS_APPLICATION_DEPLOY_PATH}
+            )
+
+            add_custom_target(TARGET windows-deployqt
+                POST_BUILD
+                    COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
+                        # 
+                        ${WINDOWS_APPLICATION_DEPLOY_PATH}/QSci.dll
+
+                        # 扫描QML-从目录开始导入。
+                        --qmlimport ${WINDOWS_QT_DIR}/../../../qml
+                        # 部署编译器运行时(仅限桌面)。
+                        --compiler-runtime  
+                        # 详细级别(0-2)
+                        --verbose 2
+                        # 部署运行时使用指定的目录
+                        --dir ${CMAKE_INSTALL_PREFIX}/bin
+            )
+
+        endif(NOTEPAD_BUILD_BY_SHARED)
 
     endif (WINDOWS_DEPLOY_QT5 OR WINDOWS_DEPLOY_QT6)
 
