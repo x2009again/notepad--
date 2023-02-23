@@ -36,7 +36,7 @@ Priority: optional
 # 软件包依赖
 Depends:
 # 软件包维护者(组织或个人)
-Maintainer: 尹作为 <757210198@qq.com>
+Maintainer: Ndd开源组织 <757210198@qq.com>
 # 软件包主页
 Homepage: https://gitee.com/cxasm/notepad--
 # 软件包建议
