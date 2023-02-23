@@ -1,15 +1,28 @@
-# export PATH=/usr/lib/x86_64-linux-gnu/qt5/bin:$PATH
-# export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu:$LD_LIBRARY_PATH
-# export QT_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins:$QT_PLUGIN_PATH
-# export QML2_IMPORT_PATH=/usr/lib/x86_64-linux-gnu/qt5/qml:$QML2_IMPORT_PATH
+# SparkAppimageConfig.cmake
 
-# export PATH=/usr/lib/x86_64-linux-gnu/qt5/bin:$PATH
-# ~/linuxdeployqt-continuous-x86_64.AppImage spark-store-submitter -appimage
-# cd ..
-# ~/appimagetool-x86_64.AppImage appimage/
+# 1. 在使用时通过准备默认的 icon 与 SparkDesktopConfig.cmake 在生成 desktop 文件
+    # 时进行借用 desktop 文件中的基本描述完成 spark-appimage.dekstop 文件的生成，
+    # 并在使用 add_appimage 时完成所有逻辑判断与目标的定义
+        # add_appimage_icon
+        # add_appimage_desktop
+        # add_appimage
 
-# LINUXDEPLOYQT=/home/zinface/linuxdeployqt-continuous-x86_64.AppImage
-# APPIMAGETOOL=/home/zinface/appimagetool-x86_64.AppImage
+# 2. 在 add_appimage 中，我们判断了是否为 cmake 提供了 LINUXDEPLOYQT 宏，
+    # 并获取此工具的真实路径。并继续判断了 APPIMAGETOOL 宏与该工具的真实路径。
+    # 然后，创建一个目录，用于即将进行的 Appimage 打包。
+
+    # 通过调用 target_linuxdeploy() 来完成 linuxdeploy 的目标创建
+    # 通过调用 target_appimage() 来完成 appimage 的目标创建
+
+# 3. 对于 linuxdeploy 目标，大致上就是通过执行 linuxdeployqt 命令与 -appimage 
+    # 参数来创建可用于 Appimage 打包的内容结构，并且使用一些参数来处理相关库的依赖。
+    # 其次就是，将 spark-appimage.desktop 复制为 default.desktop
+    # 另一个就是 spark-appimage.png 复制为 default.png
+
+# 4. 对于 appimage 目标，大致上就是通过执行 appimagetool 命令将准备好打包的目录
+    # 结构进行打包为 Appimage 可执行文件，其中为了避免可能缺失的文件，重复了对
+    # default.desktop 文件与 default.png 文件的生成。
+    # 这是一个依赖的 copy-desktop-appimage 目标，并先行执行
 
 # if ()
 set(APPIMAGE_OUTPUT  "${CMAKE_BINARY_DIR}/appimage")
