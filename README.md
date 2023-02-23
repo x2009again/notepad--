@@ -33,13 +33,65 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 
 **CMake工具链编译说明:**
 
-- Ubuntu/Debian
+- 当前的 Linux 平台构建方案
 
-1. 安装编译环境 `sudo apt-get install g++ make cmake`
-1. 安装qt工具和库 `sudo apt-get install qtbase5-dev qt5-qmake qtbase5-dev-tools libqt5printsupport5 libqt5xmlpatterns5-dev `
-1. 配置 `cmake -B build -DCMAKE_BUILD_TYPE=Release`
-1. 编译 `cd build && make -j` 
-1. 打包 `cpack`
+    ```shell
+    Build with the following configuration:
+    1. make -f linux-universal.mk 
+            默认的通用 Linux 平台构建.
+    2. make -f linux-debian.mk package 
+            通用 Linux 平台的 Debian deb 构建.
+    3. make -f linux-appimage.mk package 
+            通用 Linux 平台的 Appimage 构建.
+    4. make -f linux-uos.mk package 
+            独立 Linux 平台的 Uos 构建.
+    ```
+
+- Linux 通用构建系列(*仅适合**配合其它打包方案**操作*) - 基于默认的通用 Linux 平台构建.
+
+    ```shell
+    # 构建默认的
+    make -f linux-universal.mk 
+    # 进入构建目录
+    cd build/linux-universal
+    # 执行 make install 安装到 out 目录，得到一个标准 linux 的目录结构
+    make DESTDIR=out install
+    ```
+
+- Ubuntu/Debian - 基于通用 Linux 平台的 Debian deb 构建
+
+    ```shell
+    # 安装编译环境 
+    sudo apt-get install g++ make cmake
+    # 安装qt工具和库
+    sudo apt-get install qtbase5-dev qt5-qmake qtbase5-dev-tools \
+                    libqt5printsupport5 libqt5xmlpatterns5-dev
+    # 构建 Linux Debian 通用平台
+    make -f linux-debian.mk package
+
+    # 将在 build/linux-debian 目录中产生 deb 文件
+    # 其它相关内容将不定期更新说明
+    ```
+
+- Linux 跨发行版构建 Appimage - 基于通用 Linux 平台的 Appimage 构建
+
+    ```shell
+    # 在支持编译 Notepad-- 或 Qt 程序的 Linux 平台中
+    make -f linux-appimage.mk package
+
+    # 将在 build/linux-appimage 目录中产生 Appimage 文件
+    ```
+
+- Linux Uos 发行版构建(仅可在 Uos 中构建) - 基于独立 Linux 平台的 Uos 构建.
+
+    ```shell
+    # 在支持编译 Notepad-- 或 Qt 程序的 Uos 平台中
+    make -f linux-uos.mk package
+
+    # 将在 build/linux-uos 目录中产生 deb 文件
+    # 所有的内容将安装到 /opt/apps/com.hmja.notepad
+    # 仅适用于 Uos 系统构建，切不可使用其它发行版本，原生Qt库版本较低
+    ```
 
 - ArchLinux
 
