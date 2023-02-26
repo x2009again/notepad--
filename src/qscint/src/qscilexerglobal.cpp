@@ -163,7 +163,7 @@ QColor QsciLexerGlobal::defaultColor(int style) const
 	switch (style)
 	{
 	case GLOBAL_OVERRIDE:
-		return QColor(0xFFFF80);
+		return QColor(Qt::black);
 
 	case DEFAULT_STYLE:
 		return QColor(Qt::black);
@@ -328,7 +328,7 @@ QColor QsciLexerGlobal::defaultPaper(int style) const
 	switch (style)
 	{
 	case GLOBAL_OVERRIDE:
-		return QColor(0xFF8000);
+		return QColor(0xFFFFFF);
 
 	case DEFAULT_STYLE:
 		return QColor(0xFFFFFF);

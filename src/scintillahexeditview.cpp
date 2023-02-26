@@ -130,3 +130,4 @@ void ScintillaHexEditView::updateThemes()
 	setMarginsBackgroundColor(StyleSet::s_global_style->line_number_margin.bgColor);
 	setPaper(StyleSet::s_global_style->default_style.bgColor);
 }
+

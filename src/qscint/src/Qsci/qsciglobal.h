@@ -37,7 +37,10 @@
 // Define QSCINTILLA_MAKE_DLL to create a QScintilla shared library, or
 // define QSCINTILLA_DLL to link against a QScintilla shared library, or define
 // neither to either build or link against a static QScintilla library.
-#define QSCINTILLA_DLL
+#ifdef QSCINTILLA_DLL
+#undef QSCINTILLA_DLL
+#endif
+//#define QSCINTILLA_DLL
 
 #if defined(QSCINTILLA_DLL)
 #define QSCINTILLA_EXPORT       Q_DECL_IMPORT

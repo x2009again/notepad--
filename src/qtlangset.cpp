@@ -371,9 +371,10 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
 	{
 		//GLOBAL本身不保存，因为GLOBAL不是语法样式，而是全局的属性风格
 		//如果全局修改的是全局字体或字体大小，全局也修改一下。避免括弧等大小和全局字体不一样大。
+		//全局颜色前景和背景时，也要特殊对待，要单独修改全局default的修改；否则编辑界面看起来颜色杂乱
 		if (index == L_GLOBAL)
 		{
-			if (flag != GLOBAL_FONT_SIZE && flag != GLOBAL_FONT)
+			if (flag != GLOBAL_FONT_SIZE && flag != GLOBAL_FONT && flag != GLOBAL_FG_COLOR && flag != GLOBAL_BK_COLOR)
 			{
 			continue;
 		}
@@ -492,14 +493,37 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
 			break;
 			case GLOBAL_FG_COLOR:
 			{
+				//非全局修改所有的语法对应样式
+				if (index != L_GLOBAL)
+				{
 				pLexer->setColor(m_curStyleData.color, -1);
+					pLexer->setDefaultColor(m_curStyleData.color);
+			}
+				else
+				{
+					//全局时，只修改default的颜色
+					pLexer->setColor(m_curStyleData.color, GLOBAL_STYLES::GLOBAL_OVERRIDE);
+					pLexer->setColor(m_curStyleData.color, GLOBAL_STYLES::DEFAULT_STYLE);
+					isGlobalChange = true;
+				}
 			}
 			break;
 			case GLOBAL_BK_COLOR:
 			{
+				//非全局修改所有的语法对应样式
+				if (index != L_GLOBAL)
+				{
 				pLexer->setPaper(m_curStyleData.paper, -1);
 				//默认纸背景色会和QPalette保持一致。单独需要单独设置一下
 				pLexer->setDefaultPaper(m_curStyleData.paper);
+			}
+				else
+				{
+					//全局时，只修改default的颜色
+					pLexer->setPaper(m_curStyleData.paper, GLOBAL_STYLES::GLOBAL_OVERRIDE);
+					pLexer->setPaper(m_curStyleData.paper, GLOBAL_STYLES::DEFAULT_STYLE);
+					isGlobalChange = true;
+				}
 			}
 			break;
 			default:
@@ -515,6 +539,12 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
 	//还有，还需要把当前打开文档的全局风格设置一下，否则全局不生效
 	if (isGlobalChange)
 	{
+		refreshGlobalSet();
+	}
+}
+
+void QtLangSet::refreshGlobalSet()
+{
 		m_previousSysLangItem = nullptr;
 		slot_langListCurRowChanged(0);
 
@@ -524,14 +554,13 @@ void QtLangSet::updateAllLangeStyleWithGlobal(GLOBAL_STYLE_SET flag)
 		CCNotePad* pMainNote = dynamic_cast<CCNotePad*>(parent());
 		if (pMainNote != nullptr)
 		{
-			
+
 			for (int i = 0; i <= GLOBAL_STYLES::URL_HOVERRED; ++i)
 			{
 				pMainNote->setGlobalFont(i);
 }
 		}
 	}
-}
 
 //恢复所有语言的初始配置。与restoreOriginLangOneStyle类似，但是粒度更大
 void  QtLangSet::restoreOriginLangAllStyle()
@@ -655,7 +684,6 @@ void QtLangSet::restoreOriginLangOneStyle(GLOBAL_STYLE_SET flag)
 					{
 						oldClor = pOriginLexer->color(i);
 						pLexer->setColor(oldClor, i);
-
 					}
 					break;
 					case GLOBAL_BK_COLOR:
@@ -669,11 +697,30 @@ void QtLangSet::restoreOriginLangOneStyle(GLOBAL_STYLE_SET flag)
 					}
 				}
 			}
+
+			switch (flag)
+			{
+			case GLOBAL_FG_COLOR:
+				//把默认颜色修改一下
+				oldClor = pOriginLexer->defaultColor();
+				pLexer->setDefaultColor(oldClor);
+				break;
+			case GLOBAL_BK_COLOR:
+				//把默认颜色修改一下
+				oldClor = pOriginLexer->defaultPaper();
+				pLexer->setDefaultPaper(oldClor);
+				break;
+
+			}
 			saveLangeSet(pLexer);
 		}
 		delete pLexer;
 		delete pOriginLexer;
 	}
+
+	//全局变化了，把当前全局界面刷新一下
+	//还有，还需要把当前打开文档的全局风格设置一下，否则全局不生效
+	refreshGlobalSet();
 }
 
 //预览全局修改字体效果。把当前所有的语法，风格字体都修改一遍
@@ -1154,7 +1201,9 @@ void QtLangSet::syncShowStyleItemToUI(QListWidgetItem *item)
 		QsciLexer::StyleData & sd = m_selectLexer->styleData(styleId);
 		m_curStyleData = sd;
 		setStyleShow(sd.font, sd.color, sd.paper);
-		m_isStyleChange = false;
+
+		//这里不能直接设置为非修改，如果之前已经修改过，则还是要认定为修改。
+		//m_isStyleChange = false;
 
 		//如果是全局，则把不能修改的全局样式灰掉，避免干扰用户的选择
 		if (m_isGlobelItem)
@@ -1194,7 +1243,7 @@ void QtLangSet::syncShowStyleItemToUI(QListWidgetItem *item)
 //点击当前的风格item
 void QtLangSet::slot_styleItemSelect(QListWidgetItem *current)
 {
-	qDebug() << "slot_styleItemSelect";
+    //qDebug() << "slot_styleItemSelect";
 
 	syncShowStyleItemToUI(current);
 
@@ -1220,7 +1269,7 @@ void QtLangSet::slot_styleItemSelect(QListWidgetItem *current)
 //使用键盘上下切换
 void QtLangSet::slot_styleListCurRowChanged(int row)
 {
-	qDebug() << "slot_curRowChanged";
+    //qDebug() << "slot_curRowChanged";
 	QListWidgetItem* current = ui.styleListWidget->item(row);
 	slot_styleItemSelect(current);
 }
@@ -1478,6 +1527,24 @@ void QtLangSet::slot_changeBkColor()
 	}
 
 		}
+		else
+		{
+			//当前背景色是否变化
+			if (m_curStyleData.paper != color)
+			{
+				m_curStyleData.paper = color;
+				fillBackgroundColor(color);
+				m_isStyleChange = true;
+
+				//即时设置风格
+				if (m_selectLexer != nullptr)
+				{
+					m_selectLexer->setPaper(color, m_selectStyleId);
+
+					emit viewStyleChange(m_selectLexer->lexerTag(), m_selectStyleId, m_curStyleData.color, m_curStyleData.paper, m_curStyleData.font, false);
+				}
+			}
+		}
 	//	else if (!ui.modiryAllColor->isChecked())
 	//	{
 	//	//当前前景色是否变化
@@ -1495,26 +1562,9 @@ void QtLangSet::slot_changeBkColor()
 	//		}
 	//	}
 	//}
-		else
-		{
-			//全部风格颜色修改
-			//当前前景色是否变化
-			m_curStyleData.paper = color;
-			fillBackgroundColor(color);
-			m_isStyleChange = true;
-
-			//即时设置风格
-			if (m_selectLexer != nullptr)
-			{
-				m_selectLexer->setPaper(color, -1);
 				
-				saveCurLangSettings();
-				emit viewLexerChange(m_selectLexer->lexerTag());
 }
-
 		}
-	}
-}
 
 void QtLangSet::slot_saveClick()
 {

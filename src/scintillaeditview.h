@@ -139,9 +139,6 @@ public:
 	bool gotoPrePos();
 	bool gotoNextPos();
 
-
-	/*virtual void adjuctSkinStyle();*/
-
 	//设置文档的缩进参考线
 	void setIndentGuide(bool willBeShowed);
 
@@ -210,13 +207,20 @@ public:
 	//获取当前块的开始行号。只在大文件只读模式下有效。其余模式下均返回0
 	quint32 getBigTextBlockStartLine();
 	void setBigTextBlockStartLine(quint32 line);
+	void collapse(int level, bool mode);
+	void comment(int type);
+#ifdef Q_OS_WIN
+	void deleteTailFileThread();
+#endif
+
 signals:
 	void delayWork();
 
 protected:
-
 	virtual void addHotSpot();
 	void setStylesFont(const QFont& f, int style, int setBitMask = ALL_SET_Bit);
+	void keyPressEvent(QKeyEvent* event) override;
+	virtual void mouseReleaseEvent(QMouseEvent* ev) override;
 
 private:
 
@@ -236,6 +240,12 @@ private:
 	void getVisibleStartAndEndPosition(int * startPos, int * endPos);
 	void changeStyleColor(int sytleId);
 	void initStyleColorMenu();
+
+	bool isFolded(size_t line);
+	void fold(size_t line, bool mode);
+	void collapseFoldIndentBased(int level, bool mode);
+	bool isFoldIndentBased() const;
+
 
 public:
 	static const int _SC_MARGE_LINENUMBER;
@@ -319,4 +329,9 @@ public:
 	static int s_bigTextSize;
 
 	bool m_hasHighlight;
+
+
+#ifdef Q_OS_WIN
+	std::atomic<bool> m_isInTailStatus;
+#endif
 };

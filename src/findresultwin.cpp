@@ -600,6 +600,9 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 		QStandardItem* childItem = new QStandardItem(text);
 		childItem->setData(QVariant(v.pos), ResultItemPos);
 		childItem->setData(QVariant(v.end - v.pos), ResultItemLen);
+#if defined(Q_OS_MAC)
+        childItem->setTextAlignment(Qt::AlignVCenter);
+#endif
 		descItem->appendRow(childItem);
 	}
 	if (!record->records.isEmpty())
@@ -695,6 +698,9 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 				text = tr("<font style='font-size:14px;color:#ffffff'>Line </font><font style='font-size:14px;color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
 			}
 			QStandardItem* childItem = new QStandardItem(text);
+#if defined(Q_OS_MAC)
+        childItem->setTextAlignment(Qt::AlignVCenter);
+#endif
 			childItem->setData(QVariant(v.pos), ResultItemPos);
 			childItem->setData(QVariant(v.end - v.pos), ResultItemLen);
 			descItem->appendRow(childItem);

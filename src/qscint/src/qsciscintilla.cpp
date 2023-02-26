@@ -2370,7 +2370,9 @@ QString QsciScintilla::selectedText() const
     if (!selText)
         return QString();
 
-    char *buf = new char[SendScintilla(SCI_GETSELECTIONEND) - SendScintilla(SCI_GETSELECTIONSTART) + 1];
+    //char *buf = new char[SendScintilla(SCI_GETSELECTIONEND) - SendScintilla(SCI_GETSELECTIONSTART) + 1];
+    int size = SendScintilla(SCI_GETSELTEXT, 0);
+    char* buf = new char[size];
 
     SendScintilla(SCI_GETSELTEXT, buf);
 

@@ -189,8 +189,8 @@ QColor QsciLexerMarkdown::defaultPaper(int style) const
     case UnorderedListItem:
         return QColor(0xde, 0xd8, 0xc3);
 
-    case OrderedListItem:
-        return QColor(0xb8, 0xc3, 0xe1);
+    /*case OrderedListItem:
+        return QColor(0xb8, 0xc3, 0xe1);*/
 
     case BlockQuote:
         return QColor(0xcb, 0xdc, 0xcb);
