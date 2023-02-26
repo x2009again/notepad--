@@ -1,0 +1,28 @@
+{
+    // 指定使用 Visual Studio Community 安装的 CMake 组件
+    "cmake.cmakePath": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\CMake\\bin\\cmake.exe",
+    
+    // 配置生成器为 Nijia
+    "cmake.generator": "Ninja",
+
+    // 要在配置时传递给 CMake 的参数
+    "cmake.configureArgs": [
+        // 为 CMake 指定生成器后使用的构建程序，来源于 CMake 组件
+        "-DCMAKE_MAKE_PROGRAM='C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Common7\\IDE\\CommonExtensions\\Microsoft\\CMake\\Ninja\\ninja.exe'",
+        // 为 CMake 指定查找 MSVC 构建支持的 Qt 库路径
+        "-DCMAKE_PREFIX_PATH=C:\\Qt\\Qt5.14.2\\5.14.2\\msvc2017_64",
+        // 使用 Windows 通用构建配方
+        "-DUSE_WINDOWS_UNIVERSAL=ON",
+        // 使用 Qt5 自动化 windeployqt
+        "-DWINDOWS_DEPLOY_QT=ON",
+        "-DWINDOWS_DEPLOY_QT5=ON",
+    ],
+    // 要在生成时传递给 CMake 的参数
+    "cmake.buildArgs": [
+        "-j20"
+    ],
+    // 要在生成时传递给基础生成工具的其他参数
+    "cmake.buildToolArgs": [
+        
+    ]
+}
