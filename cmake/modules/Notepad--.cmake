@@ -26,9 +26,13 @@ if(TRUE)
     )
     # target_link_libraries(${PROJECT_NAME} QSci)
     target_link_QSci(${PROJECT_NAME})
-    target_link_qt5_PrintSupport(${PROJECT_NAME})
-    target_link_qt5_XmlPatterns(${PROJECT_NAME})
-
+    if(USE_QT6)
+        target_link_qt6_PrintSupport(${PROJECT_NAME})
+        target_link_qt6_XmlPatterns(${PROJECT_NAME})
+    else()
+        target_link_qt5_PrintSupport(${PROJECT_NAME})
+        target_link_qt5_XmlPatterns(${PROJECT_NAME})
+    endif(USE_QT6)
 endif(TRUE)
 
 # ----------------- Notepad-- 插件支持相关  ----------------- #

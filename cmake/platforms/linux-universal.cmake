@@ -67,6 +67,11 @@ if(CMAKE_HOST_UNIX)
     set(NOTEPAD_BUILD_BY_QT5 TRUE)
     set(NOTEPAD_BUILD_BY_QT6 FALSE)
 
+    if(USE_QT6)
+        set(NOTEPAD_BUILD_BY_QT5 FALSE)
+        set(NOTEPAD_BUILD_BY_QT6 TRUE)
+    endif(USE_QT6)
+
     # 定义在平台中插件应该安装的位置(待确定)
         # 定义在插件开发的 CMake 模块中，Notepad-- 是否将提供 "插件安装目录(位置)"
     set(NOTEPAD_PLUGIN_EXTERNAL_PLUGIN_INSTALL_DIRECTORY "")

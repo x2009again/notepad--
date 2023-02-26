@@ -34,9 +34,16 @@ if(TRUE)
         src/qscint/src/Qsci
         src/qscint/scintilla/src
         src/qscint/scintilla/include)
-    target_link_qt5(QSci)
-    target_link_qt5_PrintSupport(QSci)
-    target_link_qt5_Concurrent(QSci)
+    if(USE_QT6)
+        target_link_qt6(QSci)
+        target_link_qt6_Core5Compat(QSci)
+        target_link_qt6_PrintSupport(QSci)
+        target_link_qt6_Concurrent(QSci)
+    else()
+        target_link_qt5(QSci)
+        target_link_qt5_PrintSupport(QSci)
+        target_link_qt5_Concurrent(QSci)
+    endif(USE_QT6)
 endif(TRUE)
 
 

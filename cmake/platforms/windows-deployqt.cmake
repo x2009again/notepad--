@@ -23,6 +23,11 @@ if(WINDOWS_DEPLOY_QT)
     endif()
 
     if (WINDOWS_DEPLOY_QT5 OR WINDOWS_DEPLOY_QT6)
+
+        if(USE_QT6)
+            set(WINDOWS_QT_DIR "${Qt6_DIR}")
+        endif(USE_QT6)
+
         message("[windows-deployqt.cmake]: find windployqt tool")
         message("    ${WINDOWS_QT_DIR}/../../../bin/windeployqt")
 
