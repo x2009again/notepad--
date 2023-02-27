@@ -11,6 +11,7 @@
 #include <QtConcurrent>
 #include <QInputDialog>
 #include <QDragEnterEvent>
+#include <QTextCodec>
 
 
 const int ITEM_CODE = Qt::UserRole + 1;

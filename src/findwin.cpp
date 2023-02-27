@@ -621,8 +621,13 @@ bool readBase(const QChar * str, int * value, int base, int size)
 		current = str[i];
 		if (current >= 'A')
 		{
+		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 			current = current.digitValue() & 0xdf;
 			current = current.digitValue() - ('A' - '0' - 10);
+		#else
+			current = QChar(current.digitValue() & 0xdf);
+			current = QChar(current.digitValue() - ('A' - '0' - 10));
+		#endif
 		}
 		else if (current > '9')
 			return false;

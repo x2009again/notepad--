@@ -139,7 +139,9 @@ void ShortcutKeyMgr::loadUserDefSet()
 {
 	QString userDefFile = QString("notepad/shortcuttab");
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userDefFile);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	qs.setIniCodec("UTF-8");
+#endif
 
 	QStringList keys = qs.allKeys();
 
@@ -164,7 +166,9 @@ bool ShortcutKeyMgr::ModifyShortCutKey(QString initTag, QString keySeqStr)
 {
 	QString userDefFile = QString("notepad/shortcuttab");
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userDefFile);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	qs.setIniCodec("UTF-8");
+#endif
 
 	if (s_shortcutKeysMap->contains(initTag))
 	{

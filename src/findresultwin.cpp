@@ -208,12 +208,20 @@ void FindResultWin::slot_selectAll()
 		//遍历下面的子节点
 		int i = 0;
 		QModelIndex childMi;
+	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		childMi = sectionItem.child(i, 0);
+	#else
+		childMi = sectionItem.model()->index(i, 0);
+	#endif
 		while (childMi.isValid())
 		{
 			++i;
 			ui.resultTreeView->selectionModel()->select(childMi, QItemSelectionModel::Select);
+		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 			childMi = sectionItem.child(i, 0);
+		#else
+			childMi = sectionItem.model()->index(i, 0);
+		#endif
 		}
 		return i+1;
 	};
@@ -226,12 +234,20 @@ void FindResultWin::slot_selectAll()
 		//遍历根节点下面每一个section
 		{
 			int i = 0;
+		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 			QModelIndex section = rootItem.child(i, 0);
+		#else
+			QModelIndex section = rootItem.model()->index(i, 0);
+		#endif
 			while (section.isValid() && !section.data(ResultItemEditor).isNull())
 			{
 				++i;
 				selectCount += selectSection(section);
+			#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 				section = firstRootItem.child(i, 0);
+			#else
+				section = firstRootItem.model()->index(i, 0);
+			#endif
 			}
 		}
 
@@ -255,12 +271,20 @@ void FindResultWin::slot_selectSection()
 		//遍历下面的子节点
 		int i = 0;
 		QModelIndex childMi;
+	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		childMi = sectionItem.child(i, 0);
+	#else
+		childMi = sectionItem.model()->index(i, 0);
+	#endif
 		while (childMi.isValid())
 		{
 			++i;
 			ui.resultTreeView->selectionModel()->select(childMi, QItemSelectionModel::Select);
+		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 			childMi = sectionItem.child(i, 0);
+		#else
+			childMi = sectionItem.model()->index(i, 0);
+		#endif
 		}
 		return i+1;
 	};
@@ -453,7 +477,11 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 			head = QString("<font style='font-size:14px;'>%1</font>").arg(head);
 			src = QString("<font style='font-size:14px;background-color:#ffffbf'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
 			tail = QString(utf8bytes.mid(tailStart));
+		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 			if (tail > MAX_TAIL_LENGTH)
+		#else
+			if (tail.size() > MAX_TAIL_LENGTH)
+		#endif
 			{
 				tail = (tail.mid(0, MAX_TAIL_LENGTH) + "...").toHtmlEscaped();
 			}
@@ -488,7 +516,11 @@ QString FindResultWin::highlightFindText(FindRecord& record)
 			src = QString("<font style='font-size:14px;font-weight:bold;color:#ffaa00'>%1</font>").arg(QString(utf8bytes.mid(targetStart, targetLens)).toHtmlEscaped());
 
 			QString tailContens = QString(utf8bytes.mid(tailStart));
+		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 			if (tailContens > MAX_TAIL_LENGTH)
+		#else
+			if (tailContens.size() > MAX_TAIL_LENGTH)
+		#endif
 			{
 				tailContens = (tailContens.mid(0, MAX_TAIL_LENGTH) + "...").toHtmlEscaped();
 			}

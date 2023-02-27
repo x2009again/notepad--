@@ -7,6 +7,7 @@
 #include <QHeaderView>
 #include <QSettings>
 #include <QMessageBox>
+#include <QFile>
 
 int ITEM_CHANGED = Qt::UserRole; 
 int ITEM_LEX_ID = Qt::UserRole + 1; //对应的语法lexer的 ID
@@ -113,7 +114,9 @@ void LangExtSet::slot_save()
 
 	QString userLangFile = QString("notepad/tag_ext");
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	qs.setIniCodec("UTF-8");
+#endif
 
 	for (int i = 0; i < rowNums; ++i)
 	{
@@ -180,7 +183,9 @@ void LangExtSet::loadExtRelevanceToMagr()
 {
 	QString userLangFile = QString("notepad/tag_ext");//自定义语言中不能有.字符，否则可能有错，后续要检查
 	QSettings qs(QSettings::IniFormat, QSettings::UserScope, userLangFile);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	qs.setIniCodec("UTF-8");
+#endif
 
 	if (!QFile::exists(qs.fileName()))
 	{
