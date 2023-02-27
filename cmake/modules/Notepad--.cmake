@@ -28,7 +28,7 @@ if(TRUE)
     target_link_QSci(${PROJECT_NAME})
     if(USE_QT6)
         target_link_qt6_PrintSupport(${PROJECT_NAME})
-        target_link_qt6_XmlPatterns(${PROJECT_NAME})
+        # target_link_qt6_XmlPatterns(${PROJECT_NAME}) # Bug 初期配置时无此依赖要求
     else()
         target_link_qt5_PrintSupport(${PROJECT_NAME})
         target_link_qt5_XmlPatterns(${PROJECT_NAME})
