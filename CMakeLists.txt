@@ -110,3 +110,13 @@ endif()
 
 # ----------------- Notepad-- 其它主线构建相关  ----------------- #
 
+if(USE_QT6)
+    # Qt5/Qt6 兼容性构建检查文件检查
+    include(cmake/platforms/utils.cmake)
+    qt5_qt6_compatible_check(cmake/qt5_qt6_compatible_check QT56_PASS)
+    if(NOT QT56_PASS)
+        message(SEND_ERROR "[${QT56_PASS}] Qt5/Qt6 兼容性检查文件当前未能检查通过，不建议构建 Qt6。")
+    else()
+        message(NOTICE "[${QT56_PASS}] Qt5/Qt6 兼容性检查文件当前检查通过。")
+    endif(NOT QT56_PASS)
+endif(USE_QT6)

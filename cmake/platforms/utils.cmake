@@ -38,3 +38,17 @@ endfunction(get_current_platform_lib_name _VAR _IS_SHREAD _LIB)
 # 在 MacOS 中
     # 用于编译的静态库与动态库后缀分别是：.a 与 .dylib
     # 文件名称由 lib 开头
+
+# qt5_qt6_compatible_check <file> <var>
+    # Qt5/6 兼容性构建检查方案，如果文件中存在 true 将认为可兼容构建
+    # _CHECK_FILE Qt5/Qt6 兼容性检查文件
+    # _VAR 检查结果
+function(qt5_qt6_compatible_check _CHECK_FILE _VAR)
+    set(${_VAR} true PARENT_SCOPE)
+    file(READ ${_CHECK_FILE} file_content)
+    string(FIND ${file_content} "true" _index)
+    if(_index LESS 0) 
+        # -1: It is not checked and passed
+        set(${_VAR} false PARENT_SCOPE)
+    endif(_index LESS 0)
+endfunction(qt5_qt6_compatible_check _CHECK_FILE _VAR)
