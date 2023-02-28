@@ -5159,7 +5159,7 @@ void CCNotePad::saveTabEdit(int tabIndex)
 	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		if (pEdit->property(Edit_File_New) >= 0)
 	#else
-		if (pEdit->property(Edit_File_New).toString().length() >= 0)
+		if (pEdit->property(Edit_File_New).toInt() >= 0)
 	#endif
 		{
 			QString filter("Text files (*.txt);;XML files (*.xml);;h files (*.h);;cpp file(*.cpp);;All types(*.*)");
@@ -5330,7 +5330,7 @@ void CCNotePad::slot_actionSaveAsFile_toggle(bool /*checked*/)
 	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		if (pEdit->property(Edit_File_New) >= 0)
 	#else
-		if (pEdit->property(Edit_File_New).toString().length() >= 0)
+		if (pEdit->property(Edit_File_New).toInt() >= 0)
 	#endif
 		{
 			QString filter("Text files (*.txt);;XML files (*.xml);;h files (*.h);;cpp file(*.cpp);;All types(*.*)");
@@ -5636,7 +5636,7 @@ void CCNotePad::saveTempFile(ScintillaEditView* pEdit,int index, QSettings& qs)
 	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		if (pEdit->property(Edit_File_New) >= 0)
 	#else
-		if (pEdit->property(Edit_File_New).toString().length() >= 0)
+		if (pEdit->property(Edit_File_New).toInt() >= 0)
 	#endif
 		{
 			//不再保存新建的非脏文件。因为一定是空的，意义不大
@@ -5660,7 +5660,7 @@ void CCNotePad::saveTempFile(ScintillaEditView* pEdit,int index, QSettings& qs)
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	if (pEdit->property(Edit_File_New) >= 0)
 #else
-	if (pEdit->property(Edit_File_New).toString().length() >= 0)
+	if (pEdit->property(Edit_File_New).toInt() >= 0)
 #endif
 	{
 		QString qsSavePath = qs.fileName();
