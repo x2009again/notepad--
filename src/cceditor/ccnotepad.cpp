@@ -53,8 +53,10 @@
 #include <QDateTime>
 #include <QShortcut>
 #ifdef Q_OS_WIN
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 #include <QXmlQuery>
 #include <QXmlFormatter>
+#endif
 #endif
 #include <QBuffer>
 #include <QXmlStreamReader>
@@ -7593,7 +7595,11 @@ bool CCNotePad::nativeOpenfile(QString openFilePath)
 	this->activateWindow();
 	return true;
 }
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 bool CCNotePad::nativeEvent(const QByteArray & eventType, void * message, long * result)
+#else
+bool CCNotePad::nativeEvent(const QByteArray & eventType, void * message, qintptr * result)
+#endif
 {
 	MSG *param = static_cast<MSG *>(message);
 

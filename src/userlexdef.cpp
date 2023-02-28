@@ -103,7 +103,11 @@ bool UserLexDef::writeUserSettings(QString langTagName)
 	qs.setValue("mz", langTagName);
 	qs.setValue("mother", m_motherLang); 
 	qs.setValue("ext", m_extTypes);
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	qs.setValue("keyword", m_keyword.data());
+#else
+	qs.setValue("keyword", QString(m_keyword.data()));
+#endif
 
 	return true;
 }
