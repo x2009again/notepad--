@@ -2607,7 +2607,11 @@ void ScintillaEditView::changeCase(const TextCaseType & caseToConvert, QString& 
 				else if (caseToConvert == TITLECASE_FORCE)
 					strToConvert[i] = strToConvert[i].toLower();
 				//An exception
+			#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 				if ((i < 2) ? false : (strToConvert[i - 1] == L'\'' && (strToConvert[i - 2].isLetter())))
+			#else
+				if ((i < 2) ? false : (strToConvert[i - 1] == '\'' && (strToConvert[i - 2].isLetter())))
+			#endif
 					strToConvert[i] = strToConvert[i].toLower();
 			}
 		}
@@ -2635,11 +2639,19 @@ void ScintillaEditView::changeCase(const TextCaseType & caseToConvert, QString& 
 				wasEolR = false;
 				wasEolN = false;
 				//An exception
+			#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 				if (strToConvert[i] == L'i' &&
+			#else
+				if (strToConvert[i] == 'i' &&
+			#endif
 					((i < 1) ? false : (strToConvert[i - 1].isSpace() || strToConvert[i - 1] == '(' || strToConvert[i - 1] == '"')) && \
 					((i + 1 == nbChars) ? false : (strToConvert[i + 1].isSpace() || strToConvert[i + 1] == '\'')))
 				{
+				#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 					strToConvert[i] = L'I';
+				#else
+					strToConvert[i] = 'I';
+				#endif
 				}
 			}
 			else if (strToConvert[i] == '.' || strToConvert[i] == '!' || strToConvert[i] == '?')
@@ -3308,7 +3320,11 @@ bool isUrlQueryDelimiter(QChar const c)
 void scanToUrlEnd(QString & text, int textLen, int start, int* distance)
 {
 	int p = start;
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	QChar q = 0;
+#else
+	QChar q(0);
+#endif
 	enum { sHostAndPath, sQuery, sQueryAfterDelimiter, sQueryQuotes, sQueryAfterQuotes, sFragment } s = sHostAndPath;
 	while (p < textLen)
 	{

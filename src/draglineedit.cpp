@@ -1,4 +1,5 @@
 ﻿#include "draglineedit.h"
+#include <QFile>
 
 DragLineEdit::DragLineEdit(QWidget *parent)
 	: QLineEdit(parent)

@@ -6,6 +6,7 @@
 
 #include <QTableWidgetItem>
 #include <QFileDialog>
+#include <QRegExp>
 
 BatchFindReplace::BatchFindReplace(QWidget *parent)
 	: QMainWindow(parent), m_curEditWin(nullptr), m_editTabWidget(nullptr)
@@ -98,7 +99,11 @@ void BatchFindReplace::appendToFindReplaceTable(QStringList& findKeyword)
 bool BatchFindReplace::tranInputKeyword(QString& findKeyWord, QStringList& outputKeyWordList)
 {
 	//把空白字符，空格或者\t \r\n 等字符进行替换为空格
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	QRegExp re("\\s");
+#else
+	QRegularExpression re("\\s");
+#endif
 	findKeyWord.replace(re, QString(" "));
 
 	//再进行空格分隔处理
@@ -266,7 +271,9 @@ void BatchFindReplace::on_export()
 	if (!fileName.isEmpty())
 	{
 		QSettings setting(fileName, QSettings::IniFormat);
+	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		setting.setIniCodec("UTF-8");
+	#endif
 
 		int rowNums = ui.findReplaceTable->rowCount();
 
@@ -312,7 +319,9 @@ void BatchFindReplace::on_import()
 		QFileInfo fi(fileNameList[0]);
 
 		QSettings setting(fi.filePath(), QSettings::IniFormat);
+	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 		setting.setIniCodec("UTF-8");
+	#endif
 
 		ui.findKeywordEdit->setPlainText(setting.value("find").toStringList().join(" "));
 		ui.replaceKeywordEdit->setPlainText(setting.value("replace").toStringList().join(" "));

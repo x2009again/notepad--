@@ -27,6 +27,7 @@ if(TRUE)
     # target_link_libraries(${PROJECT_NAME} QSci)
     target_link_QSci(${PROJECT_NAME})
     if(USE_QT6)
+        target_link_qt6_Core5Compat(${PROJECT_NAME})   # 兼容性: Qt6 可使用 Core5Compat 少量更改 Qt5 部分
         target_link_qt6_PrintSupport(${PROJECT_NAME})
         # target_link_qt6_XmlPatterns(${PROJECT_NAME}) # Bug 初期配置时无此依赖要求
     else()
