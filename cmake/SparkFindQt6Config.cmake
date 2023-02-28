@@ -46,7 +46,7 @@ macro(spark_add_links_qt6)
 
         string(TOLOWER "${qt6_item}" qt6_lower_item)
         spark_add_link_qt6(${qt6_lower_item} Qt6::${qt6_item})
-        message("add_target_link_qt6_${qt6_item} or add_target_link_qt6_${qt6_lower_item}")
+        spark_debug_message("add_target_link_qt6_${qt6_item} or add_target_link_qt6_${qt6_lower_item}")
     endforeach(qt6_item IN LISTS qt6_items)
 endmacro(spark_add_links_qt6)
 
