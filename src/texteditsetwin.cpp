@@ -97,14 +97,20 @@ void TextEditSetWin::slot_txtFontSet()
 		//是从对比规则里面弹出来的，不进行文本的设置
 		return;
 	}
+	QtLangSet* pWin = pMainWin->getLangSet();
 
+#if 0
 	QtLangSet* pWin = new QtLangSet(QString("txt"), this);
 	pWin->setAttribute(Qt::WA_DeleteOnClose);
 
 	connect(pWin, &QtLangSet::viewStyleChange, pMainWin, &CCNotePad::slot_viewStyleChange);
 	connect(pWin, &QtLangSet::viewLexerChange, pMainWin, &CCNotePad::slot_viewLexerChange);
 	pWin->show();
+#endif
+	if (pWin != nullptr)
+	{
 	pWin->selectInitLangTag("txt");
+}
 }
 
 #if 0

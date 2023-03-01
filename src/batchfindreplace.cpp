@@ -3,6 +3,7 @@
 #include "ccnotepad.h"
 #include "progresswin.h"
 #include "nddsetting.h"
+#include "ctipwin.h"
 
 #include <QTableWidgetItem>
 #include <QFileDialog>
@@ -100,6 +101,7 @@ bool BatchFindReplace::tranInputKeyword(QString& findKeyWord, QStringList& outpu
 {
 	//把空白字符，空格或者\t \r\n 等字符进行替换为空格
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+	//把空白字符，空格或者\t \r\n 等字符进行替换为空格
 	QRegExp re("\\s");
 #else
 	QRegularExpression re("\\s");
@@ -177,42 +179,25 @@ void BatchFindReplace::on_findBtClick()
 	if (m_mainNotepad != nullptr && m_mainNotepad)
 	{
 		int rowNums = ui.findReplaceTable->rowCount();
-
 		if (rowNums == 0)
 		{
+			CTipWin::showTips(this, tr("Please fresh first !"), 1200);
 			return;
 		}
-		ProgressWin* loadFileProcessWin = new ProgressWin(this);
-
-		loadFileProcessWin->setWindowModality(Qt::WindowModal);
-
-		loadFileProcessWin->info(tr("total %1 keyword, please wait ...").arg(rowNums));
-
-		loadFileProcessWin->setTotalSteps(rowNums);
-
-		loadFileProcessWin->show();
-
 		int foundTimes = 0;
 
+		QStringList findKeyList;
+	
 		for (int i = 0; i < rowNums; ++i)
 		{
 			QTableWidgetItem* item = ui.findReplaceTable->item(i, 0);
 			if (item != nullptr && !item->text().isEmpty())
 			{
-				if (loadFileProcessWin->isCancel())
-				{
-					break;
-				}
-
-				foundTimes += m_mainNotepad->findAtBack(item->text());
-
-				loadFileProcessWin->moveStep();
-
-				QCoreApplication::processEvents();
+				findKeyList.append(item->text());
 			}
 		}
 
-		delete loadFileProcessWin;
+		foundTimes = m_mainNotepad->findAtBack(findKeyList);
 
 		ui.statusBar->showMessage(tr("Batch Find Finished! total %1 found.").arg(foundTimes),10000);
 	}
@@ -221,11 +206,15 @@ void BatchFindReplace::on_findBtClick()
 //进行批量替换工作
 void BatchFindReplace::on_replaceBtClick()
 {
-	if (m_mainNotepad != nullptr && m_mainNotepad)
+	if (m_mainNotepad != nullptr)
 	{
 		int rowNums = ui.findReplaceTable->rowCount();
+		if (rowNums == 0)
+		{
+			CTipWin::showTips(this, tr("Please fresh first !"), 1200);
+			return;
+		}
 
-		int replaceTimes = 0;
 
 		QStringList findKeyList;
 		QStringList replaceKeyList;
@@ -246,9 +235,9 @@ void BatchFindReplace::on_replaceBtClick()
 				}
 			}
 		}
-		replaceTimes = m_mainNotepad->replaceAtBack(findKeyList, replaceKeyList);
+		m_mainNotepad->replaceAtBack(findKeyList, replaceKeyList);
 
-		ui.statusBar->showMessage(tr("Batch Replace Finished, total Replace %1 times !").arg(replaceTimes), 10000);
+		ui.statusBar->showMessage(tr("Batch Replace Finished, total Replace %1 times !").arg(findKeyList.size()), 10000);
 	}
 }
 
@@ -341,40 +330,24 @@ void  BatchFindReplace::on_mark()
 		int rowNums = ui.findReplaceTable->rowCount();
 		if (rowNums == 0)
 		{
+			CTipWin::showTips(this, tr("Please fresh first !"), 1200);
 			return;
 		}
-
 		int markTimes = 0;
 
-		ProgressWin* loadFileProcessWin = new ProgressWin(this);
-
-		loadFileProcessWin->setWindowModality(Qt::WindowModal);
-
-		loadFileProcessWin->info(tr("total %1 keyword, please wait ...").arg(rowNums));
-
-		loadFileProcessWin->setTotalSteps(rowNums);
-
-		loadFileProcessWin->show();
+		QStringList findKeyList;
 
 		for (int i = 0; i < rowNums; ++i)
 		{
 			QTableWidgetItem* item = ui.findReplaceTable->item(i, 0);
 			if (item != nullptr && !item->text().isEmpty())
 			{
-				if (loadFileProcessWin->isCancel())
-				{
-					break;
-				}
-
-				markTimes += m_mainNotepad->markAtBack(item->text());
-
-				loadFileProcessWin->moveStep();
-
-				QCoreApplication::processEvents();
+				findKeyList.append(item->text());
 			}
 		}
 
-		delete loadFileProcessWin;
+		markTimes = m_mainNotepad->markAtBack(findKeyList);
+
 		ui.statusBar->showMessage(tr("Batch Mark Finished, total Mark %1 times !").arg(markTimes), 10000);
 	}
 }

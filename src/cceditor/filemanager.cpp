@@ -456,7 +456,10 @@ int FileManager::loadFileForSearch(ScintillaEditView* editView, QString filePath
 
 	CODE_ID fileTextCode = CODE_ID::UNKOWN;
 
-	CmpareMode::scanFileOutPut(fileTextCode, filePath, outputLineInfoVec, maxLineSize, charsNums, isHexFile);
+	fileTextCode = CmpareMode::scanFileOutPut(fileTextCode, filePath, outputLineInfoVec, maxLineSize, charsNums, isHexFile);
+
+	//20230218 这里必须指明一下编码，否则后续会导致编码被修改
+	editView->setProperty(Edit_Text_Code, fileTextCode);
 
 	if (isHexFile)
 	{

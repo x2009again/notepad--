@@ -1,4 +1,4 @@
-﻿#include "findresultwin.h"
+#include "findresultwin.h"
 #include "findwin.h"
 #include "common.h"
 #include "styleset.h"
@@ -208,20 +208,12 @@ void FindResultWin::slot_selectAll()
 		//遍历下面的子节点
 		int i = 0;
 		QModelIndex childMi;
-	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		childMi = sectionItem.child(i, 0);
-	#else
-		childMi = sectionItem.model()->index(i, 0);
-	#endif
+        childMi = sectionItem.model()->index(i, 0, sectionItem);
 		while (childMi.isValid())
 		{
 			++i;
 			ui.resultTreeView->selectionModel()->select(childMi, QItemSelectionModel::Select);
-		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-			childMi = sectionItem.child(i, 0);
-		#else
-			childMi = sectionItem.model()->index(i, 0);
-		#endif
+            childMi = sectionItem.model()->index(i, 0, sectionItem);
 		}
 		return i+1;
 	};
@@ -234,20 +226,12 @@ void FindResultWin::slot_selectAll()
 		//遍历根节点下面每一个section
 		{
 			int i = 0;
-		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-			QModelIndex section = rootItem.child(i, 0);
-		#else
-			QModelIndex section = rootItem.model()->index(i, 0);
-		#endif
+            QModelIndex section = rootItem.model()->index(i, 0, rootItem);
 			while (section.isValid() && !section.data(ResultItemEditor).isNull())
 			{
 				++i;
 				selectCount += selectSection(section);
-			#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-				section = firstRootItem.child(i, 0);
-			#else
-				section = firstRootItem.model()->index(i, 0);
-			#endif
+                section = firstRootItem.model()->index(i, 0, firstRootItem);
 			}
 		}
 
@@ -271,20 +255,12 @@ void FindResultWin::slot_selectSection()
 		//遍历下面的子节点
 		int i = 0;
 		QModelIndex childMi;
-	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		childMi = sectionItem.child(i, 0);
-	#else
-		childMi = sectionItem.model()->index(i, 0);
-	#endif
+        childMi = sectionItem.model()->index(i, 0, sectionItem);
 		while (childMi.isValid())
 		{
 			++i;
 			ui.resultTreeView->selectionModel()->select(childMi, QItemSelectionModel::Select);
-		#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-			childMi = sectionItem.child(i, 0);
-		#else
-			childMi = sectionItem.model()->index(i, 0);
-		#endif
+			childMi = sectionItem.model()->index(i, 0, sectionItem);
 		}
 		return i+1;
 	};
@@ -632,6 +608,9 @@ void FindResultWin::appendResultsToShow(FindRecords* record)
 		QStandardItem* childItem = new QStandardItem(text);
 		childItem->setData(QVariant(v.pos), ResultItemPos);
 		childItem->setData(QVariant(v.end - v.pos), ResultItemLen);
+#if defined(Q_OS_MAC)
+        childItem->setTextAlignment(Qt::AlignVCenter);
+#endif
 		descItem->appendRow(childItem);
 	}
 	if (!record->records.isEmpty())
@@ -727,6 +706,9 @@ void FindResultWin::appendResultsToShow(QVector<FindRecords*>* record, int hits,
 				text = tr("<font style='font-size:14px;color:#ffffff'>Line </font><font style='font-size:14px;color:#ff8040'>%1</font> : %2").arg(v.lineNum + 1).arg(richText);
 			}
 			QStandardItem* childItem = new QStandardItem(text);
+#if defined(Q_OS_MAC)
+        childItem->setTextAlignment(Qt::AlignVCenter);
+#endif
 			childItem->setData(QVariant(v.pos), ResultItemPos);
 			childItem->setData(QVariant(v.end - v.pos), ResultItemLen);
 			descItem->appendRow(childItem);

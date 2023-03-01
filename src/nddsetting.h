@@ -24,6 +24,9 @@ static QString TOOLBARSHOW = "showbar"; //是否显示工具栏
 static QString FINDWINSIZE = "findwinsize";//保存查找框的大小。150%放大时界面永久。保留避免每次手动调整
 static QString SHOWWEBADDR = "showweb";//高亮web地址，双击网页打开
 static QString FIND_RESULT_FONT_SIZE = "frfs";//查找结果的默认字体大小，默认为14
+static QString LAST_ACTION_TAB_INDEX = "lati";//上次关闭时，当前激活的tab标签页序号
+
+static QString RECENT_OPEN_FILE = "recentopenfile";
 
 
 //下面这个是winpos.ini中的key，避免单个文件太大，拖慢启动速度
@@ -58,14 +61,16 @@ public:
 
 	static void updataWinPos(QString key, QByteArray& value);
 
-	
+	static QString getKeyValueFromDelaySets(QString key);
+
+	static bool updataKeyValueFromDelaySets(QString key, QString  value);
 
 	static bool isDbExist()
 	{
 		return s_isExistDb;
 	}
 private:
-	static void winPosInit();
+	static void nddDelaySetInit();
 private:
 
 	static bool s_isExistDb;
@@ -74,5 +79,7 @@ private:
 
 	static QSettings* s_nddSet;
 
-	static QSettings* s_winPosSet;
+	//基本和s_nddSet一样，不过在启动的时候，不需要读取该文件。加快启动速度
+	//启动完毕后，其他操作触发加载该文件
+	static QSettings* s_nddDelaySet;
 };

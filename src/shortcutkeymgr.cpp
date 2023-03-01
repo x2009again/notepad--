@@ -10,12 +10,9 @@
 
 QMap<QString, int>* ShortcutKeyMgr::s_shortcutKeysMap = nullptr;
 
-//QMap<QString, int> * qScintShortcutKeyValueMap = nullptr;
-
 struct ShortcutKeySt {
 	QString iniTag;//保存在Ini文件中的名称
 	QString name;//显示在表格中的名称
-	//QString keyDesc;//qkeysequence的描述
 	QKeySequence key;
 
 	bool canModify;//能否修改
@@ -86,12 +83,12 @@ void ShortcutKeyMgr::initShortcutKeysMap()
 			<< ShortcutKeySt(tr("Save All File"), Save_All_File) \
 			<< ShortcutKeySt(tr("Close"), Close, QString("Ctrl+W")) \
 			<< ShortcutKeySt(tr("Close All"), Close_All, QString("Ctrl+Shift+W")) \
-			<< ShortcutKeySt(tr("Cut"), Cut, QString("Ctrl+X"),false) \
+			<< ShortcutKeySt(tr("Cut"), Cut, QString("Ctrl+X"), false) \
 			<< ShortcutKeySt(tr("Copy"), Copy, QString("Ctrl+C"), false) \
 			<< ShortcutKeySt(tr("Paste"), Paste, QString("Ctrl+V"), false) \
 			<< ShortcutKeySt(tr("Undo"), Undo, QString("Ctrl+Z"), false) \
 			<< ShortcutKeySt(tr("Redo"), Redo, QString("Ctrl+Y"), false) \
-			<< ShortcutKeySt(tr("Find"), Find, QString("Ctrl+F"),false) \
+			<< ShortcutKeySt(tr("Find"), Find, QString("Ctrl+F"), false) \
 			<< ShortcutKeySt(tr("Replace"), Replace, QString("Ctrl+H")) \
 			<< ShortcutKeySt(tr("Dir Find"), DirFind, QString("Ctrl+Shift+D")) \
 			<< ShortcutKeySt(tr("Mark"), Mark) \
@@ -111,9 +108,27 @@ void ShortcutKeyMgr::initShortcutKeysMap()
 			<< ShortcutKeySt(tr("transform encoding"), Trans_code) \
 			<< ShortcutKeySt(tr("batch rename file"), Batch_rename) \
 			<< ShortcutKeySt(tr("Format Xml"), Format_Xml) \
-			<< ShortcutKeySt(tr("Format Json"), Format_Json);
+			<< ShortcutKeySt(tr("Format Json"), Format_Json) \
+			<< ShortcutKeySt(tr("Add/Del Line Comment"), ADD_DELETE_LINE_COMMENT, QString("Ctrl+Q")) \
+			<< ShortcutKeySt(tr("Add Block Comment"), ADD_BLOCK_COMMENT, QString("Ctrl+K")) \
+			<< ShortcutKeySt(tr("Del Block Comment"), CANCEL_BLOCK_COMMENT, QString("Ctrl+Shift+K")) \
+			<< ShortcutKeySt(tr("Fold Level 1"), FOLD_1, QString("Alt+1")) \
+			<< ShortcutKeySt(tr("Fold Level 2"), FOLD_2, QString("Alt+2")) \
+			<< ShortcutKeySt(tr("Fold Level 3"), FOLD_3, QString("Alt+3")) \
+			<< ShortcutKeySt(tr("Fold Level 4"), FOLD_4, QString("Alt+4")) \
+			<< ShortcutKeySt(tr("Fold Level 5"), FOLD_5, QString("Alt+5")) \
+			<< ShortcutKeySt(tr("Fold Level 6"), FOLD_6, QString("Alt+6")) \
+			<< ShortcutKeySt(tr("Fold Level 7"), FOLD_7, QString("Alt+7")) \
+			<< ShortcutKeySt(tr("Fold Level 8"), FOLD_8, QString("Alt+8")) \
+			<< ShortcutKeySt(tr("UNFold Level 1"), UNFOLD_1, QString("Alt+Shift+1")) \
+			<< ShortcutKeySt(tr("UNFold Level 2"), UNFOLD_2, QString("Alt+Shift+2")) \
+			<< ShortcutKeySt(tr("UNFold Level 3"), UNFOLD_3, QString("Alt+Shift+3")) \
+			<< ShortcutKeySt(tr("UNFold Level 4"), UNFOLD_4, QString("Alt+Shift+4")) \
+			<< ShortcutKeySt(tr("UNFold Level 5"), UNFOLD_5, QString("Alt+Shift+5")) \
+			<< ShortcutKeySt(tr("UNFold Level 6"), UNFOLD_6, QString("Alt+Shift+6")) \
+			<< ShortcutKeySt(tr("UNFold Level 7"), UNFOLD_7, QString("Alt+Shift+7")) \
+			<< ShortcutKeySt(tr("UNFold Level 8"), UNFOLD_8, QString("Alt+Shift+8"));
 
-	
 		for (int i = 0; i < shortCutTable.size(); ++i)
 		{
 			s_shortcutKeysMap->insert(shortCutTable.at(i).iniTag, i);

@@ -110,12 +110,9 @@ private:
 	bool isUseGlobalFgColor();
 	bool isUseGlobalBgColor();
 
-	//void setGlobalFgColor(int style, QColor color);
-	//void setGlobalBgColor(int style, QColor color);
-	//void setGlobalFont(int style, QFont font);
-
 	bool isExistThemesSetings(int styleId);
 	void createUserStyleFormThemes(int styleId);
+	void refreshGlobalSet();
 private:
 	Ui::QtLangSetClass ui;
 

@@ -35,6 +35,10 @@ struct HexFileMgr;
 struct TextFileMgr;
 struct BigTextEditFileMgr;
 
+static const char* Tail_Thread = "tailthread";
+
+//编码类型,int
+static const char* Edit_Text_Code = "code";
 
 enum OpenAttr {
 	Text = 1,
@@ -100,18 +104,7 @@ public:
     void initLexerNameToIndex();
 	
 	static LexerInfo getLangLexerIdByFileExt(QString filePath);
-#if 0
-	static QFont & getTxtFont()
-	{
-		return s_txtFont;
-	}
 
-	static QFont & getProLangFont()
-	{
-		return s_proLangFont;
-	}
-#endif
-	
 	bool openFile(QString filePath, int lineNum=-1);
 	bool tryRestoreFile(QString filePath);
 
@@ -143,8 +136,8 @@ public:
 	void clearHighlightWord(QString signWord, ScintillaEditView* pEdit = nullptr);
 	bool closeFileByEditWidget(QWidget* pEdit);
 	void showChangePageTips(QWidget* pEdit);
-	int markAtBack(QString keyword);
-	int findAtBack(QString keyword);
+	int markAtBack(QStringList& keyword);
+	int findAtBack(QStringList& keyword);
 	int replaceAtBack(QStringList& keyword, QStringList& replace);
 	void updateThemes();
 
@@ -154,10 +147,15 @@ public:
 
 	void changeMarkColor(int sytleId);
 	void setUserDefShortcutKey(int shortcutId);
+	
+	QtLangSet* getLangSet();
 signals:
 	void signSendRegisterKey(QString key);
 	void signRegisterReplay(int code);
 	void signLinkNetServer();
+#ifdef Q_OS_WIN
+	void tailFileChange(ScintillaEditView*);
+#endif 
 public slots:
 	void slot_changeChinese();
 	void slot_changeEnglish();
@@ -171,7 +169,9 @@ public slots:
 	void slot_actionCloseNonCurDoc();
 	void slot_actionCloseLeftAll();
 	void slot_actionCloseRightAll();
+
 	void slot_quit(bool);
+
 
 	void slot_closeAllFile(bool);
 	void slot_batch_convert();
@@ -183,12 +183,15 @@ public slots:
 	void slot_viewLexerChange(QString tag);
 	void slot_findInDir();
 	void slot_showFileInExplorer();
+#ifdef Q_OS_WIN
+	void slot_showCmdInExplorer();
+#endif
 	void slot_wordHighlight();
 
 	void slot_clearWordHighlight();
 	void slot_clearMark();
 	void slot_zoomValueChange();
-
+	void on_quitActiveWindow();
 
 protected:
 	void closeEvent(QCloseEvent *event) override;
@@ -264,6 +267,7 @@ private slots:
 	void slot_compareDir();
 	void slot_binCompare();
 	void slot_tabBarClicked(int index);
+	void on_tabBarDoubleClicked(int index);
 	void slot_reOpenTextMode();
 	void slot_reOpenHexMode();
 	void slot_selectLeftFile();
@@ -342,8 +346,9 @@ private slots:
 	void slot_showToolBar(bool);
 	void slot_dynamicLoadToolMenu();
 	void slot_batchFind();
-#ifdef NO_PLUGIN
+	void on_loadReceneFile();
 	void slot_pluginMgr();
+#ifdef NO_PLUGIN
 	void onPlugWork(bool check);
 	void sendParaToPlugin(NDD_PROC_DATA& procData);
 #endif
@@ -351,6 +356,11 @@ private slots:
 	void slot_langFileSuffix();
 	void slot_shortcutManager();
 	void on_lineEndChange(int index);
+	void on_tailfile(bool isOn);
+#ifdef Q_OS_WIN
+	void on_roladFile(ScintillaEditView* pEdit);
+#endif
+	void on_md5hash();
 
 private:
 	void initFindResultDockWin();
@@ -380,6 +390,7 @@ private:
 	void syncCurDocEncodeToMenu(QWidget * curEdit);
 	void syncCurDocLineEndStatusToMenu(QWidget * curEdit);
 	void syncCurDocLexerToMenu(QWidget* pEdit);
+	void syncCurDocTailfToMenu(QWidget* curEdit);
 
 	void cmpSelectFile();
 
@@ -390,7 +401,7 @@ private:
 	void removeWatchFilePath(QString filePath);
 
 	bool checkRoladFile(ScintillaEditView * pEdit);
-	void reloadEditFile(ScintillaEditView * pEidt);
+	void reloadEditFile(ScintillaEditView * pEidt, bool isTailfOn = false);
 	int initFindWindow(FindTabIndex type= FIND_TAB);
 
 	void setToFileRightMenu();
@@ -449,6 +460,7 @@ private:
 	void init_toolsMenu();
 	void changeBlankShowStatus(int showBlank);
 	void syncBlankShowStatus();
+	void openFileInNewWin(int index);
 #ifdef NO_PLUGIN
 	void loadPluginLib();
 	void loadPluginProcs(QString strLibDir, QMenu* pMenu);
@@ -457,7 +469,12 @@ private:
 
 	void setUserDefShortcutKey();
 	void setNormalTextEditInitPro(ScintillaEditView* pEdit, QString filePath, CODE_ID code, RC_LINE_FORM lineEnd, bool isReadOnly, bool isModifyed);
+	void registerCommentShortKey(int type, QKeySequence& keySeq);
 	void dealRecentFileMenuWhenColseFile(QString closeFilePath);
+	void registerFoldShortKey(int type, QKeySequence& keySeq, bool isFold);
+	void doFold(int type, bool mode);
+	void doComment(int type);
+	void tailfile(bool isOn, ScintillaEditView* pEdit);
 private:
 	Ui::CCNotePad ui;
 
@@ -482,11 +499,15 @@ private:
 	QActionGroup *m_pLexerActGroup;
 	QActionGroup *m_pIconSize;
 
+#if 0
 	QAction* m_quitAction;
+#endif
 
 	//关闭时，询问保存文件，用户点击了取消，此时不能走关闭程序
 	//设置一个标志记录该状态，确定最终是否要退出
 	bool m_isQuitCancel;
+	//是否主窗口。可以打开多个，但是只有第一个是主窗口
+	bool m_isMainWindows;
 
     QMap<QString, LexerNode> m_lexerNameToIndex;
 
@@ -497,12 +518,13 @@ private:
 	QString m_cmpRightFilePath;
 
 	QPointer<QMainWindow> m_pFindWin;
-	QPointer <QWidget> m_columnEditWin;
+	QPointer<QWidget> m_columnEditWin;
+	QPointer<QMainWindow> m_langSetWin;
+	QPointer<QWidget> m_optionsView;
+	
 
 	QSharedMemory* m_shareMem;
 
-	//是否主窗口。可以打开多个，但是只有第一个是主窗口
-	bool m_isMainWindows;
 
 	//最近打开的对比文件和目录列表。做一个环形区
 //保存在数据库中
@@ -515,6 +537,7 @@ private:
 
 	QAction* m_openInNewWinAct;
 	QAction* m_showFileDirAct;
+	QAction* m_showCmdAct;
 
 	QAction* m_openWithText;
 	QAction* m_openWithHex;
@@ -567,6 +590,7 @@ private:
 	QToolButton* m_wordwrap;
 	QToolButton* m_allWhite;
 	QToolButton* m_indentGuide;
+	QToolButton* m_tailf;
 	QToolButton* m_preHexPage;
 	QToolButton* m_nextHexPage;
 	QToolButton* m_gotoHexPage;
@@ -588,6 +612,8 @@ private:
 	bool m_isToolMenuLoaded;
 
 	bool m_isInitBookMarkAct;
+
+	bool m_isRecentFileLoaded;
 
 	QList<QAction*>m_styleMarkActList;
 	QList<NDD_PROC_DATA> m_pluginList;

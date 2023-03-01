@@ -133,7 +133,6 @@ CODE_ID CmpareMode::getTextFileEncodeType(uchar* fileFpr, int fileLength, QStrin
 //是否跳过前面的LE头。默认不跳过。只有文件块开头第一块，才需要跳过。
 bool CmpareMode::tranUnicodeLeToUtf8Bytes(uchar* fileFpr, const int fileLength, QString &outUtf8Bytes, bool isSkipHead)
 {
-	int lineNums = 0;
 	CODE_ID code = CODE_ID::UNICODE_LE;
 
 	int lineStartPos = (isSkipHead ? 2:0); //uicode_le前面有2个特殊标识，故跳过2

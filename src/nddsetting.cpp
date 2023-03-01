@@ -15,7 +15,7 @@ bool NddSetting::s_isContentChanged = false;
 
 QSettings* NddSetting::s_nddSet = nullptr;
 
-QSettings* NddSetting::s_winPosSet = nullptr;
+QSettings* NddSetting::s_nddDelaySet = nullptr;
 
 //如果key不存在，则新增key-value。存在：返回true
 bool NddSetting::checkNoExistAdd(QString key, QVariant& value)
@@ -98,7 +98,7 @@ void NddSetting::init()
 
 		addKeyValueToSets(SOFT_KEY, "0");
 
-		addKeyValueToSets(RESTORE_CLOSE_FILE, "1");
+		addKeyValueToNumSets(RESTORE_CLOSE_FILE, 1);
 
 		//0 24 1 36 2 48
 		addKeyValueToNumSets(ICON_SIZE, 1);
@@ -229,6 +229,10 @@ void NddSetting::init()
 				QVariant v(14);
 				checkNoExistAdd(FIND_RESULT_FONT_SIZE, v);
 			}
+			{
+				QVariant v(0);
+				checkNoExistAdd(LAST_ACTION_TAB_INDEX, v);
+			}
 		} while (false);
 
 	}
@@ -312,10 +316,10 @@ void NddSetting::close()
 			}
 
 			//在这里保存一下子窗口的位置。不排除有可能子窗口还在，主窗口已经退出的情况，不过问题不大。
-			if (s_winPosSet != nullptr)
+			if (s_nddDelaySet != nullptr)
 			{
-				s_winPosSet->sync();
-				s_winPosSet = nullptr;
+				s_nddDelaySet->sync();
+				s_nddDelaySet = nullptr;
 		}
 	}
 }
@@ -324,27 +328,43 @@ void NddSetting::close()
 //子窗口的位置，单独放在一个winpos.ini文件中，而且启动程序时，不需要读取，可避免启动时拖慢速度
 QByteArray NddSetting::getWinPos(QString key)
 {
-	winPosInit();
-	return s_winPosSet->value(key, "").toByteArray();
+	nddDelaySetInit();
+	return s_nddDelaySet->value(key, "").toByteArray();
 }
 
 void NddSetting::updataWinPos(QString key, QByteArray& value)
 {
-	winPosInit();
-	s_winPosSet->setValue(key, QVariant(value));
+	nddDelaySetInit();
+	s_nddDelaySet->setValue(key, QVariant(value));
 }
 
-void NddSetting::winPosInit()
+void NddSetting::nddDelaySetInit()
 {
-	if (s_winPosSet == nullptr)
+	if (s_nddDelaySet == nullptr)
 	{
 		QString settingDir = QString("notepad/delayset");
 		QSettings qs(QSettings::IniFormat, QSettings::UserScope, settingDir);
 		QString qsSetPath = qs.fileName();
 
-		s_winPosSet = new QSettings(QSettings::IniFormat, QSettings::UserScope, settingDir);
+		s_nddDelaySet = new QSettings(QSettings::IniFormat, QSettings::UserScope, settingDir);
 	#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-		s_winPosSet->setIniCodec("UTF-8");
+		s_nddDelaySet->setIniCodec("UTF-8");
 	#endif
 	}
+}
+
+
+//写一个总的获取配置的接口，避免以后每个字段都需要写一个读写接口
+QString NddSetting::getKeyValueFromDelaySets(QString key)
+{
+	nddDelaySetInit();
+	return s_nddDelaySet->value(key, "").toString();
+}
+
+bool NddSetting::updataKeyValueFromDelaySets(QString key, QString value)
+{
+	nddDelaySetInit();
+	s_nddDelaySet->setValue(key, value);
+	s_isContentChanged = true;
+	return true;
 }

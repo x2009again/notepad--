@@ -7,6 +7,10 @@ PluginMgr::PluginMgr(QWidget *parent, QList<NDD_PROC_DATA>& pluginList)
 {
 	ui.setupUi(this);
 
+	ui.pluginTable->horizontalHeader()->setStretchLastSection(true); 
+	ui.pluginTable->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+	ui.pluginTable->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+	//ui.pluginTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	init(pluginList);
 }
 

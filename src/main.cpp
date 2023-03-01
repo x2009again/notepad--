@@ -41,7 +41,7 @@ const QString c_strTitle = "Ndd";
 
 #ifdef Q_OS_UNIX
 #if defined(Q_OS_MAC)
-QSharedMemory shared("CCNotebook122");;//mac下面后面带一个版本号，避免新的打不开
+QSharedMemory shared("CCNotebook123");;//mac下面后面带一个版本号，避免新的打不开
 #else
 QSharedMemory shared("CCNotebook");
 #endif
