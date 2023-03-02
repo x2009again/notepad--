@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(Notepad-- VERSION 1.22.0)
+project(Notepad-- VERSION 1.23.2)
 
 # -------------- Notepad -- 全局构建配置 ------------- #
 option(USE_QT6 "使用 Qt6 进行编译本项目与随带所有内容" OFF)
