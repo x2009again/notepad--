@@ -23,7 +23,6 @@
 #include "findwin.h"
 #include "pluginGl.h"
 
-
 //class ScintillaEditView;
 class ScintillaHexEditView;
 class FindRecords;
@@ -34,6 +33,7 @@ class CompareWin;
 struct HexFileMgr;
 struct TextFileMgr;
 struct BigTextEditFileMgr;
+class QtLangSet;
 
 static const char* Tail_Thread = "tailthread";
 
