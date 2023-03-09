@@ -517,3 +517,11 @@ _deps
 
 # End of https://www.toptal.com/developers/gitignore/api/cmake
 !/Makefile
+
+
+
+################ Customizable build templates. ################
+# If you copy here and customize the build form, its changes will be ignored.
+
+# Windows cmd or powershell supported files..
+/windows-msvc-ninja.bat
