@@ -69,7 +69,7 @@ if(CMAKE_HOST_WIN32)
     # 将 NOTEPAD_PLUGIN_INCLUDEDIR NOTEPAD_PLUGIN_LIBDIR 填充到 cmake 文件
     configure_package_config_file(cmake/NotepadPluginConfig.cmake.in
         ${CMAKE_BINARY_DIR}/${NOTEPAD_PLUGIN_CONFIG}
-        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${NOTEPAD_PLUGIN})
+        INSTALL_DESTINATION ${NOTEPAD_PLUGIN_LIBDIR}/cmake/${NOTEPAD_PLUGIN})
     # 安装 cmake 文件
     spark_install_file(${CMAKE_INSTALL_LIBDIR}/cmake/${NOTEPAD_PLUGIN} 
         ${CMAKE_BINARY_DIR}/${NOTEPAD_PLUGIN_CONFIG})
