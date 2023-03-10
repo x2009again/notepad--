@@ -86,7 +86,7 @@ set /p deployqt5= ‰»Î(6):
 if not "%deployqt5%" == "6" (
     set CMAKE_OPTIONS=%CMAKE_OPTIONS% -DWINDOWS_DEPLOY_QT5=ON
 ) else (
-    set CMAKE_OPTIONS=%CMAKE_OPTIONS% -DWINDOWS_DEPLOY_QT6=ON -DUSE_QT6
+    set CMAKE_OPTIONS=%CMAKE_OPTIONS% -DWINDOWS_DEPLOY_QT6=ON -DUSE_QT6=ON
 )
 
 :: ------------------------------------------------------------------- ::
