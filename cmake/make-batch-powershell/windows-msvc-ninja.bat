@@ -13,6 +13,7 @@ set installdir=%builddir%/install
 ::                                                          ::
 ::      !!! 定制: 指向用于构建时引用的 MSVC Qt 库位置!!!         ::
 set QT_MSVC_PREFIX_DIR=C:\Qt\Qt5.14.2\5.14.2\msvc2017_64
+:: set QT_MSVC_PREFIX_DIR=C:\Qt\Qt6.4.2\6.4.2\msvc2019_64
 ::                                                          ::
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
