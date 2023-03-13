@@ -24,5 +24,7 @@
     // 要在生成时传递给基础生成工具的其他参数
     "cmake.buildToolArgs": [
         
-    ]
+    ],
+    // 使用 install 时，安装到 build/install 目录
+    "cmake.installPrefix": "${workspaceFolder}/build/install"
 }
