@@ -46,7 +46,7 @@ if(WINDOWS_DEPLOY_QT)
         set_target_properties(${PROJECT_NAME}
             PROPERTIES
                 # 这是一个 WIN32 程序，即可执行文件不再出现黑窗口，转而使用 WinMain(某种 Windows 内部特性)
-                WIN32_EXECUTABLE true
+                WIN32_EXECUTABLE $<$<CONFIG:Debug>:FALSE>$<$<CONFIG:Release>:TRUE>
                 # 静态库生成目录
                 # ARCHIVE_OUTPUT_DIRECTORY ""
                 # 动态库生成目录
