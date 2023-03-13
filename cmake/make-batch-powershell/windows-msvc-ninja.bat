@@ -132,7 +132,8 @@ if "%vcvars%" == "" (
 cmake -B%builddir% %CMAKE_OPTIONS% .
 cmake --build %builddir% --config %CMAKE_BUILD_TYPE%
 cmake --install %builddir% --prefix %installdir%
-cmake --build %builddir% --target windows-deployqt
+:: 不再使用的部分，由 install 自动配置的 windeployqt 已经配置
+@REM cmake --build %builddir% --target windows-deployqt
 goto :finish
 
 
