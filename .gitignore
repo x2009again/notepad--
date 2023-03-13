@@ -519,6 +519,8 @@ _deps
 !/Makefile
 
 
+#################### Visual Studio 2022 ####################
+/out
 
 ################ Customizable build templates. ################
 # If you copy here and customize the build form, its changes will be ignored.
