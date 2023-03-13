@@ -79,21 +79,65 @@ if(WINDOWS_DEPLOY_QT)
         # 此部分为创建一个 windows-deployqt 的虚拟目标，用于对执行安装后的应用进行 windeployqt
         # 手动化构建 Windows Deploy Qt Application
         # 参考: windeployqt --qmldir <path-to-app-qml-files> <path-to-app-binary>
-        add_custom_target(windows-deployqt
-            COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
-                    # 
-                    ${WINDOWS_APPLICATION_DEPLOY_PATH}/${PROJECT_NAME}.exe
+        # add_custom_target(windows-deployqt
+        #     COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
+        #             # 
+        #             ${WINDOWS_APPLICATION_DEPLOY_PATH}/${PROJECT_NAME}.exe
 
-                    # 扫描QML-从目录开始导入。
-                    --qmlimport ${WINDOWS_QT_DIR}/../../../qml
-                    # 部署编译器运行时(仅限桌面)。
-                    --compiler-runtime  
-                    # 详细级别(0-2)
-                    --verbose 2
-                    # 部署运行时使用指定的目录
-                    --dir ${CMAKE_INSTALL_PREFIX}/bin
+        #             # 扫描QML-从目录开始导入。
+        #             --qmlimport ${WINDOWS_QT_DIR}/../../../qml
+        #             # 部署编译器运行时(仅限桌面)。
+        #             --compiler-runtime  
+        #             # 详细级别(0-2)
+        #             --verbose 2
+        #             # 部署运行时使用指定的目录
+        #             --dir ${CMAKE_INSTALL_PREFIX}/bin
+        # )
+        # 以上为被废除的内容，不再定义 windows-deployqt 为安装后的目标进行配置 windeployqt
+        # 并转为以下部分处理
+
+
+        # ---------- Windeployqt With Install Target ---------- #
+        # 
+        set(WINDEPLOYQT_EXECUTABLE "${WINDOWS_QT_DIR}/../../../bin/windeployqt")
+        #
+        file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/${PROJECT_NAME}_PATH"
+            CONTENT "$<TARGET_FILE:${PROJECT_NAME}>"
         )
+        install(CODE
+            "
+            file(READ \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}_PATH\" _file)
+            execute_process(
+                COMMAND \"${WINDEPLOYQT_EXECUTABLE}\"
+                        # 虚假的运行 windeployqt 而不复制任何内容
+                        --dry-run
+                        # 扫描QML-从目录开始导入。
+                        --qmlimport ${WINDOWS_QT_DIR}/../../../qml
+                        # 部署编译器运行时(仅限桌面)。
+                        --compiler-runtime
+                        # 以源 目标的输出形成映射关系，以便用于解析内容
+                        --list mapping
+                        \${_file}
+                OUTPUT_VARIABLE _output
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
 
+            # 将内容转为一个列表，使用 WINDOWS_COMMAND 类型的处理方式
+            separate_arguments(_files WINDOWS_COMMAND \${_output})
+
+            while(_files)            
+                list(GET _files 0 _src)
+                list(GET _files 1 _dest)
+                execute_process(
+                    COMMAND \"\${CMAKE_COMMAND}\" -E
+                        copy_if_different \${_src} \"\${CMAKE_INSTALL_PREFIX}/bin/\${_dest}\"
+                )
+                message(\"COPY \${_src} \${CMAKE_INSTALL_PREFIX}/bin/\${_dest}\")
+                list(REMOVE_AT _files 0 1)
+            endwhile(_files)
+            "
+        )
+    
         # ---------------------------------- QSci ---------------------------------- #
 
         # 当 QSci 需要构建为动态库时，就已经开始导致了关联性错误，这个与原始分支上的预期的方案不符
