@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "x64-Debug",
+            "generator": "Ninja",
+            "configurationType": "Debug",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
+            "buildRoot": "${projectDir}\\out\\build\\Debug\\${name}",
+            "installRoot": "${projectDir}\\out\\install\\Debug\\${name}",
+            "cmakeCommandArgs": "-DCMAKE_PREFIX_PATH=C:\\Qt\\Qt5.14.2\\5.14.2\\msvc2017_64 -DUSE_WINDOWS_UNIVERSAL=ON -DWINDOWS_DEPLOY_QT=ON -DWINDOWS_DEPLOY_QT5=ON",
+            "buildCommandArgs": "",
+            "ctestCommandArgs": ""
+        },
+        {
+            "name": "x64-Release",
+            "generator": "Ninja",
+            "configurationType": "Release",
+            "inheritEnvironments": [ "msvc_x64_x64" ],
+            "buildRoot": "${projectDir}\\out\\build\\Release\\${name}",
+            "installRoot": "${projectDir}\\out\\install\\Release\\${name}",
+            "cmakeCommandArgs": "-DCMAKE_PREFIX_PATH=C:\\Qt\\Qt5.14.2\\5.14.2\\msvc2017_64 -DUSE_WINDOWS_UNIVERSAL=ON -DWINDOWS_DEPLOY_QT=ON -DWINDOWS_DEPLOY_QT5=ON",
+            "buildCommandArgs": "",
+            "ctestCommandArgs": ""
+        }
+    ]
+}
