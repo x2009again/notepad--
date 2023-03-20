@@ -98,46 +98,9 @@ if(WINDOWS_DEPLOY_QT)
 
 
         # ---------- Windeployqt With Install Target ---------- #
-        # 
-        set(WINDEPLOYQT_EXECUTABLE "${WINDOWS_QT_DIR}/../../../bin/windeployqt")
-        #
-        file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/${PROJECT_NAME}_PATH"
-            CONTENT "$<TARGET_FILE:${PROJECT_NAME}>"
-        )
-        install(CODE
-            "
-            file(READ \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}_PATH\" _file)
-            execute_process(
-                COMMAND \"${WINDEPLOYQT_EXECUTABLE}\"
-                        # 虚假的运行 windeployqt 而不复制任何内容
-                        --dry-run
-                        # 扫描QML-从目录开始导入。
-                        --qmlimport ${WINDOWS_QT_DIR}/../../../qml
-                        # 部署编译器运行时(仅限桌面)。
-                        --compiler-runtime
-                        # 以源 目标的输出形成映射关系，以便用于解析内容
-                        --list mapping
-                        \${_file}
-                OUTPUT_VARIABLE _output
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-            )
-
-            # 将内容转为一个列表，使用 WINDOWS_COMMAND 类型的处理方式
-            separate_arguments(_files WINDOWS_COMMAND \${_output})
-
-            while(_files)            
-                list(GET _files 0 _src)
-                list(GET _files 1 _dest)
-                execute_process(
-                    COMMAND \"\${CMAKE_COMMAND}\" -E
-                        copy_if_different \${_src} \"\${CMAKE_INSTALL_PREFIX}/bin/\${_dest}\"
-                )
-                message(\"COPY \${_src} \${CMAKE_INSTALL_PREFIX}/bin/\${_dest}\")
-                list(REMOVE_AT _files 0 1)
-            endwhile(_files)
-            "
-        )
-    
+        include(cmake/platforms/utils.cmake)
+        windeployqt_install(${PROJECT_NAME})
+        
         # ---------------------------------- QSci ---------------------------------- #
 
         # 当 QSci 需要构建为动态库时，就已经开始导致了关联性错误，这个与原始分支上的预期的方案不符
@@ -172,22 +135,9 @@ if(WINDOWS_DEPLOY_QT)
                         # 部署运行时使用指定的目录
                         --dir ${WINDOWS_APPLICATION_DEPLOY_PATH}
             )
-
-            add_custom_command(TARGET windows-deployqt
-                POST_BUILD
-                    COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
-                        # 
-                        ${WINDOWS_APPLICATION_DEPLOY_PATH}/QSci.dll
-
-                        # 扫描QML-从目录开始导入。
-                        --qmlimport ${WINDOWS_QT_DIR}/../../../qml
-                        # 部署编译器运行时(仅限桌面)。
-                        --compiler-runtime  
-                        # 详细级别(0-2)
-                        --verbose 2
-                        # 部署运行时使用指定的目录
-                        --dir ${CMAKE_INSTALL_PREFIX}/bin
-            )
+            
+            # ---------- Windeployqt With Install Target ---------- #
+            windeployqt_install(QSci)
 
         endif(NOTEPAD_BUILD_BY_SHARED)
 
