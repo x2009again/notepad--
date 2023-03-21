@@ -107,7 +107,7 @@ ExternalProject_Add(${libopencc}
     CONFIGURE_COMMAND   ${CMAKE_COMMAND} -S ${libopencc_src} -B ${libopencc_build} ${libopencc_flags}
     # CMAKE_GENERATOR
     # BUILD_COMMAND       ${CMAKE_COMMAND} --build ${libopencc_build} --config $<CONFIG>
-    INSTALL_COMMAND     ${CMAKE_COMMAND} --install ${libopencc_build} --prefix ${libopencc_install}
+    # INSTALL_COMMAND     ${CMAKE_COMMAND} --install ${libopencc_build} --prefix ${libopencc_install}
     # TEST_COMMAND
     GIT_REMOTE_UPDATE_STRATEGY CHECKOUT
     EXCLUDE_FROM_ALL
@@ -125,3 +125,10 @@ set_target_properties(opencc
 # 确保 opencc_git 在此插件之前构建完成
 add_dependencies(${LOCAL_PLUGIN_NAME}      opencc_git)
 target_link_libraries(${LOCAL_PLUGIN_NAME} opencc)
+
+if(WIN32)
+    target_include_directories(${LOCAL_PLUGIN_NAME} PUBLIC ${libopencc_install}/include)
+    target_compile_definitions(${LOCAL_PLUGIN_NAME} 
+        PRIVATE 
+            OPENCC_EXPORT=)
+endif(WIN32)
