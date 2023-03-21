@@ -32,6 +32,9 @@ if(TRUE)
     include(cmake/modules/Notepad--.cmake)
 endif(TRUE)
 
+# ----------------- 构建 Notepad-- 插件 ----------------- #
+add_subdirectory(src/plugin)
+
 # ----------------- Notepad-- 其它主线构建相关  ----------------- #
 option(USE_WINDOWS_UNIVERSAL "通用 Windows 平台构建"          OFF)
 option(USE_WINDOWS_MINGW     "通用 Windows 平台 MinGW 构建"   OFF)
