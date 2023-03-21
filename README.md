@@ -95,14 +95,40 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 
 - ArchLinux
 
-1. 安装编译环境 `sudo pacman -S gcc cmake make ninja`
-1. 安装 qt 工具和库 `sudo pacman -S qt5-tools qt5-base qt5-xmlpatterns`
-1. 配置 `cmake -S . -Bbuild -GNinja -DCMAKE_BUILD_TYPE=Release  -DCMAKE_INSTALL_PREFIX=/usr -W no-dev`
-1. 编译 `ninja -C build && ninja -C build install`
-1. 打包: 使用 [AUR/notepad---git](https://aur.archlinux.org/packages/notepad---git) `yay -S notepad---git`
-1. 安装：
-    - 预编译包添加 [ArchLinuxCN/notepad---git](https://github.com/archlinuxcn/repo) 镜像 `yay -S archlinuxcn/notepad---git`
-    - 预编译包 [Debuginfod/notepad---git-debug](https://wiki.archlinux.org/title/Debuginfod) 包 `yay -S archlinuxcn/notepad---git-debug`
+    ```shell
+    # 此部分使用 AUR 中提供的 notepad---git 软件包
+    # https://aur.archlinux.org/packages/notepad---git
+
+    # 查看 notepad---git 中提供的 PKGBUILD 
+    curl https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=notepad---git
+    
+    # 或克隆仓库以查看 PKGBUILD
+    git clone https://aur.archlinux.org/notepad---git.git
+    cd notepad---git
+    cat PKGBUILD
+
+    # 使用 makepkg 即可进行基于源代码构建软件包
+    # 构建工具: gcc cmake make ninja
+    # 软件包运行时: qt5-tools qt5-base qt5-xmlpatterns
+
+    # 以上是基于源代码构建软件，而安装预编译的二进制则可以使用 archlinuxcn 仓库
+    # 查看使用说明 https://www.archlinuxcn.org/archlinux-cn-repo-and-mirror 
+    [archlinuxcn]
+    Server = https://repo.archlinuxcn.org/$arch
+    # ArchLinuxCN 明确说明在 ArchLinux 衍生版本中使用时出现问题时不进行任何处理
+
+    # 以上是基于源代码构建或配置预编译软件仓库进行安装现有的二进制软件包
+    # 另外，可使用 yay 来下载并编译或安装软件包
+    # 
+    yay -S notepad---git # 将从 AUR 中安装该软件包
+    # 
+    yay -S archlinuxcn/notepad---git 
+    # 将从 archlinuxcn 源，下载并安装 notepad---git 软件包
+    # 
+    yay -S archlinuxcn/notepad---git-debug
+    # 注: 这是一个调试符号表包，旨在调试 notepad---git 时使用
+    # 有关说明可查看: https://wiki.archlinux.org/title/Debuginfod
+    ```
 
 - openSUSE Tumbleweed
 
