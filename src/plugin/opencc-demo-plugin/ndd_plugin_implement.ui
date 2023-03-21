@@ -14,12 +14,23 @@
    <string>简繁转换面板 - Demo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTextEdit" name="textEdit"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QTextBrowser" name="textBrowser"/>
+      </item>
+      <item>
+       <widget class="QTextEdit" name="textEdit"/>
+      </item>
+     </layout>
     </item>
     <item>
-     <widget class="QTextBrowser" name="textBrowser"/>
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Convert</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -29,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>554</width>
-     <height>27</height>
+     <height>23</height>
     </rect>
    </property>
   </widget>
