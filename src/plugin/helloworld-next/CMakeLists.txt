@@ -51,7 +51,7 @@ endif(TRUE)
 
 # ----------------- helloworld-next 构建宏支持相关  ----------------- #
 
-if(WIN32)
+if(WIN32 AND NOTEPAD_BUILD_BY_SHARED)
     # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
     target_compile_definitions(${LOCAL_PLUGIN_NAME} 
         PRIVATE 
@@ -59,7 +59,15 @@ if(WIN32)
             QSCINTILLA_DLL  # 目前在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
                             # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
     )
-endif(WIN32)
+else()
+    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
+    target_compile_definitions(${LOCAL_PLUGIN_NAME} 
+    PRIVATE 
+        NOTEPAD_PLUGIN_MANAGER
+        # QSCINTILLA_DLL # 目前在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
+                         # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
+    )
+endif(WIN32 AND NOTEPAD_BUILD_BY_SHARED)
 
 if(UNIX)
     # 默认在 Unix/Linux 中仅需要定义一个内部插件宏管理器
