@@ -69,10 +69,28 @@ typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserDat
         pProcData->m_auther      = QString(author);     \
         pProcData->m_strFilePath = QString(filepath);   \
 
-#define NOTEPAD_PLUGIN_IMPLEMENT(imp_class)                        \
+#define NOTEPAD_PLUGIN_IMPLEMENT(imp_class)                 \
     imp_class *imp = new imp_class(pNotepad, getCurEdit()); \
-    //imp->setWindowFlag(Qt::Window);                         \
+    //imp->setWindowFlag(Qt::Window);                       \
     imp->show();
+
+/*** Interface Implementation Assistant ***/
+
+// 原始接口
+#define NOTEPAD_PLUGIN_METADATA_IDENTIFY(name, version, author, comment, filepath) \
+    bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData) {                  \
+    NOTEPAD_PLUGIN_METADATA(name, version, author, comment, filepath)   \
+        return true;\
+    }\
+
+#define NOTEPAD_PLUGIN_METADATA_IMPLEMENT(imp_class, imp_show_window) \
+    int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit) {\
+        NOTEPAD_PLUGIN_IMPLEMENT(imp_class);   \
+        if (imp_show_window) {\
+            imp->show();\
+        }\
+        return 0;\
+    }\
 
 #endif  //NOTEPAD_PLUGIN_MANAGER
 /***********在编译插件时提供的内容**************/
