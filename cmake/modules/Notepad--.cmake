@@ -5,6 +5,10 @@
 # 1. 默认构建时产出的目标为 Notepad--
 # 2. 在此处可对 Notepad-- 目标进行详细的构建计划
 
+# Notepad-- 版本配置
+configure_file(cmake/modules/config.h.in
+    ${CMAKE_BINARY_DIR}/config.h @ONLY)
+
 if(TRUE)
     # 准备构建 Notepad-- 主程序
     set(QRC_SOURCES src/RealCompare.qrc)

@@ -11,5 +11,6 @@ if(TRUE)
 
     # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
     add_subdirectory(opencc-demo-plugin)
-
+    # 一个简单的版本更新检查的插件
+    add_subdirectory(versionUpdate)
 endif(TRUE)

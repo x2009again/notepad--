@@ -138,6 +138,11 @@ int main(int argc, char *argv[])
 	a.setApplicationDisplayName(c_strTitle);
 	a.setApplicationName(c_strTitle);
 
+#include <config.h>
+#ifdef  NOTEPAD_VERSION
+	a.setApplicationVersion(NOTEPAD_VERSION);
+#endif  //NOTEPAD_VERSION
+
 	QStringList arguments = QCoreApplication::arguments();
 
 	//目前就三种
