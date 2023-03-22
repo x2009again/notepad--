@@ -106,8 +106,9 @@ ExternalProject_Add(${libopencc}
     # GIT_SHALLOW         TRUE
     CONFIGURE_COMMAND   ${CMAKE_COMMAND} -S ${libopencc_src} -B ${libopencc_build} ${libopencc_flags}
     # CMAKE_GENERATOR
-    # BUILD_COMMAND       ${CMAKE_COMMAND} --build ${libopencc_build} --config $<CONFIG>
+    BUILD_COMMAND       ${CMAKE_COMMAND} --build ${libopencc_build} --config $<CONFIG>
     # INSTALL_COMMAND     ${CMAKE_COMMAND} --install ${libopencc_build} --prefix ${libopencc_install}
+    INSTALL_COMMAND     ${CMAKE_COMMAND} --install ${libopencc_build} --config $<CONFIG>
     # TEST_COMMAND
     GIT_REMOTE_UPDATE_STRATEGY CHECKOUT
     EXCLUDE_FROM_ALL

@@ -93,9 +93,10 @@ if not "%deployqt5%" == "6" (
 :: ------------------------------------------------------------------- ::
 @echo ----------------------- 构建前配置预览 ---------------------------
 @echo "cmake -B%builddir% %CMAKE_OPTIONS% ."
+@echo "cmake --build %builddir% --config %CMAKE_BUILD_TYPE%" --target opencc_git
 @echo "cmake --build %builddir% --config %CMAKE_BUILD_TYPE%"
 @echo "cmake --install %builddir% --prefix %installdir%"
-@echo "cmake --build %builddir% --target windows-deployqt"
+
 :: ------------------------------------------------------------------- ::
 
 
@@ -103,7 +104,7 @@ if not "%deployqt5%" == "6" (
 @echo ---- 寻找硬盘中的 msvc 环境配置 ----
 
 set vcvars=
-for %%d in (C: D: E: F: G: H:) do (
+for %%d in ( "C:\Program Files\Microsoft Visual Studio" C: D: E: F: G: H:) do (
     if exist %%d (
         @echo 正在查找硬盘 %%d 中的 VC 配置环境...
         pushd %%d\
@@ -130,6 +131,7 @@ if "%vcvars%" == "" (
 :: 正式对项目进行配置、构建、安装、部署
 @echo ------------ 准备构建 ------------
 cmake -B%builddir% %CMAKE_OPTIONS% .
+cmake --build %builddir% --config %CMAKE_BUILD_TYPE% --target opencc_git
 cmake --build %builddir% --config %CMAKE_BUILD_TYPE%
 cmake --install %builddir% --prefix %installdir%
 :: 不再使用的部分，由 install 自动配置的 windeployqt 已经配置
