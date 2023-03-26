@@ -73,7 +73,7 @@ void StatusWidget::initializeIcon()
 
 void StatusWidget::setIcon(QPixmap iconPixmap)
 {
-    ui->icon->setPixmap(iconPixmap);
+    ui->icon->setPixmap(iconPixmap.scaled(ui->icon->size()));
 }
 
 QPixmap StatusWidget::getIcon() {

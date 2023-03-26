@@ -23,7 +23,11 @@ NddPluginImplement::NddPluginImplement(QWidget *parent, QsciScintilla *pEdit) : 
     statusWidget->setDirection(StatusWidget::TopIn, StatusWidget::RightOut);
     statusWidget->start(false);
     statusWidget->show();
+#ifdef Q_OS_WIN
+    statusWidget->setIcon(QPixmap("://assets/5.png"));
+#else
     statusWidget->setIcon(QIcon::fromTheme("notepad--").pixmap(32,32));
+#endif
     statusWidget->setStyleSheet("border-radius: 8px");
     QNetworkAccessManager manager;
     QEventLoop loop;

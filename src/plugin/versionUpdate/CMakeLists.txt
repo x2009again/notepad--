@@ -19,7 +19,7 @@ if(TRUE)
         .
         StatusWidget
     )
-    spark_add_library(${LOCAL_PLUGIN_NAME} SHARED ${LocalSources})
+    spark_add_library(${LOCAL_PLUGIN_NAME} SHARED ${LocalSources} "plugin.qrc")
     target_include_directories(${LOCAL_PLUGIN_NAME} PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/src/cceditor
