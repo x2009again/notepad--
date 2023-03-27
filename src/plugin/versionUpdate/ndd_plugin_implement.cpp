@@ -11,6 +11,7 @@
 #include <QJsonObject>
 #include <QApplication>
 #include <QDesktopServices>
+#include <QJsonArray>
 
 NddPluginImplement::NddPluginImplement(QWidget *parent, QsciScintilla *pEdit) : QMainWindow (parent)
   , ui(new Ui::NddPluginImplement)
@@ -55,26 +56,30 @@ NddPluginImplement::NddPluginImplement(QWidget *parent, QsciScintilla *pEdit) : 
             loop.quit();
         }
     });
-    QNetworkReply *reply = manager.get(QNetworkRequest(QUrl("https://gitee.com/api/v5/repos/cxasm/notepad--/releases/latest")));
+    QNetworkReply *reply = manager.get(QNetworkRequest(QUrl("https://gitee.com/api/v5/repos/cxasm/notepad--/releases?page=1&per_page=20&direction=desc")));
     loop.exec();
 
     qDebug() << reply->attribute(QNetworkRequest::Attribute::HttpStatusCodeAttribute).toInt();
     qDebug() << reply->errorString();
 
     if (!document.isEmpty()) {
-        QJsonObject obj = document.object();
-        if (obj.contains("tag_name")) {
-            QString kv = obj.value("tag_name").toString();
-            QString currentVersion = qApp->applicationVersion();
-            if (currentVersion.compare(kv) != 0) {
-                statusWidget->setShowMessage(u8"版本更新", QString("%1 > %2").arg(currentVersion).arg(kv));
-                QDesktopServices::openUrl(QUrl("https://gitee.com/cxasm/notepad--/releases/latest"));
+        QJsonArray array = document.array();
+        foreach (QJsonValue value, array) {
+            QJsonObject obj = value.toObject();
+            if (obj.contains("tag_name") && !obj.value("prerelease").toBool()) {
+                QString kv = obj.value("tag_name").toString();
+                QString currentVersion = qApp->applicationVersion();
+                if (currentVersion.compare(kv) != 0) {
+                    statusWidget->setShowMessage(u8"版本更新", QString("%1 > %2").arg(currentVersion).arg(kv));
+                    QDesktopServices::openUrl(QUrl("https://gitee.com/cxasm/notepad--/releases/latest"));
+                    break; //
+                } else {
+                    statusWidget->setShowMessage(u8"提示", u8"检查完成，没有任何更新");
+                }
+                qDebug() << u8"[Notepad--]: 版本确认 -" << kv;
             } else {
-                statusWidget->setShowMessage(u8"提示", u8"检查完成，没有任何更新");
-            }
-            qDebug() << u8"[Notepad--]: 版本确认 -" << kv;
-        } else {
 
+            }
         }
     } else {
         qDebug() << u8"[Notepad--]: 版本未未确认";
