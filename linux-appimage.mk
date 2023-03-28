@@ -30,16 +30,26 @@ APPIMAGETOOL  := "$(BUNDLE_LINUXDEPLOYQT)/appimagetool-x86_64.AppImage"
 # 追加 Appimagetool、linuxdeployqt 构建配置
 CMAKE_OPTIONS := -DLINUXDEPLOYQT=$(LINUXDEPLOYQT) -DAPPIMAGETOOL=$(APPIMAGETOOL) $(CMAKE_OPTIONS)
 
+# 执行 Linux DeployQt 并生成可制作 Appimage 的目录结构
 linuxdeploy: download-bundle-linuxdeploytools
+	cmake -B$(builddir) $(CMAKE_OPTIONS) -DUSE_APPIMAGE_NEW_GLIBC=ON
+	cmake --build $(builddir) --target linuxdeploy
+
+# 执行 Linux DeployQt 并生成可制作 Appimage 的目录结构
+# 但生成的应用程序将只使用操作系统中已安装的标准glibc库版本。
+linuxdeploy-fast: download-bundle-linuxdeploytools
+	cmake -B$(builddir) $(CMAKE_OPTIONS) -DUSE_APPIMAGE_NEW_GLIBC=OFF
+	cmake --build $(builddir) --target linuxdeploy
+
+# 执行 Appimage 目录结构的打包生成
+make-appimage:
 	cmake -B$(builddir) $(CMAKE_OPTIONS)
-	cmake --build $(builddir) -- linuxdeploy
+	cmake --build $(builddir) --target appimage
 
-genrate-appimage:
-	cmake -B$(builddir) $(CMAKE_OPTIONS)
-	cmake --build $(builddir) -- appimage
+package: linux-universal-release linuxdeploy make-appimage
 
-
-package: linux-universal-release linuxdeploy genrate-appimage
+# 不要一开始就使用 - 否则无法生成 AppRun
+package-fast: linux-universal-release linuxdeploy-fast make-appimage
 
 linux-build-options:
 	@echo $(CMAKE_OPTIONS)
