@@ -40,12 +40,33 @@
         # false 表示这个窗口不需要显示
     ```
 
+- 如何开发一个基于源代码树的原生二级菜单显示插件
+
+    ```cmake
+    # 复制一份你所想继承的模板，例如: base-secondary-menu-plugin-v1
+
+    # 基于 base-secondary-menu-plugin-v1 开发一个新的插件 external-plugin
+        # 1. 将文件夹重命名为插件名称
+        # 2. 替换内部 CMakeLists.txt 文件的 base-widget-ui-plugin 字符串
+        # 3. 在 plugin/CMakeLists.txt 中添加
+        add_subdirectory(external-plugin)
+
+        # 4. 在 external-plugin/plugin.cpp 中
+        NOTEPAD_PLUGIN_METADATA_IDENTIFY_V1("外部插件测试", "0.1", "zinface",
+            u8"二级扩展的插件支持", "");
+
+        NOTEPAD_PLUGIN_METADATA_IMPLEMENT_V1(NddPluginImplement, false);
+        # NddPluginImplement 是来源于 ndd_plugin_implement.h 的类
+        # false 表示这个窗口不需要显示
+    ```
+
 - 有关 plugin.cpp 宏变化文件
 
     ```shell
     # 1. 记录了在 cmake-dev 以前的插件宏实现方式
     # 2. 记录了在 cmake-dev 以来的插件宏实现方式
     # 3. 记录了在 cmake-plugins-dev 以来的插件宏实现方式
+    # 4. 记录了在 原生支持二级菜单显示 以来的插件宏实现方式
     # ...
     ```
 
