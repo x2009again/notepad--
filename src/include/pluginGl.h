@@ -56,7 +56,7 @@ typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserDat
 #endif
 
 	NDD_EXPORT bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData);
-	NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit);
+	NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit, NDD_PROC_DATA* pProcData);
 
 #ifdef __cplusplus
 	}
@@ -86,6 +86,40 @@ typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserDat
 #define NOTEPAD_PLUGIN_METADATA_IMPLEMENT(imp_class, imp_show_window) \
     int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit) {\
         NOTEPAD_PLUGIN_IMPLEMENT(imp_class);   \
+        if (imp_show_window) {\
+            imp->show();\
+        }\
+        return 0;\
+    }\
+
+// v1 支持 Menu 的接口
+#define NOTEPAD_PLUGIN_METADATA_IDENTIFY_V1(name, version, author, comment, filepath) \
+    bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData) {                  \
+    NOTEPAD_PLUGIN_METADATA(name, version, author, comment, filepath)   \
+	    pProcData->m_menuType = 1;\
+        return true;\
+    }\
+
+#define NOTEPAD_PLUGIN_METADATA_IMPLEMENT_V1(imp_class, imp_show_window) \
+    static QWidget *s_pNotepad;\
+    static NDD_PROC_DATA s_pProcData;\
+    static std::function<QsciScintilla* ()> s_getCurEdit;\
+    int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit, NDD_PROC_DATA* pProcData) {\
+        if(pNotepad != nullptr) {                   \
+            s_pNotepad = pNotepad;                  \
+        } else return -1;                           \
+                                                    \
+        if(pProcData != nullptr) {                  \
+            s_pProcData = *pProcData;               \
+        } else return -1;                           \
+                                                    \
+        if(getCurEdit != nullptr) {                 \
+            s_getCurEdit = getCurEdit;              \
+        } else return -1;                           \
+                                                    \
+        NOTEPAD_PLUGIN_IMPLEMENT(imp_class);        \
+        imp->setCurrentEditFunc(s_getCurEdit);      \
+        imp->setMenuActions(s_pProcData.m_rootMenu);\
         if (imp_show_window) {\
             imp->show();\
         }\
