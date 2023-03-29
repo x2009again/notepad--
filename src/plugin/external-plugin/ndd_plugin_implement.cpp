@@ -8,6 +8,7 @@
 #include <QFunctionPointer>
 
 #include "external-plugin/interface/external.h"
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <QUrl>

@@ -83,7 +83,20 @@ endif(UNIX)
 
 
 # ----------------- external-plugin 构建的外部项目依赖 ----------------- #
-add_library(external-plugin-say SHARED external-plugin/base.cpp)
-set_target_properties(external-plugin-say
-    PROPERTIES
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/plugin/external-plugins")
+add_library(external-plugin-base SHARED external-plugin/base.cpp)
+
+if(WIN32)
+    target_compile_features(external-plugin-base PUBLIC  cxx_std_20)
+    set_target_properties(external-plugin-base
+        PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin/external-plugins"
+            ARCHIVE_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin/external-plugins"
+            RUNTIME_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin/external-plugins")
+endif(WIN32)
+
+if(UNIX)
+    set_target_properties(external-plugin-base
+        PROPERTIES
+            LIBRARY_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin/external-plugins"
+endif(UNIX)
+
