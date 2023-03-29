@@ -97,6 +97,6 @@ endif(WIN32)
 if(UNIX)
     set_target_properties(external-plugin-base
         PROPERTIES
-            LIBRARY_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin/external-plugins"
+            LIBRARY_OUTPUT_DIRECTORY "$<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin/external-plugins")
 endif(UNIX)
 
