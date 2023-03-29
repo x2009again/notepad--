@@ -1,4 +1,4 @@
-#include "interface/external.h"
+﻿#include "interface/external.h"
 
 // #include <stdio.h>
 // #include <string.h>
@@ -22,12 +22,21 @@ void openLinkNotepad(std::string &content) {
     content = "https://gitee.com/cxasm/notepad--";
 }
 
+extern "C"
+{
+
+#ifdef WIN32
+__declspec(dllexport)
+#endif
 struct externalplugin plugin = {
     .type = ActionBase,
     .meta = "打印 Hello",
     .func = sayHello,
 };
 
+#ifdef WIN32
+__declspec(dllexport)
+#endif
 struct externalplugin plugins[] = {
     { 
         .type = ActionBase,
@@ -57,3 +66,5 @@ struct externalplugin plugins[] = {
         .type = ActionUnknow
     }
 };
+
+}
