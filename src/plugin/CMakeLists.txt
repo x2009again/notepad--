@@ -19,5 +19,7 @@ if(USE_NOTEPAD_PLUGIN)
     add_subdirectory(opencc-demo-plugin)
     # 一个简单的版本更新检查的插件
     add_subdirectory(versionUpdate)
+    # 一个简单的可二次扩展的插件
+    add_subdirectory(external-plugin)
 
 endif(USE_NOTEPAD_PLUGIN)
