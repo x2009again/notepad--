@@ -142,6 +142,47 @@ NOTEPAD_PLUGIN_METADATA_IDENTIFY("插件名称", "0.1", "author", "说明", "")
 NOTEPAD_PLUGIN_METADATA_IMPLEMENT(NddPluginImplement, true);
 
 
+/*********************** 在 可支持二级菜单显示 以来 ***********************/
+
+// v1 支持 Menu 的接口
+#define NOTEPAD_PLUGIN_METADATA_IDENTIFY_V1(name, version, author, comment, filepath) \
+    bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData) {                  \
+    NOTEPAD_PLUGIN_METADATA(name, version, author, comment, filepath)   \
+	    pProcData->m_menuType = 1;\
+        return true;\
+    }\
+
+#define NOTEPAD_PLUGIN_METADATA_IMPLEMENT_V1(imp_class, imp_show_window) \
+    static QWidget *s_pNotepad;\
+    static NDD_PROC_DATA s_pProcData;\
+    static std::function<QsciScintilla* ()> s_getCurEdit;\
+    int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit, NDD_PROC_DATA* pProcData) {\
+        if(pNotepad != nullptr) {                   \
+            s_pNotepad = pNotepad;                  \
+        } else return -1;                           \
+                                                    \
+        if(pProcData != nullptr) {                  \
+            s_pProcData = *pProcData;               \
+        } else return -1;                           \
+                                                    \
+        if(getCurEdit != nullptr) {                 \
+            s_getCurEdit = getCurEdit;              \
+        } else return -1;                           \
+                                                    \
+        NOTEPAD_PLUGIN_IMPLEMENT(imp_class);        \
+        imp->setCurrentEditFunc(s_getCurEdit);      \
+        imp->setMenuActions(s_pProcData.m_rootMenu);\
+        if (imp_show_window) {\
+            imp->show();\
+        }\
+        return 0;\
+    }\
+
+// (name, version, author, comment, filepath, menu)
+#define NOTEPAD_PLUGIN_METADATA_IDENTIFY_V1(name, version, author, comment, filepath, menu)
+
+// (imp_class, imp_show_window)
+#define NOTEPAD_PLUGIN_METADATA_IMPLEMENT_V1(NddPluginImplement, true)
 
 
 /*********************** 在未来补充 ***********************/
