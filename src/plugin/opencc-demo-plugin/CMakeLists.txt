@@ -118,8 +118,10 @@ add_library(opencc STATIC IMPORTED)
 set_target_properties(opencc
     PROPERTIES
         IMPORTED_LOCATION        ${libopencc_install}/lib/${libopencc_lib}
-        INTERFACE_LINK_LIBRARIES ${libopencc_install}/lib/${libmarisa_lib}
-        INTERFACE_INCLUDE_DIRECTORIES ${libopencc_install}/include)
+        INTERFACE_LINK_LIBRARIES ${libopencc_install}/lib/${libmarisa_lib})
+target_include_directories(${LOCAL_PLUGIN_NAME}
+    PUBLIC 
+        ${libopencc_install}/include)
 
 # ----------------------------------------------------------------
 
@@ -128,7 +130,6 @@ add_dependencies(${LOCAL_PLUGIN_NAME}      opencc_git)
 target_link_libraries(${LOCAL_PLUGIN_NAME} opencc)
 
 if(WIN32)
-    target_include_directories(${LOCAL_PLUGIN_NAME} PUBLIC ${libopencc_install}/include)
     target_compile_definitions(${LOCAL_PLUGIN_NAME} 
         PRIVATE 
             OPENCC_EXPORT=)

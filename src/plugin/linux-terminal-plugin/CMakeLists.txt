@@ -112,8 +112,10 @@ add_library(qtermwidget SHARED IMPORTED)
 set_target_properties(qtermwidget
     PROPERTIES
         IMPORTED_LOCATION ${qtermwidget_git-install}/lib/${libqtermwidget5_lib}
-        INTERFACE_INCLUDE_DIRECTORIES ${qtermwidget_git-install}/include
         INTERFACE_LINK_DIRECTORIES ${qtermwidget_git-install}/lib)
+target_include_directories(${LOCAL_PLUGIN_NAME}
+    PUBLIC 
+        ${qtermwidget_git-install}/include)
 
 # ----------------- linux-terminal-plugin 构建的外部项目依赖 ----------------- #
 # 1.明确声明 qtermwidget_git 依赖于 lxqt-build-tool 
