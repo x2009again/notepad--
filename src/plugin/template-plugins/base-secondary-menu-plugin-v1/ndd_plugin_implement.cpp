@@ -1,11 +1,11 @@
 ﻿#include "ndd_plugin_implement.h"
 
 #include <qsciscintilla.h>
-#include <QMenu>
 #include <QDebug>
 
 NddPluginImplement::NddPluginImplement(QWidget *parent, QsciScintilla *pEdit) : QWidget(parent)
-  , currentEdit(pEdit)
+    , currentWidget(parent)
+    , currentEdit(pEdit)
 {
     
 }

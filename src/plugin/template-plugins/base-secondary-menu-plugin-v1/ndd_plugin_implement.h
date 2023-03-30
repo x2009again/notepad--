@@ -1,7 +1,8 @@
 ﻿#ifndef NDD_PLUGIN_IMPLEMENT_H
 #define NDD_PLUGIN_IMPLEMENT_H
 
-#include <QMainWindow>
+#include <QWidget>
+#include <QMenu>
 
 class QsciScintilla;
 class NddPluginImplement : public QWidget
@@ -18,6 +19,8 @@ public:
     }
 
 private:
+    // 目前看来需要准备一个完整内部状态
+    QWidget *currentWidget;
     QsciScintilla *currentEdit;
     std::function<QsciScintilla* ()> getCurrentEditFunc;
 };
