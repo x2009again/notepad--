@@ -84,7 +84,7 @@ typedef void (*NDD_PROC_FOUND_CALLBACK)(NDD_PROC_DATA* pProcData, void* pUserDat
     }\
 
 #define NOTEPAD_PLUGIN_METADATA_IMPLEMENT(imp_class, imp_show_window) \
-    int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit) {\
+    int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit, NDD_PROC_DATA* pProcData) {\
         NOTEPAD_PLUGIN_IMPLEMENT(imp_class);   \
         if (imp_show_window) {\
             imp->show();\
