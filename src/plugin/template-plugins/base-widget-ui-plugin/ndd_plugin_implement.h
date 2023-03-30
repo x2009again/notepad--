@@ -1,4 +1,4 @@
-#ifndef NDD_PLUGIN_IMPLEMENT_H
+﻿#ifndef NDD_PLUGIN_IMPLEMENT_H
 #define NDD_PLUGIN_IMPLEMENT_H
 
 #include <QMainWindow>
