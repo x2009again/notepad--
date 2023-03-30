@@ -119,7 +119,7 @@ set_target_properties(opencc
     PROPERTIES
         IMPORTED_LOCATION        ${libopencc_install}/lib/${libopencc_lib}
         INTERFACE_LINK_LIBRARIES ${libopencc_install}/lib/${libmarisa_lib}
-        INCLUDE_DIRECTORIES      ${libopencc_install}/include)
+        INTERFACE_INCLUDE_DIRECTORIES ${libopencc_install}/include)
 
 # ----------------------------------------------------------------
 
