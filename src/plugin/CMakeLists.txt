@@ -7,6 +7,8 @@ if(USE_NOTEPAD_PLUGIN)
     add_subdirectory(helloworld-next)
     
     if(USE_NOTEPAD_PLUGIN_BASE)
+        # 默认的测试插件
+        add_subdirectory(test)
         # 基于源代码构建的系列插件模板
         add_subdirectory(template-plugins/base-plugin)
         add_subdirectory(template-plugins/base-widget-plugin)
