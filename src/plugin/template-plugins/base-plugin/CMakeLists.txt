@@ -15,8 +15,8 @@ set(LOCAL_PLUGIN_NAME "base-plugin")
 
 if(TRUE)
     # 准备构建 base-plugin 主程序扩展
-    spark_aux_source_paths(LocalSources
-        .
+    spark_file_glob(LocalSources
+        ./*.h ./*.cpp ./*.ui
     )
     spark_add_library(${LOCAL_PLUGIN_NAME} SHARED ${LocalSources})
     target_include_directories(${LOCAL_PLUGIN_NAME} PRIVATE

@@ -15,8 +15,8 @@ set(LOCAL_PLUGIN_NAME "external-plugin")
 
 if(TRUE)
     # 准备构建 external-plugin 主程序扩展
-    spark_aux_source_paths(LocalSources
-        .
+    spark_file_glob(LocalSources
+        ./*.h ./*.cpp ./*.ui
     )
     spark_add_library(${LOCAL_PLUGIN_NAME} SHARED ${LocalSources})
     target_include_directories(${LOCAL_PLUGIN_NAME} PRIVATE
@@ -83,7 +83,8 @@ endif(UNIX)
 
 
 # ----------------- external-plugin 构建的外部项目依赖 ----------------- #
-add_library(external-plugin-base SHARED external-plugin/base.cpp)
+add_library(external-plugin-base SHARED 
+    external-plugin/base.cpp external-plugin/interface/external.h)
 
 if(WIN32)
     target_compile_features(external-plugin-base PUBLIC  cxx_std_20)

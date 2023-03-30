@@ -174,8 +174,9 @@ macro(spark_add_library_realpaths)
 endmacro(spark_add_library_realpaths)
 
 
-# spark_aux_source_paths
+# spark_aux_source_paths <var> [paths]...
 # 将指定路径中的文件变成可用的AUX源文件列表
+    # 并提供 <var>_PATHS 记录源文件列表来源
 macro(spark_aux_source_paths AUX_VAR)
     set(${AUX_VAR} "")
     set(${AUX_VAR}_PATHS ${ARGN})
@@ -187,8 +188,9 @@ macro(spark_aux_source_paths AUX_VAR)
 
 endmacro(spark_aux_source_paths AUX_VAR)
 
-# spark_file_glob
-#
+# spark_file_glob <var> [regexp]... 
+# 使用用 file(GLOB) 的匹配规则，并一次可匹配多个规则
+    # 并提供 <var>_PATHS 记录规则列表
 macro(spark_file_glob FGLOB_VAR)
     set(${FGLOB_VAR} "")
     set(${FGLOB_VAR}_PATHS ${ARGN})
@@ -206,9 +208,9 @@ macro(spark_file_glob FGLOB_VAR)
 endmacro(spark_file_glob FGLOB_VAR)
 
 
-# spark_add_source_paths
-# 将指定路径中的文件变成可用的源文件列表
-#
+# spark_add_source_paths <var> [paths]...
+# 扩展 spark_aux_source_paths 宏增加可查找 ui 文件
+    # 并提供 <var>_PATHS 记录源文件列表来源
 macro(spark_add_source_paths SOURCE_VAR)
     set(${SOURCE_VAR} "")
     set(${SOURCE_VAR}_PATHS ${ARGN})
@@ -235,3 +237,19 @@ macro(spark_add_source_paths SOURCE_VAR)
         endforeach(ui_src IN LISTS UI_SRCS)
     endforeach(source_path IN LISTS ${SOURCE_VAR}_PATHS)
 endmacro(spark_add_source_paths SOURCE_VAR)
+
+
+# spark_add_library_file_glob <var> <STATIC|SHARED|regexp> [regexp]...
+    # 基于 regexp 所描述的内容进行构建库
+    # 这是一个比较简单的 macros 扩展宏
+macro(spark_add_library_file_glob _lib_name _lib_type)
+
+    if(${_lib_type} STREQUAL SHARED OR ${_lib_type} STREQUAL STATIC)
+        spark_file_glob(${_lib_name}_SOURCES ${ARGN})
+        spark_add_library(${_lib_name} ${_lib_type} ${${_lib_name}_SOURCES})
+    else()
+        spark_file_glob(${_lib_name}_SOURCES ${_lib_type} ${ARGN})
+        spark_add_library(${_lib_name} ${${_lib_name}_SOURCES})
+    endif(${_lib_type} STREQUAL SHARED OR ${_lib_type} STREQUAL STATIC)
+
+endmacro(spark_add_library_file_glob _lib_name _lib_type)
