@@ -30,4 +30,8 @@ if(USE_NOTEPAD_PLUGIN)
         # 一个简单的 Linux 终端插件，但依赖于外部的 lxqt-qterminal
         add_subdirectory(linux-terminal-plugin)
     endif(UNIX AND NOT APPLE)
+    
+    # TTS 语音合成
+    add_subdirectory(TTS-plugin)
+
 endif(USE_NOTEPAD_PLUGIN)
