@@ -24,8 +24,6 @@ public:
     }
 
 private slots:
-    void onReadyRead();
-
     void speakeSpeck(const QString &text);
     void speakeSpeck(const QStringList &arguments);
     void speakEkho(const QString &text);
