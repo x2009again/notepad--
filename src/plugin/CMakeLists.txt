@@ -16,6 +16,7 @@ if(USE_NOTEPAD_PLUGIN)
         add_subdirectory(template-plugins/base-widget-ui-plugin)
         add_subdirectory(template-plugins/base-secondary-menu-plugin)
         add_subdirectory(template-plugins/base-secondary-menu-plugin-v1)
+        add_subdirectory(template-plugins/base-secondary-menu-ui-plugin-v1)
     endif(USE_NOTEPAD_PLUGIN_BASE)
 
     # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
