@@ -7,6 +7,9 @@
 class OpenCCTask : public QObject , public QRunnable
 {
     Q_OBJECT
+    Q_PROPERTY(QString text READ text WRITE setText  NOTIFY textChanged)
+    Q_PROPERTY(bool cn2Tn READ cn2Tn WRITE setCn2Tn NOTIFY cn2TnChanged)
+
 public:
     explicit OpenCCTask(QObject *parent = nullptr, QString text = "");
 
@@ -18,18 +21,26 @@ public:
 
 //    void setTaskType(TaskType type = NormalType);
 
-    QString text() const;
-    void setText(const QString &text);
+
+public:
+    // QRunnable interface
+    void run() override;
+
 
 signals:
     void complete(const QString s);
+    void textChanged();
+    void cn2TnChanged();
 
-    // QRunnable interface
 public:
-    void run() override;
+    QString text() const;
+    void setText(const QString &newText);
+    bool cn2Tn() const;
+    void setCn2Tn(bool newCn2Tn);
 
 private:
     QString m_text;
+    bool m_cn2Tn;
 };
 
 #endif // OPENCCTASK_H

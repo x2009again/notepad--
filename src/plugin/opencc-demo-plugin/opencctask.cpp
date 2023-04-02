@@ -8,21 +8,36 @@ OpenCCTask::OpenCCTask(QObject *parent, QString text) : QObject(parent)
 
 }
 
+void OpenCCTask::run()
+{
+    opencc::SimpleConverter converter(cn2Tn()?"s2t.json":"t2s.json");
+    std::string s = converter.Convert(m_text.toStdString().data());
+    QString result = QString::fromStdString(s);
+    emit complete(result);
+}
+
 QString OpenCCTask::text() const
 {
     return m_text;
 }
 
-void OpenCCTask::setText(const QString &text)
+void OpenCCTask::setText(const QString &newText)
 {
-    m_text = text;
+    if (m_text == newText)
+        return;
+    m_text = newText;
+    emit textChanged();
 }
 
-void OpenCCTask::run()
+bool OpenCCTask::cn2Tn() const
 {
-    opencc::SimpleConverter converter("s2t.json");
+    return m_cn2Tn;
+}
 
-    std::string s = converter.Convert(m_text.toStdString().data());
-    QString result = QString::fromStdString(s);
-    emit complete(result);
+void OpenCCTask::setCn2Tn(bool newCn2Tn)
+{
+    if (m_cn2Tn == newCn2Tn)
+        return;
+    m_cn2Tn = newCn2Tn;
+    emit cn2TnChanged();
 }
