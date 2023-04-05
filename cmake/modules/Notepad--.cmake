@@ -53,20 +53,18 @@ endif(TRUE)
 
 # ----------------- Notepad-- 构建宏支持相关  ----------------- #
 
-if(WIN32)
-    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
-    target_compile_definitions(${PROJECT_NAME} 
-        PRIVATE 
-            NO_PLUGIN       # 开启插件支持
-            QSCINTILLA_DLL  # 目前在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
-                            # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
-    )
-endif(WIN32)
+# 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
+target_compile_definitions(${PROJECT_NAME} 
+    PRIVATE 
+        NO_PLUGIN       # 开启插件支持
+)
 
-if(UNIX)
-    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
-    target_compile_definitions(${PROJECT_NAME} 
-        PRIVATE 
-            NO_PLUGIN       # 开启插件支持
-    )
-endif(UNIX)
+# 用于打印目标属性生成器调试信息的自定义目标
+add_custom_target(targetdebug 
+    COMMAND 
+        ${CMAKE_COMMAND} -E echo 
+            ">>>>> Notepad-- COMPILE_DEFINITIONS: $<TARGET_PROPERTY:Notepad--,COMPILE_DEFINITIONS>"
+    COMMAND 
+        ${CMAKE_COMMAND} -E echo 
+            ">>>>> Notepad-- LINK_LIBRARIES: $<TARGET_PROPERTY:Notepad--,LINK_LIBRARIES>")
+

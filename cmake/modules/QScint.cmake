@@ -57,10 +57,12 @@ if(WIN32)
             SCINTILLA_QT                # 
             SCI_LEXER                   # 
             INCLUDE_DEPRECATED_FEATURES # 
-            QSCINTILLA_MAKE_DLL         # 在 Windows 中构建此库时应该采用 Q_DECL_EXPORT
-                                        # 并且在 Windows 中使用此库时应该采用 Q_DECL_IMPORT
-                                        # 控制 QSCINTILLA_EXPORT 符号应为：
+
+        # 控制 QSCINTILLA_EXPORT 符号应为：
                                         # 构建时(导出)，由外部使用时(导入)
+            QSCINTILLA_MAKE_DLL         # 在 Windows 中构建此库时应该采用 Q_DECL_EXPORT
+        INTERFACE
+            QSCINTILLA_DLL              # 在 Windows 中使用此库时应该采用 Q_DECL_IMPORT
     )
 endif(WIN32)
 
