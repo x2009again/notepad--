@@ -124,7 +124,7 @@ if(WINDOWS_DEPLOY_QT)
                     # 执行以下命令进行 windeployqt
                     COMMAND ${WINDOWS_QT_DIR}/../../../bin/windeployqt
                         # 
-                        ${WINDOWS_APPLICATION_DEPLOY_PATH}/QSci.dll
+                        ${WINDOWS_APPLICATION_DEPLOY_PATH}/$<TARGET_FILE_NAME:QSci>
 
                         # 扫描QML-从目录开始导入。
                         --qmlimport ${WINDOWS_QT_DIR}/../../../qml
