@@ -59,12 +59,13 @@ target_compile_definitions(${PROJECT_NAME}
         NO_PLUGIN       # 开启插件支持
 )
 
-# 用于打印目标属性生成器调试信息的自定义目标
-add_custom_target(targetdebug 
-    COMMAND 
-        ${CMAKE_COMMAND} -E echo 
-            ">>>>> Notepad-- COMPILE_DEFINITIONS: $<TARGET_PROPERTY:Notepad--,COMPILE_DEFINITIONS>"
-    COMMAND 
-        ${CMAKE_COMMAND} -E echo 
-            ">>>>> Notepad-- LINK_LIBRARIES: $<TARGET_PROPERTY:Notepad--,LINK_LIBRARIES>")
-
+# 添加 Notepad-- 目标属性与生成器调试信息
+spark_cmake_debug(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>> Notepad-- CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    "Notepad-- LINK_LIBRARIES:        $<TARGET_PROPERTY:Notepad--,LINK_LIBRARIES>"
+    "Notepad-- COMPILE_DEFINITIONS:   $<TARGET_PROPERTY:Notepad--,COMPILE_DEFINITIONS>"
+    "Notepad-- INTERFACE:             $<TARGET_PROPERTY:Notepad--,INTERFACE>"
+    "Notepad-- TARGET_FILE_BASE_NAME: $<TARGET_FILE_BASE_NAME:Notepad-->"
+    "Notepad-- TARGET_FILE_NAME:      $<TARGET_FILE_NAME:Notepad-->"
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>> Notepad-- CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
+)

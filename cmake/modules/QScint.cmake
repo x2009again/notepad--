@@ -77,3 +77,14 @@ if(UNIX)
                                         # 控制 QSCINTILLA_EXPORT 符号应为留空
     )
 endif(UNIX)
+
+# 添加 QSci 目标属性与生成器调试信息
+spark_cmake_debug(
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>> QSci CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    "QSci LINK_LIBRARIES:        $<TARGET_PROPERTY:QSci,LINK_LIBRARIES>"
+    "QSci COMPILE_DEFINITIONS:   $<TARGET_PROPERTY:QSci,COMPILE_DEFINITIONS>"
+    "QSci INTERFACE:             $<TARGET_PROPERTY:QSci,INTERFACE>"
+    "QSci TARGET_FILE_BASE_NAME: $<TARGET_FILE_BASE_NAME:QSci>"
+    "QSci TARGET_FILE_NAME:      $<TARGET_FILE_NAME:QSci>"
+    ">>>>>>>>>>>>>>>>>>>>>>>>>>> QSci CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
+)

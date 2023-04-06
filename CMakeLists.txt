@@ -13,6 +13,7 @@ else()
     include(cmake/SparkFindQt5Config.cmake)
 endif(USE_QT6)
 include(cmake/SparkMacrosExtendConfig.cmake)
+include(cmake/SparkCMakeDebugConfig.cmake)
 
 
 # ----------------- 构建之前 全局定义 ----------------- #
@@ -123,3 +124,7 @@ if(USE_QT6)
         message(NOTICE "[${QT56_PASS}] Qt5/Qt6 兼容性检查文件当前检查通过。")
     endif(NOT QT56_PASS)
 endif(USE_QT6)
+
+
+# 在全局结束位置使用 cmake-debug 目标来驱动内部调试信息打印
+spark_generator_cmake_debug(cmake-debug)
