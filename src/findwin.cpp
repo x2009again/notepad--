@@ -5,6 +5,7 @@
 #include "doctypelistview.h"
 #include "filemanager.h"
 #include "ccnotepad.h"
+#include "nddsetting.h"
 
 #include <QMimeDatabase>
 #include <QRadioButton>
@@ -78,7 +79,7 @@ FindWin::~FindWin()
 	{
 		delete pEditTemp;
 		pEditTemp = nullptr;
-}
+	}
 }
 
 void FindWin::slot_tabIndexChange(int index)
@@ -277,6 +278,20 @@ void FindWin::setFindHistory(QList<QString>* findHistory)
 	}
 }
 
+void FindWin::setReplaceHistory(QList<QString>* replaceHistory)
+{
+	m_replaceHistory = replaceHistory;
+
+	if ((m_replaceHistory != nullptr) && !m_replaceHistory->isEmpty())
+	{
+		ui.replaceWithBox->addItems(*m_replaceHistory);
+		ui.replaceWithBox->clearEditText();
+		ui.dirReplaceWhat->addItems(*m_replaceHistory);
+		ui.dirReplaceWhat->clearEditText();
+		
+	}
+}
+
 //标记高亮所有word单词
 int FindWin::markAllWord(QString & word)
 {
@@ -312,7 +327,7 @@ void FindWin::removeLineHeadEndBlank(int mode)
 		{
 			ui.replaceTextBox->setCurrentText("[	 ]+$");
 		}
-		ui.replaceWithBox->setText("");
+		ui.replaceWithBox->setEditText("");
 		
 		ui.replaceModeRegularBt->setChecked(true);
 
@@ -466,9 +481,9 @@ void FindWin::updateParameterFromUI()
 			m_isFindFirst = true;
 		}
 
-		if (m_replaceWithText != ui.replaceWithBox->text())
+		if (m_replaceWithText != ui.replaceWithBox->currentText())
 		{
-			m_replaceWithText = ui.replaceWithBox->text();
+			m_replaceWithText = ui.replaceWithBox->currentText();
 			m_isFindFirst = true;
 		}
 
@@ -528,9 +543,9 @@ void FindWin::updateParameterFromUI()
 			m_isFindFirst = true;
 		}
 
-		if (m_replaceWithText != ui.dirReplaceWhat->text())
+		if (m_replaceWithText != ui.dirReplaceWhat->currentText())
 		{
-			m_replaceWithText = ui.dirReplaceWhat->text();
+			m_replaceWithText = ui.dirReplaceWhat->currentText();
 			m_isFindFirst = true;
 		}
 
@@ -699,6 +714,55 @@ void FindWin::addFindHistory(QString &text)
 		if (m_findHistory->size() >= 15)
 		{
 			m_findHistory->takeLast();
+		}
+	}
+}
+
+void FindWin::addReplaceHistory(QString& text)
+{
+	//太长会导致看起来很杂乱，也不记录
+	if (text.isEmpty() || text.size() >= MAX_RECORD_KEY_LENGTH)
+	{
+		return;
+	}
+
+	if (m_replaceHistory != nullptr)
+	{
+		int index = m_replaceHistory->indexOf(text, 0);
+		//已经是最上面一个了，直接返回
+		if (0 == index)
+		{
+			return;
+		}
+		//没有直接添加到最前面。不做查找删除重复，一是慢，而是删除会引起信号逻辑时序有误
+		if (-1 == index)
+		{
+			m_replaceHistory->push_front(text);
+			ui.replaceWithBox->insertItem(0, text); 
+			ui.dirReplaceWhat->insertItem(0, text);
+		}
+		else
+		{
+			//有了怎么办，删除旧的，加新的
+			m_replaceHistory->removeAt(index);
+			m_replaceHistory->push_front(text);
+
+			//发现不能只删除旧的，有bug，一旦删除后，查找框乱了，被切换到下一个。
+			ui.replaceWithBox->removeItem(index);
+			ui.dirReplaceWhat->removeItem(index);
+			ui.replaceWithBox->insertItem(0, text);
+			ui.dirReplaceWhat->insertItem(0, text);
+			//发现不能只删除旧的，有bug，一旦删除后，查找框乱了，被切换到下一个。
+			//必须重新设置一下，否则查找框里面字段乱跳到下一个去了
+			ui.replaceWithBox->setCurrentIndex(0);
+			ui.dirReplaceWhat->setCurrentIndex(0);
+		}
+
+
+
+		if (m_replaceHistory->size() >= 15)
+		{
+			m_replaceHistory->takeLast();
 		}
 	}
 }
@@ -876,7 +940,7 @@ void FindWin::removeEmptyLine(bool isBlankContained)
 		{
 			ui.replaceTextBox->setCurrentText("^$(\\r\\n|\\r|\\n)");
 		}
-		ui.replaceWithBox->setText("");
+		ui.replaceWithBox->setEditText("");
 
 		ui.replaceModeRegularBt->setChecked(true);
 
@@ -969,8 +1033,6 @@ void FindWin::dofindNext()
 	updateParameterFromUI();
 
 	QWidget* pw = autoAdjustCurrentEditWin();
-
-
 	QsciScintilla* pEdit = dynamic_cast<QsciScintilla*>(pw);
 
 	//第一次查找
@@ -1095,7 +1157,7 @@ void FindWin::slot_findCount()
 		//这里的forward一定要是true。回环一定是false
 		if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0,false))
 		{
-			ui.statusbar->showMessage(tr("count %1 times with \'%2\'").arg(countNums).arg(m_expr), 8000);
+			ui.statusbar->showMessage(tr("count %1 times with \'%2\'").arg(countNums).arg(m_expr));
 			QApplication::beep();
 
 			m_isFindFirst = true;
@@ -1119,11 +1181,11 @@ void FindWin::slot_findCount()
 
 		pEdit->execute(SCI_GOTOPOS, srcPostion);
 		pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
-		pEdit->execute(SCI_SETXOFFSET, 0);
+		//pEdit->execute(SCI_SETXOFFSET, 0);
 
 		//全部替换后，下次查找，必须算第一次查找
 		m_isFindFirst = true;
-		ui.statusbar->showMessage(tr("count %1 times with \'%2\'").arg(countNums).arg(m_expr), 8000);
+		ui.statusbar->showMessage(tr("count %1 times with \'%2\'").arg(countNums).arg(m_expr));
 	}
 	else
 	{
@@ -1165,11 +1227,16 @@ QString FindWin::addCurFindRecord(ScintillaEditView* pEdit, FindRecords& recordR
 	FindState& state = pEdit->getLastFindState();
 	aRecord.pos = state.targstart;
 	aRecord.end = state.targend;
+	aRecord.lineNum = state.linenum;
 
 	//mark模式不需要这么多信息，可直接返回
 	if (!isMark)
 	{
-		aRecord.lineNum = pEdit->execute(SCI_LINEFROMPOSITION, aRecord.pos);
+		//静默查找，在后台批量查找时，不会返回这个state.linenum。需要手动获取一下
+		if (aRecord.lineNum == -1)
+		{
+			aRecord.lineNum = pEdit->execute(SCI_LINEFROMPOSITION, aRecord.pos);
+		}
 		aRecord.lineStartPos = pEdit->execute(SCI_POSITIONFROMLINE, aRecord.lineNum);
 		int lineLens = pEdit->execute(SCI_LINELENGTH, aRecord.lineNum);
 
@@ -1553,8 +1620,8 @@ int FindWin::findAllInCurDoc(QStringList* reResult)
 
 			if (!m_isStatic)
 			{
-			QApplication::beep();
-			emit sign_findAllInCurDoc(&results);
+				QApplication::beep();
+				emit sign_findAllInCurDoc(&results);
 			}
 
 			m_isFindFirst = true;
@@ -1604,7 +1671,7 @@ int FindWin::findAllInCurDoc(QStringList* reResult)
 
 		pEdit->execute(SCI_GOTOPOS, srcPostion);
 		pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
-		pEdit->execute(SCI_SETXOFFSET, 0);
+		//pEdit->execute(SCI_SETXOFFSET, 0);
 
 		//全部替换后，下次查找，必须算第一次查找
 		m_isFindFirst = true;
@@ -1637,11 +1704,110 @@ int FindWin::findAllInCurDoc(QStringList* reResult)
 
 void FindWin::slot_findAllInCurDoc()
 {
-	findAllInCurDoc();
+	//findAllInCurDoc();
+
+	int index = m_editTabWidget->currentIndex();
+
+	if (index >= 0)
+	{
+		findAllInOpenDoc(index);
+	}
+}
+
+void FindWin::findAllInOpenDoc(int index)
+{
+	if (ui.findComboBox->currentText().isEmpty())
+	{
+		ui.statusbar->showMessage(tr("what find is null !"), 8000);
+		QApplication::beep();
+		return;
+	}
+
+	QString whatFind = ui.findComboBox->currentText();
+	QString originWhatFine = whatFind;
+
+	if (m_extend)
+	{
+		QString extendFind;
+		convertExtendedToString(whatFind, extendFind);
+		whatFind = extendFind;
+	}
+
+	int replaceNums = 0;
+	QVector<FindRecords*>* allOpenFileRecord = new QVector<FindRecords*>();
+
+	for (int i = 0; i < m_editTabWidget->count(); ++i)
+	{
+		//是否只查找一个文档
+		if ((index != -1) && (i != index))
+		{
+			continue;
+		}
+		QWidget* pw = m_editTabWidget->widget(i);
+		ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+		if (pEdit != nullptr)
+		{
+			if (pEdit->isReadOnly())
+			{
+				continue;
+			}
+
+			FindRecords* results = new FindRecords();
+			results->pEdit = pEdit;
+
+			results->findFilePath = pw->property("filePath").toString();
+
+			updateParameterFromUI();
+
+			//无条件进行第一次查找，从0行0列开始查找，而且不回环。如果没有找到，则替换完毕
+			//results->findText要是有原来的值，因为扩展模式下\r\n不会转义，直接输出会换行显示
+			results->findText = originWhatFine;
+			if (!pEdit->findFirst(whatFind, m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_FINDNEXT, 0, 0))
+			{
+				delete results;
+				continue;
+			}
+			else
+			{
+				dealWithZeroFound(pEdit);
+			}
+			addCurFindRecord(pEdit, *results);
+
+			++replaceNums;
+
+			//找到了,把结果收集起来
+			while (pEdit->findNext())
+			{
+				addCurFindRecord(pEdit, *results);
+				++replaceNums;
+				dealWithZeroFound(pEdit);
+			}
+
+			allOpenFileRecord->append(results);
+		}
+	}
+
+	//全部替换后，下次查找，必须算第一次查找
+	m_isFindFirst = true;
+	ui.statusbar->showMessage(tr("find finished, total %1 found!").arg(replaceNums), 10000);
+
+	emit sign_findAllInOpenDoc(allOpenFileRecord, replaceNums, whatFind);
+
+	//释放元素
+	for (int i = 0; i < allOpenFileRecord->size(); ++i)
+	{
+		delete allOpenFileRecord->at(i);
+	}
+
+	delete allOpenFileRecord;
+
 }
 
 void FindWin::slot_findAllInOpenDoc()
 {
+	findAllInOpenDoc(-1);
+
+#if 0
 	if (ui.findComboBox->currentText().isEmpty())
 	{
 		ui.statusbar->showMessage(tr("what find is null !"), 8000);
@@ -1721,7 +1887,7 @@ void FindWin::slot_findAllInOpenDoc()
 	}
 
 	delete allOpenFileRecord;
-	
+#endif
 }
 
 //返回是否查找得到内容
@@ -1738,6 +1904,9 @@ bool FindWin::replaceFindNext(QsciScintilla* pEdit, bool showZeroFindTip)
 			QString whatFind = ui.replaceTextBox->currentText();
 
 			addFindHistory(whatFind);
+
+			QString replaceWith = ui.replaceWithBox->currentText();
+			addReplaceHistory(replaceWith);
 
 			if (m_extend)
 			{
@@ -1815,7 +1984,7 @@ bool FindWin::replace(ScintillaEditView* pEdit)
 	}
 
 	QString findText = ui.replaceTextBox->currentText();
-	QString replaceText = ui.replaceWithBox->text();
+	QString replaceText = ui.replaceWithBox->currentText();
 
 	if (m_extend)
 	{
@@ -2078,7 +2247,7 @@ int FindWin::doReplaceAll(ScintillaEditView* pEdit, QString &whatFind, QString& 
 
 	if (isCombineUndo)
 	{
-	pEdit->execute(SCI_BEGINUNDOACTION);
+		pEdit->execute(SCI_BEGINUNDOACTION);
 	}
 
 	int flags = buildSearchFlags(m_re, m_cs, m_wo, false, true, FINDNEXTTYPE_REPLACENEXT, 0, 0);
@@ -2142,14 +2311,12 @@ int FindWin::doReplaceAll(ScintillaEditView* pEdit, QString &whatFind, QString& 
 
 	if (isCombineUndo)
 	{
-	pEdit->execute(SCI_ENDUNDOACTION);
+		pEdit->execute(SCI_ENDUNDOACTION);
 	}
 
 	pEdit->execute(SCI_GOTOPOS, srcPostion);
 	pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
-	pEdit->execute(SCI_SETXOFFSET, 0);
-
-	
+	//pEdit->execute(SCI_SETXOFFSET, 0);
 
 	return replaceNums;
 }
@@ -2181,7 +2348,7 @@ int FindWin::replaceAll()
 	updateParameterFromUI();
 
 	QString whatFind = ui.replaceTextBox->currentText();
-	QString replaceText = ui.replaceWithBox->text();
+	QString replaceText = ui.replaceWithBox->currentText();
 
 	if (m_extend)
 	{
@@ -2285,7 +2452,7 @@ void FindWin::slot_replaceAllInOpenDoc()
 	ui.statusbar->showMessage(tr("Replace in Opened Files: %1 occurrences were replaced.").arg(replaceNums), 10000);
 }
 
-int  FindWin::markAll()
+int  FindWin::markAll(QSet<int>* outLineNum)
 {
 	if (ui.markTextBox->currentText().isEmpty())
 	{
@@ -2362,6 +2529,11 @@ int  FindWin::markAll()
 				pEdit->execute(SCI_SETINDICATORCURRENT, CCNotePad::s_curMarkColorId);
 				pEdit->execute(SCI_INDICATORFILLRANGE, rs.pos, foundTextLen);
 			}
+
+			if (outLineNum != nullptr)
+			{
+				outLineNum->insert(rs.lineNum);
+			}
 		}
 
 		if (!results->records.isEmpty())
@@ -2369,15 +2541,15 @@ int  FindWin::markAll()
 			pEdit->appendMarkRecord(results);
 		}
 
-
-		pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
 		pEdit->execute(SCI_GOTOPOS, srcPostion);
-		pEdit->execute(SCI_SETXOFFSET, 0);
+		pEdit->execute(SCI_SETFIRSTVISIBLELINE, firstDisLineNum);
+		//pEdit->execute(SCI_SETXOFFSET, 0);
 
 		//全部替换后，下次查找，必须算第一次查找
 		m_isFindFirst = true;
 		ui.statusbar->showMessage(tr("mark finished, total %1 found!").arg(replaceNums), 10000);
 
+	
 		return replaceNums;
 	}
 	else
@@ -2426,6 +2598,10 @@ void FindWin::slot_dirSelectDest()
 	QString curDirPath = ui.destFindDir->text();
 	if (curDirPath.isEmpty())
 	{
+		if (CCNotePad::s_lastOpenDirPath.isEmpty())
+		{
+			CCNotePad::s_lastOpenDirPath = NddSetting::getKeyValueFromDelaySets(LAST_OPEN_DIR);
+		}
 		curDirPath = CCNotePad::s_lastOpenDirPath;
 	}
 
@@ -2512,30 +2688,14 @@ bool FindWin::replaceTextInFile(QString &filePath, int &replaceNums, QVector<Fin
 		replace = extendReplace;
 	}
 
-	replaceNums += doReplaceAll(pEditTemp, find, replace);
+	int modifyTimes = doReplaceAll(pEditTemp, find, replace);
 
-#if 0
-	if (!pEditTemp->findFirst(find, m_re, m_cs, m_wo, false, m_forward, FINDNEXTTYPE_REPLACENEXT,0, 0,false))
+	if (modifyTimes > 0)
 	{
-		return false;
+		replaceNums += modifyTimes;
+		//如果进行过替换，则必须要保存一下；否则不能保存，不然文件被修改。
+		emit sign_replaceSaveFile(filePath, pEditTemp);
 	}
-
-	pEditTemp->replace(replace);
-	dealWithZeroFound(pEditTemp);
-
-	++replaceNums;
-
-	//找到了，则自动进行全部替换
-	while (pEditTemp->findNext())
-	{
-		pEditTemp->replace(replace);
-		++replaceNums;
-		dealWithZeroFound(pEditTemp);
-	}
-#endif
-
-	//必须要保存一下
-	emit sign_replaceSaveFile(filePath, pEditTemp);
 
 	return true;
 }
@@ -2848,7 +3008,7 @@ void FindWin::slot_dirFindAll()
 
 	if (pEditTemp == nullptr)
 	{
-		pEditTemp = new ScintillaEditView(nullptr);
+		pEditTemp = ScintillaEditView::createEditForSearch();
 	}
 
 	int foundNums = 0;
@@ -2860,7 +3020,7 @@ void FindWin::slot_dirFindAll()
 
 	//全部替换后，下次查找，必须算第一次查找
 	m_isFindFirst = true;
-	ui.statusbar->showMessage(tr("find finished, total %1 found in %2 file!").arg(foundNums).arg(filesNum), 10000);
+	ui.statusbar->showMessage(tr("find finished, walk %1 files, total %2 found in %3 file!").arg(filesNum).arg(foundNums).arg(allfileInDirRecord->size()));
 
 	//复用了这个信号函数，没有新做消息，要注意
 	emit sign_findAllInOpenDoc(allfileInDirRecord, foundNums, whatFind);
@@ -2882,7 +3042,7 @@ void FindWin::slot_dirReplaceAll()
 {
 	QString dirPath = ui.destFindDir->text();
 	QString whatFind = ui.dirFindWhat->currentText();
-	QString dirReplaceWhat = ui.dirReplaceWhat->text();
+	QString dirReplaceWhat = ui.dirReplaceWhat->currentText();
 
 	if (dirPath.isEmpty())
 	{
@@ -2964,12 +3124,15 @@ void FindWin::slot_dirReplaceAll()
 	int skipMaxSize = (ui.skipFileMaxSize->isChecked()) ? ui.maxFileSizeSpinBox->value() * 1024 * 1024 : 0;
 	bool isSkipChildDir = ui.skipChildDirs->isChecked();
 
+	addReplaceHistory(dirReplaceWhat);
+
 	updateParameterFromUI();
 
 	if (pEditTemp == nullptr)
 	{
-		pEditTemp = new ScintillaEditView(nullptr);
+		pEditTemp = ScintillaEditView::createEditForSearch();
 	}
+
 	int replaceNums = 0;
 
 	std::function<bool(QString &, int &, QVector<FindRecords*>* allfileInDirRecord)> foundCallBack = std::bind(&FindWin::replaceTextInFile, this, std::placeholders::_1, std::placeholders::_2, nullptr);
@@ -2978,7 +3141,7 @@ void FindWin::slot_dirReplaceAll()
 
 	//全部替换后，下次查找，必须算第一次查找
 	m_isFindFirst = true;
-	ui.statusbar->showMessage(tr("replace finished, total %1 replace in %2 file!").arg(replaceNums).arg(filesNum), 10000);
+	ui.statusbar->showMessage(tr("replace finished, walk %1 files, total %2 replace !").arg(filesNum).arg(replaceNums));
 }
 
 
@@ -2999,4 +3162,19 @@ void  FindWin::on_copyReFindResult()
 		QClipboard* clipboard = QApplication::clipboard();
 		clipboard->setText(reResult.join("\n"));
 	}
+}
+
+void FindWin::on_markAndBook()
+{
+	QSet<int> outLineNum;
+	markAll(&outLineNum);
+
+	QWidget* pw = autoAdjustCurrentEditWin();
+	ScintillaEditView* pEdit = dynamic_cast<ScintillaEditView*>(pw);
+
+	if (pEdit != nullptr)
+	{
+		pEdit->bookmarkAdd(outLineNum);
+	}
+
 }

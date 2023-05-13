@@ -2,6 +2,7 @@
 #include "scintillaeditview.h"
 #include "ccnotepad.h"
 #include "qtlangset.h"
+#include "nddsetting.h"
 #include <QFontDialog>
 #include <QColorDialog>
 
@@ -21,6 +22,9 @@ TextEditSetWin::TextEditSetWin(QWidget *parent)
 
 	ui.restoreFile->setChecked((CCNotePad::s_restoreLastFile == 1));
 
+	int clearOpenfilelist = NddSetting::getKeyValueFromDelayNumSets(CLEAR_OPENFILE_ON_CLOSE);
+
+	ui.openfileRecord->setChecked((clearOpenfilelist ==1));
 
 	QPalette pal = QApplication::palette();
 
@@ -28,7 +32,6 @@ TextEditSetWin::TextEditSetWin(QWidget *parent)
 	f.fill(pal.text().color());
 	ui.appFontColorLabel->setPixmap(f);
 
-	//ui.appFontColorLabel
 }
 
 TextEditSetWin::~TextEditSetWin()
@@ -87,6 +90,11 @@ void TextEditSetWin::save()
 	{
 		CCNotePad::s_restoreLastFile = restoreFile;
 }
+
+	//注意这里是禁用，和启用是相反的意思
+	int clearOpenfilelist = (ui.openfileRecord->isChecked() ? 1 : 0);
+
+	NddSetting::updataKeyValueFromDelayNumSets(CLEAR_OPENFILE_ON_CLOSE, clearOpenfilelist);
 }
 
 void TextEditSetWin::slot_txtFontSet()

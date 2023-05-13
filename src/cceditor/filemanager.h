@@ -154,8 +154,13 @@ public:
 
 	void delNewFileNode(int fileIndex);
 
-	int loadFileDataInText(ScintillaEditView * editView, QString filePath, CODE_ID & fileTextCode, RC_LINE_FORM &lineEnd, CCNotePad * callbackObj=nullptr, bool hexAsk = true, QWidget* MsgBoxParent=nullptr);
+	int loadFileDataInTextFromOffset(ScintillaEditView* editView, QString filePath, CODE_ID fileTextCode, QWidget* msgBoxParent, quint64 startReadSize);
 
+	//下面这个是旧函数，之前对比时候用的。
+	//int loadFileDataInText(ScintillaEditView * editView, QString filePath, CODE_ID & fileTextCode, RC_LINE_FORM &lineEnd, CCNotePad * callbackObj=nullptr, bool hexAsk = true, QWidget* MsgBoxParent=nullptr);
+
+	int loadFileDataInText(ScintillaEditView* editView, QString filePath, CODE_ID& fileTextCode, RC_LINE_FORM& lineEnd, CCNotePad* callbackObj = nullptr, bool hexAsk = true, QWidget* msgBoxParent = nullptr);
+	
 	int loadFileForSearch(ScintillaEditView * editView, QString filePath);
 
 	//int loadFileData(ScintillaEditView * editView, QString filePath, CODE_ID & fileTextCode, RC_LINE_FORM & lineEnd);
@@ -187,8 +192,6 @@ public:
 	void closeSuperBigTextFileHand(QString filepath);
 
 	void closeBigTextRoFileHand(QString filepath);
-
-	LangType detectLanguageFromTextBegining(const unsigned char * data, size_t dataLen);
 
 	static FileManager& getInstance() {
 		static FileManager instance;

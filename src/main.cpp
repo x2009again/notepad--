@@ -120,8 +120,12 @@ class MyApplication : public QApplication
 
 int main(int argc, char *argv[])
 {
-	//可以防止某些屏幕下的字体拥挤重叠问题
-	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	//可以防止某些屏幕下的字体拥挤重叠问题。暂时屏蔽，不使用qt方法，使用windows自带方案
+	// 发现windows自带方案模糊。//发现下面打开后，在win10上反而效果不好，界面会变得很大，默认还是不开启的好。
+	//QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+	//QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+	//QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::RoundPreferFloor);
+
 #ifdef Q_OS_MAC
     MyApplication a(argc, argv);
 #else

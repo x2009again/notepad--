@@ -1,6 +1,6 @@
 ﻿// This module implements the QsciCommandSet class.
 //
-// Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2023 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -125,6 +125,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Scroll view up one line")
         },
+#if 0
         {
             QsciCommand::ScrollToStart,
 #if defined(USING_OSX_KEYS)
@@ -145,6 +146,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Scroll to end of document")
         },
+#endif
 #if 0
         {
             QsciCommand::VerticalCentreCaret,

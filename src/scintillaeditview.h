@@ -7,6 +7,7 @@
 #include <unordered_set>
 #include "common.h"
 #include "Sorters.h"
+#include "markdownview.h"
 
 
 typedef sptr_t(*SCINTILLA_FUNC) (sptr_t ptr, unsigned int, uptr_t, sptr_t);
@@ -213,6 +214,10 @@ public:
 	void deleteTailFileThread();
 #endif
 
+	void bookmarkAdd(QSet<int>& lineSet);
+
+	static ScintillaEditView* createEditForSearch();
+
 signals:
 	void delayWork();
 
@@ -223,7 +228,7 @@ protected:
 	virtual void mouseReleaseEvent(QMouseEvent* ev) override;
 
 private:
-
+	ScintillaEditView();
 	void getText(char * dest, size_t start, size_t end) const;
 
 	QString getGenericTextAsQString(size_t start, size_t end) const;
@@ -293,8 +298,8 @@ private slots:
 	void slot_clearHightWord();
 
 	void slot_bookMarkClicked(int margin, int line, Qt::KeyboardModifiers state);
-
-
+	void on_viewMarkdown();
+	void on_updataMarkdown();
 
 private:
 
@@ -323,6 +328,9 @@ private:
 	quint32 m_curBlockLineStartNum;
 
 	QMap<qint64, quint32> m_addrLineNumMap;//大文本模式下，地址和行号的对应关系。只需要首尾即可
+
+	QPointer<MarkdownView> m_markdownWin;
+
 public:
 	static int s_tabLens;
 	static bool s_noUseTab;

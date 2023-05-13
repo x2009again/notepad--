@@ -23,6 +23,7 @@
 #include "findwin.h"
 #include "pluginGl.h"
 
+
 //class ScintillaEditView;
 class ScintillaHexEditView;
 class FindRecords;
@@ -33,7 +34,6 @@ class CompareWin;
 struct HexFileMgr;
 struct TextFileMgr;
 struct BigTextEditFileMgr;
-class QtLangSet;
 
 static const char* Tail_Thread = "tailthread";
 
@@ -87,6 +87,7 @@ enum NddDocType {
 //打开模式。1 文本 2 二进制 3 大文本只读 4 文本只读
 //const char* Open_Attr = "openid";
 class FileListView;
+class QtLangSet;
 
 class CCNotePad : public QMainWindow
 {
@@ -154,7 +155,7 @@ signals:
 	void signRegisterReplay(int code);
 	void signLinkNetServer();
 #ifdef Q_OS_WIN
-	void tailFileChange(ScintillaEditView*);
+	void tailFileChange(ScintillaEditView*,qint64 lastSize, qint64 curSize);
 #endif 
 public slots:
 	void slot_changeChinese();
@@ -197,6 +198,7 @@ protected:
 	void closeEvent(QCloseEvent *event) override;
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* e) override;
+	void dragLeaveEvent(QDragLeaveEvent* event);
 	bool eventFilter(QObject *watched, QEvent *event)override;
 #ifdef Q_OS_WIN
 	bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
@@ -235,7 +237,9 @@ private slots:
 	
 	void slot_findResultPosChangeed(Qt::DockWidgetArea area);
 	void slot_findResultItemDoubleClick(const QModelIndex & index);
+#if 0
 	void slot_showFindAllInCurDocResult(FindRecords * record);
+#endif
 	void slot_showfindAllInOpenDocResult(QVector<FindRecords*>* record, int hits, QString whatFind);
 	void slot_clearFindResult();
 	void slot_convertWinLineEnd(bool);
@@ -347,6 +351,8 @@ private slots:
 #ifdef NO_PLUGIN
 	void onPlugWork(bool check);
 	void sendParaToPlugin(NDD_PROC_DATA& procData);
+	//cmdId 执行什么动作，一定固定后，主程序不能随便修改，否则会引发兼容性问题。
+	bool pluginInvoke(int cmdId, void* data);
 #endif
 	void slot_showWebAddr(bool check);
 	void slot_langFileSuffix();
@@ -354,7 +360,7 @@ private slots:
 	void on_lineEndChange(int index);
 	void on_tailfile(bool isOn);
 #ifdef Q_OS_WIN
-	void on_roladFile(ScintillaEditView* pEdit);
+	void on_roladFile(ScintillaEditView* pEdit,quint64 lastSize, qint64 curSize);
 #endif
 	void on_md5hash();
 
@@ -396,11 +402,15 @@ private:
 	void addWatchFilePath(QString filePath);
 	void removeWatchFilePath(QString filePath);
 
-	bool checkRoladFile(ScintillaEditView * pEdit);
-	void reloadEditFile(ScintillaEditView * pEidt, bool isTailfOn = false);
+	void doReloadTxtFile(ScintillaEditView* pEdit, bool isOnTail, qint64 startReadSize);
+	void firstTimeIntoTail(ScintillaEditView* pEdit, int remainLineNums=100);
+	bool checkRoladFile(ScintillaEditView * pEdit, qint64 startReadSize=-1);
+	void reloadEditFile(ScintillaEditView * pEidt, bool isTailfOn = false, qint64 startReadSize=-1);
 	int initFindWindow(FindTabIndex type= FIND_TAB);
 
 	void setToFileRightMenu();
+	void initReceneCmp();
+	void saveReceneCmp();
 
 	QString getShortName(const QString& name);
 
@@ -471,6 +481,7 @@ private:
 	void doFold(int type, bool mode);
 	void doComment(int type);
 	void tailfile(bool isOn, ScintillaEditView* pEdit);
+	void on_findResultlineDoubleClick(QString* pFilePath, int pos, int end);
 private:
 	Ui::CCNotePad ui;
 
@@ -521,6 +532,10 @@ private:
 
 	QSharedMemory* m_shareMem;
 
+	
+
+	QList<CompareDirs*> m_cmpDirMgr;
+	QList<CompareWin*> m_cmpFileMgr;
 
 	//最近打开的对比文件和目录列表。做一个环形区
 //保存在数据库中
@@ -551,6 +566,7 @@ private:
 	QPointer<QWidget> m_pHexGotoWin;
 
 	static QStringList s_findHistroy;
+	static QStringList s_replaceHistroy;
 	static int s_padTimes;
 
 	int m_curSoftLangs; //当前语言0:自动 1 中文 2 英语
@@ -615,6 +631,7 @@ private:
 	QList<NDD_PROC_DATA> m_pluginList;
 
 public:
+	
 		static QString s_lastOpenDirPath;
 	static int s_restoreLastFile; //自动恢复上次打开的文件
 	static int s_curStyleId;

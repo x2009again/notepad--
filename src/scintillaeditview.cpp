@@ -8,6 +8,7 @@
 #include "findwin.h"
 #include "filemanager.h"
 #include "shortcutkeymgr.h"
+#include "markdownview.h"
 
 #include <Scintilla.h>
 #include <SciLexer.h>
@@ -216,6 +217,31 @@ ScintillaEditView::~ScintillaEditView()
 #ifdef Q_OS_WIN
 	deleteTailFileThread();
 #endif
+}
+
+ScintillaEditView::ScintillaEditView():QsciScintilla(nullptr),m_NoteWin(nullptr), m_preFirstLineNum(0), m_curPos(0), m_hasHighlight(false), m_bookmarkPng(nullptr), m_styleColorMenu(nullptr), m_isBigText(false), m_curBlockLineStartNum(0)
+#ifdef Q_OS_WIN
+, m_isInTailStatus(false)
+#endif
+{
+	m_pScintillaFunc = (SCINTILLA_FUNC)this->SendScintillaPtrResult(SCI_GETDIRECTFUNCTION);
+	m_pScintillaPtr = (SCINTILLA_PTR)this->SendScintillaPtrResult(SCI_GETDIRECTPOINTER);
+
+
+	if (!m_pScintillaFunc)
+	{
+		throw std::runtime_error("ScintillaEditView::init : SCI_GETDIRECTFUNCTION message failed");
+	}
+
+	if (!m_pScintillaPtr)
+	{
+		throw std::runtime_error("ScintillaEditView::init : SCI_GETDIRECTPOINTER message failed");
+	}
+}
+
+ScintillaEditView* ScintillaEditView::createEditForSearch()
+{
+	return new ScintillaEditView();
 }
 
 
@@ -1418,6 +1444,16 @@ void ScintillaEditView::bookmarkToggle(intptr_t lineno) const {
 		bookmarkAdd(lineno);
 }
 
+void ScintillaEditView::bookmarkAdd(QSet<int>& lineSet)
+{
+	QSet<int>::const_iterator i = lineSet.constBegin();
+	while (i != lineSet.constEnd()) {
+		bookmarkAdd(*i);
+		++i;
+	}
+}
+
+
 void ScintillaEditView::bookmarkClearAll() const {
 	this->execute(SCI_MARKERDELETEALL, _SC_MARGE_SYBOLE);
 }
@@ -1936,6 +1972,9 @@ void ScintillaEditView::contextUserDefineMenuEvent(QMenu* menu)
 		});
 
 		menu->addSeparator();
+
+		menu->addAction(tr("Markdown View"), this, &ScintillaEditView::on_viewMarkdown);
+
 		menu->addAction(tr("Word Count"), [this]() {
 			showWordNums();
 			});
@@ -3694,7 +3733,7 @@ void ScintillaEditView::updateThemes()
 	}
 }
 
-void getFoldColor(QColor& fgColor, QColor& bgColor, QColor& activeFgColor)
+static void getFoldColor(QColor& fgColor, QColor& bgColor, QColor& activeFgColor)
 {
 	//这里看起来反了，但是实际代码就是如此
 	fgColor = StyleSet::s_global_style->fold.bgColor;
@@ -4270,3 +4309,28 @@ void ScintillaEditView::deleteTailFileThread()
 	}
 }
 #endif
+
+//显示markdown编辑器
+void ScintillaEditView::on_viewMarkdown()
+{
+	if (m_markdownWin.isNull())
+	{
+		m_markdownWin = new MarkdownView(this);
+		m_markdownWin->setAttribute(Qt::WA_DeleteOnClose);
+		connect(this, &ScintillaEditView::textChanged, this, &ScintillaEditView::on_updataMarkdown);
+	}
+	
+	QString text = this->text();
+	m_markdownWin->viewMarkdown(text);
+	m_markdownWin->show();
+}
+
+void ScintillaEditView::on_updataMarkdown()
+{
+	if (!m_markdownWin.isNull())
+	{
+		QString text = this->text();
+		m_markdownWin->viewMarkdown(text);
+		m_markdownWin->show();
+	}
+}
