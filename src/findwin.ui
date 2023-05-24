@@ -403,13 +403,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QLineEdit" name="replaceWithBox">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
+               <widget class="QComboBox" name="replaceWithBox">
                 <property name="minimumSize">
                  <size>
                   <width>300</width>
@@ -421,6 +415,12 @@
                   <width>350</width>
                   <height>16777215</height>
                  </size>
+                </property>
+                <property name="editable">
+                 <bool>true</bool>
+                </property>
+                <property name="maxCount">
+                 <number>512</number>
                 </property>
                </widget>
               </item>
@@ -759,48 +759,7 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_5">
-            <item row="1" column="1">
-             <widget class="QLineEdit" name="fileType">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>300</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>350</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="placeholderText">
-               <string>*.c:*.cpp:*.h</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0">
-             <widget class="QCheckBox" name="dealFileType">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>File Type :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
              <widget class="QLabel" name="label_6">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -813,20 +772,7 @@
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="skipDir">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Skip Dir Name :</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
+            <item row="3" column="1">
              <widget class="QLineEdit" name="skipDirNames">
               <property name="enabled">
                <bool>false</bool>
@@ -854,8 +800,24 @@
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QLineEdit" name="dirReplaceWhat">
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="skipDir">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Skip Dir Name :</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QLineEdit" name="fileType">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -873,6 +835,35 @@
                 <width>350</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="placeholderText">
+               <string>*.c:*.cpp:*.h</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="dealFileType">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>File Type :</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QComboBox" name="dirReplaceWhat">
+              <property name="minimumSize">
+               <size>
+                <width>300</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="editable">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1313,6 +1304,25 @@
            </widget>
           </item>
           <item>
+           <widget class="QPushButton" name="pushButton">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>200</width>
+              <height>28</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Mark &amp; Bookmark</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QPushButton" name="markClearBox">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -1410,7 +1420,6 @@
   <tabstop>findModeExtendBt</tabstop>
   <tabstop>findModeRegularBt</tabstop>
   <tabstop>replaceTextBox</tabstop>
-  <tabstop>replaceWithBox</tabstop>
   <tabstop>replaceFindNextBox</tabstop>
   <tabstop>replaceBt</tabstop>
   <tabstop>replaceAllBt</tabstop>
@@ -1425,7 +1434,6 @@
   <tabstop>replaceModeRegularBt</tabstop>
   <tabstop>destFindDir</tabstop>
   <tabstop>dirFindWhat</tabstop>
-  <tabstop>dirReplaceWhat</tabstop>
   <tabstop>selectDir</tabstop>
   <tabstop>dirFindAll</tabstop>
   <tabstop>dirReplaceAll</tabstop>
@@ -1627,8 +1635,8 @@
    <slot>slot_clearMark()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>489</x>
-     <y>84</y>
+     <x>672</x>
+     <y>129</y>
     </hint>
     <hint type="destinationlabel">
      <x>588</x>
@@ -1643,8 +1651,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>572</x>
-     <y>162</y>
+     <x>672</x>
+     <y>197</y>
     </hint>
     <hint type="destinationlabel">
      <x>404</x>
@@ -1755,8 +1763,8 @@
    <slot>slot_clearAllMark()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>538</x>
-     <y>112</y>
+     <x>672</x>
+     <y>163</y>
     </hint>
     <hint type="destinationlabel">
      <x>574</x>
@@ -1780,6 +1788,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>pushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>FindWin</receiver>
+   <slot>on_markAndBook()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>565</x>
+     <y>77</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>434</x>
+     <y>386</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slot_findNext()</slot>
@@ -1799,5 +1823,6 @@
   <slot>slot_findPrev()</slot>
   <slot>slot_clearAllMark()</slot>
   <slot>on_copyReFindResult()</slot>
+  <slot>on_markAndBook()</slot>
  </slots>
 </ui>

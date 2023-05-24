@@ -69,6 +69,7 @@ public:
 	void setMarkFindText(QString& text);
 	void disableReplace();
 	void setFindHistory(QList<QString>* findHistory);
+	void setReplaceHistory(QList<QString>* replaceHistory);
 	int markAllWord(QString& word);
 	void removeLineHeadEndBlank(int mode);
 	static void showCallTip(QsciScintilla * pEdit, int pos);
@@ -97,6 +98,7 @@ signals:
 private:
 	void updateParameterFromUI();
 	void addFindHistory(QString & text);
+	void addReplaceHistory(QString& text);
 	bool isFirstFind();
 	
 	QString addCurFindRecord(ScintillaEditView * pEdit, FindRecords & recordRet, bool isMark=false, bool getResult=false);
@@ -125,9 +127,11 @@ private:
 
 	int replaceAll();
 
-	int markAll();
+	int markAll(QSet<int>* outLineNum=nullptr);
 
 	int findAllInCurDoc(QStringList * reResult=nullptr);
+
+	void findAllInOpenDoc(int index = -1);
 
 private slots:
 
@@ -173,6 +177,8 @@ private slots:
 
 	void on_copyReFindResult();
 
+	void on_markAndBook();
+
 private:
 	Ui::FindWin ui;
 
@@ -215,6 +221,8 @@ private:
 	QString m_lastClickBtName;
 
 	QList<QString>* m_findHistory;
+
+	QList<QString>* m_replaceHistory;
 
 	ScintillaEditView* pEditTemp;
 

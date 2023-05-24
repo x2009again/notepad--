@@ -90,10 +90,10 @@ void NddSetting::init()
 		//开启自动缩进
 		addKeyValueToNumSets(INDENT_KEY, 0);
 
-		//显示空白
+		//显示空白。0都不显示 1 单显示空格 2 单显示行尾 3 都显示
 		addKeyValueToNumSets(SHOWSPACE_KEY, 0);
 
-		//最大文本文件的门限。默认100M.(50-300)
+		//最大文本文件的门限。默认100M.(50-600)
 		addKeyValueToNumSets(MAX_BIG_TEXT, 100);
 
 		addKeyValueToSets(SOFT_KEY, "0");
@@ -362,6 +362,21 @@ QString NddSetting::getKeyValueFromDelaySets(QString key)
 }
 
 bool NddSetting::updataKeyValueFromDelaySets(QString key, QString value)
+{
+	nddDelaySetInit();
+	s_nddDelaySet->setValue(key, value);
+	s_isContentChanged = true;
+	return true;
+}
+
+//写一个总的获取配置的接口，避免以后每个字段都需要写一个读写接口
+int NddSetting::getKeyValueFromDelayNumSets(QString key)
+{
+	nddDelaySetInit();
+	return s_nddDelaySet->value(key, "").toInt();
+}
+
+bool NddSetting::updataKeyValueFromDelayNumSets(QString key, int value)
 {
 	nddDelaySetInit();
 	s_nddDelaySet->setValue(key, value);

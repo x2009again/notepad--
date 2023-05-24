@@ -1,4 +1,4 @@
-﻿#include "Qsci/qscilexerglobal.h"
+#include "Qsci/qscilexerglobal.h"
 #include "Qsci/qsciscintilla.h"
 #include "Scintilla.h"
 #include "SciLexer.h"
@@ -147,9 +147,11 @@ QFont QsciLexerGlobal::defaultFont(int style) const
 		return f;
 
 	case LINE_NUMBER_MARGIN:
+	{
 		//这个对应STYLE_LINENUMBER的默认大小为10
-		f.setPointSize(12);
-		return f;
+		QFont linefont("Courier New", 10);
+		return linefont;
+	}
 	default:
 		break;
 	}
@@ -346,7 +348,7 @@ QColor QsciLexerGlobal::defaultPaper(int style) const
 		return QColor(0xE8E8FF);
 
 	case SELECT_TEXT_COLOR:
-		return QColor(0xC0C0C0);
+		return QColor(0xffff00);
 
 	case CARET_COLOUR:
 		return QColor(0x919994);

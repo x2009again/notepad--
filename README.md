@@ -18,11 +18,9 @@
 
 您可以在这个项目提交bug或反馈问题。
 
-最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.22
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/latest
 
-最新内测版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.23
-
-NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
+NDD 具备插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
 开发者参与插件功能开发。
 
 做国人自己的免费编辑器，离不开您的支持，请通过微信捐赠我们。
@@ -159,10 +157,18 @@ QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献�
 
 ## 效果预览
 
-![输入图片说明](png/20221107_160824.png)
+ **windows效果图：** 
+
+![输入图片说明](png/11.png.png)
 
 ![输入图片说明](png/6.png)
+
+ **MacOS 效果图：** 
 
 ![Mac系统运行图](png/%E6%88%AA%E5%B1%8F2023-02-26%2011.41.20.png)
 
 ![Mac系统文件对比图](png/%E6%88%AA%E5%B1%8F2023-02-26%2011.45.48.png)
+
+ **Redhat7.x 效果图：** 
+
+![输入图片说明](png/10.png.png)

@@ -324,7 +324,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="116"/>
-        <location filename="ui_ccnotepad.h" line="1627"/>
+        <location filename="ui_ccnotepad.h" line="1630"/>
         <source>Format Conversion</source>
         <translation type="unfinished">换行符转换</translation>
     </message>
@@ -338,7 +338,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="217"/>
-        <location filename="ui_ccnotepad.h" line="1635"/>
+        <location filename="ui_ccnotepad.h" line="1638"/>
         <source>Display symbols</source>
         <translation type="unfinished">显示符号</translation>
     </message>
@@ -348,19 +348,19 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="480"/>
-        <location filename="ui_ccnotepad.h" line="1661"/>
+        <location filename="ui_ccnotepad.h" line="1664"/>
         <source>Language</source>
         <translation type="unfinished">语言</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="276"/>
-        <location filename="ui_ccnotepad.h" line="1641"/>
+        <location filename="ui_ccnotepad.h" line="1644"/>
         <source>P</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="94"/>
-        <location filename="ui_ccnotepad.h" line="1625"/>
+        <location filename="ui_ccnotepad.h" line="1628"/>
         <source>Recene File</source>
         <translation type="unfinished">最近文件</translation>
     </message>
@@ -368,89 +368,89 @@
         <location filename="cceditor/ccnotepad.ui" line="291"/>
         <location filename="cceditor/ccnotepad.ui" line="874"/>
         <location filename="ui_ccnotepad.h" line="1424"/>
-        <location filename="ui_ccnotepad.h" line="1642"/>
+        <location filename="ui_ccnotepad.h" line="1645"/>
         <source>C</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="304"/>
-        <location filename="ui_ccnotepad.h" line="1643"/>
+        <location filename="ui_ccnotepad.h" line="1646"/>
         <source>J</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="313"/>
         <location filename="cceditor/ccnotepad.ui" line="842"/>
-        <location filename="cceditor/ccnotepad.ui" line="2082"/>
+        <location filename="cceditor/ccnotepad.ui" line="2085"/>
         <location filename="ui_ccnotepad.h" line="1420"/>
-        <location filename="ui_ccnotepad.h" line="1620"/>
-        <location filename="ui_ccnotepad.h" line="1644"/>
+        <location filename="ui_ccnotepad.h" line="1623"/>
+        <location filename="ui_ccnotepad.h" line="1647"/>
         <source>R</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="324"/>
-        <location filename="ui_ccnotepad.h" line="1645"/>
+        <location filename="ui_ccnotepad.h" line="1648"/>
         <source>H</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="330"/>
-        <location filename="ui_ccnotepad.h" line="1646"/>
+        <location filename="ui_ccnotepad.h" line="1649"/>
         <source>M</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="339"/>
-        <location filename="ui_ccnotepad.h" line="1647"/>
+        <location filename="ui_ccnotepad.h" line="1650"/>
         <source>B</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="348"/>
-        <location filename="ui_ccnotepad.h" line="1648"/>
+        <location filename="ui_ccnotepad.h" line="1651"/>
         <source>I</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="356"/>
-        <location filename="ui_ccnotepad.h" line="1649"/>
+        <location filename="ui_ccnotepad.h" line="1652"/>
         <source>N</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="365"/>
-        <location filename="ui_ccnotepad.h" line="1650"/>
+        <location filename="ui_ccnotepad.h" line="1653"/>
         <source>A</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="376"/>
-        <location filename="ui_ccnotepad.h" line="1651"/>
+        <location filename="ui_ccnotepad.h" line="1654"/>
         <source>S</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="388"/>
-        <location filename="ui_ccnotepad.h" line="1652"/>
+        <location filename="ui_ccnotepad.h" line="1655"/>
         <source>V</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="398"/>
-        <location filename="ui_ccnotepad.h" line="1653"/>
+        <location filename="ui_ccnotepad.h" line="1656"/>
         <source>L</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="406"/>
-        <location filename="ui_ccnotepad.h" line="1654"/>
+        <location filename="ui_ccnotepad.h" line="1657"/>
         <source>T</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="415"/>
-        <location filename="ui_ccnotepad.h" line="1655"/>
+        <location filename="ui_ccnotepad.h" line="1658"/>
         <source>F</source>
         <translation type="unfinished"></translation>
     </message>
@@ -460,31 +460,31 @@
         <location filename="cceditor/ccnotepad.ui" line="1452"/>
         <location filename="ui_ccnotepad.h" line="1453"/>
         <location filename="ui_ccnotepad.h" line="1497"/>
-        <location filename="ui_ccnotepad.h" line="1656"/>
+        <location filename="ui_ccnotepad.h" line="1659"/>
         <source>D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="431"/>
-        <location filename="ui_ccnotepad.h" line="1657"/>
+        <location filename="ui_ccnotepad.h" line="1660"/>
         <source>O</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="438"/>
-        <location filename="ui_ccnotepad.h" line="1658"/>
+        <location filename="ui_ccnotepad.h" line="1661"/>
         <source>E</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="446"/>
-        <location filename="ui_ccnotepad.h" line="1659"/>
+        <location filename="ui_ccnotepad.h" line="1662"/>
         <source>G</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="527"/>
-        <location filename="ui_ccnotepad.h" line="1667"/>
+        <location filename="ui_ccnotepad.h" line="1670"/>
         <source>About</source>
         <translation type="unfinished">关于</translation>
     </message>
@@ -494,7 +494,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="506"/>
-        <location filename="ui_ccnotepad.h" line="1664"/>
+        <location filename="ui_ccnotepad.h" line="1667"/>
         <source>Recently</source>
         <translation type="unfinished">最近对比</translation>
     </message>
@@ -542,8 +542,8 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="608"/>
-        <location filename="cceditor/ccnotepad.cpp" line="2970"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3294"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2977"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3301"/>
         <location filename="ui_ccnotepad.h" line="1351"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
@@ -568,7 +568,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="624"/>
-        <location filename="cceditor/ccnotepad.cpp" line="2976"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2983"/>
         <location filename="ui_ccnotepad.h" line="1359"/>
         <source>Close All</source>
         <translation type="unfinished">关闭所有</translation>
@@ -581,7 +581,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="632"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3005"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3012"/>
         <location filename="ui_ccnotepad.h" line="1363"/>
         <source>Undo</source>
         <translation type="unfinished">撤销</translation>
@@ -594,7 +594,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="640"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3011"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3018"/>
         <location filename="ui_ccnotepad.h" line="1367"/>
         <source>Redo</source>
         <translation type="unfinished">重做</translation>
@@ -607,7 +607,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="648"/>
-        <location filename="cceditor/ccnotepad.cpp" line="2984"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2991"/>
         <location filename="ui_ccnotepad.h" line="1371"/>
         <source>Cut</source>
         <translation type="unfinished">剪切</translation>
@@ -620,7 +620,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="656"/>
-        <location filename="cceditor/ccnotepad.cpp" line="2991"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2998"/>
         <location filename="ui_ccnotepad.h" line="1375"/>
         <source>Copy</source>
         <translation type="unfinished">拷贝</translation>
@@ -633,7 +633,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="664"/>
-        <location filename="cceditor/ccnotepad.cpp" line="2997"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3004"/>
         <location filename="ui_ccnotepad.h" line="1379"/>
         <source>Paste</source>
         <translation type="unfinished">粘贴</translation>
@@ -676,7 +676,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="704"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3019"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3026"/>
         <location filename="ui_ccnotepad.h" line="1390"/>
         <source>Find</source>
         <translation type="unfinished">查找</translation>
@@ -689,7 +689,7 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="712"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3025"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3032"/>
         <location filename="ui_ccnotepad.h" line="1394"/>
         <source>Replace</source>
         <translation type="unfinished">替换</translation>
@@ -728,31 +728,31 @@
         <location filename="cceditor/ccnotepad.ui" line="755"/>
         <location filename="ui_ccnotepad.h" line="1405"/>
         <source>Encode in GBK</source>
-        <translation type="unfinished">用编码 ANSI/GBK 打开</translation>
+        <translation type="unfinished">使用编码 ANSI/GBK 打开</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="763"/>
         <location filename="ui_ccnotepad.h" line="1406"/>
         <source>Encode in UTF8</source>
-        <translation type="unfinished">用编码 UTF8 打开</translation>
+        <translation type="unfinished">使用编码 UTF8 打开</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="771"/>
         <location filename="ui_ccnotepad.h" line="1407"/>
         <source>Encode in UTF8-BOM</source>
-        <translation type="unfinished">用编码 UTF8-BOM 打开</translation>
+        <translation type="unfinished">使用编码 UTF8-BOM 打开</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="779"/>
         <location filename="ui_ccnotepad.h" line="1408"/>
         <source>Encode in UCS-2 BE BOM</source>
-        <translation type="unfinished">用编码 UCS-2 BE BOM 打开</translation>
+        <translation type="unfinished">使用编码 UCS-2 BE BOM 打开</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="787"/>
         <location filename="ui_ccnotepad.h" line="1409"/>
         <source>Encode in UCS-2 LE BOM</source>
-        <translation type="unfinished">用编码 UCS-2 LE BOM 打开</translation>
+        <translation type="unfinished">使用编码 UCS-2 LE BOM 打开</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="792"/>
@@ -834,9 +834,9 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="1579"/>
-        <location filename="cceditor/ccnotepad.ui" line="1904"/>
+        <location filename="cceditor/ccnotepad.ui" line="1907"/>
         <location filename="ui_ccnotepad.h" line="1514"/>
-        <location filename="ui_ccnotepad.h" line="1594"/>
+        <location filename="ui_ccnotepad.h" line="1597"/>
         <source>Yellow</source>
         <translation type="unfinished">黄色</translation>
     </message>
@@ -889,10 +889,10 @@
     <message>
         <location filename="cceditor/ccnotepad.ui" line="1513"/>
         <location filename="cceditor/ccnotepad.ui" line="1518"/>
-        <location filename="cceditor/ccnotepad.ui" line="2087"/>
+        <location filename="cceditor/ccnotepad.ui" line="2090"/>
         <location filename="ui_ccnotepad.h" line="1505"/>
         <location filename="ui_ccnotepad.h" line="1506"/>
-        <location filename="ui_ccnotepad.h" line="1621"/>
+        <location filename="ui_ccnotepad.h" line="1624"/>
         <source>test</source>
         <translation type="unfinished"></translation>
     </message>
@@ -917,116 +917,116 @@
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="90"/>
-        <location filename="ui_ccnotepad.h" line="1624"/>
+        <location filename="ui_ccnotepad.h" line="1627"/>
         <source>&amp;File</source>
         <oldsource>File(&amp;F)</oldsource>
         <translation type="unfinished">文件(&amp;F)</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="112"/>
-        <location filename="ui_ccnotepad.h" line="1626"/>
+        <location filename="ui_ccnotepad.h" line="1629"/>
         <source>&amp;Edit</source>
         <oldsource>Edit(&amp;E)</oldsource>
         <translation type="unfinished">编辑(&amp;E)</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="124"/>
-        <location filename="ui_ccnotepad.h" line="1628"/>
+        <location filename="ui_ccnotepad.h" line="1631"/>
         <source>Blank CharOperate</source>
         <translation type="unfinished">空白字符操作</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="136"/>
-        <location filename="ui_ccnotepad.h" line="1629"/>
+        <location filename="ui_ccnotepad.h" line="1632"/>
         <source>Convert Case to</source>
         <translation type="unfinished">大小写转换</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="149"/>
-        <location filename="ui_ccnotepad.h" line="1630"/>
+        <location filename="ui_ccnotepad.h" line="1633"/>
         <source>Line Operations</source>
         <translation type="unfinished">行编辑</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="189"/>
-        <location filename="ui_ccnotepad.h" line="1631"/>
+        <location filename="ui_ccnotepad.h" line="1634"/>
         <source>&amp;Search</source>
         <oldsource>Search(&amp;S)</oldsource>
         <translation type="unfinished">查找(&amp;S)</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="193"/>
-        <location filename="ui_ccnotepad.h" line="1632"/>
+        <location filename="ui_ccnotepad.h" line="1635"/>
         <source>Bookmark</source>
         <oldsource>Book Mark</oldsource>
         <translation type="unfinished">书签</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="198"/>
-        <location filename="ui_ccnotepad.h" line="1633"/>
+        <location filename="ui_ccnotepad.h" line="1636"/>
         <source>Mark Color</source>
         <translation type="unfinished">标记颜色...</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="213"/>
-        <location filename="ui_ccnotepad.h" line="1634"/>
+        <location filename="ui_ccnotepad.h" line="1637"/>
         <source>&amp;View</source>
         <oldsource>View(&amp;V)</oldsource>
         <translation type="unfinished">视图(&amp;V)</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="225"/>
-        <location filename="ui_ccnotepad.h" line="1636"/>
+        <location filename="ui_ccnotepad.h" line="1639"/>
         <source>Icon Size</source>
         <translation type="unfinished">图标大小</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="241"/>
-        <location filename="ui_ccnotepad.h" line="1637"/>
+        <location filename="ui_ccnotepad.h" line="1640"/>
         <source>E&amp;ncoding</source>
         <oldsource>Encoding(&amp;N)</oldsource>
         <translation type="unfinished">编码(&amp;N)</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="245"/>
-        <location filename="ui_ccnotepad.h" line="1638"/>
+        <location filename="ui_ccnotepad.h" line="1641"/>
         <source>Other</source>
         <translation type="unfinished">其它编码</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="251"/>
-        <location filename="ui_ccnotepad.h" line="1639"/>
+        <location filename="ui_ccnotepad.h" line="1642"/>
         <source>Convert to Other</source>
         <translation type="unfinished">转换为其它编码</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="272"/>
-        <location filename="ui_ccnotepad.h" line="1640"/>
+        <location filename="ui_ccnotepad.h" line="1643"/>
         <source>&amp;Language</source>
         <oldsource>Language(&amp;L)</oldsource>
         <translation type="unfinished">语言(&amp;L)</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="476"/>
-        <location filename="ui_ccnotepad.h" line="1660"/>
+        <location filename="ui_ccnotepad.h" line="1663"/>
         <source>Se&amp;t</source>
         <oldsource>Set(&amp;T)</oldsource>
         <translation type="unfinished">设置(&amp;T)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1706"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1709"/>
         <source>Format Language</source>
         <translation type="unfinished">格式化语言</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="494"/>
-        <location filename="ui_ccnotepad.h" line="1662"/>
+        <location filename="ui_ccnotepad.h" line="1665"/>
         <source>Feedback</source>
         <translation type="unfinished">反馈问题</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="502"/>
-        <location filename="ui_ccnotepad.h" line="1663"/>
+        <location filename="ui_ccnotepad.h" line="1666"/>
         <source>&amp;Compare</source>
         <oldsource>Compare(&amp;C)</oldsource>
         <translation type="unfinished">对比(&amp;C)</translation>
@@ -1544,26 +1544,32 @@
         <translation type="unfinished">注册版本</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1951"/>
-        <location filename="ui_ccnotepad.h" line="1601"/>
+        <location filename="cceditor/ccnotepad.ui" line="1662"/>
+        <location filename="ui_ccnotepad.h" line="1529"/>
+        <source>Alt+X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="cceditor/ccnotepad.ui" line="1954"/>
+        <location filename="ui_ccnotepad.h" line="1604"/>
         <source>About Notepad--</source>
         <translation type="unfinished">关于 Notepad--</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2072"/>
-        <location filename="ui_ccnotepad.h" line="1618"/>
+        <location filename="cceditor/ccnotepad.ui" line="2075"/>
+        <location filename="ui_ccnotepad.h" line="1621"/>
         <source>Language File Suffix</source>
         <translation type="unfinished">语法文件后缀关联</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2077"/>
-        <location filename="ui_ccnotepad.h" line="1619"/>
+        <location filename="cceditor/ccnotepad.ui" line="2080"/>
+        <location filename="ui_ccnotepad.h" line="1622"/>
         <source>Shortcut Key Manager</source>
         <translation type="unfinished">快捷键管理</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2097"/>
-        <location filename="ui_ccnotepad.h" line="1623"/>
+        <location filename="cceditor/ccnotepad.ui" line="2100"/>
+        <location filename="ui_ccnotepad.h" line="1626"/>
         <source>Md5/Sha</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1608,391 +1614,391 @@
         <translation type="unfinished">列块编辑</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1667"/>
-        <location filename="ui_ccnotepad.h" line="1528"/>
+        <location filename="cceditor/ccnotepad.ui" line="1670"/>
+        <location filename="ui_ccnotepad.h" line="1531"/>
         <source>Wrap</source>
         <translation type="unfinished">自动换行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1672"/>
-        <location filename="ui_ccnotepad.h" line="1529"/>
+        <location filename="cceditor/ccnotepad.ui" line="1675"/>
+        <location filename="ui_ccnotepad.h" line="1532"/>
         <source>Define Language</source>
         <translation type="unfinished">自定义语言</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1677"/>
-        <location filename="ui_ccnotepad.h" line="1530"/>
+        <location filename="cceditor/ccnotepad.ui" line="1680"/>
+        <location filename="ui_ccnotepad.h" line="1533"/>
         <source>UPPERCASE</source>
         <translation type="unfinished">转成大写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1682"/>
-        <location filename="ui_ccnotepad.h" line="1531"/>
+        <location filename="cceditor/ccnotepad.ui" line="1685"/>
+        <location filename="ui_ccnotepad.h" line="1534"/>
         <source>lowercase</source>
         <translation type="unfinished">转成小写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1687"/>
-        <location filename="ui_ccnotepad.h" line="1532"/>
+        <location filename="cceditor/ccnotepad.ui" line="1690"/>
+        <location filename="ui_ccnotepad.h" line="1535"/>
         <source>Proper Case</source>
         <translation type="unfinished">每词转成仅首字母大写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1692"/>
-        <location filename="ui_ccnotepad.h" line="1533"/>
+        <location filename="cceditor/ccnotepad.ui" line="1695"/>
+        <location filename="ui_ccnotepad.h" line="1536"/>
         <source>Proper Case (blend)</source>
         <translation type="unfinished">每词的首字母转成大写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1697"/>
-        <location filename="ui_ccnotepad.h" line="1534"/>
+        <location filename="cceditor/ccnotepad.ui" line="1700"/>
+        <location filename="ui_ccnotepad.h" line="1537"/>
         <source>Sentence case</source>
         <translation type="unfinished">每句转成仅首字母大写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1702"/>
-        <location filename="ui_ccnotepad.h" line="1535"/>
+        <location filename="cceditor/ccnotepad.ui" line="1705"/>
+        <location filename="ui_ccnotepad.h" line="1538"/>
         <source>Sentence case (blend)</source>
         <translation type="unfinished">每句的首字母转成大写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1707"/>
-        <location filename="ui_ccnotepad.h" line="1536"/>
+        <location filename="cceditor/ccnotepad.ui" line="1710"/>
+        <location filename="ui_ccnotepad.h" line="1539"/>
         <source>Invert Case</source>
         <translation type="unfinished">大小写互换</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1712"/>
-        <location filename="ui_ccnotepad.h" line="1537"/>
+        <location filename="cceditor/ccnotepad.ui" line="1715"/>
+        <location filename="ui_ccnotepad.h" line="1540"/>
         <source>Random Case</source>
         <translation type="unfinished">随机大小写</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1717"/>
-        <location filename="ui_ccnotepad.h" line="1538"/>
+        <location filename="cceditor/ccnotepad.ui" line="1720"/>
+        <location filename="ui_ccnotepad.h" line="1541"/>
         <source>Remove Empty Lines</source>
         <translation type="unfinished">移除空行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1722"/>
-        <location filename="ui_ccnotepad.h" line="1539"/>
+        <location filename="cceditor/ccnotepad.ui" line="1725"/>
+        <location filename="ui_ccnotepad.h" line="1542"/>
         <source>Remove Empty Lines (Containing Blank characters)</source>
         <translation type="unfinished">移除空行(包括空白字符)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1730"/>
-        <location filename="ui_ccnotepad.h" line="1540"/>
+        <location filename="cceditor/ccnotepad.ui" line="1733"/>
+        <location filename="ui_ccnotepad.h" line="1543"/>
         <source>UserDefine</source>
         <translation type="unfinished">用户自定义</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1735"/>
-        <location filename="ui_ccnotepad.h" line="1541"/>
+        <location filename="cceditor/ccnotepad.ui" line="1738"/>
+        <location filename="ui_ccnotepad.h" line="1544"/>
         <source>Column Block Mode</source>
         <translation type="unfinished">列块模式...</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1740"/>
-        <location filename="ui_ccnotepad.h" line="1542"/>
+        <location filename="cceditor/ccnotepad.ui" line="1743"/>
+        <location filename="ui_ccnotepad.h" line="1545"/>
         <source>TAB to Space</source>
         <translation type="unfinished">TAB 转空格</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1745"/>
-        <location filename="ui_ccnotepad.h" line="1543"/>
+        <location filename="cceditor/ccnotepad.ui" line="1748"/>
+        <location filename="ui_ccnotepad.h" line="1546"/>
         <source>Space to TAB (All)</source>
         <translation type="unfinished">空格转 TAB (全部)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1750"/>
-        <location filename="ui_ccnotepad.h" line="1544"/>
+        <location filename="cceditor/ccnotepad.ui" line="1753"/>
+        <location filename="ui_ccnotepad.h" line="1547"/>
         <source>Space to TAB (Leading)</source>
         <translation type="unfinished">空格转 TAB (行首)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1755"/>
-        <location filename="ui_ccnotepad.h" line="1545"/>
+        <location filename="cceditor/ccnotepad.ui" line="1758"/>
+        <location filename="ui_ccnotepad.h" line="1548"/>
         <source>Duplicate Current Line</source>
         <translation type="unfinished">复制当前行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1758"/>
-        <location filename="ui_ccnotepad.h" line="1547"/>
+        <location filename="cceditor/ccnotepad.ui" line="1761"/>
+        <location filename="ui_ccnotepad.h" line="1550"/>
         <source>Ctrl+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1763"/>
-        <location filename="ui_ccnotepad.h" line="1549"/>
+        <location filename="cceditor/ccnotepad.ui" line="1766"/>
+        <location filename="ui_ccnotepad.h" line="1552"/>
         <source>Remove Duplicate Lines</source>
         <translation type="unfinished">删除重复行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1768"/>
-        <location filename="ui_ccnotepad.h" line="1550"/>
+        <location filename="cceditor/ccnotepad.ui" line="1771"/>
+        <location filename="ui_ccnotepad.h" line="1553"/>
         <source>Remove Consecutive Duplicate Lines</source>
         <translation type="unfinished">删除连续的重复行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1773"/>
-        <location filename="ui_ccnotepad.h" line="1551"/>
+        <location filename="cceditor/ccnotepad.ui" line="1776"/>
+        <location filename="ui_ccnotepad.h" line="1554"/>
         <source>Split Lines</source>
         <translation type="unfinished">分割行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1778"/>
-        <location filename="ui_ccnotepad.h" line="1552"/>
+        <location filename="cceditor/ccnotepad.ui" line="1781"/>
+        <location filename="ui_ccnotepad.h" line="1555"/>
         <source>Join Lines</source>
         <translation type="unfinished">合并行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1783"/>
-        <location filename="ui_ccnotepad.h" line="1553"/>
+        <location filename="cceditor/ccnotepad.ui" line="1786"/>
+        <location filename="ui_ccnotepad.h" line="1556"/>
         <source>Move Up Current Line</source>
         <translation type="unfinished">上移当前行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1786"/>
-        <location filename="ui_ccnotepad.h" line="1555"/>
+        <location filename="cceditor/ccnotepad.ui" line="1789"/>
+        <location filename="ui_ccnotepad.h" line="1558"/>
         <source>Ctrl+Shift+Up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1791"/>
-        <location filename="ui_ccnotepad.h" line="1557"/>
+        <location filename="cceditor/ccnotepad.ui" line="1794"/>
+        <location filename="ui_ccnotepad.h" line="1560"/>
         <source>Move Down Current Line</source>
         <translation type="unfinished">下移当前行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1794"/>
-        <location filename="ui_ccnotepad.h" line="1559"/>
+        <location filename="cceditor/ccnotepad.ui" line="1797"/>
+        <location filename="ui_ccnotepad.h" line="1562"/>
         <source>Ctrl+Shift+Down</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1799"/>
-        <location filename="ui_ccnotepad.h" line="1561"/>
+        <location filename="cceditor/ccnotepad.ui" line="1802"/>
+        <location filename="ui_ccnotepad.h" line="1564"/>
         <source>Insert Blank Line Above Current</source>
         <translation type="unfinished">在当前行上方插入空行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1802"/>
-        <location filename="ui_ccnotepad.h" line="1563"/>
+        <location filename="cceditor/ccnotepad.ui" line="1805"/>
+        <location filename="ui_ccnotepad.h" line="1566"/>
         <source>Ctrl+Alt+Return</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1807"/>
-        <location filename="ui_ccnotepad.h" line="1565"/>
+        <location filename="cceditor/ccnotepad.ui" line="1810"/>
+        <location filename="ui_ccnotepad.h" line="1568"/>
         <source>Insert Blank Line Below Current</source>
         <translation type="unfinished">在当前行下方插入空行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1810"/>
-        <location filename="ui_ccnotepad.h" line="1567"/>
+        <location filename="cceditor/ccnotepad.ui" line="1813"/>
+        <location filename="ui_ccnotepad.h" line="1570"/>
         <source>Ctrl+Alt+Shift+Return</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1815"/>
-        <location filename="ui_ccnotepad.h" line="1569"/>
+        <location filename="cceditor/ccnotepad.ui" line="1818"/>
+        <location filename="ui_ccnotepad.h" line="1572"/>
         <source>Reverse Line Order</source>
         <translation type="unfinished">反排序行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1820"/>
-        <location filename="ui_ccnotepad.h" line="1570"/>
+        <location filename="cceditor/ccnotepad.ui" line="1823"/>
+        <location filename="ui_ccnotepad.h" line="1573"/>
         <source>Randomize Line Order</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1825"/>
-        <location filename="ui_ccnotepad.h" line="1571"/>
+        <location filename="cceditor/ccnotepad.ui" line="1828"/>
+        <location filename="ui_ccnotepad.h" line="1574"/>
         <source>Sort Lines Lexicographically Ascending</source>
         <translation type="unfinished">升序排列文本行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1830"/>
-        <location filename="ui_ccnotepad.h" line="1572"/>
+        <location filename="cceditor/ccnotepad.ui" line="1833"/>
+        <location filename="ui_ccnotepad.h" line="1575"/>
         <source>Sort Lines Lex. Ascending Ignoring Case</source>
         <translation type="unfinished">升序排列文本行（不分大小写）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1835"/>
-        <location filename="ui_ccnotepad.h" line="1573"/>
+        <location filename="cceditor/ccnotepad.ui" line="1838"/>
+        <location filename="ui_ccnotepad.h" line="1576"/>
         <source>Sort Lines As Integers Ascending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1840"/>
-        <location filename="ui_ccnotepad.h" line="1574"/>
+        <location filename="cceditor/ccnotepad.ui" line="1843"/>
+        <location filename="ui_ccnotepad.h" line="1577"/>
         <source>Sort Lines As Decimals (Comma) Ascending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1845"/>
-        <location filename="ui_ccnotepad.h" line="1575"/>
+        <location filename="cceditor/ccnotepad.ui" line="1848"/>
+        <location filename="ui_ccnotepad.h" line="1578"/>
         <source>Sort Lines As Decimals (Dot) Ascending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1850"/>
-        <location filename="ui_ccnotepad.h" line="1576"/>
+        <location filename="cceditor/ccnotepad.ui" line="1853"/>
+        <location filename="ui_ccnotepad.h" line="1579"/>
         <source>Sort Lines Lexicographically Descending</source>
         <translation type="unfinished">降序排列文本行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1855"/>
-        <location filename="ui_ccnotepad.h" line="1577"/>
+        <location filename="cceditor/ccnotepad.ui" line="1858"/>
+        <location filename="ui_ccnotepad.h" line="1580"/>
         <source>Sort Lines Lex. Descending Ignoring Case</source>
         <translation type="unfinished">降序排列文本行（不分大小写）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1860"/>
-        <location filename="ui_ccnotepad.h" line="1578"/>
+        <location filename="cceditor/ccnotepad.ui" line="1863"/>
+        <location filename="ui_ccnotepad.h" line="1581"/>
         <source>Sort Lines As Integers Descending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1865"/>
-        <location filename="ui_ccnotepad.h" line="1579"/>
+        <location filename="cceditor/ccnotepad.ui" line="1868"/>
+        <location filename="ui_ccnotepad.h" line="1582"/>
         <source>Sort Lines As Decimals (Comma) Descending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1870"/>
-        <location filename="ui_ccnotepad.h" line="1580"/>
+        <location filename="cceditor/ccnotepad.ui" line="1873"/>
+        <location filename="ui_ccnotepad.h" line="1583"/>
         <source>Sort Lines As Decimals (Dot) Descending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1875"/>
-        <location filename="ui_ccnotepad.h" line="1581"/>
+        <location filename="cceditor/ccnotepad.ui" line="1878"/>
+        <location filename="ui_ccnotepad.h" line="1584"/>
         <source>Find In Dir</source>
         <translation type="unfinished">在目录查找</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1878"/>
-        <location filename="ui_ccnotepad.h" line="1583"/>
+        <location filename="cceditor/ccnotepad.ui" line="1881"/>
+        <location filename="ui_ccnotepad.h" line="1586"/>
         <source>Ctrl+Shift+D</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1956"/>
-        <location filename="cceditor/ccnotepad.ui" line="1990"/>
-        <location filename="ui_ccnotepad.h" line="1602"/>
-        <location filename="ui_ccnotepad.h" line="1607"/>
+        <location filename="cceditor/ccnotepad.ui" line="1959"/>
+        <location filename="cceditor/ccnotepad.ui" line="1993"/>
+        <location filename="ui_ccnotepad.h" line="1605"/>
+        <location filename="ui_ccnotepad.h" line="1610"/>
         <source>1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1961"/>
-        <location filename="cceditor/ccnotepad.cpp" line="1707"/>
-        <location filename="ui_ccnotepad.h" line="1603"/>
+        <location filename="cceditor/ccnotepad.ui" line="1964"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1710"/>
+        <location filename="ui_ccnotepad.h" line="1606"/>
         <source>Format Xml</source>
         <translation type="unfinished">格式化 Xml</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1966"/>
-        <location filename="cceditor/ccnotepad.cpp" line="1708"/>
-        <location filename="ui_ccnotepad.h" line="1604"/>
+        <location filename="cceditor/ccnotepad.ui" line="1969"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1711"/>
+        <location filename="ui_ccnotepad.h" line="1607"/>
         <source>Format Json</source>
         <translation type="unfinished">格式化 Json</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1974"/>
-        <location filename="ui_ccnotepad.h" line="1605"/>
+        <location filename="cceditor/ccnotepad.ui" line="1977"/>
+        <location filename="ui_ccnotepad.h" line="1608"/>
         <source>Dark</source>
         <translation type="unfinished">深色</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1982"/>
-        <location filename="ui_ccnotepad.h" line="1606"/>
+        <location filename="cceditor/ccnotepad.ui" line="1985"/>
+        <location filename="ui_ccnotepad.h" line="1609"/>
         <source>VB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1998"/>
-        <location filename="ui_ccnotepad.h" line="1608"/>
+        <location filename="cceditor/ccnotepad.ui" line="2001"/>
+        <location filename="ui_ccnotepad.h" line="1611"/>
         <source>2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2006"/>
-        <location filename="ui_ccnotepad.h" line="1609"/>
+        <location filename="cceditor/ccnotepad.ui" line="2009"/>
+        <location filename="ui_ccnotepad.h" line="1612"/>
         <source>3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2014"/>
-        <location filename="ui_ccnotepad.h" line="1610"/>
+        <location filename="cceditor/ccnotepad.ui" line="2017"/>
+        <location filename="ui_ccnotepad.h" line="1613"/>
         <source>4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2022"/>
-        <location filename="ui_ccnotepad.h" line="1611"/>
+        <location filename="cceditor/ccnotepad.ui" line="2025"/>
+        <location filename="ui_ccnotepad.h" line="1614"/>
         <source>5</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2030"/>
-        <location filename="ui_ccnotepad.h" line="1612"/>
+        <location filename="cceditor/ccnotepad.ui" line="2033"/>
+        <location filename="ui_ccnotepad.h" line="1615"/>
         <source>loop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2035"/>
-        <location filename="ui_ccnotepad.h" line="1613"/>
+        <location filename="cceditor/ccnotepad.ui" line="2038"/>
+        <location filename="ui_ccnotepad.h" line="1616"/>
         <source>Clear History</source>
         <translation type="unfinished">清除历史打开记录</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2043"/>
-        <location filename="ui_ccnotepad.h" line="1614"/>
+        <location filename="cceditor/ccnotepad.ui" line="2046"/>
+        <location filename="ui_ccnotepad.h" line="1617"/>
         <source>FileListView</source>
         <translation type="unfinished">文件列表窗口</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2054"/>
-        <location filename="ui_ccnotepad.h" line="1615"/>
+        <location filename="cceditor/ccnotepad.ui" line="2057"/>
+        <location filename="ui_ccnotepad.h" line="1618"/>
         <source>Show ToolBar</source>
         <translation type="unfinished">显示工具栏</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2059"/>
-        <location filename="cceditor/ccnotepad.cpp" line="1712"/>
-        <location filename="ui_ccnotepad.h" line="1616"/>
+        <location filename="cceditor/ccnotepad.ui" line="2062"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1715"/>
+        <location filename="ui_ccnotepad.h" line="1619"/>
         <source>Batch Find</source>
         <translation type="unfinished">批量查找替换</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2067"/>
-        <location filename="ui_ccnotepad.h" line="1617"/>
+        <location filename="cceditor/ccnotepad.ui" line="2070"/>
+        <location filename="ui_ccnotepad.h" line="1620"/>
         <source>Show Web Addr(Not recommended)</source>
         <translation type="unfinished">显示网站（不推荐开启）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1883"/>
-        <location filename="ui_ccnotepad.h" line="1585"/>
+        <location filename="cceditor/ccnotepad.ui" line="1886"/>
+        <location filename="ui_ccnotepad.h" line="1588"/>
         <source>Find Next</source>
         <translation type="unfinished">查找下一个</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="510"/>
-        <location filename="ui_ccnotepad.h" line="1665"/>
+        <location filename="ui_ccnotepad.h" line="1668"/>
         <source>menuDir</source>
         <translation type="unfinished">目录对比记录</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="515"/>
-        <location filename="ui_ccnotepad.h" line="1666"/>
+        <location filename="ui_ccnotepad.h" line="1669"/>
         <source>menuReceFile</source>
         <translation type="unfinished">文件对比记录</translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="533"/>
-        <location filename="ui_ccnotepad.h" line="1668"/>
+        <location filename="ui_ccnotepad.h" line="1671"/>
         <source>T&amp;ools</source>
         <oldsource>Tools(&amp;O)</oldsource>
         <translation type="unfinished">工具(&amp;O)</translation>
@@ -2004,58 +2010,58 @@
         <translation type="unfinished">主题与语法样式</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1886"/>
-        <location filename="ui_ccnotepad.h" line="1587"/>
+        <location filename="cceditor/ccnotepad.ui" line="1889"/>
+        <location filename="ui_ccnotepad.h" line="1590"/>
         <source>F3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1891"/>
-        <location filename="ui_ccnotepad.h" line="1589"/>
+        <location filename="cceditor/ccnotepad.ui" line="1894"/>
+        <location filename="ui_ccnotepad.h" line="1592"/>
         <source>Find Prev</source>
         <translation type="unfinished">查找前一个</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1894"/>
-        <location filename="ui_ccnotepad.h" line="1591"/>
+        <location filename="cceditor/ccnotepad.ui" line="1897"/>
+        <location filename="ui_ccnotepad.h" line="1594"/>
         <source>F4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1899"/>
-        <location filename="ui_ccnotepad.h" line="1593"/>
+        <location filename="cceditor/ccnotepad.ui" line="1902"/>
+        <location filename="ui_ccnotepad.h" line="1596"/>
         <source>Red</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1909"/>
-        <location filename="ui_ccnotepad.h" line="1595"/>
+        <location filename="cceditor/ccnotepad.ui" line="1912"/>
+        <location filename="ui_ccnotepad.h" line="1598"/>
         <source>Blue</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1917"/>
-        <location filename="cceditor/ccnotepad.ui" line="1922"/>
-        <location filename="ui_ccnotepad.h" line="1596"/>
-        <location filename="ui_ccnotepad.h" line="1597"/>
+        <location filename="cceditor/ccnotepad.ui" line="1920"/>
+        <location filename="cceditor/ccnotepad.ui" line="1925"/>
+        <location filename="ui_ccnotepad.h" line="1599"/>
+        <location filename="ui_ccnotepad.h" line="1600"/>
         <source>Big5</source>
         <translation type="unfinished">Big5(繁体中文）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1930"/>
-        <location filename="ui_ccnotepad.h" line="1598"/>
+        <location filename="cceditor/ccnotepad.ui" line="1933"/>
+        <location filename="ui_ccnotepad.h" line="1601"/>
         <source>24x24</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1938"/>
-        <location filename="ui_ccnotepad.h" line="1599"/>
+        <location filename="cceditor/ccnotepad.ui" line="1941"/>
+        <location filename="ui_ccnotepad.h" line="1602"/>
         <source>36x36</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="1946"/>
-        <location filename="ui_ccnotepad.h" line="1600"/>
+        <location filename="cceditor/ccnotepad.ui" line="1949"/>
+        <location filename="ui_ccnotepad.h" line="1603"/>
         <source>48x48</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2069,95 +2075,95 @@
         <translation type="obsolete">信息</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1162"/>
-        <location filename="cceditor/ccnotepad.cpp" line="1280"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1165"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1283"/>
         <source>Ln:0	Col:0</source>
         <translation type="unfinished">行 0 列 0</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1185"/>
-        <location filename="cceditor/ccnotepad.cpp" line="1313"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1188"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1316"/>
         <source>Quit</source>
         <translation type="unfinished">退出</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1839"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1842"/>
         <source>load plugin in dir %1 success, plugin num %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2206"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2209"/>
         <source>Edit with Notepad--</source>
         <oldsource>Edit with Notebook CC</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2335"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2338"/>
         <source>Close Current Document</source>
         <translation type="unfinished">关闭当前文档</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2336"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2339"/>
         <source>Close Non-Current documents</source>
         <translation type="unfinished">关闭所有非当前文档</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2337"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2340"/>
         <source>Close Left All</source>
         <translation type="unfinished">关闭左边所有文档</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2338"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2341"/>
         <source>Close Right All</source>
         <translation type="unfinished">关闭右边所有文档</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2342"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2345"/>
         <source>Current Document Sava as...</source>
         <translation type="unfinished">当前文件另存为</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2344"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2347"/>
         <source>Show File in Explorer...</source>
         <translation type="unfinished">定位到文件路径</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2343"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2346"/>
         <source>Open in New Window</source>
         <translation type="unfinished">在新窗口中打开</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1023"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1026"/>
         <source>Can&apos;t Get Admin Auth, Open File %1 failed</source>
         <translation type="unfinished">获取管理员权限失败，打开文件 %1 失败。修改系统文件请以管理员权限执行ndd程序。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2221"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2224"/>
         <source>Please run in admin auth</source>
         <translation type="unfinished">请在管理员权限下执行程序</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2341"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2344"/>
         <source>Rename Current Document </source>
         <translation type="unfinished">重命名当前文件</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2352"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2355"/>
         <source>Reload With Text Mode</source>
         <translation type="unfinished">重新以文本模式打开</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2353"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2356"/>
         <source>Reload With Hex Mode</source>
         <translation type="unfinished">重新以二进制模式打开</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2356"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2359"/>
         <source>Select Left Cmp File</source>
         <translation type="unfinished">选择为左边对比文件</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2357"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2360"/>
         <source>Select Right Cmp File</source>
         <translation type="unfinished">选择为右边对比文件</translation>
     </message>
@@ -2166,293 +2172,310 @@
         <translation type="obsolete">大文本文件只读模式</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2938"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2945"/>
         <source>New File</source>
         <translation type="unfinished">新建</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2944"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2951"/>
         <source>Open File</source>
         <translation type="unfinished">打开</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2950"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5523"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2957"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5635"/>
         <source>Save File</source>
         <translation type="unfinished">保存</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2956"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2963"/>
         <source>Save All File</source>
         <translation type="unfinished">保存所有</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2963"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2970"/>
         <source>Cycle Auto Save</source>
         <translation type="unfinished">周期自动保存</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3031"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3038"/>
         <source>Mark</source>
         <translation type="unfinished">标记</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3040"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3047"/>
         <source>word highlight(F8)</source>
         <translation type="unfinished">高亮单词（F8)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3048"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3055"/>
         <source>clear all highlight(F7)</source>
         <translation type="unfinished">取消所有高亮（F7)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3058"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3065"/>
         <source>Zoom In</source>
         <translation type="unfinished">放大</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3064"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3071"/>
         <source>Zoom Out</source>
         <translation type="unfinished">缩小</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3074"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3081"/>
         <source>Word Wrap</source>
         <translation type="unfinished">自动换行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3087"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3094"/>
         <source>Show Blank</source>
         <translation type="unfinished">显示空白字符</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3097"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3104"/>
         <source>Indent Guide</source>
         <translation type="unfinished">缩进参考线</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3105"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3112"/>
         <source>tailf file</source>
         <translation type="unfinished">监控文件</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3113"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3120"/>
         <source>Pre Hex Page</source>
         <translation type="unfinished">上一页/位置</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3119"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3126"/>
         <source>Next Hex Page</source>
         <translation type="unfinished">下一页/位置</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3125"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3132"/>
         <source>Goto Hex Page</source>
         <translation type="unfinished">跳转到文件偏移地址</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3133"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3140"/>
         <source>File Compare</source>
         <translation type="unfinished">文件对比</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3139"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3146"/>
         <source>Dir Compare</source>
         <translation type="unfinished">目录对比</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3145"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3152"/>
         <source>Bin Compare</source>
         <translation type="unfinished">二进制对比</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3153"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3160"/>
         <source>transform encoding</source>
         <translation type="unfinished">转换编码</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3159"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3166"/>
         <source>batch rename file</source>
         <translation type="unfinished">批量重命名</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3302"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3309"/>
         <source>Zoom: %1%</source>
         <translation type="unfinished">缩放率: %1%</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3551"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3566"/>
         <source>Big5(Traditional Chinese)</source>
         <translation type="unfinished">Big5(繁体中文)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3600"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3640"/>
         <source>reload file %1 failed</source>
         <translation type="unfinished">重加载文件 %1 失败</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3655"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3733"/>
         <source>Yes[Reload]</source>
         <translation type="unfinished">是 [重新加载]</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3655"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3733"/>
         <source>No[Drop]</source>
         <translation type="unfinished">否 [放弃更新]</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3655"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3733"/>
         <source>On Tailf</source>
         <translation type="unfinished">开启自动监控</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3942"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4023"/>
         <source>Do you want to save changes to before closing?</source>
         <oldsource>Do you want to save changes to « %1 » before closing?</oldsource>
         <translation type="unfinished">关闭文件之前，是否保存修改？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3942"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4024"/>
         <source>If you don&apos;t save the changes you made in file %1, you&apos;ll lose them forever.</source>
         <translation type="unfinished">如果你不保存在文件 %1 中的修改，变更操作将不会生效。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4120"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4027"/>
+        <source>&amp;Yes</source>
+        <translation type="unfinished">是[&amp;Y]</translation>
+    </message>
+    <message>
+        <location filename="cceditor/ccnotepad.cpp" line="4030"/>
+        <source>&amp;No</source>
+        <translation type="unfinished">否[&amp;N]</translation>
+    </message>
+    <message>
+        <location filename="cceditor/ccnotepad.cpp" line="4033"/>
+        <source>&amp;Cancel</source>
+        <translation type="unfinished">取消[&amp;C]</translation>
+    </message>
+    <message>
+        <location filename="cceditor/ccnotepad.cpp" line="4218"/>
         <source>New File Finished [Text Mode] Zoom %1%</source>
         <translation type="unfinished">创建新文件成功 缩放率 %1%</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4443"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4541"/>
         <source>Use &lt; (Prev) or &gt; (Next) and Goto Buttons to Change Page Num .</source>
         <oldsource>Use &lt; (Pre) or &gt; (Next) and Goto Buttons to Change Page Num .</oldsource>
         <translation type="unfinished">使用工具栏按钮 &lt; (前一页） &gt;（下一页） Go(跳转) 进行翻页。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4485"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4577"/>
         <source>File %1 
 File Size %2 &gt; %3M, How to Open it ?</source>
         <translation type="unfinished"> 文件 %1 
  文件大小 %2 大于 %3M，请选择打开方式。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4578"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3636"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4141"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4670"/>
         <source>File %1 open success. But Exist Garbled code !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4684"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4781"/>
         <source>File %1 Open Finished [Text Mode] Zoom %2%</source>
         <translation type="unfinished">文件 %1 打开成功 [文本模式] 缩放率 %2%</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4860"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4936"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4957"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5033"/>
         <source>Format Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4860"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4864"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4936"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4940"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4957"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4961"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5033"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5037"/>
         <source>Not a txt format file , load with big txt is garbled code!</source>
         <translation type="unfinished">文件不是文本格式，强制以大文本打开时乱码！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4929"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4947"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5026"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5044"/>
         <source>Current offset is %1 , line nums is %2 - %3 load Contens Size is %4, File Total Size is %5</source>
         <translation type="unfinished">当前文件偏移 %1 ，行号 %2-%3 ，分块加载大小 %4 ，文件大小是 %5</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5095"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5192"/>
         <source>File List</source>
         <translation type="unfinished">文件列表</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5344"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5448"/>
         <source>Save Swap File %1 failed. Write the target file directly ?</source>
         <translation type="unfinished">保存交换文件 %1 失败，是否直接保存写入原始文件？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="6440"/>
-        <location filename="cceditor/ccnotepad.cpp" line="6466"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6555"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6581"/>
         <source>Current Zoom Value is %1%</source>
         <translation type="unfinished">当前缩放率 %1%</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="6632"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6747"/>
         <source>Only Text File Can Use it !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="6645"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6760"/>
         <source>File %1 into tailf mode, readonly !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7472"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7657"/>
         <source>out of file line range,mar line num is %1 !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8095"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8280"/>
         <source>Registered Version</source>
         <translation type="unfinished">注册过的正版软件！（恭喜）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8099"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8284"/>
         <source>Free Trial</source>
         <translation type="unfinished">免费永久试用版本（捐赠可获取注册码）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8161"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8346"/>
         <source>%1 is not a file, skip open it...</source>
         <translation type="unfinished">%1 不是一个文件，跳过打开它......</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7380"/>
-        <location filename="cceditor/ccnotepad.cpp" line="9293"/>
-        <location filename="cceditor/ccnotepad.cpp" line="9381"/>
-        <location filename="cceditor/ccnotepad.cpp" line="9400"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7565"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9482"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9570"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9589"/>
         <source>The ReadOnly document does not allow this operation.</source>
         <translation type="unfinished">当前只读显示文件不允许该操作！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9355"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9544"/>
         <source>Column Edit Mode Tips</source>
         <translation type="unfinished">列块模式提示</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9355"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9544"/>
         <source>&quot;ALT+Mouse Click&quot; or &quot;Alt+Shift+Arrow keys&quot; Switch to mode!</source>
         <translation type="unfinished">请使用&apos;ALT+鼠标点选&apos; 或 &apos;Alt+Shif+箭头键&apos;切换列块模式。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9795"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9984"/>
         <source>SortingError</source>
         <translation type="unfinished">排序错误</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9795"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9984"/>
         <source>Unable to perform numeric sorting due to line %1.</source>
         <translation type="unfinished">行 %1 不能进行排序操作！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9857"/>
-        <location filename="cceditor/ccnotepad.cpp" line="9882"/>
+        <location filename="cceditor/ccnotepad.cpp" line="10046"/>
+        <location filename="cceditor/ccnotepad.cpp" line="10071"/>
         <source>what find is null !</source>
         <translation type="unfinished">查找字段为空</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9946"/>
+        <location filename="cceditor/ccnotepad.cpp" line="10135"/>
         <source>XML format error, please check!</source>
         <oldsource>Xml format error, please check!</oldsource>
         <translation type="unfinished">Xml 格式化错误，请检查文件格式！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9976"/>
+        <location filename="cceditor/ccnotepad.cpp" line="10165"/>
         <source>JSON format error, please check!</source>
         <oldsource>Json format error, please check!</oldsource>
         <translation type="unfinished">Json 格式化错误，请检查文件格式！</translation>
@@ -2462,65 +2485,62 @@ File Size %2 &gt; %3M, How to Open it ?</source>
         <translation type="obsolete">已打开的窗口背景颜色，将在文件重新打开后才会生效！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3547"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3562"/>
         <source>GB18030(Simplified Chinese)</source>
         <translation type="unfinished">GB18030(简体中文)</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3571"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3586"/>
         <source>Language: %1</source>
         <translation type="unfinished">语法：%1</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3655"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3733"/>
         <source>Reload</source>
         <translation type="unfinished">重加载</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3942"/>
         <source>Yes</source>
-        <translation type="unfinished">保存</translation>
+        <translation type="obsolete">保存</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3942"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4541"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4633"/>
         <source>No</source>
         <translation type="unfinished">放弃修改</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3942"/>
         <source>Cancel</source>
-        <translation type="unfinished">取消</translation>
+        <translation type="obsolete">取消</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4047"/>
-        <location filename="cceditor/ccnotepad.cpp" line="9003"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4145"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9188"/>
         <source>Restore Last Temp File %1 Failed</source>
         <translation type="unfinished">恢复临时文件 %1 失败！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4541"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4633"/>
         <source>Recover File?</source>
         <translation type="unfinished">是否恢复文件？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4541"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4633"/>
         <source>File %1 abnormally closed last time , Restore it ?</source>
         <translation type="unfinished">文件 %1 上次异常退出并留下未保存存档，是否恢复文件存档？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4541"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4633"/>
         <source>Restore</source>
         <translation type="unfinished">恢复文件？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4591"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5163"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4683"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5260"/>
         <source>File %1 Open Failed</source>
         <translation type="unfinished">文件 %1 打开失败！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8066"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8251"/>
         <source>
 &lt;a href=&quot;https://gitee.com/cxasm/notepad--&quot;&gt;https://gitee.com/cxasm/notepad--&lt;/a&gt;
 &lt;br/&gt;
@@ -2529,23 +2549,23 @@ File Size %2 &gt; %3M, How to Open it ?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8089"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8274"/>
         <source>Notepad-- Version %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="9108"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9297"/>
         <source>File %1 Open Finished [Text Mode]</source>
         <translation type="unfinished">文件 %1 打开成功 [文本模式]</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4727"/>
-        <location filename="cceditor/ccnotepad.cpp" line="4853"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4824"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4950"/>
         <source>Current offset is %1 , load Contens Size is %2, File Total Size is %3</source>
         <translation type="unfinished">当前文件偏移 %1 ， 加载内容大小是 %2，文件总大小是 %3 （字节）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5003"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5100"/>
         <source>File %1 Open Finished [Hex ReayOnly Mode]</source>
         <translation type="unfinished">文件 %1 打开成功 [二进制只读模式]</translation>
     </message>
@@ -2554,23 +2574,23 @@ File Size %2 &gt; %3M, How to Open it ?</source>
         <translation type="obsolete">文件 %1 可能是二进制文件，尝试以文本格式打开。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5349"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5453"/>
         <source>Save File %1 failed. You may not have write privileges 
 Please save as a new file!</source>
         <translation type="unfinished">保存文件 %1 失败！ 你可能没有文件写权限，请另存为一个新文件！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5883"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5994"/>
         <source>Cycle autosave on ...</source>
         <translation type="unfinished">周期性自动保存文件已开启...</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5891"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6002"/>
         <source>Cycle autosave off ...</source>
         <translation type="unfinished">周期性自动保存文件已关闭...</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5948"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6059"/>
         <source>The current document has been automatically saved</source>
         <translation type="unfinished">当前文件周期性自动保存完毕！</translation>
     </message>
@@ -2587,9 +2607,9 @@ Do you want to reload it?</source>
         <translation type="obsolete">%1\n\n \n文件已在外部被其它程序修改。\n是否重新加载该文件?</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3700"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3707"/>
-        <location filename="cceditor/ccnotepad.cpp" line="3716"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3780"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3787"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3796"/>
         <source>Ln: %1	Col: %2</source>
         <translation type="unfinished">行：%1 列：%2</translation>
     </message>
@@ -2606,31 +2626,31 @@ Do you want to reload it?</source>
         <translation type="obsolete">当前文件偏移 %1 ， 文件大小是 %2 （字节）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1023"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5190"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5307"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5344"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5349"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5530"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5650"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5699"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1026"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5287"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5411"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5448"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5453"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5642"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5762"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5811"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5190"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5287"/>
         <source>file %1 not exist.</source>
         <translation type="unfinished">文件 %1 不存在</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5216"/>
-        <location filename="cceditor/ccnotepad.cpp" line="8209"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5313"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8394"/>
         <source>file %1 already open at tab %2</source>
         <translation type="unfinished">文件 %1 已经在页面 %2 中打开</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5307"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5309"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5411"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5413"/>
         <source>Save File %1 failed. Can not write auth, Please save as new file</source>
         <translation type="unfinished">保存 %1 失败。当前文件没有写权限，请另存为一个新文件</translation>
     </message>
@@ -2639,161 +2659,161 @@ Do you want to reload it?</source>
         <translation type="obsolete">打开文件 %1 失败</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4177"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5498"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5675"/>
-        <location filename="cceditor/ccnotepad.cpp" line="7372"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4275"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5610"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5787"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7557"/>
         <source>Only Text File Can Use it, Current Doc is a Hex File !</source>
         <translation type="unfinished">只有文本模式才能使用该功能，当前文件是二进制文件！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="3655"/>
+        <location filename="cceditor/ccnotepad.cpp" line="3733"/>
         <source>&quot;%1&quot; This file has been modified by another program. Do you want to reload it?</source>
         <translation type="unfinished">%1 该文件已在外部被其它程序修改，是否重新加载？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="999"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1002"/>
         <source>Run As Admin Failed to save the file. Please check the file permissions.</source>
         <translation type="unfinished">以管理员模式保存文件失败！请检查文件的权限。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.ui" line="2092"/>
-        <location filename="ui_ccnotepad.h" line="1622"/>
+        <location filename="cceditor/ccnotepad.ui" line="2095"/>
+        <location filename="ui_ccnotepad.h" line="1625"/>
         <source>Plugin Manager</source>
         <translation type="unfinished">插件管理</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1804"/>
-        <location filename="cceditor/ccnotepad.cpp" line="1828"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1807"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1831"/>
         <source>plugin %1 load failed !</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="cceditor/ccnotepad.ui" line="539"/>
-        <location filename="ui_ccnotepad.h" line="1669"/>
+        <location filename="ui_ccnotepad.h" line="1672"/>
         <source>Plugin</source>
         <translation type="unfinished">插件</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1890"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1893"/>
         <source>If display exceptions,Please Install System Font Courier</source>
         <translation type="unfinished">如果界面字体不满意，还请安装windows系统字体 Courier</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1966"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1969"/>
         <source>Set/Remove BookMark</source>
         <translation type="unfinished">设置/取消书签</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1969"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1972"/>
         <source>Next BookMark</source>
         <translation type="unfinished">下一书签</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1972"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1975"/>
         <source>Prev BookMark</source>
         <translation type="unfinished">上一书签</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1975"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1978"/>
         <source>ClearAll BookMark</source>
         <translation type="unfinished">清除所有书签</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1978"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1981"/>
         <source>Cut BookMark Lines</source>
         <translation type="unfinished">剪切书签行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1981"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1984"/>
         <source>Copy BookMark Lines</source>
         <translation type="unfinished">复制书签行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1984"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1987"/>
         <source>Paste BookMark Lines</source>
         <translation type="unfinished">粘贴(替换)书签行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1987"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1990"/>
         <source>Delete BookMark Lines</source>
         <translation type="unfinished">删除书签行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1990"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1993"/>
         <source>Delete UnBookMark Lines</source>
         <translation type="unfinished">删除未标记行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="1993"/>
+        <location filename="cceditor/ccnotepad.cpp" line="1996"/>
         <source>Clip BookMark</source>
         <translation type="unfinished">反向标记书签</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2033"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2036"/>
         <source>Color %1</source>
         <translation type="unfinished">颜色 %1</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2348"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2351"/>
         <source>Cmd in Explorer...</source>
         <translation type="unfinished">在文件目录打开CMD窗口</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2428"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2435"/>
         <source>The currently file %1 is already in text mode</source>
         <translation type="unfinished">当前文件 %1 已经是文本模式</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2444"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2451"/>
         <source>The currently file %1 is already in bin mode</source>
         <translation type="unfinished">当前文件 %1 已经是二进制模式</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="2532"/>
+        <location filename="cceditor/ccnotepad.cpp" line="2539"/>
         <source>open cmd in file dir %1 failed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="4691"/>
-        <location filename="cceditor/ccnotepad.cpp" line="9114"/>
+        <location filename="cceditor/ccnotepad.cpp" line="4788"/>
+        <location filename="cceditor/ccnotepad.cpp" line="9303"/>
         <source>File %1 Open Finished [Text ReadOnly Mode] (Note: display up to 50K bytes ...)</source>
         <translation type="unfinished">文件 %1 打开成功 [文本只读模式] （乱码：二进制文件强行以文本格式显示，最多显示50K字节的内容，后面忽略...）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5530"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5699"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5642"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5811"/>
         <source>file %1 already open at tab %2, please select other file name.</source>
         <translation type="unfinished">文件 %1 已经存在于页面 %2 中，请选择一个其它名称</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5611"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5723"/>
         <source>Rename File As ...</source>
         <translation type="unfinished">重命名...</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5650"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5762"/>
         <source>file %1 reanme failed!</source>
         <translation type="unfinished">文件 %1 重命名失败！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="5690"/>
-        <location filename="cceditor/ccnotepad.cpp" line="5727"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5802"/>
+        <location filename="cceditor/ccnotepad.cpp" line="5839"/>
         <source>Save File As ...</source>
         <translation type="unfinished">另存为文件 ...</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="6221"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6332"/>
         <source>Close ?</source>
         <translation type="unfinished">关闭?</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="6221"/>
+        <location filename="cceditor/ccnotepad.cpp" line="6332"/>
         <source>already has child window open, close all ?</source>
         <translation type="unfinished">目前还有子窗口处于打开状态，关闭所有窗口吗？</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7162"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7299"/>
         <source>Find result</source>
         <translation type="unfinished">查找结果</translation>
     </message>
@@ -2802,50 +2822,50 @@ Do you want to reload it?</source>
         <translation type="obsolete">文件已关闭</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7292"/>
-        <location filename="cceditor/ccnotepad.cpp" line="7303"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7476"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7488"/>
         <source>Find result - %1 hit</source>
         <translation type="unfinished">查找结果 - %1 命中</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7410"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7595"/>
         <source>Convert end of line In progress, please wait ...</source>
         <translation type="unfinished">行尾转换中，请等待...</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7415"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7600"/>
         <source>Convert end of line finish.</source>
         <translation type="unfinished">行尾转换完毕</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7440"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7625"/>
         <source>Go to line</source>
         <translation type="unfinished">跳转到行</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7440"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7625"/>
         <source>Line Num:</source>
         <translation type="unfinished">行号</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7781"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7966"/>
         <source>no more pre pos</source>
         <translation type="unfinished">没有前一个位置了</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7873"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8058"/>
         <source>no more next pos</source>
         <translation type="unfinished">没有后一个位置了</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7843"/>
-        <location filename="cceditor/ccnotepad.cpp" line="7891"/>
-        <location filename="cceditor/ccnotepad.cpp" line="7909"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8028"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8076"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8094"/>
         <source>The Last Page ! Current offset is %1 , load Contens Size is %2, File Total Size is %3</source>
         <translation type="unfinished">最后一页！当前文件偏移是 %1 ，加载内容大小是 %2 ，文件总大小是 %3 (字节）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7971"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8156"/>
         <source>Only Hex File Can Use it, Current Doc not a Hex File !</source>
         <translation type="unfinished">只有二进制文件具备该功能。当前文件不是二进制文件！</translation>
     </message>
@@ -2854,24 +2874,25 @@ Do you want to reload it?</source>
         <translation type="obsolete">最后一页！当前文件偏移是 %1 ，文件大小是 %2 (字节）</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7251"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7390"/>
+        <location filename="cceditor/ccnotepad.cpp" line="7459"/>
         <source>file %1 was not exists !</source>
         <translation type="unfinished">文件 %1 不存在！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="7987"/>
-        <location filename="cceditor/ccnotepad.cpp" line="8038"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8172"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8223"/>
         <source>Error file offset addr , please check !</source>
         <translation type="unfinished">错误的文件偏移量地址，请检查！</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8000"/>
-        <location filename="cceditor/ccnotepad.cpp" line="8052"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8185"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8237"/>
         <source>File Size is %1, addr %2 is exceeds file size</source>
         <translation type="unfinished">文件大小是 %1，当前地址 %2 超过了文件大小。</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8058"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8243"/>
         <source>Current Text Doc Can Not Use it !</source>
         <oldsource>Current Text Doc Canp Not Use it !</oldsource>
         <translation type="unfinished">当前是常规文本文档，不能使用该功能！</translation>
@@ -2884,14 +2905,14 @@ china: https://gitee.com/cxasm/notepad--</source>
 国内：https://gitee.com/cxasm/notepad--</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8593"/>
-        <location filename="cceditor/ccnotepad.cpp" line="8627"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8778"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8812"/>
         <source>notice</source>
         <translation type="unfinished">消息</translation>
     </message>
     <message>
-        <location filename="cceditor/ccnotepad.cpp" line="8593"/>
-        <location filename="cceditor/ccnotepad.cpp" line="8627"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8778"/>
+        <location filename="cceditor/ccnotepad.cpp" line="8812"/>
         <source>file path not exist, remove recent record!</source>
         <translation type="unfinished">文件路径不存在，删除历史记录！</translation>
     </message>
@@ -2924,7 +2945,7 @@ china: https://gitee.com/cxasm/notepad--</source>
         <translation type="unfinished">文件开始偏移位置超过文件长度！</translation>
     </message>
     <message>
-        <location filename="CmpareMode.cpp" line="2993"/>
+        <location filename="CmpareMode.cpp" line="3040"/>
         <source>BigFile Compare, left linenum %1 , right lineNum %2, Please Waiting !</source>
         <translation type="unfinished">大文件对比，左文件行数 %1 ，右文件行数 %2, 请等待 ！</translation>
     </message>
@@ -3108,255 +3129,265 @@ china: https://gitee.com/cxasm/notepad--</source>
         <translation type="unfinished">不同</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="108"/>
+        <location filename="CompareDirs.cpp" line="105"/>
+        <source>only diff</source>
+        <translation type="unfinished">差异</translation>
+    </message>
+    <message>
+        <location filename="CompareDirs.cpp" line="113"/>
+        <source>unique</source>
+        <translation type="unfinished">独有</translation>
+    </message>
+    <message>
+        <location filename="CompareDirs.cpp" line="125"/>
         <source>expand</source>
         <translation type="unfinished">展开</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="116"/>
+        <location filename="CompareDirs.cpp" line="133"/>
         <source>fold</source>
         <translation type="unfinished">收起</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="127"/>
+        <location filename="CompareDirs.cpp" line="144"/>
         <source>clear</source>
         <translation type="unfinished">清空</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="135"/>
+        <location filename="CompareDirs.cpp" line="152"/>
         <source>swap</source>
         <translation type="unfinished">交换</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="143"/>
+        <location filename="CompareDirs.cpp" line="160"/>
         <source>reload</source>
         <translation type="unfinished">重载</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="246"/>
+        <location filename="CompareDirs.cpp" line="263"/>
         <source>Status: normal</source>
         <translation type="unfinished">状态：正常</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="427"/>
-        <location filename="CompareDirs.cpp" line="450"/>
+        <location filename="CompareDirs.cpp" line="444"/>
+        <location filename="CompareDirs.cpp" line="467"/>
         <source>error: %1 not a dir !</source>
         <translation type="unfinished">错误：%1 不是一个目录！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="602"/>
+        <location filename="CompareDirs.cpp" line="762"/>
         <source>now busy, please try later ...</source>
         <translation type="unfinished">当前忙，稍后再试...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="675"/>
-        <location filename="CompareDirs.cpp" line="697"/>
+        <location filename="CompareDirs.cpp" line="835"/>
+        <location filename="CompareDirs.cpp" line="857"/>
         <source>Copy to right</source>
         <translation type="unfinished">拷贝到右边</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="676"/>
-        <location filename="CompareDirs.cpp" line="698"/>
+        <location filename="CompareDirs.cpp" line="836"/>
+        <location filename="CompareDirs.cpp" line="858"/>
         <source>Cover Diffent File To Right</source>
         <translation type="unfinished">覆盖不同文件到右边</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="677"/>
-        <location filename="CompareDirs.cpp" line="699"/>
+        <location filename="CompareDirs.cpp" line="837"/>
+        <location filename="CompareDirs.cpp" line="859"/>
         <source>Cover Diffent File To Right (Traverse subdirectories)</source>
         <translation type="unfinished">覆盖不同文件到右边(递归子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="681"/>
-        <location filename="CompareDirs.cpp" line="691"/>
+        <location filename="CompareDirs.cpp" line="841"/>
+        <location filename="CompareDirs.cpp" line="851"/>
         <source>Copy to left</source>
         <translation type="unfinished">拷贝到左边</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="682"/>
-        <location filename="CompareDirs.cpp" line="692"/>
+        <location filename="CompareDirs.cpp" line="842"/>
+        <location filename="CompareDirs.cpp" line="852"/>
         <source>Cover Diffent File To Left</source>
         <translation type="unfinished">覆盖不同文件到左边</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="683"/>
-        <location filename="CompareDirs.cpp" line="693"/>
+        <location filename="CompareDirs.cpp" line="843"/>
+        <location filename="CompareDirs.cpp" line="853"/>
         <source>Cover Diffent File To Left (Traverse subdirectories)</source>
         <translation type="unfinished">覆盖不同文件到左边(递归子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="710"/>
+        <location filename="CompareDirs.cpp" line="870"/>
         <source>Mark as equal</source>
         <translation type="unfinished">标记为相等</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="719"/>
+        <location filename="CompareDirs.cpp" line="879"/>
         <source>Copy Unique File To Other Side</source>
         <translation type="unfinished">拷贝独有文件到对方</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="729"/>
+        <location filename="CompareDirs.cpp" line="889"/>
         <source>Copy Unique File To Other Side (Traverse subdirectories)</source>
         <translation type="unfinished">拷贝独有文件到对方(递归子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="735"/>
+        <location filename="CompareDirs.cpp" line="895"/>
         <source>Delete This File</source>
         <translation type="unfinished">删除该文件</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="739"/>
+        <location filename="CompareDirs.cpp" line="899"/>
         <source>Delete Only in This Side</source>
         <translation type="unfinished">删除本侧独有文件</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="745"/>
+        <location filename="CompareDirs.cpp" line="905"/>
         <source>Cope Path To Clipboard</source>
         <translation type="unfinished">拷贝文件路径到剪切板</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="786"/>
+        <location filename="CompareDirs.cpp" line="946"/>
         <source>Find File By Name</source>
         <translation type="unfinished">查找文件</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="830"/>
+        <location filename="CompareDirs.cpp" line="990"/>
         <source>%1 not exist, please check!</source>
         <translation type="unfinished">文件 %1 不存在，请检查！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="831"/>
-        <location filename="CompareDirs.cpp" line="869"/>
-        <location filename="CompareDirs.cpp" line="1026"/>
-        <location filename="CompareDirs.cpp" line="1061"/>
-        <location filename="CompareDirs.cpp" line="1131"/>
-        <location filename="CompareDirs.cpp" line="1165"/>
-        <location filename="CompareDirs.cpp" line="1212"/>
+        <location filename="CompareDirs.cpp" line="991"/>
+        <location filename="CompareDirs.cpp" line="1029"/>
+        <location filename="CompareDirs.cpp" line="1186"/>
+        <location filename="CompareDirs.cpp" line="1221"/>
+        <location filename="CompareDirs.cpp" line="1291"/>
+        <location filename="CompareDirs.cpp" line="1325"/>
+        <location filename="CompareDirs.cpp" line="1372"/>
         <source>Notice</source>
         <translation type="unfinished">消息</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="860"/>
+        <location filename="CompareDirs.cpp" line="1020"/>
         <source>del file %1 success!</source>
         <translation type="unfinished">删除文件 %1 成功！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="864"/>
+        <location filename="CompareDirs.cpp" line="1024"/>
         <source>del file %1 failed, maybe other place using !</source>
         <translation type="unfinished">删除文件 %1 失败，可能其它地方在使用中！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="869"/>
+        <location filename="CompareDirs.cpp" line="1029"/>
         <source>Do you want to delete this files ?</source>
         <translation type="unfinished">您确定删除该文件吗？</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="908"/>
+        <location filename="CompareDirs.cpp" line="1068"/>
         <source>right Dirs No Find Prev!</source>
         <translation type="unfinished">右边目录没有找到前一个！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="909"/>
+        <location filename="CompareDirs.cpp" line="1069"/>
         <source>right Dirs No Find Next!</source>
         <translation type="unfinished">右边目录没有找到下一个！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="939"/>
-        <location filename="CompareDirs.cpp" line="982"/>
-        <location filename="CompareDirs.cpp" line="1011"/>
+        <location filename="CompareDirs.cpp" line="1099"/>
+        <location filename="CompareDirs.cpp" line="1142"/>
+        <location filename="CompareDirs.cpp" line="1171"/>
         <source>Not Find</source>
         <translation type="unfinished">没有找到</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="909"/>
+        <location filename="CompareDirs.cpp" line="1069"/>
         <source>left Dirs No Find Next!</source>
         <translation type="unfinished">左边目录没有找到下一个！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="908"/>
+        <location filename="CompareDirs.cpp" line="1068"/>
         <source>left Dirs No Find Prev!</source>
         <translation type="unfinished">左边目录没有找到上一个！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="939"/>
+        <location filename="CompareDirs.cpp" line="1099"/>
         <source>can not find %1</source>
         <translation type="unfinished">没有找到相关文件 %1</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1026"/>
+        <location filename="CompareDirs.cpp" line="1186"/>
         <source>Do you want to overwrite all files (excluding folders) to the other side?</source>
         <translation type="unfinished">您确定覆盖目录下所有不同文件到对方吗？（不递归子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1046"/>
-        <location filename="CompareDirs.cpp" line="1114"/>
+        <location filename="CompareDirs.cpp" line="1206"/>
+        <location filename="CompareDirs.cpp" line="1274"/>
         <source>cover file %1 please waiting</source>
         <translation type="unfinished">覆盖文件 %1 请等待</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1052"/>
-        <location filename="CompareDirs.cpp" line="1122"/>
-        <location filename="CompareDirs.cpp" line="1156"/>
-        <location filename="CompareDirs.cpp" line="1202"/>
+        <location filename="CompareDirs.cpp" line="1212"/>
+        <location filename="CompareDirs.cpp" line="1282"/>
+        <location filename="CompareDirs.cpp" line="1316"/>
+        <location filename="CompareDirs.cpp" line="1362"/>
         <source>cover file finish, total cover %1 files</source>
         <translation type="unfinished">覆盖文件完成，一共覆盖 %1 个文件</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1061"/>
+        <location filename="CompareDirs.cpp" line="1221"/>
         <source>Do you want to overwrite all files (Traverse subdirs) to the other side?</source>
         <translation type="unfinished">您确定覆盖目录下所有不同文件到对方吗？（递归覆盖子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1131"/>
+        <location filename="CompareDirs.cpp" line="1291"/>
         <source>Do you want to copy unique files (excluding folders) to the other side?</source>
         <translation type="unfinished">您确定拷贝此目录下独有文件到对方？（不递归子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1165"/>
+        <location filename="CompareDirs.cpp" line="1325"/>
         <source>Do you want to copy unique files (Traverse subdirs) to the other side?</source>
         <translation type="unfinished">您确定拷贝此目录下独有文件到对方？（递归拷贝子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1212"/>
+        <location filename="CompareDirs.cpp" line="1372"/>
         <source>Do you want to delete all files (excluding folders) only in this side?</source>
         <translation type="unfinished">您确定删除目录下的独有文件吗？（不递归子目录）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1238"/>
+        <location filename="CompareDirs.cpp" line="1398"/>
         <source>delete file finish, total del %1 files</source>
         <translation type="unfinished">删除文件完成，一共删除 %1 个文件</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1320"/>
-        <location filename="CompareDirs.cpp" line="1404"/>
-        <location filename="CompareDirs.cpp" line="1494"/>
+        <location filename="CompareDirs.cpp" line="1480"/>
+        <location filename="CompareDirs.cpp" line="1564"/>
+        <location filename="CompareDirs.cpp" line="1654"/>
         <source>%1 not exist, skip ...</source>
         <translation type="unfinished">文件 %1 不存在，跳过...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1329"/>
-        <location filename="CompareDirs.cpp" line="1410"/>
-        <location filename="CompareDirs.cpp" line="1501"/>
+        <location filename="CompareDirs.cpp" line="1489"/>
+        <location filename="CompareDirs.cpp" line="1570"/>
+        <location filename="CompareDirs.cpp" line="1661"/>
         <source>%1 is exist, if replace ?</source>
         <translation type="unfinished">%1 已经存在，是否替换文件？</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1331"/>
-        <location filename="CompareDirs.cpp" line="1412"/>
-        <location filename="CompareDirs.cpp" line="1503"/>
+        <location filename="CompareDirs.cpp" line="1491"/>
+        <location filename="CompareDirs.cpp" line="1572"/>
+        <location filename="CompareDirs.cpp" line="1663"/>
         <source>Replace ?</source>
         <translation type="unfinished">是否替换？</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1386"/>
-        <location filename="CompareDirs.cpp" line="1486"/>
-        <location filename="CompareDirs.cpp" line="1558"/>
+        <location filename="CompareDirs.cpp" line="1546"/>
+        <location filename="CompareDirs.cpp" line="1646"/>
+        <location filename="CompareDirs.cpp" line="1718"/>
         <source>copy file %1 failed, please check file auth !</source>
         <translation type="unfinished">拷贝文件 %1 失败，请检查文件权限！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1574"/>
-        <location filename="CompareDirs.cpp" line="1585"/>
+        <location filename="CompareDirs.cpp" line="1734"/>
+        <location filename="CompareDirs.cpp" line="1745"/>
         <source>current file: %1</source>
         <oldsource>current file %1</oldsource>
         <translation type="unfinished">当前文件：%1</translation>
@@ -3366,73 +3397,73 @@ china: https://gitee.com/cxasm/notepad--</source>
         <translation type="obsolete">放弃修改</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1633"/>
-        <location filename="CompareDirs.cpp" line="1661"/>
-        <location filename="CompareDirs.cpp" line="1827"/>
-        <location filename="CompareDirs.cpp" line="1855"/>
+        <location filename="CompareDirs.cpp" line="1793"/>
+        <location filename="CompareDirs.cpp" line="1821"/>
+        <location filename="CompareDirs.cpp" line="1987"/>
+        <location filename="CompareDirs.cpp" line="2015"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1633"/>
-        <location filename="CompareDirs.cpp" line="1661"/>
-        <location filename="CompareDirs.cpp" line="1827"/>
-        <location filename="CompareDirs.cpp" line="1855"/>
+        <location filename="CompareDirs.cpp" line="1793"/>
+        <location filename="CompareDirs.cpp" line="1821"/>
+        <location filename="CompareDirs.cpp" line="1987"/>
+        <location filename="CompareDirs.cpp" line="2015"/>
         <source>Yes[hex cmp]</source>
         <translation type="unfinished">是[进行二进制对比]</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1633"/>
-        <location filename="CompareDirs.cpp" line="1661"/>
-        <location filename="CompareDirs.cpp" line="1827"/>
-        <location filename="CompareDirs.cpp" line="1855"/>
+        <location filename="CompareDirs.cpp" line="1793"/>
+        <location filename="CompareDirs.cpp" line="1821"/>
+        <location filename="CompareDirs.cpp" line="1987"/>
+        <location filename="CompareDirs.cpp" line="2015"/>
         <source>No[text cmp]</source>
         <translation type="unfinished">否[进行文件对比]</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2098"/>
+        <location filename="CompareDirs.cpp" line="2258"/>
         <source>current exec rule mode is quick mode, please wait ...</source>
         <translation type="unfinished">当前执行的对比模式是快速模式，请等待...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2102"/>
+        <location filename="CompareDirs.cpp" line="2262"/>
         <source>current exec rule mode is deep slow mode, please wait ...</source>
         <translation type="unfinished">当前执行的对比模式是深入文本慢速模式，请等待...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2136"/>
+        <location filename="CompareDirs.cpp" line="2296"/>
         <source>There are still %1 files haven&apos;t returned comparison results</source>
         <translation type="unfinished">还有 %1 个文件正在对比中</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2140"/>
+        <location filename="CompareDirs.cpp" line="2300"/>
         <source>file is %1 in comparing !</source>
         <translation type="unfinished">文件 %1 对比进行中！</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2883"/>
+        <location filename="CompareDirs.cpp" line="3043"/>
         <source>load dir file tree in progress
 , please wait ...</source>
         <translation type="unfinished">正在加载文件树目录，请等待...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2912"/>
-        <location filename="CompareDirs.cpp" line="2920"/>
+        <location filename="CompareDirs.cpp" line="3072"/>
+        <location filename="CompareDirs.cpp" line="3080"/>
         <source>skip dir %1</source>
         <translation type="unfinished">跳过目录 %1</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2943"/>
+        <location filename="CompareDirs.cpp" line="3103"/>
         <source>load %1 dir %2</source>
         <translation type="unfinished">加载第 %1 个目录 %2</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2980"/>
+        <location filename="CompareDirs.cpp" line="3140"/>
         <source>skip file ext %1</source>
         <translation type="unfinished">跳过文件类型 %1</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2986"/>
+        <location filename="CompareDirs.cpp" line="3146"/>
         <source>skip file prefix %1</source>
         <translation type="unfinished">跳过文件前缀 %1</translation>
     </message>
@@ -3446,65 +3477,65 @@ china: https://gitee.com/cxasm/notepad--</source>
         <translation type="obsolete">文件 [%1] 可能不是文本文件，比较操作危险，强行比较吗？（不建议）</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1965"/>
-        <location filename="CompareDirs.cpp" line="1982"/>
+        <location filename="CompareDirs.cpp" line="2125"/>
+        <location filename="CompareDirs.cpp" line="2142"/>
         <source>Open Directory</source>
         <translation type="unfinished">打开目录</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2046"/>
+        <location filename="CompareDirs.cpp" line="2206"/>
         <source>init dir file tree in progress
 total %1 file, please wait ...</source>
         <translation type="unfinished">初始化文件树目录中，一共 %1 文件，请等待...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2012"/>
-        <location filename="CompareDirs.cpp" line="2035"/>
-        <location filename="CompareDirs.cpp" line="2094"/>
+        <location filename="CompareDirs.cpp" line="2172"/>
+        <location filename="CompareDirs.cpp" line="2195"/>
+        <location filename="CompareDirs.cpp" line="2254"/>
         <source>Comparison in progress, please wait ...</source>
         <translation type="unfinished">对比文件进行中，请等待...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="1633"/>
-        <location filename="CompareDirs.cpp" line="1661"/>
-        <location filename="CompareDirs.cpp" line="1827"/>
-        <location filename="CompareDirs.cpp" line="1855"/>
+        <location filename="CompareDirs.cpp" line="1793"/>
+        <location filename="CompareDirs.cpp" line="1821"/>
+        <location filename="CompareDirs.cpp" line="1987"/>
+        <location filename="CompareDirs.cpp" line="2015"/>
         <source>file [%1] may be not a text file, cmp in hex mode?</source>
         <translation type="unfinished">文件 %1 可能不是文本格式，是否进行二进制格式对比？</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2121"/>
-        <location filename="CompareDirs.cpp" line="2122"/>
-        <location filename="CompareDirs.cpp" line="2466"/>
-        <location filename="CompareDirs.cpp" line="3017"/>
+        <location filename="CompareDirs.cpp" line="2281"/>
+        <location filename="CompareDirs.cpp" line="2282"/>
+        <location filename="CompareDirs.cpp" line="2626"/>
+        <location filename="CompareDirs.cpp" line="3177"/>
         <source>compare canceled ...</source>
         <translation type="unfinished">对比被取消</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2163"/>
+        <location filename="CompareDirs.cpp" line="2323"/>
         <source>compare not finished, user canceled ...</source>
         <translation type="unfinished">对比没有完成，用户取消</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2164"/>
-        <location filename="CompareDirs.cpp" line="2249"/>
+        <location filename="CompareDirs.cpp" line="2324"/>
+        <location filename="CompareDirs.cpp" line="2409"/>
         <source>user canceled finished ...</source>
         <translation type="unfinished">用户取消完成</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2170"/>
-        <location filename="CompareDirs.cpp" line="2253"/>
-        <location filename="CompareDirs.cpp" line="2254"/>
+        <location filename="CompareDirs.cpp" line="2330"/>
+        <location filename="CompareDirs.cpp" line="2413"/>
+        <location filename="CompareDirs.cpp" line="2414"/>
         <source>compare file finish ...</source>
         <translation type="unfinished">文件对比完成</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2278"/>
+        <location filename="CompareDirs.cpp" line="2438"/>
         <source>load dir files, please wait ...</source>
         <translation type="unfinished">加载目录中，请等待...</translation>
     </message>
     <message>
-        <location filename="CompareDirs.cpp" line="2330"/>
+        <location filename="CompareDirs.cpp" line="2490"/>
         <source>load dir finish, total %1 files</source>
         <translation type="unfinished">加载目录完成，一共加载 %1 个文件</translation>
     </message>
@@ -4435,63 +4466,63 @@ Left Equal ratio %4 Right Equal ratio %5</source>
         <translation type="unfinished">打开目录</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="447"/>
+        <location filename="encodeconvert.cpp" line="448"/>
         <source>start scan file text code, please wait...</source>
         <translation type="unfinished">开始扫描文件编码，请等待...</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="467"/>
-        <location filename="encodeconvert.cpp" line="573"/>
+        <location filename="encodeconvert.cpp" line="469"/>
+        <location filename="encodeconvert.cpp" line="575"/>
         <source>ignore</source>
         <translation type="unfinished">忽略</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="481"/>
+        <location filename="encodeconvert.cpp" line="483"/>
         <source>please wait, total file %1,cur scan index %2, scan finish %3%</source>
         <translation type="unfinished">请等待，一共 %1个文件，当前扫描第 %2 个，扫描完成率 %3%</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="485"/>
+        <location filename="encodeconvert.cpp" line="487"/>
         <source>scan finished, total file %1</source>
         <translation type="unfinished">扫描完成，一共%1个文件</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="568"/>
+        <location filename="encodeconvert.cpp" line="570"/>
         <source>already %1 ignore</source>
         <translation type="unfinished">已经是 %1编码,忽略</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="587"/>
+        <location filename="encodeconvert.cpp" line="589"/>
         <source>total file %1,cur deal index %2,finish %3%</source>
         <translation type="unfinished">一共 %1 个文件，当前处理第 %2 个，完成率%3%</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="592"/>
+        <location filename="encodeconvert.cpp" line="594"/>
         <source>total file %1,cur deal index %2,finish 100%</source>
         <translation type="unfinished">一共 %1 个 文件，当前处理第 %2 个，完成率100%</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="593"/>
+        <location filename="encodeconvert.cpp" line="595"/>
         <source>convert finished !</source>
         <translation type="unfinished">转换完成！</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="614"/>
+        <location filename="encodeconvert.cpp" line="616"/>
         <source>convert finish</source>
         <translation type="unfinished">转换完成</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="618"/>
+        <location filename="encodeconvert.cpp" line="620"/>
         <source>convert fail</source>
         <translation type="unfinished">转换失败</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="619"/>
+        <location filename="encodeconvert.cpp" line="621"/>
         <source>file %1 convert failed,pleas check...</source>
         <translation type="unfinished">文件 %1 转换编码失败，请检查...</translation>
     </message>
     <message>
-        <location filename="encodeconvert.cpp" line="690"/>
+        <location filename="encodeconvert.cpp" line="692"/>
         <source>please drop a file dir ...</source>
         <translation type="unfinished">请拖入一个文件夹...</translation>
     </message>
@@ -4603,8 +4634,11 @@ Left Equal ratio %4 Right Equal ratio %5</source>
 <context>
     <name>FileManager</name>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="258"/>
-        <location filename="cceditor/filemanager.cpp" line="277"/>
+        <location filename="cceditor/filemanager.cpp" line="245"/>
+        <location filename="cceditor/filemanager.cpp" line="322"/>
+        <location filename="cceditor/filemanager.cpp" line="341"/>
+        <location filename="cceditor/filemanager.cpp" line="512"/>
+        <location filename="cceditor/filemanager.cpp" line="531"/>
         <source>Error</source>
         <translation type="unfinished">错误</translation>
     </message>
@@ -4613,17 +4647,21 @@ Left Equal ratio %4 Right Equal ratio %5</source>
         <translation type="obsolete">打开文件 %1 失败。没有读文件的权限。</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="258"/>
+        <location filename="cceditor/filemanager.cpp" line="245"/>
+        <location filename="cceditor/filemanager.cpp" line="322"/>
+        <location filename="cceditor/filemanager.cpp" line="512"/>
         <source>Open File %1 failed</source>
         <translation type="unfinished">打开文件 %1 失败。</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="277"/>
+        <location filename="cceditor/filemanager.cpp" line="341"/>
+        <location filename="cceditor/filemanager.cpp" line="531"/>
         <source>File is too big to be opened by Notepad--</source>
         <translation type="unfinished">文件太大，不能使用Notepad--打开！</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="301"/>
+        <location filename="cceditor/filemanager.cpp" line="365"/>
+        <location filename="cceditor/filemanager.cpp" line="552"/>
         <source>The file %1 is likely to be binary. Do you want to open it in binary?</source>
         <translation type="unfinished">文件 %1 可能是二进制格式，你想以二进制（只读）格式打开文件吗？</translation>
     </message>
@@ -4632,27 +4670,31 @@ Left Equal ratio %4 Right Equal ratio %5</source>
         <translation type="obsolete">二进制或文本打开？</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="301"/>
+        <location filename="cceditor/filemanager.cpp" line="365"/>
+        <location filename="cceditor/filemanager.cpp" line="552"/>
         <source>Hex Open</source>
         <translation type="unfinished">以二进制打开</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="301"/>
+        <location filename="cceditor/filemanager.cpp" line="365"/>
+        <location filename="cceditor/filemanager.cpp" line="552"/>
         <source>Text Open</source>
         <translation type="unfinished">以文本打开</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="301"/>
+        <location filename="cceditor/filemanager.cpp" line="365"/>
+        <location filename="cceditor/filemanager.cpp" line="552"/>
         <source>Cancel</source>
         <translation type="unfinished">取消</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="301"/>
+        <location filename="cceditor/filemanager.cpp" line="365"/>
+        <location filename="cceditor/filemanager.cpp" line="552"/>
         <source>Open with Text or Hex? [Exist Garbled Code]</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">打开为文本或二进制？[检测存在乱码]</translation>
     </message>
     <message>
-        <location filename="cceditor/filemanager.cpp" line="1042"/>
+        <location filename="cceditor/filemanager.cpp" line="1247"/>
         <source>load bit text file tree in progress
 file size %1, please wait ...</source>
         <translation type="unfinished">加载大文件中，文件大小 %1，请等待...</translation>
@@ -4777,10 +4819,43 @@ file size %1, please wait ...</source>
     </message>
 </context>
 <context>
+    <name>FindResultView</name>
+    <message>
+        <location filename="findresultview.cpp" line="158"/>
+        <source>Fold All</source>
+        <translation type="unfinished">全部折叠</translation>
+    </message>
+    <message>
+        <location filename="findresultview.cpp" line="159"/>
+        <source>Expand All</source>
+        <translation type="unfinished">全部展开</translation>
+    </message>
+    <message>
+        <location filename="findresultview.cpp" line="167"/>
+        <source>copy select line</source>
+        <translation type="unfinished">复制选择行</translation>
+    </message>
+    <message>
+        <location filename="findresultview.cpp" line="168"/>
+        <source>warp</source>
+        <translation type="unfinished">自动换行</translation>
+    </message>
+    <message>
+        <location filename="findresultview.cpp" line="172"/>
+        <source>clear</source>
+        <translation type="unfinished">清空</translation>
+    </message>
+    <message>
+        <location filename="findresultview.cpp" line="173"/>
+        <source>close</source>
+        <translation type="unfinished">关闭</translation>
+    </message>
+</context>
+<context>
     <name>FindResultWin</name>
     <message>
         <location filename="findresultwin.ui" line="20"/>
-        <location filename="ui_findresultwin.h" line="62"/>
+        <location filename="ui_findresultwin.h" line="56"/>
         <source>FindResultWin</source>
         <translation type="unfinished">查找结果</translation>
     </message>
@@ -4789,103 +4864,132 @@ file size %1, please wait ...</source>
         <translation type="obsolete">清空</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="91"/>
         <source>clear this find result</source>
-        <translation type="unfinished">清除当前结果</translation>
+        <translation type="obsolete">清除当前结果</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="92"/>
         <source>clear all find result</source>
-        <translation type="unfinished">清除所有结果</translation>
+        <translation type="obsolete">清除所有结果</translation>
     </message>
     <message>
         <source>copy item content</source>
         <translation type="obsolete">拷贝到剪切板</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="100"/>
         <source>copy select item (Ctrl Muli)</source>
-        <translation type="unfinished">复制选中项（按ctrl多选）</translation>
+        <translation type="obsolete">复制选中项（按ctrl多选）</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="101"/>
         <source>copy select Line (Ctrl Muli)</source>
-        <translation type="unfinished">复制选中行（按ctrl多选）</translation>
+        <translation type="obsolete">复制选中行（按ctrl多选）</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="95"/>
         <source>select section</source>
-        <translation type="unfinished">选中所在节</translation>
+        <translation type="obsolete">选中所在节</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="96"/>
         <source>select all item</source>
-        <translation type="unfinished">全部选择</translation>
+        <translation type="obsolete">全部选择</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="104"/>
         <source>Zoom In</source>
-        <translation type="unfinished">放大</translation>
+        <translation type="obsolete">放大</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="105"/>
         <source>Zoom Out</source>
-        <translation type="unfinished">缩小</translation>
+        <translation type="obsolete">缩小</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="106"/>
         <source>close</source>
-        <translation type="unfinished">关闭</translation>
+        <translation type="obsolete">关闭</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="243"/>
-        <location filename="findresultwin.cpp" line="289"/>
         <source>%1 rows selected !</source>
-        <translation type="unfinished">%1 行被选中！</translation>
+        <translation type="obsolete">%1 行被选中！</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="321"/>
         <source>%1 items have been copied to the clipboard !</source>
-        <translation type="unfinished">%1 项已经被复制到剪切板</translation>
+        <translation type="obsolete">%1 项已经被复制到剪切板</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="371"/>
         <source>%1 lines have been copied to the clipboard !</source>
-        <translation type="unfinished">%1 行已经被复制到剪切板</translation>
+        <translation type="obsolete">%1 行已经被复制到剪切板</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="516"/>
+        <location filename="findresultwin.cpp" line="202"/>
+        <source>Search &quot;%1&quot; (%2 hits)
+</source>
+        <translation type="unfinished">查找 &quot;%1&quot; (%2 处命中)
+</translation>
+    </message>
+    <message>
+        <location filename="findresultwin.cpp" line="221"/>
+        <location filename="findresultwin.cpp" line="225"/>
+        <source>Line %1 : %2
+</source>
+        <translation type="unfinished">行 %1 : %2
+</translation>
+    </message>
+    <message>
+        <location filename="findresultwin.cpp" line="244"/>
         <source>&lt;font style=&apos;font-size:14px;font-weight:bold;color:#343497&apos;&gt;Search &quot;%1&quot; (%2 hits)&lt;/font&gt;</source>
         <translation type="unfinished">&lt;font style=&apos;font-size:14px;font-weight:bold;color:#343497&apos;&gt;查找 &quot;%1&quot; (%2 命中)&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="555"/>
-        <location filename="findresultwin.cpp" line="650"/>
+        <location filename="findresultwin.cpp" line="270"/>
         <source>&lt;font style=&apos;font-size:14px;font-weight:bold;color:#309730&apos;&gt;%1 (%2 hits)&lt;/font&gt;</source>
         <translation type="unfinished">&lt;font style=&apos;font-size:14px;font-weight:bold;color:#309730&apos;&gt;%1 (%2 命中)&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="559"/>
-        <location filename="findresultwin.cpp" line="654"/>
+        <location filename="findresultwin.cpp" line="274"/>
         <source>&lt;font style=&apos;font-size:14px;color:#99cc99&apos;&gt;%1 (%2 hits)&lt;/font&gt;</source>
         <translation type="unfinished">&lt;font style=&apos;font-size:14px;color:#99cc99&apos;&gt;%1 (%2 命中)&lt;/font&gt;</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="594"/>
-        <location filename="findresultwin.cpp" line="691"/>
+        <location filename="findresultwin.cpp" line="307"/>
         <source>&lt;font style=&apos;font-size:14px;&apos;&gt;Line &lt;/font&gt;&lt;font style=&apos;font-size:14px;color:#ff8040&apos;&gt;%1&lt;/font&gt; : %2</source>
         <translation type="unfinished">&lt;font style=&apos;font-size:14px;&apos;&gt;行 &lt;/font&gt;&lt;font style=&apos;font-size:14px;color:#ff8040&apos;&gt;%1&lt;/font&gt; : %2</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="598"/>
-        <location filename="findresultwin.cpp" line="695"/>
+        <location filename="findresultwin.cpp" line="311"/>
         <source>&lt;font style=&apos;font-size:14px;color:#ffffff&apos;&gt;Line &lt;/font&gt;&lt;font style=&apos;font-size:14px;color:#ff8040&apos;&gt;%1&lt;/font&gt; : %2</source>
         <translation type="unfinished">&lt;font style=&apos;font-size:14px;color:#ffffff&apos;&gt;行 &lt;/font&gt;&lt;font style=&apos;font-size:14px;color:#ff8040&apos;&gt;%1&lt;/font&gt; : %2</translation>
     </message>
     <message>
-        <location filename="findresultwin.cpp" line="619"/>
+        <location filename="findresultwin.cpp" line="343"/>
+        <source>Search &quot;%1&quot; (%2 hits in %3 files)
+</source>
+        <translation type="unfinished">查找 &quot;%1&quot; (%2 处命中在 %3 文件)
+</translation>
+    </message>
+    <message>
+        <location filename="findresultwin.cpp" line="376"/>
+        <location filename="findresultwin.cpp" line="380"/>
+        <source> %1 (%2 hits)
+</source>
+        <translation type="unfinished">%1 (%2 命中)
+</translation>
+    </message>
+    <message>
+        <location filename="findresultwin.cpp" line="394"/>
+        <source>    Line %1: </source>
+        <translation type="unfinished">    行 %1: </translation>
+    </message>
+    <message>
+        <location filename="findresultwin.cpp" line="398"/>
+        <location filename="findresultwin.cpp" line="402"/>
+        <source>%1%2
+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="findresultwin.cpp" line="456"/>
+        <source>    Line </source>
+        <translation type="unfinished">    行 </translation>
+    </message>
+    <message>
         <source>&lt;font style=&apos;font-size:14px;font-weight:bold;color:#343497&apos;&gt;Search &quot;%1&quot; (%2 hits in %3 files)&lt;/font&gt;</source>
-        <translation type="unfinished">&lt;font style=&apos;font-size:14px;font-weight:bold;color:#343497&apos;&gt;查找 &quot;%1&quot; (%2 命中在 %3 文件)&lt;/font&gt;</translation>
+        <translation type="obsolete">&lt;font style=&apos;font-size:14px;font-weight:bold;color:#343497&apos;&gt;查找 &quot;%1&quot; (%2 命中在 %3 文件)&lt;/font&gt;</translation>
     </message>
     <message>
         <source>&lt;font style=&apos;font-weight:bold;color:#343497&apos;&gt;Search &quot;%1&quot; (%2 hits)&lt;/font&gt;</source>
@@ -4921,13 +5025,13 @@ file size %1, please wait ...</source>
     <name>FindWin</name>
     <message>
         <location filename="findwin.ui" line="14"/>
-        <location filename="ui_findwin.h" line="1026"/>
+        <location filename="ui_findwin.h" line="1032"/>
         <source>MainWindow</source>
         <translation type="unfinished">查找与替换</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="47"/>
-        <location filename="ui_findwin.h" line="1055"/>
+        <location filename="ui_findwin.h" line="1061"/>
         <source>find</source>
         <translation type="unfinished">查找</translation>
     </message>
@@ -4935,176 +5039,176 @@ file size %1, please wait ...</source>
         <location filename="findwin.ui" line="66"/>
         <location filename="findwin.ui" line="362"/>
         <location filename="findwin.ui" line="732"/>
-        <location filename="ui_findwin.h" line="1027"/>
-        <location filename="ui_findwin.h" line="1056"/>
-        <location filename="ui_findwin.h" line="1075"/>
+        <location filename="ui_findwin.h" line="1033"/>
+        <location filename="ui_findwin.h" line="1062"/>
+        <location filename="ui_findwin.h" line="1081"/>
         <source>Find what :</source>
         <translation type="unfinished">查找目标：</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="114"/>
         <location filename="findwin.ui" line="451"/>
-        <location filename="ui_findwin.h" line="1028"/>
-        <location filename="ui_findwin.h" line="1058"/>
+        <location filename="ui_findwin.h" line="1034"/>
+        <location filename="ui_findwin.h" line="1064"/>
         <source>Backward direction</source>
         <translation type="unfinished">反向查找</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="121"/>
         <location filename="findwin.ui" line="458"/>
-        <location filename="findwin.ui" line="899"/>
-        <location filename="findwin.ui" line="1216"/>
-        <location filename="ui_findwin.h" line="1029"/>
-        <location filename="ui_findwin.h" line="1059"/>
-        <location filename="ui_findwin.h" line="1081"/>
-        <location filename="ui_findwin.h" line="1099"/>
+        <location filename="findwin.ui" line="890"/>
+        <location filename="findwin.ui" line="1207"/>
+        <location filename="ui_findwin.h" line="1035"/>
+        <location filename="ui_findwin.h" line="1065"/>
+        <location filename="ui_findwin.h" line="1087"/>
+        <location filename="ui_findwin.h" line="1105"/>
         <source>Match whole word only</source>
         <translation type="unfinished">全词匹配</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="128"/>
         <location filename="findwin.ui" line="465"/>
-        <location filename="findwin.ui" line="912"/>
-        <location filename="findwin.ui" line="1223"/>
-        <location filename="ui_findwin.h" line="1030"/>
-        <location filename="ui_findwin.h" line="1060"/>
-        <location filename="ui_findwin.h" line="1082"/>
-        <location filename="ui_findwin.h" line="1100"/>
+        <location filename="findwin.ui" line="903"/>
+        <location filename="findwin.ui" line="1214"/>
+        <location filename="ui_findwin.h" line="1036"/>
+        <location filename="ui_findwin.h" line="1066"/>
+        <location filename="ui_findwin.h" line="1088"/>
+        <location filename="ui_findwin.h" line="1106"/>
         <source>Match case</source>
         <translation type="unfinished">匹配大小写</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="135"/>
         <location filename="findwin.ui" line="472"/>
-        <location filename="ui_findwin.h" line="1031"/>
-        <location filename="ui_findwin.h" line="1061"/>
+        <location filename="ui_findwin.h" line="1037"/>
+        <location filename="ui_findwin.h" line="1067"/>
         <source>Wrap around</source>
         <translation type="unfinished">循环查找</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="160"/>
         <location filename="findwin.ui" line="497"/>
-        <location filename="findwin.ui" line="938"/>
-        <location filename="findwin.ui" line="1245"/>
-        <location filename="ui_findwin.h" line="1032"/>
-        <location filename="ui_findwin.h" line="1062"/>
-        <location filename="ui_findwin.h" line="1083"/>
-        <location filename="ui_findwin.h" line="1101"/>
+        <location filename="findwin.ui" line="929"/>
+        <location filename="findwin.ui" line="1236"/>
+        <location filename="ui_findwin.h" line="1038"/>
+        <location filename="ui_findwin.h" line="1068"/>
+        <location filename="ui_findwin.h" line="1089"/>
+        <location filename="ui_findwin.h" line="1107"/>
         <source>Search Mode</source>
         <translation type="unfinished">查找模式</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="168"/>
         <location filename="findwin.ui" line="515"/>
-        <location filename="findwin.ui" line="956"/>
-        <location filename="findwin.ui" line="1253"/>
-        <location filename="ui_findwin.h" line="1033"/>
-        <location filename="ui_findwin.h" line="1064"/>
-        <location filename="ui_findwin.h" line="1085"/>
-        <location filename="ui_findwin.h" line="1102"/>
+        <location filename="findwin.ui" line="947"/>
+        <location filename="findwin.ui" line="1244"/>
+        <location filename="ui_findwin.h" line="1039"/>
+        <location filename="ui_findwin.h" line="1070"/>
+        <location filename="ui_findwin.h" line="1091"/>
+        <location filename="ui_findwin.h" line="1108"/>
         <source>Regular expression</source>
         <translation type="unfinished">正则表达式</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="177"/>
         <location filename="findwin.ui" line="503"/>
-        <location filename="findwin.ui" line="944"/>
-        <location filename="findwin.ui" line="1262"/>
-        <location filename="ui_findwin.h" line="1034"/>
-        <location filename="ui_findwin.h" line="1063"/>
-        <location filename="ui_findwin.h" line="1084"/>
-        <location filename="ui_findwin.h" line="1103"/>
+        <location filename="findwin.ui" line="935"/>
+        <location filename="findwin.ui" line="1253"/>
+        <location filename="ui_findwin.h" line="1040"/>
+        <location filename="ui_findwin.h" line="1069"/>
+        <location filename="ui_findwin.h" line="1090"/>
+        <location filename="ui_findwin.h" line="1109"/>
         <source>Normal</source>
         <translation type="unfinished">普通</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="187"/>
         <location filename="findwin.ui" line="524"/>
-        <location filename="findwin.ui" line="965"/>
-        <location filename="findwin.ui" line="1272"/>
-        <location filename="ui_findwin.h" line="1035"/>
-        <location filename="ui_findwin.h" line="1065"/>
-        <location filename="ui_findwin.h" line="1086"/>
-        <location filename="ui_findwin.h" line="1104"/>
+        <location filename="findwin.ui" line="956"/>
+        <location filename="findwin.ui" line="1263"/>
+        <location filename="ui_findwin.h" line="1041"/>
+        <location filename="ui_findwin.h" line="1071"/>
+        <location filename="ui_findwin.h" line="1092"/>
+        <location filename="ui_findwin.h" line="1110"/>
         <source>Extend(\n,\r,\t,\0,\x...)</source>
         <translation type="unfinished">扩展(\n,\r,\t,\0,\x...)</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="222"/>
-        <location filename="ui_findwin.h" line="1036"/>
+        <location filename="ui_findwin.h" line="1042"/>
         <source>Find Next(F3)</source>
         <translation type="unfinished">查找下一个(F3)</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="225"/>
-        <location filename="ui_findwin.h" line="1038"/>
+        <location filename="ui_findwin.h" line="1044"/>
         <source>F3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="findwin.ui" line="238"/>
-        <location filename="ui_findwin.h" line="1040"/>
+        <location filename="ui_findwin.h" line="1046"/>
         <source>Find Prev(F4)</source>
         <translation type="unfinished">查找上一个(F4)</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="241"/>
-        <location filename="ui_findwin.h" line="1042"/>
+        <location filename="ui_findwin.h" line="1048"/>
         <source>F4</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="findwin.ui" line="254"/>
-        <location filename="ui_findwin.h" line="1044"/>
+        <location filename="ui_findwin.h" line="1050"/>
         <source>Counter(T)</source>
         <translation type="unfinished">计数(T)</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="257"/>
-        <location filename="ui_findwin.h" line="1046"/>
+        <location filename="ui_findwin.h" line="1052"/>
         <source>Ctrl+T</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="findwin.ui" line="292"/>
-        <location filename="ui_findwin.h" line="1052"/>
+        <location filename="ui_findwin.h" line="1058"/>
         <source>Copy Regular Result</source>
         <translation type="unfinished">提取正则结果到剪切板</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="565"/>
-        <location filename="ui_findwin.h" line="1066"/>
+        <location filename="ui_findwin.h" line="1072"/>
         <source>Find Next</source>
         <translation type="unfinished">查找下一个</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="799"/>
-        <location filename="ui_findwin.h" line="1077"/>
+        <location filename="findwin.ui" line="853"/>
+        <location filename="ui_findwin.h" line="1086"/>
         <source>File Type :</source>
         <translation type="unfinished">文件类型：</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="825"/>
-        <location filename="ui_findwin.h" line="1079"/>
+        <location filename="findwin.ui" line="812"/>
+        <location filename="ui_findwin.h" line="1084"/>
         <source>Skip Dir Name :</source>
         <translation type="unfinished">跳过目录名：</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1349"/>
-        <location filename="ui_findwin.h" line="1107"/>
+        <location filename="findwin.ui" line="1359"/>
+        <location filename="ui_findwin.h" line="1114"/>
         <source>Clear All</source>
         <translation type="unfinished">清除全部标记</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="270"/>
-        <location filename="ui_findwin.h" line="1048"/>
+        <location filename="ui_findwin.h" line="1054"/>
         <source>Find All in Current 
  Document</source>
         <translation type="unfinished">在当前文件中查找</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="284"/>
-        <location filename="ui_findwin.h" line="1050"/>
+        <location filename="ui_findwin.h" line="1056"/>
         <source>Find All in All Opened 
  Documents</source>
         <translation type="unfinished">查找所有打开文件</translation>
@@ -5112,97 +5216,103 @@ file size %1, please wait ...</source>
     <message>
         <location filename="findwin.ui" line="318"/>
         <location filename="findwin.ui" line="642"/>
-        <location filename="findwin.ui" line="1128"/>
-        <location filename="findwin.ui" line="1368"/>
-        <location filename="ui_findwin.h" line="1054"/>
-        <location filename="ui_findwin.h" line="1071"/>
-        <location filename="ui_findwin.h" line="1096"/>
-        <location filename="ui_findwin.h" line="1108"/>
+        <location filename="findwin.ui" line="1119"/>
+        <location filename="findwin.ui" line="1378"/>
+        <location filename="ui_findwin.h" line="1060"/>
+        <location filename="ui_findwin.h" line="1077"/>
+        <location filename="ui_findwin.h" line="1102"/>
+        <location filename="ui_findwin.h" line="1115"/>
         <source>Close</source>
         <translation type="unfinished">关闭</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="341"/>
         <location filename="findwin.ui" line="584"/>
-        <location filename="ui_findwin.h" line="1067"/>
-        <location filename="ui_findwin.h" line="1072"/>
+        <location filename="ui_findwin.h" line="1073"/>
+        <location filename="ui_findwin.h" line="1078"/>
         <source>Replace</source>
         <translation type="unfinished">替换</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="401"/>
-        <location filename="findwin.ui" line="812"/>
-        <location filename="ui_findwin.h" line="1057"/>
-        <location filename="ui_findwin.h" line="1078"/>
+        <location filename="findwin.ui" line="771"/>
+        <location filename="ui_findwin.h" line="1063"/>
+        <location filename="ui_findwin.h" line="1082"/>
         <source>Replace with :</source>
         <translation type="unfinished">替换为：</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="603"/>
-        <location filename="ui_findwin.h" line="1068"/>
+        <location filename="ui_findwin.h" line="1074"/>
         <source>Replace All</source>
         <translation type="unfinished">在当前文件中替换</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="622"/>
-        <location filename="ui_findwin.h" line="1069"/>
+        <location filename="ui_findwin.h" line="1075"/>
         <source>Replace All in All Opened 
  Documents</source>
         <translation type="unfinished">替换所有打开文件</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1090"/>
-        <location filename="ui_findwin.h" line="1094"/>
+        <location filename="findwin.ui" line="1081"/>
+        <location filename="ui_findwin.h" line="1100"/>
         <source>Replace In File</source>
         <translation type="unfinished">在目录文件中替换</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="305"/>
-        <location filename="findwin.ui" line="1109"/>
-        <location filename="ui_findwin.h" line="1053"/>
-        <location filename="ui_findwin.h" line="1095"/>
+        <location filename="findwin.ui" line="1100"/>
+        <location filename="ui_findwin.h" line="1059"/>
+        <location filename="ui_findwin.h" line="1101"/>
         <source>Clear Result</source>
         <translation type="unfinished">清空结果</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1151"/>
-        <location filename="ui_findwin.h" line="1109"/>
+        <location filename="findwin.ui" line="1142"/>
+        <location filename="ui_findwin.h" line="1116"/>
         <source>Mark</source>
         <translation type="unfinished">标记</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1170"/>
-        <location filename="ui_findwin.h" line="1098"/>
+        <location filename="findwin.ui" line="1161"/>
+        <location filename="ui_findwin.h" line="1104"/>
         <source>Mark What</source>
         <translation type="unfinished">标记目标：</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1311"/>
-        <location filename="ui_findwin.h" line="1105"/>
+        <location filename="findwin.ui" line="1302"/>
+        <location filename="ui_findwin.h" line="1111"/>
         <source>Mark All</source>
         <translation type="unfinished">全部标记</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1330"/>
-        <location filename="ui_findwin.h" line="1106"/>
+        <location filename="findwin.ui" line="1321"/>
+        <location filename="ui_findwin.h" line="1112"/>
+        <source>Mark &amp; Bookmark</source>
+        <translation type="unfinished">标记加书签</translation>
+    </message>
+    <message>
+        <location filename="findwin.ui" line="1340"/>
+        <location filename="ui_findwin.h" line="1113"/>
         <source>Clear Mark</source>
         <translation type="unfinished">清除</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="665"/>
-        <location filename="ui_findwin.h" line="1097"/>
+        <location filename="ui_findwin.h" line="1103"/>
         <source>Dir Find</source>
         <translation type="unfinished">在目录查找</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="684"/>
-        <location filename="ui_findwin.h" line="1073"/>
+        <location filename="ui_findwin.h" line="1079"/>
         <source>Dest Dir :</source>
         <translation type="unfinished">目标目录：</translation>
     </message>
     <message>
         <location filename="findwin.ui" line="719"/>
-        <location filename="ui_findwin.h" line="1074"/>
+        <location filename="ui_findwin.h" line="1080"/>
         <source>Select</source>
         <translation type="unfinished">选择</translation>
     </message>
@@ -5211,8 +5321,8 @@ file size %1, please wait ...</source>
         <translation type="obsolete">文件类型：</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="786"/>
-        <location filename="ui_findwin.h" line="1076"/>
+        <location filename="findwin.ui" line="840"/>
+        <location filename="ui_findwin.h" line="1085"/>
         <source>*.c:*.cpp:*.h</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5221,298 +5331,308 @@ file size %1, please wait ...</source>
         <translation type="obsolete">跳过目录名</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="853"/>
-        <location filename="ui_findwin.h" line="1080"/>
+        <location filename="findwin.ui" line="799"/>
+        <location filename="ui_findwin.h" line="1083"/>
         <source>debug:Debug:.vs:.git:.svn</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="977"/>
-        <location filename="ui_findwin.h" line="1087"/>
+        <location filename="findwin.ui" line="968"/>
+        <location filename="ui_findwin.h" line="1093"/>
         <source>Options</source>
         <translation type="unfinished">选项</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="983"/>
-        <location filename="ui_findwin.h" line="1088"/>
+        <location filename="findwin.ui" line="974"/>
+        <location filename="ui_findwin.h" line="1094"/>
         <source>Skip child dirs</source>
         <translation type="unfinished">跳过子目录</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="990"/>
-        <location filename="ui_findwin.h" line="1089"/>
+        <location filename="findwin.ui" line="981"/>
+        <location filename="ui_findwin.h" line="1095"/>
         <source>Skip hide file</source>
         <translation type="unfinished">跳过隐藏文件</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1003"/>
-        <location filename="ui_findwin.h" line="1090"/>
+        <location filename="findwin.ui" line="994"/>
+        <location filename="ui_findwin.h" line="1096"/>
         <source>Skip binary file</source>
         <translation type="unfinished">跳过二进制文件</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1018"/>
-        <location filename="ui_findwin.h" line="1091"/>
+        <location filename="findwin.ui" line="1009"/>
+        <location filename="ui_findwin.h" line="1097"/>
         <source>Skip Big file exceed</source>
         <translation type="unfinished">跳过超过大小的文件</translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1041"/>
-        <location filename="ui_findwin.h" line="1092"/>
+        <location filename="findwin.ui" line="1032"/>
+        <location filename="ui_findwin.h" line="1098"/>
         <source>MB</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="findwin.ui" line="1071"/>
-        <location filename="ui_findwin.h" line="1093"/>
+        <location filename="findwin.ui" line="1062"/>
+        <location filename="ui_findwin.h" line="1099"/>
         <source>Find All</source>
         <translation type="unfinished">全部查找</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="964"/>
-        <location filename="findwin.cpp" line="1062"/>
-        <location filename="findwin.cpp" line="1513"/>
-        <location filename="findwin.cpp" line="1659"/>
-        <location filename="findwin.cpp" line="1802"/>
-        <location filename="findwin.cpp" line="1896"/>
-        <location filename="findwin.cpp" line="1966"/>
-        <location filename="findwin.cpp" line="2173"/>
-        <location filename="findwin.cpp" line="2228"/>
-        <location filename="findwin.cpp" line="2783"/>
-        <location filename="findwin.cpp" line="2908"/>
+        <location filename="findwin.cpp" line="1028"/>
+        <location filename="findwin.cpp" line="1124"/>
+        <location filename="findwin.cpp" line="1568"/>
+        <location filename="findwin.cpp" line="1721"/>
+        <location filename="findwin.cpp" line="1813"/>
+        <location filename="findwin.cpp" line="1959"/>
+        <location filename="findwin.cpp" line="2053"/>
+        <location filename="findwin.cpp" line="2123"/>
+        <location filename="findwin.cpp" line="2328"/>
+        <location filename="findwin.cpp" line="2383"/>
+        <location filename="findwin.cpp" line="2931"/>
+        <location filename="findwin.cpp" line="3056"/>
         <source>what find is null !</source>
         <translation type="unfinished">查找字段为空</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="994"/>
-        <location filename="findwin.cpp" line="1564"/>
-        <location filename="findwin.cpp" line="1763"/>
-        <location filename="findwin.cpp" line="2010"/>
-        <location filename="findwin.cpp" line="2338"/>
+        <location filename="findwin.cpp" line="1056"/>
+        <location filename="findwin.cpp" line="1619"/>
+        <location filename="findwin.cpp" line="1920"/>
+        <location filename="findwin.cpp" line="2167"/>
+        <location filename="findwin.cpp" line="2493"/>
         <source>cant&apos;t find text &apos;%1&apos;</source>
         <translation type="unfinished">找不到字段 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1014"/>
-        <location filename="findwin.cpp" line="1783"/>
+        <location filename="findwin.cpp" line="1076"/>
+        <location filename="findwin.cpp" line="1940"/>
         <source>no more find text &apos;%1&apos;</source>
         <translation type="unfinished">没有更多的字段 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="301"/>
-        <location filename="findwin.cpp" line="865"/>
-        <location filename="findwin.cpp" line="1073"/>
-        <location filename="findwin.cpp" line="1526"/>
+        <location filename="findwin.cpp" line="316"/>
+        <location filename="findwin.cpp" line="929"/>
+        <location filename="findwin.cpp" line="1135"/>
+        <location filename="findwin.cpp" line="1581"/>
         <source>The ReadOnly document does not allow this operation.</source>
         <translation type="unfinished">当前只读显示文件不允许该操作！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1626"/>
-        <location filename="findwin.cpp" line="1725"/>
+        <location filename="findwin.cpp" line="1681"/>
+        <location filename="findwin.cpp" line="1792"/>
+        <location filename="findwin.cpp" line="1879"/>
         <source>find finished, total %1 found!</source>
         <translation type="unfinished">查找完成，一共 %1 处发现。</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1130"/>
-        <location filename="findwin.cpp" line="1643"/>
+        <location filename="findwin.cpp" line="1192"/>
+        <location filename="findwin.cpp" line="1698"/>
         <source>The mode of the current document does not allow this operation.</source>
         <translation type="unfinished">当前模式下的文档不允许该操作！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1227"/>
-        <location filename="findwin.cpp" line="1317"/>
-        <location filename="findwin.cpp" line="1409"/>
-        <location filename="findwin.cpp" line="1908"/>
-        <location filename="findwin.cpp" line="1981"/>
-        <location filename="findwin.cpp" line="2188"/>
+        <location filename="findwin.cpp" line="1294"/>
+        <location filename="findwin.cpp" line="1384"/>
+        <location filename="findwin.cpp" line="1464"/>
+        <location filename="findwin.cpp" line="2065"/>
+        <location filename="findwin.cpp" line="2138"/>
+        <location filename="findwin.cpp" line="2343"/>
         <source>The ReadOnly document does not allow replacement.</source>
         <translation type="unfinished">当前只读文档不允许执行替换操作！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1863"/>
-        <location filename="findwin.cpp" line="1870"/>
+        <location filename="findwin.cpp" line="2020"/>
+        <location filename="findwin.cpp" line="2027"/>
         <source>no more replace text &apos;%1&apos;</source>
         <translation type="unfinished">没有更多替换文本 &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="843"/>
+        <location filename="findwin.cpp" line="907"/>
         <source>find-regex-zero-length-match</source>
         <translation type="unfinished">正则查找零长匹配</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="948"/>
+        <location filename="findwin.cpp" line="1012"/>
         <source>target info linenum %1 pos is %2 - %3</source>
         <translation type="unfinished">目标在行 %1 位置 %2 - %3</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1098"/>
-        <location filename="findwin.cpp" line="1126"/>
+        <location filename="findwin.cpp" line="1160"/>
+        <location filename="findwin.cpp" line="1188"/>
         <source>count %1 times with &apos;%2&apos;</source>
         <translation type="unfinished">计数 %1 次匹配 &apos;%2&apos;</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1244"/>
-        <location filename="findwin.cpp" line="1336"/>
-        <location filename="findwin.cpp" line="1426"/>
+        <location filename="findwin.cpp" line="1311"/>
+        <location filename="findwin.cpp" line="1403"/>
+        <location filename="findwin.cpp" line="1481"/>
         <source>total %1 keyword, please wait ...</source>
         <translation type="unfinished">一共 %1 关键字，请等待......</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1630"/>
+        <location filename="findwin.cpp" line="1685"/>
         <source>find finished, total %1 found! Result in clipboard.</source>
         <translation type="unfinished">查找完成，一共 %1 处发现，目标结果字段已经提取到剪切板。</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1921"/>
-        <location filename="findwin.cpp" line="2043"/>
+        <location filename="findwin.cpp" line="2078"/>
+        <location filename="findwin.cpp" line="2200"/>
         <source>The mode of the current document does not allow replacement.</source>
         <translation type="unfinished">当前模式的文档不允许执行替换操作！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1970"/>
-        <location filename="findwin.cpp" line="2177"/>
+        <location filename="findwin.cpp" line="2127"/>
+        <location filename="findwin.cpp" line="2332"/>
         <source>Replace All current Doc</source>
-        <translation type="unfinished">在所有打开文件中替换</translation>
+        <translation type="unfinished">在当前文件中替换所有</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1970"/>
-        <location filename="findwin.cpp" line="2177"/>
+        <location filename="findwin.cpp" line="2127"/>
+        <location filename="findwin.cpp" line="2332"/>
         <source>Are you sure replace all occurrences in current documents?</source>
         <translation type="unfinished">是否确认在当前打开的文档中替换？</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2039"/>
-        <location filename="findwin.cpp" line="2212"/>
+        <location filename="findwin.cpp" line="2196"/>
+        <location filename="findwin.cpp" line="2367"/>
         <source>replace finished, total %1 replaced!</source>
         <translation type="unfinished">替换完成，一共 %1 处替换！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2233"/>
+        <location filename="findwin.cpp" line="2388"/>
         <source>Replace All Open Doc</source>
         <translation type="unfinished">替换所有打开的文档</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2233"/>
+        <location filename="findwin.cpp" line="2388"/>
         <source>Are you sure replace all occurrences in all open documents?</source>
         <translation type="unfinished">是否确认在所有打开的文档中替换？</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2297"/>
+        <location filename="findwin.cpp" line="2452"/>
         <source>Replace in Opened Files: %1 occurrences were replaced.</source>
         <translation type="unfinished">在打开的文档中替换：%1 处已经被替换。</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2304"/>
-        <location filename="findwin.cpp" line="2413"/>
+        <location filename="findwin.cpp" line="2459"/>
+        <location filename="findwin.cpp" line="2573"/>
         <source>what mark is null !</source>
         <translation type="unfinished">标记字段为空！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2348"/>
+        <location filename="findwin.cpp" line="2503"/>
         <source>cant&apos;t mark text &apos;%1&apos;</source>
         <translation type="unfinished">不能标记文本 ‘%1’</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2391"/>
+        <location filename="findwin.cpp" line="2550"/>
         <source>mark finished, total %1 found!</source>
         <translation type="unfinished">标记完成，一共 %1 处发现！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2397"/>
+        <location filename="findwin.cpp" line="2557"/>
         <source>The mode of the current document does not allow mark.</source>
         <translation type="unfinished">当前模式的文档不允许执行标记操作！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2444"/>
+        <location filename="findwin.cpp" line="2608"/>
         <source>Open Directory</source>
         <translation type="unfinished">打开目录</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2604"/>
+        <location filename="findwin.cpp" line="2752"/>
         <source>load dir file in progress
 , please wait ...</source>
         <translation type="unfinished">加载目录文件中，请等待...</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2641"/>
-        <location filename="findwin.cpp" line="2649"/>
+        <location filename="findwin.cpp" line="2789"/>
+        <location filename="findwin.cpp" line="2797"/>
         <source>skip dir %1</source>
         <translation type="unfinished">跳过目录 %1</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2657"/>
+        <location filename="findwin.cpp" line="2805"/>
         <source>found %1 dir %2</source>
         <translation type="unfinished">发现 %1 个目录 %2</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2695"/>
+        <location filename="findwin.cpp" line="2843"/>
         <source>ext type  skip file %1</source>
         <translation type="unfinished">跳过类型文件 %1</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2721"/>
+        <location filename="findwin.cpp" line="2869"/>
         <source>found in dir canceled ...</source>
         <translation type="unfinished">查找取消...</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="3002"/>
+        <location filename="findwin.cpp" line="3023"/>
+        <source>find finished, walk %1 files, total %2 found in %3 file!</source>
+        <translation type="unfinished">查找完成，遍历 %1 个文件，一共 %2 处发现在 %3 个文件！</translation>
+    </message>
+    <message>
+        <location filename="findwin.cpp" line="3144"/>
+        <source>replace finished, walk %1 files, total %2 replace !</source>
+        <translation type="unfinished">替换完成，遍历 %1 个文件，一共 %2 处替换！</translation>
+    </message>
+    <message>
+        <location filename="findwin.cpp" line="3153"/>
         <source>Only regular lookup mode can be used!</source>
         <translation type="unfinished">只在正则查找模式才能使用该功能！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1608"/>
-        <location filename="findwin.cpp" line="2729"/>
+        <location filename="findwin.cpp" line="1663"/>
+        <location filename="findwin.cpp" line="2877"/>
         <source>Continue Find ?</source>
         <translation type="unfinished">是否继续查找？</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1608"/>
-        <location filename="findwin.cpp" line="2729"/>
+        <location filename="findwin.cpp" line="1663"/>
+        <location filename="findwin.cpp" line="2877"/>
         <source>The search results have been greater than %1 times in %2 files, and more may be slow. Continue to search?</source>
         <translation type="unfinished">查找结果已经有 %1 处在 %2 个文件中，结果太多会比较慢，是否继续查找？</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1608"/>
-        <location filename="findwin.cpp" line="2729"/>
+        <location filename="findwin.cpp" line="1663"/>
+        <location filename="findwin.cpp" line="2877"/>
         <source>Yes</source>
         <translation type="unfinished">继续查找</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="1608"/>
-        <location filename="findwin.cpp" line="2729"/>
+        <location filename="findwin.cpp" line="1663"/>
+        <location filename="findwin.cpp" line="2877"/>
         <source>Abort</source>
         <translation type="unfinished">终止查找</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2776"/>
-        <location filename="findwin.cpp" line="2901"/>
+        <location filename="findwin.cpp" line="2924"/>
+        <location filename="findwin.cpp" line="3049"/>
         <source>please select find dest dir !</source>
         <translation type="unfinished">请选择目标文件夹！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2791"/>
+        <location filename="findwin.cpp" line="2939"/>
         <source>dest dir %1 not exist !</source>
         <translation type="unfinished">目标文件夹 %1 不存在！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2875"/>
         <source>find finished, total %1 found in %2 file!</source>
-        <translation type="unfinished">查找完成，一共发现 %1 处在 %2 个文件中！</translation>
+        <translation type="obsolete">查找完成，一共发现 %1 处在 %2 个文件中！</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2913"/>
+        <location filename="findwin.cpp" line="3061"/>
         <source>Replace All Dirs</source>
         <translation type="unfinished">目录全部替换</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2913"/>
+        <location filename="findwin.cpp" line="3061"/>
         <source>Are you sure replace all &quot;%1&quot; to &quot;%2&quot; occurrences in selected dirs ?</source>
         <translation type="unfinished">您确定替换目录文件中所有 &quot;%1&quot; 为 &quot;%2&quot; 吗？</translation>
     </message>
     <message>
-        <location filename="findwin.cpp" line="2993"/>
         <source>replace finished, total %1 replace in %2 file!</source>
-        <translation type="unfinished">替换完成，一共替换 %1 处在 %2 个文件中！</translation>
+        <translation type="obsolete">替换完成，一共替换 %1 处在 %2 个文件中！</translation>
     </message>
 </context>
 <context>
@@ -5956,6 +6076,15 @@ Double-click a column item to modify the syntax association file.</source>
     </message>
 </context>
 <context>
+    <name>MarkdownViewClass</name>
+    <message>
+        <location filename="markdownview.ui" line="14"/>
+        <location filename="ui_markdownview.h" line="71"/>
+        <source>MarkdownView</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Md5hash</name>
     <message>
         <location filename="md5hash.cpp" line="151"/>
@@ -6315,17 +6444,6 @@ Double-click a column item to modify the syntax association file.</source>
         <translation type="unfinished">光标移到行尾</translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="157"/>
-        <source>Scroll vertically to centre current line</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qscicommandset.cpp" line="164"/>
-        <source>Move down one paragraph</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qscicommandset.cpp" line="174"/>
         <source>Extend selection down one paragraph</source>
         <translation type="unfinished">继续选中下一段落</translation>
     </message>
@@ -6378,22 +6496,18 @@ Double-click a column item to modify the syntax association file.</source>
         <translation type="unfinished">扩展选中光标至行首</translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="448"/>
         <source>Move to first visible character in document line</source>
         <translation type="unfinished">光标移到行首</translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="460"/>
         <source>Extend selection to first visible character in document line</source>
         <translation type="unfinished">扩展选中光标至行首</translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="498"/>
         <source>Move to end of document line</source>
         <translation type="unfinished">光标移到行尾</translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="509"/>
         <source>Extend selection to end of document line</source>
         <translation type="unfinished">扩展选中光标至行尾</translation>
     </message>
@@ -6502,7 +6616,6 @@ Double-click a column item to modify the syntax association file.</source>
         <translation type="unfinished">插入新行</translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="870"/>
         <source>Indent one level</source>
         <translation type="unfinished">键入制表符</translation>
     </message>
@@ -6699,7 +6812,7 @@ Double-click a column item to modify the syntax association file.</source>
     </message>
     <message>
         <location filename="qtlangset.cpp" line="867"/>
-        <location filename="qtlangset.cpp" line="1664"/>
+        <location filename="qtlangset.cpp" line="1666"/>
         <source>AllGlobal</source>
         <translation type="unfinished">全局格式统一设置</translation>
     </message>
@@ -6719,53 +6832,53 @@ Double-click a column item to modify the syntax association file.</source>
         <translation type="unfinished">读取 %1 语言用户自定义格式失败！</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1370"/>
+        <location filename="qtlangset.cpp" line="1372"/>
         <source>Save Finished !</source>
         <translation type="unfinished">保存成功！</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1373"/>
+        <location filename="qtlangset.cpp" line="1375"/>
         <source>Not change, no need save !</source>
         <translation type="unfinished">没有改变，无需保存！</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1390"/>
+        <location filename="qtlangset.cpp" line="1392"/>
         <source>Style Foreground Color</source>
         <translatorcomment>风格背景色</translatorcomment>
         <translation type="unfinished">风格前景色</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1491"/>
+        <location filename="qtlangset.cpp" line="1493"/>
         <source>Style Background Color</source>
         <translation type="unfinished">风格背景色</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1579"/>
+        <location filename="qtlangset.cpp" line="1581"/>
         <source>Reset Style</source>
         <translation type="unfinished">重置风格</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1579"/>
+        <location filename="qtlangset.cpp" line="1581"/>
         <source>Are you sure to reset language %1 sytle</source>
         <translation type="unfinished">您确定重置语言 %1 的风格吗？</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1618"/>
+        <location filename="qtlangset.cpp" line="1620"/>
         <source>Reset All Style</source>
         <translation type="unfinished">重置所有风格</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1618"/>
+        <location filename="qtlangset.cpp" line="1620"/>
         <source>Are you sure to reset All language sytle</source>
         <translation type="unfinished">您确定重置所有语言风格吗？</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1920"/>
+        <location filename="qtlangset.cpp" line="1922"/>
         <source>themes changing, please waiting ...</source>
         <translation type="unfinished">主题切换中，请等待 ...</translation>
     </message>
     <message>
-        <location filename="qtlangset.cpp" line="1954"/>
+        <location filename="qtlangset.cpp" line="1956"/>
         <source>themes changed finished ...</source>
         <translation type="unfinished">主题切换完成 ...</translation>
     </message>
@@ -7311,64 +7424,69 @@ Double-click a column item to modify the syntax association file.</source>
 <context>
     <name>ScintillaEditView</name>
     <message>
-        <location filename="scintillaeditview.cpp" line="1866"/>
+        <location filename="scintillaeditview.cpp" line="1916"/>
         <source>Show File in Explorer</source>
         <translation type="unfinished">定位到文件目录</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="1816"/>
-        <location filename="scintillaeditview.cpp" line="1870"/>
+        <location filename="scintillaeditview.cpp" line="1866"/>
+        <location filename="scintillaeditview.cpp" line="1920"/>
         <source>mark with color</source>
         <translation type="unfinished">使用颜色标记</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="1827"/>
-        <location filename="scintillaeditview.cpp" line="1881"/>
+        <location filename="scintillaeditview.cpp" line="1877"/>
+        <location filename="scintillaeditview.cpp" line="1931"/>
         <source>Color %1</source>
         <translation type="unfinished">颜色 %1</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="270"/>
-        <location filename="scintillaeditview.cpp" line="1855"/>
-        <location filename="scintillaeditview.cpp" line="1907"/>
+        <location filename="scintillaeditview.cpp" line="310"/>
+        <location filename="scintillaeditview.cpp" line="1905"/>
+        <location filename="scintillaeditview.cpp" line="1957"/>
         <source>Clear Select</source>
         <translation type="unfinished">清除选择标记</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="271"/>
-        <location filename="scintillaeditview.cpp" line="1856"/>
-        <location filename="scintillaeditview.cpp" line="1908"/>
+        <location filename="scintillaeditview.cpp" line="311"/>
+        <location filename="scintillaeditview.cpp" line="1906"/>
+        <location filename="scintillaeditview.cpp" line="1958"/>
         <source>Clear All</source>
         <translation type="unfinished">清除全部标记</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="1914"/>
+        <location filename="scintillaeditview.cpp" line="1964"/>
         <source>Add/Del line comment</source>
         <translation type="unfinished">添加/删除当行注释</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="1917"/>
+        <location filename="scintillaeditview.cpp" line="1967"/>
         <source>Add Block comment</source>
         <translation type="unfinished">区块注释</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="1920"/>
+        <location filename="scintillaeditview.cpp" line="1970"/>
         <source>Del Block comment</source>
         <translation type="unfinished">清除区块注释</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="1925"/>
+        <location filename="scintillaeditview.cpp" line="1976"/>
+        <source>Markdown View</source>
+        <translation type="unfinished">预览 MarkDown</translation>
+    </message>
+    <message>
+        <location filename="scintillaeditview.cpp" line="1978"/>
         <source>Word Count</source>
         <translation type="unfinished">字数统计</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="2250"/>
-        <location filename="scintillaeditview.cpp" line="2265"/>
+        <location filename="scintillaeditview.cpp" line="2303"/>
+        <location filename="scintillaeditview.cpp" line="2318"/>
         <source>Word Nums</source>
         <translation type="unfinished">字符数量</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="2250"/>
+        <location filename="scintillaeditview.cpp" line="2303"/>
         <source>Current Select Word Nums is %1 . 
 Line nums is %2 . 
 Space nums is %3, Non-space is %4 .</source>
@@ -7377,7 +7495,7 @@ Space nums is %3, Non-space is %4 .</source>
 空格字符 %3，非空格字符数 %4</translation>
     </message>
     <message>
-        <location filename="scintillaeditview.cpp" line="2265"/>
+        <location filename="scintillaeditview.cpp" line="2318"/>
         <source>Current Doc Word Nums is %1 . 
 Line nums is %2 . 
 Space nums is %3, Non-space is %4 .</source>
@@ -7811,91 +7929,91 @@ Space nums is %3, Non-space is %4 .</source>
     <name>TextEditSetWin</name>
     <message>
         <location filename="texteditsetwin.ui" line="14"/>
-        <location filename="ui_texteditsetwin.h" line="240"/>
+        <location filename="ui_texteditsetwin.h" line="246"/>
         <source>TextEditSetWin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="22"/>
-        <location filename="ui_texteditsetwin.h" line="241"/>
+        <location filename="ui_texteditsetwin.h" line="247"/>
         <source>Tab Setting</source>
         <translation type="unfinished">Tab 设置</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="30"/>
-        <location filename="ui_texteditsetwin.h" line="242"/>
+        <location filename="ui_texteditsetwin.h" line="248"/>
         <source>Set Tab Length</source>
         <translation type="unfinished">Tab 字符长度</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="49"/>
-        <location filename="ui_texteditsetwin.h" line="243"/>
+        <location filename="ui_texteditsetwin.h" line="249"/>
         <source>Space Replacement Tab</source>
         <translation type="unfinished">使用空格替换tab</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="62"/>
-        <location filename="ui_texteditsetwin.h" line="244"/>
+        <location filename="ui_texteditsetwin.h" line="250"/>
         <source>Big Text Size</source>
         <translation type="unfinished">大文本文件大小</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="68"/>
-        <location filename="ui_texteditsetwin.h" line="245"/>
+        <location filename="ui_texteditsetwin.h" line="251"/>
         <source>Beyond this size, it can only be read-only and displayed in blocks</source>
         <translation type="unfinished">文本文件超过该值时，只能以只读的方式进行分块加载显示。</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="77"/>
-        <location filename="ui_texteditsetwin.h" line="246"/>
+        <location filename="ui_texteditsetwin.h" line="252"/>
         <source>Exceed(MB)</source>
         <translation type="unfinished">超过(MB)</translation>
     </message>
     <message>
-        <location filename="texteditsetwin.ui" line="97"/>
-        <location filename="ui_texteditsetwin.h" line="247"/>
-        <source>(50-300MB)</source>
-        <translation type="unfinished"></translation>
+        <location filename="texteditsetwin.ui" line="227"/>
+        <location filename="ui_texteditsetwin.h" line="261"/>
+        <source>Clear openfile list record on close</source>
+        <translation type="unfinished">关闭时清除打开历史记录</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="137"/>
-        <location filename="ui_texteditsetwin.h" line="248"/>
+        <location filename="ui_texteditsetwin.h" line="254"/>
         <source>Font Setting</source>
         <translation type="unfinished">字体设置</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="145"/>
-        <location filename="ui_texteditsetwin.h" line="249"/>
+        <location filename="ui_texteditsetwin.h" line="255"/>
         <source>Txt File Font:</source>
         <translation type="unfinished">Txt 文件字体</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="152"/>
-        <location filename="ui_texteditsetwin.h" line="250"/>
+        <location filename="ui_texteditsetwin.h" line="256"/>
         <source> Set</source>
         <translation type="unfinished">设置</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="176"/>
-        <location filename="ui_texteditsetwin.h" line="251"/>
+        <location filename="ui_texteditsetwin.h" line="257"/>
         <source>App Font Color:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="183"/>
-        <location filename="ui_texteditsetwin.h" line="252"/>
+        <location filename="ui_texteditsetwin.h" line="258"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="193"/>
-        <location filename="ui_texteditsetwin.h" line="253"/>
+        <location filename="ui_texteditsetwin.h" line="259"/>
         <source>Set</source>
         <translation type="unfinished">设置</translation>
     </message>
     <message>
         <location filename="texteditsetwin.ui" line="220"/>
-        <location filename="ui_texteditsetwin.h" line="254"/>
+        <location filename="ui_texteditsetwin.h" line="260"/>
         <source>Restore files opened on close</source>
         <translation type="unfinished">恢复上次关闭时的打开文件</translation>
     </message>
@@ -7929,17 +8047,17 @@ Space nums is %3, Non-space is %4 .</source>
         <translation type="obsolete">选择字体</translation>
     </message>
     <message>
-        <location filename="texteditsetwin.cpp" line="123"/>
+        <location filename="texteditsetwin.cpp" line="131"/>
         <source>App Font Foreground Color</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="texteditsetwin.cpp" line="156"/>
+        <location filename="texteditsetwin.cpp" line="164"/>
         <source>The App Font</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="texteditsetwin.cpp" line="185"/>
+        <location filename="texteditsetwin.cpp" line="193"/>
         <source>User define Txt Font</source>
         <translation type="unfinished">用户自定义文本字体</translation>
     </message>
@@ -7986,60 +8104,60 @@ Space nums is %3, Non-space is %4 .</source>
 <context>
     <name>UserRegister</name>
     <message>
-        <location filename="userregister.cpp" line="21"/>
+        <location filename="userregister.cpp" line="22"/>
         <source>Free Trial</source>
         <translation type="unfinished">免费永久试用版本（捐赠可获取注册码）</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="25"/>
-        <location filename="userregister.cpp" line="58"/>
+        <location filename="userregister.cpp" line="26"/>
+        <location filename="userregister.cpp" line="76"/>
         <source>Registered Version</source>
         <translation type="unfinished">注册过的正版软件！（恭喜）</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="29"/>
+        <location filename="userregister.cpp" line="30"/>
         <source>License Expired</source>
         <translation type="unfinished">许可证过期（可捐赠获取）</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="33"/>
+        <location filename="userregister.cpp" line="34"/>
         <source>License Error</source>
         <translation type="unfinished">错误的注册码（可重新输入）</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="73"/>
-        <location filename="userregister.cpp" line="79"/>
-        <location filename="userregister.cpp" line="86"/>
-        <location filename="userregister.cpp" line="109"/>
-        <location filename="userregister.cpp" line="113"/>
-        <location filename="userregister.cpp" line="119"/>
+        <location filename="userregister.cpp" line="91"/>
+        <location filename="userregister.cpp" line="97"/>
+        <location filename="userregister.cpp" line="104"/>
+        <location filename="userregister.cpp" line="127"/>
+        <location filename="userregister.cpp" line="131"/>
+        <location filename="userregister.cpp" line="137"/>
         <source>Licence Key</source>
         <translation type="unfinished">许可证</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="73"/>
+        <location filename="userregister.cpp" line="91"/>
         <source>It is already a registered version.</source>
         <translation type="unfinished">当前已经是注册版！</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="79"/>
+        <location filename="userregister.cpp" line="97"/>
         <source>Please scanning the donation, Write your email address in the message area.
 You will get the registration code!</source>
         <translation type="unfinished">请微信扫描捐赠，在留言处留下您的邮件地址，注册码将通过邮件发送给您。</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="86"/>
+        <location filename="userregister.cpp" line="104"/>
         <source>Please enter the correct registration code!</source>
         <translation type="unfinished">请输入正确的注册码！</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="109"/>
+        <location filename="userregister.cpp" line="127"/>
         <source>Congratulations on your successful registration.</source>
         <translation type="unfinished">恭喜注册成功！</translation>
     </message>
     <message>
-        <location filename="userregister.cpp" line="113"/>
-        <location filename="userregister.cpp" line="119"/>
+        <location filename="userregister.cpp" line="131"/>
+        <location filename="userregister.cpp" line="137"/>
         <source>Registration failed. Please try again later.</source>
         <translation type="unfinished">注册失败，请稍后再试！</translation>
     </message>

@@ -1627,6 +1627,9 @@
    <property name="text">
     <string>Column Block Editing</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+X</string>
+   </property>
   </action>
   <action name="actionWrap">
    <property name="checkable">
