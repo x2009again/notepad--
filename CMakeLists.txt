@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(Notepad-- VERSION 1.23.2)
+project(Notepad-- VERSION 2.0.0)
 
 # -------------- Notepad -- 全局构建配置 ------------- #
 option(USE_QT6 "使用 Qt6 进行编译本项目与随带所有内容" OFF)
@@ -20,6 +20,8 @@ include(cmake/SparkMacrosExtendConfig.cmake)
 if(WIN32)
     add_compile_definitions(_UNICODE= UNICODE=)
 endif()
+# 符合 2.0.0 代码预期的版本处理
+add_compile_definitions(TEST_PRE)
 
 # ----------------- 构建 QSci 库 ----------------- #
 if(TRUE)
