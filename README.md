@@ -73,3 +73,6 @@ QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献�
  **Redhat7.x 效果图：** 
 
 ![输入图片说明](png/10.png.png)
+
+ **麒麟openkylin 0.9 x64 效果图：** 
+![输入图片说明](png/openkylin.png)
