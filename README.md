@@ -58,8 +58,7 @@ QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献�
 ## 效果预览
 
  **windows效果图：** 
-
-![输入图片说明](png/11.png.png)
+![输入图片说明](png/0803.png)
 
 ![输入图片说明](png/6.png)
 
@@ -73,5 +72,8 @@ QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献�
 
 ![输入图片说明](png/10.png.png)
 
+ **UOS 深度 效果图：** 
+![输入图片说明](png/0412.png)
+
  **麒麟openkylin 0.9 x64 效果图：** 
-![输入图片说明](png/openkylin.png)
+![目前支持还不够，待完善](png/openkylin.png)
