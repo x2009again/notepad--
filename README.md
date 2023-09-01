@@ -4,11 +4,9 @@
 
 ## 项目简介
 
-Notepad-- 是使用C++编写的文本编辑器Notepad--,可以支持Win/Linux/Mac平台。
+Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持Window/Mac/Linux操作系统平台。
 
-我们的目标是要进行文本编辑类软件的国产可替代，重点在国产Uos/Linux系统、Mac 系统上发展。
-
-一个支持windows/linux/mac的文本编辑器，目标是要国产替换同类软件，来自中国。
+我们的目标：完成文本编辑类软件的国产可替代，重点在国产Uos/Linux系统、Mac 系统上发展。
 
 对比其它竞品Notepad类软件而言，我们的优势是可以跨平台，支持linux mac操作系统。
 
@@ -20,8 +18,7 @@ Notepad-- 是使用C++编写的文本编辑器Notepad--,可以支持Win/Linux/Ma
 
 最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/latest
 
-NDD 具备插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
-开发者参与插件功能开发。
+NDD 具备插件编写功能，如果您愿意开发插件，还请提交给我们。
 
 做国人自己的免费编辑器，离不开您的支持，请通过微信捐赠我们。
 
