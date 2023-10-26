@@ -363,7 +363,7 @@ QColor QsciLexerGlobal::defaultPaper(int style) const
 		return QColor(0xE0E0E0);
 
 	case FOLD:
-		return QColor(0xF3F3F3);
+		return QColor(0xFFFF7F);
 
 	case FOLD_ACTIVE:
 		return QColor(0x2E3436);
@@ -456,7 +456,7 @@ int QsciLexerGlobal::changeOperBit(int style) const
 		return BG_BIT;
 
 	case SELECT_TEXT_COLOR:
-		return FG_BIT | BG_BIT;
+		return /*FG_BIT |*/ BG_BIT;
 
 	case CARET_COLOUR:
 		return FG_BIT;

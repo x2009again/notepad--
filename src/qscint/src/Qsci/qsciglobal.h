@@ -41,7 +41,7 @@
 #undef QSCINTILLA_DLL
 #endif
 
-//#define QSCINTILLA_DLL
+#define QSCINTILLA_DLL 
 
 #if defined(QSCINTILLA_DLL)
 #define QSCINTILLA_EXPORT       Q_DECL_IMPORT

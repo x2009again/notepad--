@@ -254,25 +254,26 @@ QVariant QsciScintillaBase::inputMethodQuery(Qt::InputMethodQuery query) const
             int paraEnd = sci->pdoc->ParaDown(pos);
             QVarLengthArray<char,1024> buffer(paraEnd - paraStart + 1);
 
-            Sci_CharacterRange charRange;
-            charRange.cpMin = paraStart;
-            charRange.cpMax = paraEnd;
+           // Sci_CharacterRange charRange;
+           // charRange.cpMin = paraStart;
+           // charRange.cpMax = paraEnd;
 
             Sci_TextRange textRange;
-            textRange.chrg = charRange;
+            textRange.chrg.cpMin = paraStart;
+            textRange.chrg.cpMax = paraEnd;
             textRange.lpstrText = buffer.data();
 
-            SendScintilla(SCI_GETTEXTRANGE, 0, (sptr_t)&textRange);
+            SendScintilla(SCI_GETTEXTRANGE, 0, &textRange);
 
-            return bytesAsText(buffer.constData());
+            return bytesAsText(buffer.constData(), buffer.size());
         }
 
         case Qt::ImCurrentSelection:
         {
-            QVarLengthArray<char,1024> buffer(SendScintilla(SCI_GETSELTEXT));
+            QVarLengthArray<char,1024> buffer(SendScintilla(SCI_GETSELTEXT) + 1);
             SendScintilla(SCI_GETSELTEXT, 0, (sptr_t)buffer.data());
 
-            return bytesAsText(buffer.constData());
+            return bytesAsText(buffer.constData(), buffer.size() - 1);
         }
 
         default:

@@ -1977,8 +1977,18 @@ void Editor::AddCharUTF(const char *s, unsigned int len, bool treatAsDBCS) {
 			// Also treats \0 and naked trail bytes 0x80 to 0xBF as valid
 			// characters representing themselves.
 		} else {
+
+			//发现这里在macOs下面输入要崩溃。于是把windows macos还是区分一下
 			unsigned int utf32[1] = { 0 };
+
+#if defined(Q_OS_WIN)
 			UTF32FromUTF8(s, len, utf32, ELEMENTS(utf32));
+#elif defined(Q_OS_MAC)
+			//在MAC上面最多输入3个字符。因为一个UTF8编码也就三个字符。而且这里原设计也就只接受一个字符。
+			UTF32FromUTF8(s, (len > 3 ? 3 : len), utf32, ELEMENTS(utf32));
+#elif defined(Q_OS_UNIX)
+			UTF32FromUTF8(s, len, utf32, ELEMENTS(utf32));
+#endif
 			byte = utf32[0];
 		}
 		NotifyChar(byte);
@@ -2836,7 +2846,7 @@ void Editor::NotifyMacroRecord(unsigned int iMessage, uptr_t wParam, sptr_t lPar
 
 	// Send notification
 	SCNotification scn = {};
-	scn.nmhdr.code = SCN_MACRORECORD;
+	scn.nmhdr.code = SCN_MACRORECORD_ID;
 	scn.message = iMessage;
 	scn.wParam = wParam;
 	scn.lParam = lParam;
@@ -5809,12 +5819,26 @@ sptr_t Editor::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
 		return pdoc->Length();
 
 	case SCI_CUT:
-		Cut();
-		SetLastXChosen();
+		if (!sel.Empty())
+		{
+			Cut();
+			SetLastXChosen();
+		}
+		else
+		{
+			KeyCommand(SCI_LINECUT);
+		}
 		break;
 
 	case SCI_COPY:
-		Copy();
+		if (!sel.Empty())
+		{
+			Copy();
+		}
+		else
+		{
+			KeyCommand(SCI_LINECOPY);
+		}
 		break;
 
 	case SCI_COPYALLOWLINE:
@@ -7831,6 +7855,9 @@ sptr_t Editor::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
 	case SCI_STOPRECORD:
 		recordingMacro = false;
 		return 0;
+
+	case SCI_GETRECORSTATUS:
+		return (recordingMacro ? 1 : 0);
 
 	case SCI_MOVECARETINSIDEVIEW:
 		MoveCaretInsideView();

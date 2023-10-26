@@ -35,6 +35,11 @@ QT_END_NAMESPACE
 
 class QsciScintilla;
 
+#ifdef Q_OS_WIN
+//windows系统下面，不允许随意修改默认快捷键。因为加载快捷键会降低启动速度。
+#else
+#define USER_SHUT_CUT_DEF
+#endif
 
 //! \brief The QsciCommandSet class represents the set of all internal editor
 //! commands that may have keys bound.
@@ -84,6 +89,13 @@ private:
 
     QsciCommandSet(const QsciCommandSet &);
     QsciCommandSet &operator=(const QsciCommandSet &);
+
+public:
+#ifdef USER_SHUT_CUT_DEF
+    void readUserShutKey();
+
+    void saveUserDefQsciShutkey();
+#endif
 };
 
 #endif

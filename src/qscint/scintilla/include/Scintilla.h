@@ -989,6 +989,7 @@ typedef sptr_t (*SciFnDirect)(sptr_t ptr, unsigned int iMessage, uptr_t wParam, 
 #define SCI_CLEARREPRESENTATION 2667
 #define SCI_STARTRECORD 3001
 #define SCI_STOPRECORD 3002
+#define SCI_GETRECORSTATUS 3003
 #define SCI_SETLEXER 4001
 #define SCI_GETLEXER 4002
 #define SCI_COLOURISE 4003
@@ -1093,7 +1094,7 @@ typedef sptr_t (*SciFnDirect)(sptr_t ptr, unsigned int iMessage, uptr_t wParam, 
 #define SCN_DOUBLECLICK 2006
 #define SCN_UPDATEUI 2007
 #define SCN_MODIFIED 2008
-#define SCN_MACRORECORD 2009
+#define SCN_MACRORECORD_ID 2009
 #define SCN_MARGINCLICK 2010
 #define SCN_NEEDSHOWN 2011
 #define SCN_PAINTED 2013

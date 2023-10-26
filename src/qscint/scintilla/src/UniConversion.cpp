@@ -1,4 +1,4 @@
-﻿// Scintilla source code edit control
+// Scintilla source code edit control
 /** @file UniConversion.cxx
  ** Functions to handle UTF-8 and UTF-16 strings.
  **/
@@ -166,7 +166,7 @@ size_t UTF32FromUTF8(const char *s, size_t len, unsigned int *tbuf, size_t tlen)
 	size_t ui = 0;
 	for (size_t i = 0; i < len;) {
 		unsigned char ch = s[i];
-		const unsigned int byteCount = UTF8BytesOfLead[ch];
+		unsigned int byteCount = UTF8BytesOfLead[ch];
 		unsigned int value;
 
 		if (i + byteCount > len) {
@@ -179,7 +179,12 @@ size_t UTF32FromUTF8(const char *s, size_t len, unsigned int *tbuf, size_t tlen)
 		}
 
 		if (ui == tlen) {
-			throw std::runtime_error("UTF32FromUTF8: attempted write beyond end");
+			//在macos下面，中文输入shift+_，会导致触发这里的崩溃。发现macos下面输入shift+_，引入的两个字符——，会同时输入。
+			//即这里——长度是6个字符。但是外面来的tlen=1,导致二者没有匹配。但是崩溃总不是一个好的选择。
+			//我们直接强行赋值byteCount=3，然后输出拉倒。20230506
+			//throw std::runtime_error("UTF32FromUTF8: attempted write beyond end");
+			ui = tlen - 1;
+			byteCount = 3;
 		}
 
 		i++;

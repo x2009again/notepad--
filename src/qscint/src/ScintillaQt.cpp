@@ -386,7 +386,7 @@ void QsciScintillaQt::NotifyParent(SCNotification scn)
         emit qsb->SCN_INDICATORRELEASE(scn.position, scn.modifiers);
         break;
 
-    case SCN_MACRORECORD:
+    case SCN_MACRORECORD_ID:
         emit qsb->SCN_MACRORECORD(scn.message, scn.wParam,
                 reinterpret_cast<void *>(scn.lParam));
         break;

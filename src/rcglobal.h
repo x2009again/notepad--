@@ -11,7 +11,7 @@
 static const char* VersionStr = u8"(内部测试非稳定) v2.0.0";
 #else
 
-static const char* VersionStr = "v1.23.2";
+static const char* VersionStr = "v2.0.0";
 #endif // TEST_PRE
 
 

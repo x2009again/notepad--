@@ -30,6 +30,12 @@
 
 class QsciScintilla;
 
+enum USER_DEFINE_MACRO {
+    MACRO_FIND_NEXT = 5000,//查找下一个
+    MACRO_REPLACE_ALL,//全部替换
+    MACRO_REPLACE_ONE,//替换一条
+    MACRO_EXE_MENU_FUN,//执行菜单栏上面的命令
+};
 
 //! \brief The QsciMacro class represents a sequence of recordable editor
 //! commands.
@@ -67,6 +73,10 @@ public:
     //!
     //! \sa load()
     QString save() const;
+
+//signals:
+//    //从外部调用记录宏，非qscintilla内部宏
+//    void s_record(unsigned int msg, unsigned long wParam, void* lParam);
 
 public slots:
     //! Play the macro.

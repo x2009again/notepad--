@@ -2382,6 +2382,21 @@ QString QsciScintilla::selectedText() const
     return qs;
 }
 
+//20230929 在base64编码时，如果文本中有二进制字符，比如一些控制字符。
+//如果使用selectedText，则获取的文件字节，转换为QString会乱码。此时不对，直接获取原始字节码。
+bool QsciScintilla::selectedRawBytes(QByteArray& bytes) const
+{
+    if (!selText)
+        return false;
+
+    //char *buf = new char[SendScintilla(SCI_GETSELECTIONEND) - SendScintilla(SCI_GETSELECTIONSTART) + 1];
+    int size = SendScintilla(SCI_GETSELTEXT, 0);
+    bytes.resize(size);
+    SendScintilla(SCI_GETSELTEXT, bytes.data());
+
+    return true;
+}
+
 
 // Return the current text.
 QString QsciScintilla::text() const
@@ -3671,8 +3686,11 @@ void QsciScintilla::setStylesFont(const QFont &f, int style)
             long(f.pointSizeF() * SC_FONT_SIZE_MULTIPLIER));
 
     // Pass the Qt weight via the back door.
-    SendScintilla(SCI_STYLESETWEIGHT, style, -f.weight());
-
+    //SendScintilla(SCI_STYLESETWEIGHT, style, -f.weight());
+    
+    //20230712 发现粗体总是存在混淆，修改一个风格，会导致其余风格也被设置。于是注释掉上面的SCI_STYLESETWEIGHT
+    //使用下面的SCI_STYLESETBOLD取代后，发现问题解除。
+    SendScintilla(SCI_STYLESETBOLD, style, f.bold());
     SendScintilla(SCI_STYLESETITALIC, style, f.italic());
     SendScintilla(SCI_STYLESETUNDERLINE, style, f.underline());
 
@@ -4360,6 +4378,11 @@ bool QsciScintilla::getHtmlHighLightTag()
 	return isHtmlHighLightTag;
 }
 
+intptr_t QsciScintilla::searchInTarget(QByteArray& text2Find, size_t fromPos, size_t toPos) const
+{
+    SendScintilla(SCI_SETTARGETRANGE, fromPos, toPos);
+    return SendScintilla(SCI_SEARCHINTARGET, text2Find.size(), text2Find.data());
+}
 
 // Return the word at the given coordinates.
 QString QsciScintilla::wordAtLineIndex(int line, int index) const
@@ -4701,7 +4724,7 @@ QMenu *QsciScintilla::createStandardContextMenu()
 
     action = menu->addAction(tr("&Copy"), this, SLOT(copy()));
     action->setObjectName("copy");
-    set_shortcut(action, QsciCommand::SelectionCopy);
+    //set_shortcut(action, QsciCommand::SelectionCopy);
     action->setEnabled(has_selection);
 
     if (!read_only)

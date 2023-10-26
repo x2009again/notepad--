@@ -76,8 +76,10 @@ QColor QsciLexerBash::defaultColor(int style) const
         return QColor(0x80,0x80,0x80);
 
     case Error:
-    case Backticks:
         return QColor(0xff,0xff,0x00);
+
+    case Backticks:
+        return QColor(0x00, 0x00, 0xff);
 
     case Comment:
         return QColor(0x00,0x7f,0x00);
@@ -260,9 +262,6 @@ QColor QsciLexerBash::defaultPaper(int style) const
 
     case ParameterExpansion:
         return QColor(0xff,0xff,0xe0);
-
-    case Backticks:
-        return QColor(0xa0,0x80,0x80);
 
     case HereDocumentDelimiter:
     case SingleQuotedHereDocument:
