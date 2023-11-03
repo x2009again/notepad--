@@ -63,5 +63,9 @@ QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献�
  **UOS 深度 效果图：** 
 ![输入图片说明](png/0809.png)
 
- **麒麟openkylin 0.9 x64 效果图：** 
-![目前支持还不够，待完善](png/openkylin.png)
+ **银河麒麟 开源openkylin amd x64 效果图：** 
+![输入图片说明](png/kinly01.png)
+
+![输入图片说明](png/kinly02.png)
+
+![输入图片说明](png/kinly03.png)
