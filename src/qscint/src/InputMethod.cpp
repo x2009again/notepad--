@@ -252,11 +252,13 @@ QVariant QsciScintillaBase::inputMethodQuery(Qt::InputMethodQuery query) const
         {
             int paraStart = sci->pdoc->ParaUp(pos);
             int paraEnd = sci->pdoc->ParaDown(pos);
-            QVarLengthArray<char,1024> buffer(paraEnd - paraStart + 1);
 
-           // Sci_CharacterRange charRange;
-           // charRange.cpMin = paraStart;
-           // charRange.cpMax = paraEnd;
+            if (paraEnd - paraStart <= 0)
+            {
+                return "";
+            }
+            QByteArray buffer(paraEnd - paraStart + 1,0);
+            //QVarLengthArray<char,1024> buffer(paraEnd - paraStart + 1);
 
             Sci_TextRange textRange;
             textRange.chrg.cpMin = paraStart;

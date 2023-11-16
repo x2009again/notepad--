@@ -358,7 +358,7 @@ void LineMarker::Draw(Surface *surface, PRectangle &rcWhole, Font &fontForCharac
 			DrawMinus(surface, centreX, centreY, blobSize, colourTail);
 
 			surface->PenColour(colourHead);
-			surface->MoveTo(centreX, centreY + blobSize);
+			surface->MoveTo(centreX, centreY + blobSize + 1);
 			surface->LineTo(centreX, ircWhole.bottom);
 
 		}
@@ -369,7 +369,7 @@ void LineMarker::Draw(Surface *surface, PRectangle &rcWhole, Font &fontForCharac
 			DrawMinus(surface, centreX, centreY, blobSize, colourTail);
 
 			surface->PenColour(colourHead);
-			surface->MoveTo(centreX, centreY + blobSize);
+			surface->MoveTo(centreX, centreY + blobSize + 1);
 			surface->LineTo(centreX, ircWhole.bottom);
 
 			surface->PenColour(colourBody);
@@ -440,7 +440,7 @@ void LineMarker::Draw(Surface *surface, PRectangle &rcWhole, Font &fontForCharac
 
 		}
 		break;
-		
+
 		case SC_MARK_DOTDOTDOT: 
 		{
 			XYPOSITION right = static_cast<XYPOSITION>(centreX - 6);

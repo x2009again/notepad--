@@ -261,6 +261,14 @@ void QsciScintilla::handleCharAdded(int ch)
 
         return;
     }
+    else if (isListActive() && ch > 0x80)
+    {
+        cancelList();
+        //不是ascii字符，是中文UTF8的情况。
+         //识别中文Utf8字符。
+        startAutoWordCompletion(acSource, false, use_single == AcusAlways);
+        return;
+    }
 
     // Handle call tips.
     if (call_tips_style != CallTipsNone && !lex.isNull() && strchr("(),", ch) != NULL)
@@ -282,7 +290,13 @@ void QsciScintilla::handleCharAdded(int ch)
             startAutoCompletion(acSource, false, use_single == AcusAlways);
         else if (acThresh >= 1 && isWordCharacter(ch))
             startAutoCompletion(acSource, true, use_single == AcusAlways);
+        else if(ch > 0x80)
+        {
+            //不是ascii字符，是中文UTF8的情况。
+            //识别中文Utf8字符。
+            startAutoWordCompletion(acSource, false, use_single == AcusAlways);
     }
+}
 }
 
 
@@ -783,6 +797,15 @@ void QsciScintilla::startAutoCompletion(AutoCompletionSource acs,
 
     ScintillaBytes wlist_s = textAsBytes(wlist.join(QChar(acSeparator)));
     SendScintilla(SCI_AUTOCSHOW, last_len, ScintillaBytesConstData(wlist_s));
+}
+
+
+
+//放在子类中去完成。
+bool QsciScintilla::startAutoWordCompletion(AutoCompletionSource acs,
+    bool checkThresh, bool choose_single)
+{
+    return false;
 }
 
 
@@ -1915,7 +1938,7 @@ bool QsciScintilla::doFind()
 int QsciScintilla::simpleFind()
 {
 	/*这里是会大于的，因为我在外面会零长查找时，会增加startPos的值。如果是向前，才这样处理*/
-	
+
 	if (findState.forward && (findState.startpos >= findState.endpos)) {
         return -1;
 	}
@@ -3687,7 +3710,7 @@ void QsciScintilla::setStylesFont(const QFont &f, int style)
 
     // Pass the Qt weight via the back door.
     //SendScintilla(SCI_STYLESETWEIGHT, style, -f.weight());
-    
+
     //20230712 发现粗体总是存在混淆，修改一个风格，会导致其余风格也被设置。于是注释掉上面的SCI_STYLESETWEIGHT
     //使用下面的SCI_STYLESETBOLD取代后，发现问题解除。
     SendScintilla(SCI_STYLESETBOLD, style, f.bold());

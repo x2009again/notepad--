@@ -1677,7 +1677,7 @@ public:
 	bool getHtmlHighLightTag();
 
     intptr_t searchInTarget(QByteArray& text2Find, size_t fromPos, size_t toPos) const;
-   
+
 
 public slots:
     //! Appends the text \a text to the end of the text edit.  Note that the
@@ -2234,6 +2234,10 @@ protected:
 
     }
 
+    //识别中文UTF8字符的情况。
+    virtual bool startAutoWordCompletion(AutoCompletionSource acs, bool checkThresh,
+        bool choose_single);
+
 private slots:
     void handleCallTipClick(int dir);
     void handleCharAdded(int charadded);
@@ -2292,7 +2296,7 @@ private:
             int visLevels = 0, int level = -1);
     void setFoldMarker(int marknr, int mark = SC_MARK_EMPTY);
     void setLexerStyle(int style);
- 
+
     void setEnabledColors(int style, QColor &fore, QColor &back);
 
     void braceMatch();
