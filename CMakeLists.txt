@@ -20,7 +20,7 @@ include(cmake/SparkMacrosExtendConfig.cmake)
 if(WIN32)
     add_compile_definitions(_UNICODE= UNICODE=)
 endif()
-# 符合 2.0.0 代码预期的版本处理
+# 符合 2.0.0 代码预期的版本处理, 核心编辑器组件 2.11
 add_compile_definitions(TEST_PRE)
 
 # ----------------- 构建 QSci 库 ----------------- #
