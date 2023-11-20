@@ -36,6 +36,23 @@
 #undef  USING_OSX_KEYS
 #endif
 
+#ifdef USER_SHUT_CUT_DEF
+void QsciCommandSet::readUserShutKey()
+{
+    QString userDefFile = QString("notepad/scishortcut");
+    QSettings qs(QSettings::IniFormat, QSettings::UserScope, userDefFile);
+    qs.setIniCodec("UTF-8");
+    readSettings(qs, "qsci");
+}
+
+void QsciCommandSet::saveUserDefQsciShutkey()
+{
+     QString userDefFile = QString("notepad/scishortcut");
+     QSettings qs(QSettings::IniFormat, QSettings::UserScope, userDefFile);
+     qs.setIniCodec("UTF-8");
+     writeSettings(qs, "qsci");
+}
+#endif
 
 // The ctor.
 QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
@@ -168,14 +185,14 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
 #endif
 
 #if 0 
-                //测试无效
-        {
-            QsciCommand::ParaDownExtend,
-            Qt::Key_BracketRight | Qt::CTRL | Qt::SHIFT,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand",
-                    "Extend selection down one paragraph")
-        },
+        //测试无效
+{
+    QsciCommand::ParaDownExtend,
+    Qt::Key_BracketRight | Qt::CTRL | Qt::SHIFT,
+    0,
+    QT_TRANSLATE_NOOP("QsciCommand",
+            "Extend selection down one paragraph")
+},
 #endif 
         {
             QsciCommand::ParaUp,
@@ -261,7 +278,6 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
                     "Extend rectangular selection right one character")
         },
 
-#if 0
         {
             QsciCommand::WordLeft,
 #if defined(USING_OSX_KEYS)
@@ -272,7 +288,6 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Move left one word")
         },
-#endif
         {
             QsciCommand::WordLeftExtend,
 #if defined(USING_OSX_KEYS)
@@ -283,7 +298,6 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Extend selection left one word")
         },
-#if 0
         {
             QsciCommand::WordRight,
 #if defined(USING_OSX_KEYS)
@@ -294,15 +308,12 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Move right one word")
         },
-#endif
-#if 0
         {
             QsciCommand::WordRightExtend,
             Qt::Key_Right | Qt::CTRL | Qt::SHIFT,
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Extend selection right one word")
         },
-#endif
 #if 0
         {
             QsciCommand::WordLeftEnd,
@@ -442,7 +453,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
         {
             QsciCommand::VCHome,
 #if defined(USING_OSX_KEYS)
-            0,
+            Qt::Key_H | Qt::META,
 #else
             Qt::Key_Home,
 #endif
@@ -611,7 +622,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Move up one page")
         },
-      /*  {
+        {
             QsciCommand::PageUpExtend,
             Qt::Key_PageUp | Qt::SHIFT,
             0,
@@ -623,7 +634,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand",
                     "Extend rectangular selection up one page")
-        },*/
+        },
         {
             QsciCommand::PageDown,
             Qt::Key_PageDown,
@@ -634,7 +645,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
 #endif
             QT_TRANSLATE_NOOP("QsciCommand", "Move down one page")
         },
-        /*{
+        {
             QsciCommand::PageDownExtend,
             Qt::Key_PageDown | Qt::SHIFT,
 #if defined(USING_OSX_KEYS)
@@ -654,7 +665,7 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
 #endif
             QT_TRANSLATE_NOOP("QsciCommand",
                     "Extend rectangular selection down one page")
-        },*/
+        },
 #if 0
         {
             QsciCommand::StutteredPageUp,
@@ -697,9 +708,12 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             QsciCommand::DeleteBack,
             Qt::Key_Backspace,
 #if defined(USING_OSX_KEYS)
-            Qt::Key_H | Qt::META,
+            0,
 #else
-            Qt::Key_Backspace | Qt::SHIFT,
+            //发现百度输入法输入shift+( 会映射到第8个命令，也就是当前这条，会导致删除字符。
+            // 发现这个快捷键完全是多余，将这个快捷键删除。删除后，百度输入法shift+(会与下一条冲突。20230506
+            //Qt::Key_Backspace | Qt::SHIFT,
+            0,
 #endif
             QT_TRANSLATE_NOOP("QsciCommand", "Delete previous character")
         },
@@ -711,6 +725,9 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             QT_TRANSLATE_NOOP("QsciCommand",
                 "Delete previous character if not at start of line")
         },
+
+#endif
+
         {
             QsciCommand::DeleteWordLeft,
             Qt::Key_Backspace | Qt::CTRL,
@@ -723,7 +740,6 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Delete word to right")
         },
-#endif
 #if 0
         {
             QsciCommand::DeleteWordRightEnd,
@@ -771,165 +787,164 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
             0,
             QT_TRANSLATE_NOOP("QsciCommand", "Copy current line")
         },
-       /* {
-            QsciCommand::LineTranspose,
-            Qt::Key_T | Qt::SHIFT,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand",
-                    "Transpose current and previous lines")
-        },*/
-#if 0
-        {
-            QsciCommand::LineDuplicate,
-            0,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Duplicate the current line")
-        },
-#endif
-        {
-            QsciCommand::SelectAll,
-            Qt::Key_A | Qt::CTRL,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Select all")
-        },
-#if 0
-        {
-            QsciCommand::MoveSelectedLinesUp,
-            0,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Move selected lines up one line")
-        },
-        {
-            QsciCommand::MoveSelectedLinesDown,
-            0,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand",
-                    "Move selected lines down one line")
-        },
-#endif
-#if 0
-        {
-            QsciCommand::SelectionDuplicate,
-            Qt::Key_D | Qt::CTRL,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Duplicate selection")
-        },
-#endif
-        {
-            QsciCommand::SelectionLowerCase,
-            Qt::Key_U | Qt::CTRL,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Convert selection to lower case")
-        },
-        {
-            QsciCommand::SelectionUpperCase,
-            Qt::Key_U | Qt::CTRL | Qt::SHIFT,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Convert selection to upper case")
-        },
-        {
-            QsciCommand::SelectionCut,
-            Qt::Key_X | Qt::CTRL,
-            Qt::Key_Delete | Qt::SHIFT,
-            QT_TRANSLATE_NOOP("QsciCommand", "Cut selection")
-        },
-        {
-            QsciCommand::SelectionCopy,
-            Qt::Key_C | Qt::CTRL,
-            Qt::Key_Insert | Qt::CTRL,
-            QT_TRANSLATE_NOOP("QsciCommand", "Copy selection")
-        },
-        {
-            QsciCommand::Paste,
-            Qt::Key_V | Qt::CTRL,
-            Qt::Key_Insert | Qt::SHIFT,
-            QT_TRANSLATE_NOOP("QsciCommand", "Paste")
-        },
-        {
-            QsciCommand::EditToggleOvertype,
-            Qt::Key_Insert,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Toggle insert/overtype")
-        },
-        {
-            QsciCommand::Newline,
-            Qt::Key_Return,
-            Qt::Key_Return | Qt::SHIFT,
-            QT_TRANSLATE_NOOP("QsciCommand", "Insert newline")
-        },
-#if 0
-        {
-            QsciCommand::Formfeed,
-            0,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Formfeed")
-        },
-#endif                   
-        {
-            QsciCommand::Tab,
-            Qt::Key_Tab,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Indent one level")
-        },
-#if 0
-        {
-            QsciCommand::Backtab,
-            Qt::Key_Tab | Qt::SHIFT,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "De-indent one level")
-        },
-        {
-            QsciCommand::Cancel,
-            Qt::Key_Escape,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Cancel")
-        },
-#endif
-        {
-            QsciCommand::Undo,
-            Qt::Key_Z | Qt::CTRL,
-            Qt::Key_Backspace | Qt::ALT,
-            QT_TRANSLATE_NOOP("QsciCommand", "Undo last command")
-        },
-        {
-            QsciCommand::Redo,
-#if defined(USING_OSX_KEYS)
-            Qt::Key_Z | Qt::CTRL | Qt::SHIFT,
-#else
-            Qt::Key_Y | Qt::CTRL,
-#endif
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Redo last command")
-        },
-#if 1
-        {
-            QsciCommand::ZoomIn,
-            Qt::Key_Equal | Qt::CTRL,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Zoom in")
-        },
-        {
-            QsciCommand::ZoomOut,
-            Qt::Key_Minus | Qt::CTRL,
-            0,
-            QT_TRANSLATE_NOOP("QsciCommand", "Zoom out")
-        }, 
-#endif
-#if 0
-		{
-		   QsciCommand::MoveLineUp,
-		   Qt::Key_Up | Qt::CTRL | Qt::SHIFT,
-		   0,
-		   QT_TRANSLATE_NOOP("QsciCommand", "Move Line up")
-		}, 
+        /* {
+             QsciCommand::LineTranspose,
+             Qt::Key_T | Qt::SHIFT,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand",
+                     "Transpose current and previous lines")
+         },*/
+ #if 0
+         {
+             QsciCommand::LineDuplicate,
+             0,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Duplicate the current line")
+         },
+ #endif
+         {
+             QsciCommand::SelectAll,
+             Qt::Key_A | Qt::CTRL,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Select all")
+         },
+ #if 0
+         {
+             QsciCommand::MoveSelectedLinesUp,
+             0,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Move selected lines up one line")
+         },
+         {
+             QsciCommand::MoveSelectedLinesDown,
+             0,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand",
+                     "Move selected lines down one line")
+         },
+ #endif
+         {
+             QsciCommand::SelectionDuplicate,
+             Qt::Key_D | Qt::CTRL,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Duplicate selection")
+         },
+         {
+             QsciCommand::SelectionLowerCase,
+             Qt::Key_U | Qt::CTRL,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Convert selection to lower case")
+         },
+         {
+             QsciCommand::SelectionUpperCase,
+             Qt::Key_U | Qt::CTRL | Qt::SHIFT,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Convert selection to upper case")
+         },
+         {
+             QsciCommand::SelectionCut,
+             Qt::Key_X | Qt::CTRL,
+             Qt::Key_Delete | Qt::SHIFT,
+             QT_TRANSLATE_NOOP("QsciCommand", "Cut selection")
+         },
+         {
+             QsciCommand::SelectionCopy,
+             Qt::Key_C | Qt::CTRL,
+             Qt::Key_Insert | Qt::CTRL,
+             QT_TRANSLATE_NOOP("QsciCommand", "Copy selection")
+         },
+         {
+             QsciCommand::Paste,
+             Qt::Key_V | Qt::CTRL,
+             Qt::Key_Insert | Qt::SHIFT,
+             QT_TRANSLATE_NOOP("QsciCommand", "Paste")
+         },
+         {
+             QsciCommand::EditToggleOvertype,
+             Qt::Key_Insert,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Toggle insert/overtype")
+         },
+         {
+             QsciCommand::Newline,
+             Qt::Key_Return,
+             Qt::Key_Return | Qt::SHIFT,
+             QT_TRANSLATE_NOOP("QsciCommand", "Insert newline")
+         },
+ #if 0
+         {
+             QsciCommand::Formfeed,
+             0,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Formfeed")
+         },
+ #endif                   
+         {
+             QsciCommand::Tab,
+             Qt::Key_Tab,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Indent one level")
+         },
 
-		{
-		   QsciCommand::MovdLineDown,
-		   Qt::Key_Down | Qt::CTRL | Qt::SHIFT,
-		   0,
-		   QT_TRANSLATE_NOOP("QsciCommand", "Move Line down")
-		},
-#endif
+         {
+             QsciCommand::Backtab,
+             Qt::Key_Tab | Qt::SHIFT,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "De-indent one level")
+         },
+ #if 0
+         {
+             QsciCommand::Cancel,
+             Qt::Key_Escape,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Cancel")
+         },
+ #endif
+         {
+             QsciCommand::Undo,
+             Qt::Key_Z | Qt::CTRL,
+             Qt::Key_Backspace | Qt::ALT,
+             QT_TRANSLATE_NOOP("QsciCommand", "Undo last command")
+         },
+         {
+             QsciCommand::Redo,
+ #if defined(USING_OSX_KEYS)
+             Qt::Key_Z | Qt::CTRL | Qt::SHIFT,
+ #else
+             Qt::Key_Y | Qt::CTRL,
+ #endif
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Redo last command")
+         },
+ #if 1
+         {
+             QsciCommand::ZoomIn,
+             Qt::Key_Equal | Qt::CTRL,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Zoom in")
+         },
+         {
+             QsciCommand::ZoomOut,
+             Qt::Key_Minus | Qt::CTRL,
+             0,
+             QT_TRANSLATE_NOOP("QsciCommand", "Zoom out")
+         },
+ #endif
+ #if 0
+         {
+            QsciCommand::MoveLineUp,
+            Qt::Key_Up | Qt::CTRL | Qt::SHIFT,
+            0,
+            QT_TRANSLATE_NOOP("QsciCommand", "Move Line up")
+         },
+
+         {
+            QsciCommand::MovdLineDown,
+            Qt::Key_Down | Qt::CTRL | Qt::SHIFT,
+            0,
+            QT_TRANSLATE_NOOP("QsciCommand", "Move Line down")
+         },
+ #endif
     };
 
     // Clear the default map.
@@ -939,13 +954,20 @@ QsciCommandSet::QsciCommandSet(QsciScintilla *qs) : qsci(qs)
     // control character into the text).
     for (int k = 'A'; k <= 'Z'; ++k)
         qsci->SendScintilla(QsciScintillaBase::SCI_ASSIGNCMDKEY,
-                k + (QsciScintillaBase::SCMOD_CTRL << 16),
-                QsciScintillaBase::SCI_NULL);
+            k + (QsciScintillaBase::SCMOD_CTRL << 16),
+            QsciScintillaBase::SCI_NULL);
 
     for (int i = 0; i < sizeof (cmd_table) / sizeof (cmd_table[0]); ++i)
+    {
         cmds.append(
-                new QsciCommand(qsci, cmd_table[i].cmd, cmd_table[i].key,
-                        cmd_table[i].altkey, cmd_table[i].desc));
+            new QsciCommand(qsci, cmd_table[i].cmd, cmd_table[i].key,
+                cmd_table[i].altkey, cmd_table[i].desc));
+    }
+
+#ifdef USER_SHUT_CUT_DEF
+    readUserShutKey();
+#endif
+
 }
 
 
@@ -1061,3 +1083,5 @@ QsciCommand *QsciCommandSet::find(QsciCommand::Command command) const
     // This should never happen.
     return 0;
 }
+
+

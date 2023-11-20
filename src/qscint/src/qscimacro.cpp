@@ -162,7 +162,7 @@ bool QsciMacro::load(const QString &asc)
 
         macro.append(cmd);
     }
-        
+
     if (!ok)
         macro.clear();
 
@@ -229,8 +229,18 @@ void QsciMacro::play()
     QList<Macro>::const_iterator it;
 
     for (it = macro.begin(); it != macro.end(); ++it)
-        qsci->SendScintilla((*it).msg, static_cast<uintptr_t>((*it).wParam),
+    {
+        if (it->msg >= 5000)
+        {
+            qsci->playUserMacroRecord((*it).msg, static_cast<uintptr_t>((*it).wParam),
+               (void*) (*it).text.constData());
+        }
+        else
+        {
+            qsci->SendScintilla((*it).msg, static_cast<uintptr_t>((*it).wParam),
                 (*it).text.constData());
+        }
+    }
 }
 
 
@@ -292,7 +302,15 @@ void QsciMacro::record(unsigned int msg, unsigned long wParam, void *lParam)
     case QsciScintillaBase::SCI_APPENDTEXT:
     case QsciScintillaBase::SCI_SEARCHNEXT:
     case QsciScintillaBase::SCI_SEARCHPREV:
+
+    case MACRO_FIND_NEXT://查找下一个。需要flag 和 查找内容
+    case MACRO_REPLACE_ALL:
+    case MACRO_REPLACE_ONE:
         m.text.append(reinterpret_cast<const char *>(lParam));
+        break;
+
+    case MACRO_EXE_MENU_FUN:
+        m.text.append(QByteArray::number((int)wParam));
         break;
     }
 

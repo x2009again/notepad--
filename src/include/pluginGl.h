@@ -22,9 +22,10 @@ struct ndd_proc_data
 	QString m_version;           // [可选]版本号码
 	QString m_auther;            // [可选]作者名称
 	int 	m_menuType;			 // [可选]菜单类型(0：不使用二级菜单 1：创建二级菜单)
-	QMenu* 	m_rootMenu;			 // [依赖]当 m_menuType = 1，给出二级根菜单的地址(默认为 nullptr)
+	QMenu* 	m_rootMenu;			 // [依赖]当 m_menuType = 1，则给出二级根菜单的地址(默认为 nullptr)
+	QAction* m_pAction;          // []如果m_menuType = 0，给出一级菜单动作的地址。其他值nullptr 插件内部不用填写，主程序传递下来
 
-	ndd_proc_data(): m_rootMenu(nullptr), m_menuType(0)
+	ndd_proc_data(): m_rootMenu(nullptr), m_pAction(nullptr),m_menuType(0)
 	{
 
 	}

@@ -53,7 +53,7 @@ enum LangType {
 	L_CSOUND, L_ERLANG, L_ESCRIPT, L_FORTH, L_LATEX, \
 	L_MMIXAL, L_NIM, L_NNCRONTAB, L_OSCRIPT, L_REBOL, \
 	L_REGISTRY, L_RUST, L_SPICE, L_TXT2TAGS, L_VISUALPROLOG, L_TYPESCRIPT, \
-	L_EDIFACT, L_MARKDOWN, L_OCTAVE, L_PO, L_POV, L_IDL, L_GO, L_GLOBAL, L_TXT, \
+	L_EDIFACT, L_MARKDOWN, L_OCTAVE, L_PO, L_POV, L_IDL, L_GO, L_GLOBAL, L_LOG, L_GCode, L_APDL, L_TXT,\
 	// Don't use L_JS, use L_JAVASCRIPT instead
 	// The end of enumated language type, so it should be always at the end
 	L_EXTERNAL = 100, L_USER_DEFINE=200,L_USER_TXT,L_USER_CPP //用户自定义顺序与UserLangMother保存一致

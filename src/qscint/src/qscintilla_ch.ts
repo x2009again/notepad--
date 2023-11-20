@@ -4,477 +4,497 @@
 <context>
     <name>QsciCommand</name>
     <message>
-        <location filename="qscicommandset.cpp" line="61"/>
+        <location filename="qscicommandset.cpp" line="78"/>
         <source>Move down one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="72"/>
+        <location filename="qscicommandset.cpp" line="89"/>
         <source>Extend selection down one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="82"/>
+        <location filename="qscicommandset.cpp" line="99"/>
         <source>Extend rectangular selection down one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="89"/>
+        <location filename="qscicommandset.cpp" line="106"/>
         <source>Scroll view down one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="99"/>
+        <location filename="qscicommandset.cpp" line="116"/>
         <source>Move up one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="109"/>
+        <location filename="qscicommandset.cpp" line="126"/>
         <source>Extend selection up one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="119"/>
+        <location filename="qscicommandset.cpp" line="136"/>
         <source>Extend rectangular selection up one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="126"/>
+        <location filename="qscicommandset.cpp" line="143"/>
         <source>Scroll view up one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="137"/>
+        <location filename="qscicommandset.cpp" line="154"/>
         <source>Scroll to start of document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="147"/>
+        <location filename="qscicommandset.cpp" line="164"/>
         <source>Scroll to end of document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="159"/>
+        <location filename="qscicommandset.cpp" line="176"/>
         <source>Scroll vertically to centre current line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="166"/>
+        <location filename="qscicommandset.cpp" line="183"/>
         <source>Move down one paragraph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="176"/>
+        <location filename="qscicommandset.cpp" line="193"/>
         <source>Extend selection down one paragraph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="184"/>
+        <location filename="qscicommandset.cpp" line="201"/>
         <source>Move up one paragraph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="192"/>
+        <location filename="qscicommandset.cpp" line="209"/>
         <source>Extend selection up one paragraph</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="204"/>
+        <location filename="qscicommandset.cpp" line="221"/>
         <source>Move left one character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="216"/>
+        <location filename="qscicommandset.cpp" line="233"/>
         <source>Extend selection left one character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="228"/>
+        <location filename="qscicommandset.cpp" line="245"/>
         <source>Extend rectangular selection left one character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="239"/>
+        <location filename="qscicommandset.cpp" line="256"/>
         <source>Move right one character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="249"/>
+        <location filename="qscicommandset.cpp" line="266"/>
         <source>Extend selection right one character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="260"/>
+        <location filename="qscicommandset.cpp" line="277"/>
         <source>Extend rectangular selection right one character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="273"/>
+        <location filename="qscicommandset.cpp" line="289"/>
         <source>Move left one word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="284"/>
+        <location filename="qscicommandset.cpp" line="299"/>
         <source>Extend selection left one word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="295"/>
+        <location filename="qscicommandset.cpp" line="309"/>
         <source>Move right one word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="303"/>
+        <location filename="qscicommandset.cpp" line="315"/>
         <source>Extend selection right one word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="311"/>
+        <location filename="qscicommandset.cpp" line="322"/>
         <source>Move to end of previous word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="317"/>
+        <location filename="qscicommandset.cpp" line="328"/>
         <source>Extend selection to end of previous word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="328"/>
+        <location filename="qscicommandset.cpp" line="339"/>
         <source>Move to end of next word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="338"/>
+        <location filename="qscicommandset.cpp" line="349"/>
         <source>Extend selection to end of next word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="347"/>
+        <location filename="qscicommandset.cpp" line="358"/>
         <source>Move left one word part</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="353"/>
+        <location filename="qscicommandset.cpp" line="364"/>
         <source>Extend selection left one word part</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="360"/>
+        <location filename="qscicommandset.cpp" line="371"/>
         <source>Move right one word part</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="366"/>
+        <location filename="qscicommandset.cpp" line="377"/>
         <source>Extend selection right one word part</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="379"/>
+        <location filename="qscicommandset.cpp" line="390"/>
         <source>Move to start of document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="389"/>
+        <location filename="qscicommandset.cpp" line="400"/>
         <source>Extend selection to start of document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="400"/>
+        <location filename="qscicommandset.cpp" line="411"/>
         <source>Extend rectangular selection to start of document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="413"/>
+        <location filename="qscicommandset.cpp" line="424"/>
         <source>Move to start of display line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="423"/>
+        <location filename="qscicommandset.cpp" line="434"/>
         <source>Extend selection to start of display line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="430"/>
+        <location filename="qscicommandset.cpp" line="441"/>
         <source>Move to start of display or document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="437"/>
+        <location filename="qscicommandset.cpp" line="448"/>
         <source>Extend selection to start of display or document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="450"/>
+        <location filename="qscicommandset.cpp" line="461"/>
         <source>Move to first visible character in document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="462"/>
+        <location filename="qscicommandset.cpp" line="473"/>
         <source>Extend selection to first visible character in document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="474"/>
+        <location filename="qscicommandset.cpp" line="485"/>
         <source>Extend rectangular selection to first visible character in document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="481"/>
+        <location filename="qscicommandset.cpp" line="492"/>
         <source>Move to first visible character of display in document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="488"/>
+        <location filename="qscicommandset.cpp" line="499"/>
         <source>Extend selection to first visible character in display or document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="500"/>
+        <location filename="qscicommandset.cpp" line="511"/>
         <source>Move to end of document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="511"/>
+        <location filename="qscicommandset.cpp" line="522"/>
         <source>Extend selection to end of document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="523"/>
+        <location filename="qscicommandset.cpp" line="534"/>
         <source>Extend rectangular selection to end of document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="536"/>
+        <location filename="qscicommandset.cpp" line="547"/>
         <source>Move to end of display line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="548"/>
+        <location filename="qscicommandset.cpp" line="559"/>
         <source>Extend selection to end of display line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="555"/>
+        <location filename="qscicommandset.cpp" line="566"/>
         <source>Move to end of display or document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="562"/>
+        <location filename="qscicommandset.cpp" line="573"/>
         <source>Extend selection to end of display or document line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="574"/>
+        <location filename="qscicommandset.cpp" line="585"/>
         <source>Move to start of document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="584"/>
+        <location filename="qscicommandset.cpp" line="595"/>
         <source>Extend selection to start of document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="595"/>
+        <location filename="qscicommandset.cpp" line="606"/>
         <source>Move to end of document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="605"/>
+        <location filename="qscicommandset.cpp" line="616"/>
         <source>Extend selection to end of document</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="612"/>
+        <location filename="qscicommandset.cpp" line="623"/>
         <source>Move up one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="qscicommandset.cpp" line="629"/>
+        <source>Extend selection up one page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="qscicommandset.cpp" line="635"/>
+        <source>Extend rectangular selection up one page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscicommandset.cpp" line="646"/>
         <source>Move down one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="663"/>
+        <location filename="qscicommandset.cpp" line="656"/>
+        <source>Extend selection down one page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscicommandset.cpp" line="666"/>
+        <source>Extend rectangular selection down one page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscicommandset.cpp" line="674"/>
         <source>Stuttered move up one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="669"/>
+        <location filename="qscicommandset.cpp" line="680"/>
         <source>Stuttered extend selection up one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="676"/>
+        <location filename="qscicommandset.cpp" line="687"/>
         <source>Stuttered move down one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="682"/>
+        <location filename="qscicommandset.cpp" line="693"/>
         <source>Stuttered extend selection down one page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="694"/>
+        <location filename="qscicommandset.cpp" line="705"/>
         <source>Delete current character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="704"/>
+        <location filename="qscicommandset.cpp" line="718"/>
         <source>Delete previous character</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="711"/>
+        <location filename="qscicommandset.cpp" line="725"/>
         <source>Delete previous character if not at start of line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="718"/>
+        <location filename="qscicommandset.cpp" line="735"/>
         <source>Delete word to left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="724"/>
+        <location filename="qscicommandset.cpp" line="741"/>
         <source>Delete word to right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="736"/>
+        <location filename="qscicommandset.cpp" line="752"/>
         <source>Delete right to end of next word</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="744"/>
+        <location filename="qscicommandset.cpp" line="760"/>
         <source>Delete line to left</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="754"/>
+        <location filename="qscicommandset.cpp" line="770"/>
         <source>Delete line to right</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="760"/>
+        <location filename="qscicommandset.cpp" line="776"/>
         <source>Delete current line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="766"/>
+        <location filename="qscicommandset.cpp" line="782"/>
         <source>Cut current line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="772"/>
+        <location filename="qscicommandset.cpp" line="788"/>
         <source>Copy current line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="786"/>
+        <location filename="qscicommandset.cpp" line="802"/>
         <source>Duplicate the current line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="793"/>
+        <location filename="qscicommandset.cpp" line="809"/>
         <source>Select all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="800"/>
+        <location filename="qscicommandset.cpp" line="816"/>
         <source>Move selected lines up one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="806"/>
+        <location filename="qscicommandset.cpp" line="822"/>
         <source>Move selected lines down one line</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="815"/>
+        <location filename="qscicommandset.cpp" line="830"/>
         <source>Duplicate selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="822"/>
+        <location filename="qscicommandset.cpp" line="836"/>
         <source>Convert selection to lower case</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="828"/>
+        <location filename="qscicommandset.cpp" line="842"/>
         <source>Convert selection to upper case</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="834"/>
+        <location filename="qscicommandset.cpp" line="848"/>
         <source>Cut selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="840"/>
+        <location filename="qscicommandset.cpp" line="854"/>
         <source>Copy selection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="846"/>
+        <location filename="qscicommandset.cpp" line="860"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="852"/>
+        <location filename="qscicommandset.cpp" line="866"/>
         <source>Toggle insert/overtype</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="858"/>
+        <location filename="qscicommandset.cpp" line="872"/>
         <source>Insert newline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="865"/>
+        <location filename="qscicommandset.cpp" line="879"/>
         <source>Formfeed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="872"/>
+        <location filename="qscicommandset.cpp" line="886"/>
         <source>Indent one level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="879"/>
+        <location filename="qscicommandset.cpp" line="893"/>
         <source>De-indent one level</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="885"/>
+        <location filename="qscicommandset.cpp" line="900"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="892"/>
+        <location filename="qscicommandset.cpp" line="907"/>
         <source>Undo last command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="902"/>
+        <location filename="qscicommandset.cpp" line="917"/>
         <source>Redo last command</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="909"/>
+        <location filename="qscicommandset.cpp" line="924"/>
         <source>Zoom in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="915"/>
+        <location filename="qscicommandset.cpp" line="930"/>
         <source>Zoom out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="923"/>
+        <location filename="qscicommandset.cpp" line="938"/>
         <source>Move Line up</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscicommandset.cpp" line="930"/>
+        <location filename="qscicommandset.cpp" line="945"/>
         <source>Move Line down</source>
         <translation type="unfinished"></translation>
     </message>
@@ -565,72 +585,72 @@
 <context>
     <name>QsciLexerBash</name>
     <message>
-        <location filename="qscilexerbash.cpp" line="204"/>
+        <location filename="qscilexerbash.cpp" line="206"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="207"/>
+        <location filename="qscilexerbash.cpp" line="209"/>
         <source>Error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="210"/>
+        <location filename="qscilexerbash.cpp" line="212"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="213"/>
+        <location filename="qscilexerbash.cpp" line="215"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="216"/>
+        <location filename="qscilexerbash.cpp" line="218"/>
         <source>Keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="219"/>
+        <location filename="qscilexerbash.cpp" line="221"/>
         <source>Double-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="222"/>
+        <location filename="qscilexerbash.cpp" line="224"/>
         <source>Single-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="225"/>
+        <location filename="qscilexerbash.cpp" line="227"/>
         <source>Operator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="228"/>
+        <location filename="qscilexerbash.cpp" line="230"/>
         <source>Identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="231"/>
+        <location filename="qscilexerbash.cpp" line="233"/>
         <source>Scalar</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="234"/>
+        <location filename="qscilexerbash.cpp" line="236"/>
         <source>Parameter expansion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="237"/>
+        <location filename="qscilexerbash.cpp" line="239"/>
         <source>Backticks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="240"/>
+        <location filename="qscilexerbash.cpp" line="242"/>
         <source>Here document delimiter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerbash.cpp" line="243"/>
+        <location filename="qscilexerbash.cpp" line="245"/>
         <source>Single-quoted here document</source>
         <translation type="unfinished"></translation>
     </message>
@@ -759,282 +779,282 @@
 <context>
     <name>QsciLexerCPP</name>
     <message>
-        <location filename="qscilexercpp.cpp" line="380"/>
+        <location filename="qscilexercpp.cpp" line="383"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="383"/>
+        <location filename="qscilexercpp.cpp" line="386"/>
         <source>Inactive default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="386"/>
+        <location filename="qscilexercpp.cpp" line="389"/>
         <source>C comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="389"/>
+        <location filename="qscilexercpp.cpp" line="392"/>
         <source>Inactive C comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="392"/>
+        <location filename="qscilexercpp.cpp" line="395"/>
         <source>C++ comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="395"/>
+        <location filename="qscilexercpp.cpp" line="398"/>
         <source>Inactive C++ comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="398"/>
+        <location filename="qscilexercpp.cpp" line="401"/>
         <source>JavaDoc style C comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="401"/>
+        <location filename="qscilexercpp.cpp" line="404"/>
         <source>Inactive JavaDoc style C comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="404"/>
+        <location filename="qscilexercpp.cpp" line="407"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="407"/>
+        <location filename="qscilexercpp.cpp" line="410"/>
         <source>Inactive number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="410"/>
+        <location filename="qscilexercpp.cpp" line="413"/>
         <source>Keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="413"/>
+        <location filename="qscilexercpp.cpp" line="416"/>
         <source>Inactive keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="416"/>
+        <location filename="qscilexercpp.cpp" line="419"/>
         <source>Double-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="419"/>
+        <location filename="qscilexercpp.cpp" line="422"/>
         <source>Inactive double-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="422"/>
+        <location filename="qscilexercpp.cpp" line="425"/>
         <source>Single-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="425"/>
+        <location filename="qscilexercpp.cpp" line="428"/>
         <source>Inactive single-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="428"/>
+        <location filename="qscilexercpp.cpp" line="431"/>
         <source>IDL UUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="431"/>
+        <location filename="qscilexercpp.cpp" line="434"/>
         <source>Inactive IDL UUID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="434"/>
+        <location filename="qscilexercpp.cpp" line="437"/>
         <source>Pre-processor block</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="437"/>
+        <location filename="qscilexercpp.cpp" line="440"/>
         <source>Inactive pre-processor block</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="440"/>
+        <location filename="qscilexercpp.cpp" line="443"/>
         <source>Operator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="443"/>
+        <location filename="qscilexercpp.cpp" line="446"/>
         <source>Inactive operator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="446"/>
+        <location filename="qscilexercpp.cpp" line="449"/>
         <source>Identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="449"/>
+        <location filename="qscilexercpp.cpp" line="452"/>
         <source>Inactive identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="452"/>
+        <location filename="qscilexercpp.cpp" line="455"/>
         <source>Unclosed string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="455"/>
+        <location filename="qscilexercpp.cpp" line="458"/>
         <source>Inactive unclosed string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="458"/>
+        <location filename="qscilexercpp.cpp" line="461"/>
         <source>C# verbatim string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="461"/>
+        <location filename="qscilexercpp.cpp" line="464"/>
         <source>Inactive C# verbatim string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="464"/>
+        <location filename="qscilexercpp.cpp" line="467"/>
         <source>JavaScript regular expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="467"/>
+        <location filename="qscilexercpp.cpp" line="470"/>
         <source>Inactive JavaScript regular expression</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="470"/>
+        <location filename="qscilexercpp.cpp" line="473"/>
         <source>JavaDoc style C++ comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="473"/>
+        <location filename="qscilexercpp.cpp" line="476"/>
         <source>Inactive JavaDoc style C++ comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="476"/>
+        <location filename="qscilexercpp.cpp" line="479"/>
         <source>Secondary keywords and identifiers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="479"/>
+        <location filename="qscilexercpp.cpp" line="482"/>
         <source>Inactive secondary keywords and identifiers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="482"/>
+        <location filename="qscilexercpp.cpp" line="485"/>
         <source>JavaDoc keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="485"/>
+        <location filename="qscilexercpp.cpp" line="488"/>
         <source>Inactive JavaDoc keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="488"/>
+        <location filename="qscilexercpp.cpp" line="491"/>
         <source>JavaDoc keyword error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="491"/>
+        <location filename="qscilexercpp.cpp" line="494"/>
         <source>Inactive JavaDoc keyword error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="494"/>
+        <location filename="qscilexercpp.cpp" line="497"/>
         <source>Global classes and typedefs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="497"/>
+        <location filename="qscilexercpp.cpp" line="500"/>
         <source>Inactive global classes and typedefs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="500"/>
+        <location filename="qscilexercpp.cpp" line="503"/>
         <source>C++ raw string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="503"/>
+        <location filename="qscilexercpp.cpp" line="506"/>
         <source>Inactive C++ raw string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="506"/>
+        <location filename="qscilexercpp.cpp" line="509"/>
         <source>Vala triple-quoted verbatim string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="509"/>
+        <location filename="qscilexercpp.cpp" line="512"/>
         <source>Inactive Vala triple-quoted verbatim string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="512"/>
+        <location filename="qscilexercpp.cpp" line="515"/>
         <source>Pike hash-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="515"/>
+        <location filename="qscilexercpp.cpp" line="518"/>
         <source>Inactive Pike hash-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="518"/>
+        <location filename="qscilexercpp.cpp" line="521"/>
         <source>Pre-processor C comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="521"/>
+        <location filename="qscilexercpp.cpp" line="524"/>
         <source>Inactive pre-processor C comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="524"/>
+        <location filename="qscilexercpp.cpp" line="527"/>
         <source>JavaDoc style pre-processor comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="527"/>
+        <location filename="qscilexercpp.cpp" line="530"/>
         <source>Inactive JavaDoc style pre-processor comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="530"/>
+        <location filename="qscilexercpp.cpp" line="533"/>
         <source>User-defined literal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="533"/>
+        <location filename="qscilexercpp.cpp" line="536"/>
         <source>Inactive user-defined literal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="536"/>
+        <location filename="qscilexercpp.cpp" line="539"/>
         <source>Task marker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="539"/>
+        <location filename="qscilexercpp.cpp" line="542"/>
         <source>Inactive task marker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="542"/>
+        <location filename="qscilexercpp.cpp" line="545"/>
         <source>Escape sequence</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexercpp.cpp" line="545"/>
+        <location filename="qscilexercpp.cpp" line="548"/>
         <source>Inactive escape sequence</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1525,78 +1545,131 @@
 <context>
     <name>QsciLexerFortran77</name>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="186"/>
+        <location filename="qscilexerfortran77.cpp" line="187"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="189"/>
+        <location filename="qscilexerfortran77.cpp" line="190"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="192"/>
+        <location filename="qscilexerfortran77.cpp" line="193"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="195"/>
+        <location filename="qscilexerfortran77.cpp" line="196"/>
         <source>Single-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="198"/>
+        <location filename="qscilexerfortran77.cpp" line="199"/>
         <source>Double-quoted string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="201"/>
+        <location filename="qscilexerfortran77.cpp" line="202"/>
         <source>Unclosed string</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="204"/>
+        <location filename="qscilexerfortran77.cpp" line="205"/>
         <source>Operator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="207"/>
+        <location filename="qscilexerfortran77.cpp" line="208"/>
         <source>Identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="210"/>
+        <location filename="qscilexerfortran77.cpp" line="211"/>
         <source>Keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="213"/>
+        <location filename="qscilexerfortran77.cpp" line="214"/>
         <source>Intrinsic function</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="216"/>
+        <location filename="qscilexerfortran77.cpp" line="217"/>
         <source>Extended function</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="219"/>
+        <location filename="qscilexerfortran77.cpp" line="220"/>
         <source>Pre-processor block</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="222"/>
+        <location filename="qscilexerfortran77.cpp" line="223"/>
         <source>Dotted operator</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="225"/>
+        <location filename="qscilexerfortran77.cpp" line="226"/>
         <source>Label</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexerfortran77.cpp" line="228"/>
+        <location filename="qscilexerfortran77.cpp" line="229"/>
         <source>Continuation</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QsciLexerGCode</name>
+    <message>
+        <location filename="qscilexergcode.cpp" line="118"/>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="120"/>
+        <source>keyword</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="122"/>
+        <source>Keyword1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="124"/>
+        <source>Comment</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="126"/>
+        <source>Position-X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="128"/>
+        <source>Position-Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="130"/>
+        <source>Position-Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="132"/>
+        <source>Offset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="134"/>
+        <source>Velocity</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexergcode.cpp" line="136"/>
+        <source>Times</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -1770,17 +1843,20 @@
     </message>
     <message>
         <location filename="qscilexerhtml.cpp" line="586"/>
-        <source>HTML number</source>
+        <source>Number</source>
+        <oldsource>HTML number</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qscilexerhtml.cpp" line="589"/>
-        <source>HTML double-quoted string</source>
+        <source>double-quoted string</source>
+        <oldsource>HTML double-quoted string</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qscilexerhtml.cpp" line="592"/>
-        <source>HTML single-quoted string</source>
+        <source>single-quoted string</source>
+        <oldsource>HTML single-quoted string</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2375,6 +2451,29 @@
     <message>
         <location filename="qscilexerjavascript.cpp" line="111"/>
         <source>Regular expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QsciLexerLog</name>
+    <message>
+        <location filename="qscilexerlog.cpp" line="118"/>
+        <source>Default</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexerlog.cpp" line="120"/>
+        <source>Num</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexerlog.cpp" line="122"/>
+        <source>Date</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qscilexerlog.cpp" line="124"/>
+        <source>Keyword</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -4275,52 +4374,52 @@
 <context>
     <name>QsciLexerYAML</name>
     <message>
-        <location filename="qscilexeryaml.cpp" line="171"/>
+        <location filename="qscilexeryaml.cpp" line="145"/>
         <source>Default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="174"/>
+        <location filename="qscilexeryaml.cpp" line="148"/>
         <source>Comment</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="177"/>
+        <location filename="qscilexeryaml.cpp" line="151"/>
         <source>Identifier</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="180"/>
+        <location filename="qscilexeryaml.cpp" line="154"/>
         <source>Keyword</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="183"/>
+        <location filename="qscilexeryaml.cpp" line="157"/>
         <source>Number</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="186"/>
+        <location filename="qscilexeryaml.cpp" line="160"/>
         <source>Reference</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="189"/>
+        <location filename="qscilexeryaml.cpp" line="163"/>
         <source>Document delimiter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="192"/>
+        <location filename="qscilexeryaml.cpp" line="166"/>
         <source>Text block marker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="195"/>
+        <location filename="qscilexeryaml.cpp" line="169"/>
         <source>Syntax error marker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qscilexeryaml.cpp" line="198"/>
+        <location filename="qscilexeryaml.cpp" line="172"/>
         <source>Operator</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4328,27 +4427,27 @@
 <context>
     <name>QsciScintilla</name>
     <message>
-        <location filename="qsciscintilla.cpp" line="4697"/>
+        <location filename="qsciscintilla.cpp" line="4705"/>
         <source>&amp;Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qsciscintilla.cpp" line="4702"/>
+        <location filename="qsciscintilla.cpp" line="4710"/>
         <source>&amp;Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qsciscintilla.cpp" line="4709"/>
+        <location filename="qsciscintilla.cpp" line="4717"/>
         <source>&amp;Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qsciscintilla.cpp" line="4713"/>
+        <location filename="qsciscintilla.cpp" line="4721"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qsciscintilla.cpp" line="4720"/>
+        <location filename="qsciscintilla.cpp" line="4728"/>
         <source>Select All</source>
         <translation type="unfinished"></translation>
     </message>

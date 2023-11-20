@@ -85,9 +85,13 @@ enum FindNextType {
 //! in other Qt editor classes. It also provides a higher level interface to
 //! features specific to Scintilla such as syntax styling, call tips,
 //! auto-indenting and auto-completion than that provided by QsciScintillaBase.
+
+class QsciMacro;
+
 class QSCINTILLA_EXPORT QsciScintilla : public QsciScintillaBase
 {
     Q_OBJECT
+        friend QsciMacro;
 
 public:
     //! This enum defines the different auto-indentation styles.
@@ -1500,6 +1504,8 @@ public:
     //! \sa hasSelectedText()
     QString selectedText() const;
 
+    bool selectedRawBytes(QByteArray& bytes) const;
+
     //! Returns whether or not the selection is drawn up to the right hand
     //! border.
     //!
@@ -1670,7 +1676,8 @@ public:
 	void setHtmlHighLightTag(bool v);
 	bool getHtmlHighLightTag();
 
-   /* virtual void adjuctSkinStyle() {}*/
+    intptr_t searchInTarget(QByteArray& text2Find, size_t fromPos, size_t toPos) const;
+
 
 public slots:
     //! Appends the text \a text to the end of the text edit.  Note that the
@@ -2124,6 +2131,7 @@ signals:
     //! within the line.
     void cursorPositionChanged(int line, int index);
 
+    //和cursorPositionChanged类似，但是只有当前行号真正发送变化后，才触发该信号。
 	void cursorPosChange(int line, int pos);
 
     //! This signal is emitted whenever text is selected or de-selected.
@@ -2220,6 +2228,16 @@ protected:
 
     void setStylesFont(const QFont& f, int style);
 
+    //运行用户自定义的宏。故意放在最后，防止破坏兼容性
+    virtual void playUserMacroRecord(unsigned int msg, unsigned long wParam, void* lParam)
+    {
+
+    }
+
+    //识别中文UTF8字符的情况。
+    virtual bool startAutoWordCompletion(AutoCompletionSource acs, bool checkThresh,
+        bool choose_single);
+
 private slots:
     void handleCallTipClick(int dir);
     void handleCharAdded(int charadded);
@@ -2278,7 +2296,7 @@ private:
             int visLevels = 0, int level = -1);
     void setFoldMarker(int marknr, int mark = SC_MARK_EMPTY);
     void setLexerStyle(int style);
- 
+
     void setEnabledColors(int style, QColor &fore, QColor &back);
 
     void braceMatch();

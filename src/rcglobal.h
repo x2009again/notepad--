@@ -11,7 +11,7 @@
 static const char* VersionStr = u8"(内部测试非稳定) v2.0.0";
 #else
 
-static const char* VersionStr = "v1.23.2";
+static const char* VersionStr = "v2.0.0";
 #endif // TEST_PRE
 
 // Bug: 在 Visual Studio 中引发无法构建的问题，此处被重复定义(在 cmake 中已对其定义)

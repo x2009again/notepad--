@@ -619,12 +619,14 @@ void SCI_METHOD LexerPerl::Lex(Sci_PositionU startPos, Sci_Position length, int 
 		// 2: here doc text (lines after the delimiter)
 		int Quote;		// the char after '<<'
 		bool Quoted;		// true if Quote in ('\'','"','`')
+		bool StripIndent;	// true if '<<~' requested to strip leading whitespace
 		int DelimiterLength;	// strlen(Delimiter)
 		char Delimiter[HERE_DELIM_MAX];	// the Delimiter
 		HereDocCls() {
 			State = 0;
 			Quote = 0;
 			Quoted = false;
+			StripIndent = false;
 			DelimiterLength = 0;
 			Delimiter[0] = '\0';
 		}
@@ -885,7 +887,7 @@ void SCI_METHOD LexerPerl::Lex(Sci_PositionU startPos, Sci_Position length, int 
 			sc.SetState(SCE_PL_DEFAULT);
 			break;
 		case SCE_PL_COMMENTLINE:
-			if (sc.atLineEnd) {
+			if (sc.atLineStart) {
 				sc.SetState(SCE_PL_DEFAULT);
 			}
 			break;
@@ -896,8 +898,14 @@ void SCI_METHOD LexerPerl::Lex(Sci_PositionU startPos, Sci_Position length, int 
 				HereDoc.State = 1;	// pre-init HERE doc class
 				HereDoc.Quote = sc.chNext;
 				HereDoc.Quoted = false;
+				HereDoc.StripIndent = false;
 				HereDoc.DelimiterLength = 0;
 				HereDoc.Delimiter[HereDoc.DelimiterLength] = '\0';
+				if (delim_ch == '~') { // was actually '<<~'
+					sc.Forward();
+					HereDoc.StripIndent = true;
+					HereDoc.Quote = delim_ch = sc.chNext;
+				}
 				if (IsASpaceOrTab(delim_ch)) {
 					// skip whitespace; legal only for quoted delimiters
 					Sci_PositionU i = sc.currentPos + 1;
@@ -964,6 +972,11 @@ void SCI_METHOD LexerPerl::Lex(Sci_PositionU startPos, Sci_Position length, int 
 		case SCE_PL_HERE_QX:
 			// also implies HereDoc.State == 2
 			sc.Complete();
+			if (HereDoc.StripIndent) {
+				// skip whitespace
+				while (IsASpaceOrTab(sc.ch) && !sc.atLineEnd)
+					sc.Forward();
+			}
 			if (HereDoc.DelimiterLength == 0 || sc.Match(HereDoc.Delimiter)) {
 				int c = sc.GetRelative(HereDoc.DelimiterLength);
 				if (c == '\r' || c == '\n') {	// peek first, do not consume match
@@ -1701,6 +1714,12 @@ void SCI_METHOD LexerPerl::Fold(Sci_PositionU startPos, Sci_Position length, int
 			} else if (ch == ']') {
 				levelCurrent--;
 			}
+		} else if (style == SCE_PL_STRING_QW) {
+			// qw
+			if (stylePrevCh != style)
+				levelCurrent++;
+			else if (styleNext != style)
+				levelCurrent--;
 		}
 		// POD folding
 		if (options.foldPOD && atLineStart) {

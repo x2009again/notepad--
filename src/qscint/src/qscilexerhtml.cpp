@@ -583,13 +583,13 @@ QString QsciLexerHTML::description(int style) const
         return tr("Unknown attribute");
 
     case HTMLNumber:
-        return tr("HTML number");
+        return tr("Number");
 
     case HTMLDoubleQuotedString:
-        return tr("HTML double-quoted string");
+        return tr("double-quoted string");
 
     case HTMLSingleQuotedString:
-        return tr("HTML single-quoted string");
+        return tr("single-quoted string");
 
     case OtherInTag:
         return tr("Other text in a tag");

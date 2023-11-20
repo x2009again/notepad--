@@ -1,11 +1,14 @@
 ﻿#include "qttestclass.h"
 #include <qsciscintilla.h>
 
-QtTestClass::QtTestClass(QWidget *parent, QsciScintilla* pEdit)
-	: QWidget(parent)
+extern std::function<QsciScintilla* (QWidget*)> s_getCurEdit;
+
+
+QtTestClass::QtTestClass(QWidget *parent): QWidget(parent)
 {
 	ui.setupUi(this);
-	m_pEdit = pEdit;
+
+	m_pNotepad = parent;
 }
 
 QtTestClass::~QtTestClass()
@@ -13,18 +16,26 @@ QtTestClass::~QtTestClass()
 
 void QtTestClass::on_upper()
 {
-	QString text = m_pEdit->text();
+	QsciScintilla* pEdit = s_getCurEdit(m_pNotepad);
+	if (pEdit != nullptr)
+	{
+		QString text = pEdit->text();
 
-	text = text.toUpper();
+		text = text.toUpper();
 
-	m_pEdit->setText(text);
+		pEdit->setText(text);
+	}
 }
 
 void QtTestClass::on_lower()
 {
-	QString text = m_pEdit->text();
+	QsciScintilla* pEdit = s_getCurEdit(m_pNotepad);
+	if (pEdit != nullptr)
+	{
+		QString text = pEdit->text();
 
-	text = text.toLower();
+		text = text.toLower();
 
-	m_pEdit->setText(text);
+		pEdit->setText(text);
+	}
 }

@@ -22,6 +22,7 @@
 
 TEMPLATE = lib
 CONFIG += qt warn_off thread exceptions hide_symbols release staticlib
+DEFINES+= QT_NO_DEBUG_OUTPUT
 
 CONFIG(debug, debug|release) {
     mac: {
@@ -33,11 +34,11 @@ CONFIG(debug, debug|release) {
             TARGET = qmyedit_qt$${QT_MAJOR_VERSION}
         }
     }
-	
+
 	DESTDIR = ../../x64/Debug
 } else {
     TARGET = qmyedit_qt$${QT_MAJOR_VERSION}
-	
+
 	DESTDIR = ../../x64/Release
 }
 
@@ -103,6 +104,7 @@ HEADERS = \
     ./Qsci/qscicommandset.h \
     ./Qsci/qscidocument.h \
     ./Qsci/qscilexer.h \
+	./Qsci/qscilexerapdl.h \
     ./Qsci/qscilexerasm.h \
     ./Qsci/qscilexerbash.h \
     ./Qsci/qscilexerbatch.h \
@@ -118,15 +120,19 @@ HEADERS = \
     ./Qsci/qscilexerfortran.h \
     ./Qsci/qscilexerfortran77.h \
 	./Qsci/qscilexergo.h \
+	./Qsci/qscilexergcode.h \
     ./Qsci/qscilexerglobal.h \
     ./Qsci/qscilexertext.h \
     ./Qsci/qscilexerrust.h \
     ./Qsci/qscilexerhtml.h \
     ./Qsci/qscilexeridl.h \
+	./Qsci/qscilexerintelhex.h \
     ./Qsci/qscilexerjava.h \
     ./Qsci/qscilexerjavascript.h \
     ./Qsci/qscilexerjson.h \
     ./Qsci/qscilexerlua.h \
+	./Qsci/qscilexerlog.h \
+	./Qsci/qscilexerlisp.h \
     ./Qsci/qscilexermakefile.h \
     ./Qsci/qscilexermarkdown.h \
     ./Qsci/qscilexermatlab.h \
@@ -134,6 +140,7 @@ HEADERS = \
     ./Qsci/qscilexerpascal.h \
     ./Qsci/qscilexerperl.h \
     ./Qsci/qscilexerpostscript.h \
+	./Qsci/qscilexerpowershell.h \
     ./Qsci/qscilexerpo.h \
     ./Qsci/qscilexerpov.h \
     ./Qsci/qscilexerproperties.h \
@@ -224,7 +231,6 @@ HEADERS = \
 !ios:HEADERS += ./Qsci/qsciprinter.h
 
 SOURCES = \
-    qscilexertext.cpp \
     qscilexerrust.cpp \
     qscilexernsis.cpp \
     qsciscintilla.cpp \
@@ -235,6 +241,7 @@ SOURCES = \
     qscicommandset.cpp \
     qscidocument.cpp \
     qscilexer.cpp \
+	qscilexerapdl.cpp \
     qscilexerasm.cpp \
     qscilexerbash.cpp \
     qscilexerbatch.cpp \
@@ -251,13 +258,17 @@ SOURCES = \
     qscilexerfortran77.cpp \
 	qscilexergo.cpp \
     qscilexerglobal.cpp \
+	qscilexergcode.cpp \
     qscilexertext.cpp \
     qscilexerhtml.cpp \
     qscilexeridl.cpp \
+	qscilexerintelhex.cpp \
     qscilexerjava.cpp \
     qscilexerjavascript.cpp \
     qscilexerjson.cpp \
     qscilexerlua.cpp \
+	qscilexerlog.cpp \
+	qscilexerlisp.cpp \
     qscilexermakefile.cpp \
     qscilexermarkdown.cpp \
     qscilexermatlab.cpp \
@@ -265,6 +276,7 @@ SOURCES = \
     qscilexerpascal.cpp \
     qscilexerperl.cpp \
     qscilexerpostscript.cpp \
+	qscilexerpowershell.cpp \
     qscilexerpo.cpp \
     qscilexerpov.cpp \
     qscilexerproperties.cpp \
@@ -331,6 +343,7 @@ SOURCES = \
     ../scintilla/lexers/LexForth.cpp \
     ../scintilla/lexers/LexFortran.cpp \
     ../scintilla/lexers/LexGAP.cpp \
+	../scintilla/lexers/LexGCode.cpp \
     ../scintilla/lexers/LexGui4Cli.cpp \
     ../scintilla/lexers/LexHTML.cpp \
     ../scintilla/lexers/LexHaskell.cpp \
@@ -344,6 +357,7 @@ SOURCES = \
     ../scintilla/lexers/LexLisp.cpp \
     ../scintilla/lexers/LexLout.cpp \
     ../scintilla/lexers/LexLua.cpp \
+	 ../scintilla/lexers/LexLog.cpp \
     ../scintilla/lexers/LexMMIXAL.cpp \
     ../scintilla/lexers/LexMPT.cpp \
     ../scintilla/lexers/LexMSSQL.cpp \
@@ -443,7 +457,7 @@ SOURCES = \
     ../scintilla/boostregex/BoostRegExSearch.cpp \
     ../scintilla/boostregex/UTF8DocumentIterator.cpp
 
-    
+
 INCLUDEPATH += ../scintilla/boostregex
 
 !ios:SOURCES += qsciprinter.cpp

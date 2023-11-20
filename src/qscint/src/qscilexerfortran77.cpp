@@ -100,7 +100,7 @@ QColor QsciLexerFortran77::defaultColor(int style) const
         return QColor(0x7f,0x7f,0x00);
 
     case Label:
-        return QColor(0xe0,0xc0,0xe0);
+        return QColor(0x00,0x00,0x00);
     }
 
     return QsciLexer::defaultColor(style);
@@ -136,6 +136,7 @@ QFont QsciLexerFortran77::defaultFont(int style) const
 
     case Operator:
     case DottedOperator:
+	case Keyword:
         f = QsciLexer::defaultFont(style);
         f.setBold(true);
         break;
@@ -240,6 +241,9 @@ QColor QsciLexerFortran77::defaultPaper(int style) const
 
     if (style == Continuation)
         return QColor(0xf0,0xe0,0x80);
+	 
+	 if (style == Label)
+        return QColor(0xe0,0xc0,0xe0);
 
     return QsciLexer::defaultPaper(style);
 }

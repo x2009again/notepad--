@@ -101,46 +101,20 @@ bool QsciLexerYAML::defaultEolFill(int style) const
 // Returns the font of the text for a style.
 QFont QsciLexerYAML::defaultFont(int style) const
 {
-    QFont f;
+    QFont f(QsciLexer::s_defaultLangFont);
 
     switch (style)
     {
     case Default:
     case TextBlockMarker:
-#if defined(Q_OS_WIN)
-        f = QFont("Courier New", 14);
-#elif defined(Q_OS_MAC)
-        f = QFont("Times New Roman", 12);
-#else
-        f = QFont("Bitstream Charter", 10);
-#endif
-        break;
-
-    case Identifier:
-        f = QsciLexer::defaultFont(style);
-        f.setBold(true);
         break;
 
     case DocumentDelimiter:
-#if defined(Q_OS_WIN)
-        f = QFont("Comic Sans MS",9);
-#elif defined(Q_OS_MAC)
-        f = QFont("Comic Sans MS", 12);
-#else
-        f = QFont("Bitstream Vera Serif",9);
-#endif
+    case Identifier:
         f.setBold(true);
         break;
 
     case SyntaxErrorMarker:
-#if defined(Q_OS_WIN)
-        f = QFont("Times New Roman", 11);
-#elif defined(Q_OS_MAC)
-        f = QFont("Times New Roman", 12);
-#else
-        f = QFont("Bitstream Charter", 10);
-#endif
-        f.setBold(true);
         f.setItalic(true);
         break;
 

@@ -2251,6 +2251,8 @@ public:
         //!
         SCI_STOPRECORD = 3002,
 
+        SCI_GETRECORSTATUS = 3003,//是否在记录中 0 否，1是
+
         //! This message sets the number of the lexer to use for syntax
         //! styling.
         //! \a wParam is the number of the lexer and is one of the SCLEX_*
@@ -3004,7 +3006,10 @@ public:
         SCK_INSERT = 309,
         SCK_ESCAPE = 7,
         SCK_BACK = 8,
-        SCK_TAB = 9,
+        //20230506 最开始这里是9，我修改为了109。因为百度输入法下面，对shitf+(中文输入时
+        //会先来一个8，再来一个9的映射键。恰好这两个键有冲突。其他8对应之前的删除，我已经在快捷键中把删除那个干掉了。
+        //9的话对应这个缩进，所以修改为109，不使用9，这样一来，百度输入法的9会映射到其他键，而不与这里的SCK_TAB冲突。
+        SCK_TAB = 109,//9,
         SCK_RETURN = 13,
         SCK_ADD = 310,
         SCK_SUBTRACT = 311,

@@ -152,7 +152,8 @@
 #define SCLEX_IDL 154
 #define SCLEX_GO 155
 #define SCLEX_TXT 156
-
+#define SCLEX_LOG 157
+#define SCLEX_GCode 158
 #define SCLEX_AUTOMATIC 1000
 
 

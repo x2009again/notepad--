@@ -135,10 +135,10 @@ QColor QsciLexerCPP::defaultColor(int style) const
         return QColor(0x3f, 0x70, 0x3f);
 
     case Number:
-        return QColor(0x00, 0x7f, 0x7f);
+        return QColor(0xff, 0x80, 0x00);
 
     case Keyword:
-        return QColor(0x80, 0x00, 0xff);
+        return QColor(0x00,0x00,0xff);
 
     case DoubleQuotedString:
     case SingleQuotedString:
@@ -150,7 +150,7 @@ QColor QsciLexerCPP::defaultColor(int style) const
 
     case Operator:
     case UnclosedString:
-        return QColor(0x00, 0x00, 0x00);
+        return QColor(0x00, 0x00, 0x80);
 
     case VerbatimString:
     case TripleQuotedVerbatimString:
@@ -274,21 +274,24 @@ QFont QsciLexerCPP::defaultFont(int style) const
     case InactiveCommentDocKeywordError:
     case TaskMarker:
     case InactiveTaskMarker:
+    {
 #if defined(Q_OS_WIN)
-        f = QFont("Courier New",QsciLexer::s_defaultFontSize);
+        f = QFont("Courier New", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
         f = QFont("Comic Sans MS", 12);
 #else
-        f = QFont("Bitstream Vera Serif",9);
+        f = QsciLexer::s_defaultLangFont;
 #endif
+    }
         break;
 
     case Keyword:
     case InactiveKeyword:
     case Operator:
     case InactiveOperator:
+
         f = QsciLexer::defaultFont(style);
-        f.setBold(false);
+        f.setBold(true);
         break;
 
     case DoubleQuotedString:
@@ -306,11 +309,11 @@ QFont QsciLexerCPP::defaultFont(int style) const
     case HashQuotedString:
     case InactiveHashQuotedString:
 #if defined(Q_OS_WIN)
-        f = QFont("Courier New",QsciLexer::s_defaultFontSize);
+        f = QFont("Courier New", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
         f = QFont("Courier", 12);
 #else
-        f = QFont("Bitstream Vera Sans Mono",9);
+        f = QsciLexer::s_defaultLangFont;
 #endif
         break;
 
@@ -344,9 +347,9 @@ const char *QsciLexerCPP::keywords(int set)
             "catch char class compl const const_cast continue "
             "default delete do double dynamic_cast else enum "
             "explicit export extern false float for friend goto if "
-            "inline int long mutable namespace new not not_eq "
-            "operator or or_eq private protected public register "
-            "reinterpret_cast return short signed sizeof static "
+            "inline int long mutable namespace new not not_eq nullptr null "
+            "out operator or or_eq private protected public println register "
+            "reinterpret_cast return short signed sizeof static system "
             "static_cast struct switch template this throw true "
             "try typedef typeid typename union unsigned using "
             "virtual void volatile wchar_t while xor xor_eq";

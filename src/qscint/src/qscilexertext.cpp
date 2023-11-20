@@ -6,7 +6,7 @@
 #include <qsettings.h>
 
 #if defined(Q_OS_WIN)
-QFont QsciLexerText::s_defaultTxtFont(u8"宋体", QsciLexer::s_defaultFontSize);
+	QFont QsciLexerText::s_defaultTxtFont("Courier New", QsciLexer::s_defaultFontSize);
 #elif defined(Q_OS_MAC)
     QFont QsciLexerText::s_defaultTxtFont("STSong",14);
 #else

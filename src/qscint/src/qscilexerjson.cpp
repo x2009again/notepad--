@@ -60,7 +60,7 @@ QColor QsciLexerJSON::defaultColor(int style) const
     {
     case UnclosedString:
     case Error:
-        return QColor(0xff, 0xff, 0xff);
+        return QColor(0x0, 0x0, 0x0);
 
     case Number:
         return QColor(0x00, 0x7f, 0x7f);
