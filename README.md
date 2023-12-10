@@ -28,6 +28,25 @@ NDD 具备插件编写功能，如果您愿意开发插件，还请提交给我�
 
 **CMake工具链编译说明:**
 
+- Windows 系统通用构建 - 基于 Batch 脚本进行构建
+    
+    ```batch
+    ;; 将 Batch 脚本复制到项目目录
+    copy cmake/make-batch-powershell/windows-msvc-ninja.bat .
+
+    ;; 使用脚本进行构建，它将会询问如何进行构建
+    windows-msvc-ninja.bat
+    ```
+
+- Windows 系统 VSCode 构建 - 基于 VSCode 配置模板进行调整构建
+
+    ```batch
+    ;; 拷贝一份 cmake/vscode/windows-vs-2022-cmake-ninja.json 作为你的 .vscode/settings.json
+    ;; 修改配置中的 -DCMAKE_PREFIX_PATH 部分为你的 Qt 路径，或你自行编译的 Qt 路径，
+    ;; 例如：
+    ;;    "-DCMAKE_PREFIX_PATH=C:\\Qt\\Qt5.14.2\\5.14.2\\msvc2017_64",
+    ```
+
 - 当前的 Linux 平台构建方案
 
     ```shell
