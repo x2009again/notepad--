@@ -47,6 +47,23 @@ NDD 具备插件编写功能，如果您愿意开发插件，还请提交给我�
     ;;    "-DCMAKE_PREFIX_PATH=C:\\Qt\\Qt5.14.2\\5.14.2\\msvc2017_64",
     ```
 
+- MacOSX 平台构建方案
+
+    ```shell
+    Build with the following configuration:
+    1. make macosx-universal 
+            通用 MacOSX 平台构建(Debug).
+    2. make macosx-universal-release 
+            通用 MacOSX 平台构建(Release).
+    3. make package 
+            通用 MacOSX 平台构建 CPack 打包.
+
+    # 由 CPack 驱动的打包：
+    # 将在 build/macosx-universal 目录中产生 dmg 文件
+    # 可在 CPack 的生成目录尝试进行手动 macdeployqt 处理
+    # 注：目前M1平台使用原生Qt执行此操作会损坏此包，将需要开发者签证
+    ```
+
 - 当前的 Linux 平台构建方案
 
     ```shell
