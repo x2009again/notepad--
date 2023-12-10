@@ -46,16 +46,15 @@ option(WINDOWS_DEPLOY_QT6    "通用 Windows 平台指定 Qt6 部署 windeployqt
 option(USE_LINUX_UNIVERSAL   "通用 Linux 平台构建"            OFF)
 option(USE_LINUX_DEBIAN      "通用 Debian Linux 平台构建"     OFF)
 option(USE_LINUX_APPIMAGE    "通用 Appimage Linux 平台构建"   OFF)
-#
 option(USE_LINUX_UOS         "独立 Linux 平台的 Uos 构建"      OFF)
 #
-option(USE_MACOS_UNIVERSAL   "通用 MacOS 平台构建"            OFF)
+option(USE_MACOSX_UNIVERSAL      "通用 MacOSX 平台构建"            OFF)
 
 # 使用 windows.cmake / linux.cmake / macos.cmake 维护构建.
 
     # 在 Windows 中此处将由通用构建、MinGW 构建、MSVC 构建组成
 if(WIN32)
-    
+
     # 通用 Windows 平台构建，一切的起始
     if(USE_WINDOWS_UNIVERSAL)
         include(cmake/platforms/windows-universal.cmake)
@@ -104,10 +103,15 @@ elseif(UNIX AND NOT APPLE AND NOT WIN32 AND NOT ANDROID)
         # include(cmake/platforms/linux-other.cmake)
     endif(USE_LINUX_UNIVERSAL)
 
-    # 通用 MacOS 平台的构建(一个无具体实现的空构建)
+    # 通用 MacOSX 平台的构建
 elseif(APPLE)
 
-    # include(cmake/platforms/macos.cmake)
+    # 通用 MacOSX 平台构建，一切的起始
+    if(USE_MACOSX_UNIVERSAL)
+        include(cmake/platforms/macos-universal.cmake)
+        
+    endif(USE_MACOSX_UNIVERSAL)
+
 endif()
 
 # ----------------- Notepad-- 其它主线构建相关  ----------------- #

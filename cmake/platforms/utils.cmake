@@ -5,7 +5,7 @@
     # _VAR          用于存储内容的变量
     # _IS_IS_SHREAD 是否为共享库
     # _LIB          目标名称
-function(get_current_platform_lib_name _VAR _IS_SHREAD _LIB)
+    function(get_current_platform_lib_name _VAR _IS_SHREAD _LIB)
     set(_LIB_NAME  "")
     if(WIN32)
         set(_LIB_NAME ${_LIB}.lib)
@@ -101,3 +101,37 @@ function(windeployqt_install TARGET)
         "
     )
 endfunction(windeployqt_install TARGET)
+
+# 
+# [UnTested]macdeployqt_install
+    # MacOSX 在 install 目标时进行 macdeployqt 的自动化
+    # 由于
+function(macdeployqt_install _target)
+    set(MACDEPLOYQT_EXECUTABLE "${MACOS_QT_DIR}/../../../bin/macdeployqt")
+    #
+    file(GENERATE OUTPUT "${CMAKE_BINARY_DIR}/${_target}_PATH"
+        # CONTENT "$<TARGET_FILE:${_target}>"
+        CONTENT "${CMAKE_BINARY_DIR}/_CPack_Packages/Darwin/Bundle/${_target}-${PROJECT_VERSION}-Darwin/${_target}.app"
+    )
+    install(CODE
+        "
+        file(READ \"${CMAKE_BINARY_DIR}/${_target}_PATH\" _file)
+        execute_process(
+            COMMAND \"${MACDEPLOYQT_EXECUTABLE}\"
+                    # 虚假的运行 macdeployqt 而不复制任何内容
+                    --dry-run
+                    # 扫描QML-从目录开始导入。
+                    #--qmlimport=${MACOS_QT_DIR}/../../../qml
+                    # 部署编译器运行时(仅限桌面)。
+                    #--compiler-runtime
+                    # 以源 目标的输出形成映射关系，以便用于解析内容
+                    #--list mapping
+                    #-no-plugins
+                    #-timestamp
+                    \${_file}
+            OUTPUT_VARIABLE _output
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        "
+    )
+endfunction(macdeployqt_install _target)

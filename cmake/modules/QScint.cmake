@@ -39,10 +39,18 @@ if(TRUE)
         target_link_qt6_Core5Compat(QSci)
         target_link_qt6_PrintSupport(QSci)
         target_link_qt6_Concurrent(QSci)
+        if(APPLE)
+            # Is there anything missing?
+            # MacExtras?
+        endif(APPLE)
     else()
         target_link_qt5(QSci)
         target_link_qt5_PrintSupport(QSci)
         target_link_qt5_Concurrent(QSci)
+        if(APPLE)
+            find_package(Qt5 COMPONENTS MacExtras)
+            target_link_libraries(QSci Qt5::MacExtras)
+        endif(APPLE)
     endif(USE_QT6)
 endif(TRUE)
 
