@@ -9,8 +9,8 @@ option(USE_LINUX_DEBIAN "为 Linux 生成 deb 软件包" OFF)
 
 if(USE_LINUX_DEBIAN)
     
-    find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
-    add_package_descript(cmake/package-deb.descript)
+    find_package(SparkDebPackage PATHS ${CMAKE_SOURCE_DIR})
+    add_package_descript(cmake/spark-deb-package.descript)
 
 endif(USE_LINUX_DEBIAN)
 

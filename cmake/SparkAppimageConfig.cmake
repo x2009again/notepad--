@@ -48,27 +48,27 @@ endfunction(add_appimage_icon _icon)
 # 2. 基于 SparkDesktopMacros.cmake 提供的宏来定义 desktop 内容说明
     # 使用与自身的 desktop.in 模板进行生成
 function(add_appimage_desktop)
-    configure_file(cmake/spark-appimage.desktop.in
+    configure_file(cmake/spark-appimage.desktop.in.txt
         ${APPIMAGE_OUTPUT_DESTKOP} @ONLY)
 endfunction(add_appimage_desktop)
 
-function(target_linuxdeploy)
+function(target_linuxdeploy _target)
 
     if(USE_APPIMAGE_NEW_GLIBC)
         message("Use New glibc")
         add_custom_target(linuxdeploy pwd
             BYPRODUCTS appimage
-            COMMAND "${LINUXDEPLOYQT}" ${PROJECT_NAME} -appimage -unsupported-allow-new-glibc -verbose=3 -no-strip|| true
+            COMMAND "${LINUXDEPLOYQT}" $<TARGET_FILE:${_target}> -appimage -unsupported-allow-new-glibc -verbose=3 -no-strip || true
             WORKING_DIRECTORY "${APPIMAGE_OUTPUT}")
     else()
         message("Un Use New glibc")
         add_custom_target(linuxdeploy pwd
             BYPRODUCTS appimage
-            COMMAND "${LINUXDEPLOYQT}" ${PROJECT_NAME} -appimage -verbose=3 -no-strip|| true
+            COMMAND "${LINUXDEPLOYQT}" $<TARGET_FILE:${_target}> -appimage -verbose=3 -no-strip || true
             WORKING_DIRECTORY "${APPIMAGE_OUTPUT}")
     endif(USE_APPIMAGE_NEW_GLIBC)
 
-endfunction(target_linuxdeploy)
+endfunction(target_linuxdeploy _target)
 
 function(target_appimage)
     add_custom_target(appimage pwd
@@ -83,12 +83,17 @@ function(add_appimage_target _target)
         message("AppImage> Not Found LINUXDEPLOYQT Variable!")
         return()
     endif(NOT DEFINED LINUXDEPLOYQT)
-    if(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
+    if(CMAKE_VERSION VERSION_LESS 3.19)
         message("> cmake version is less than 3.19")
-        message(WARNING "!Relative paths are not supported!")
+        if(CMAKE_VERSION VERSION_GREATER 3.4)
+            get_filename_component(LINUXDEPLOYQT_REAL_PATH ${LINUXDEPLOYQT} REALPATH)
+        else()
+            message("> cmake version is less than 3.4")
+            message(WARNING "!Relative paths are not supported!")
+        endif(CMAKE_VERSION VERSION_GREATER 3.4)
     else()
         file(REAL_PATH ${LINUXDEPLOYQT} LINUXDEPLOYQT_REAL_PATH)
-    endif(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
+    endif(CMAKE_VERSION VERSION_LESS 3.19)
     message("AppImage> Found LINUXDEPLOYQT Variable: ${LINUXDEPLOYQT_REAL_PATH}")
 
     # check appimagetool
@@ -96,29 +101,34 @@ function(add_appimage_target _target)
         message("AppImage> Not Found APPIMAGETOOL Variable!")
         return()
     endif(NOT DEFINED APPIMAGETOOL)
-    if(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
+    if(CMAKE_VERSION VERSION_LESS 3.19)
         # execute_process(COMMAND realpath ${APPIMAGETOOL} OUTPUT_VARIABLE APPIMAGETOOL_REAL_PATH)
         message("> cmake version is less than 3.19")
-        message(WARNING "!Relative paths are not supported!")
+        if(CMAKE_VERSION VERSION_GREATER 3.4)
+            get_filename_component(APPIMAGETOOL_REAL_PATH ${APPIMAGETOOL} REALPATH)
+        else()
+            message("> cmake version is less than 3.4")
+            message(WARNING "!Relative paths are not supported!")
+        endif(CMAKE_VERSION VERSION_GREATER 3.4)
     else()
         file(REAL_PATH ${APPIMAGETOOL} APPIMAGETOOL_REAL_PATH)
-    endif(CMAKE_VERSION VERSION_LESS 3.19 AND NOT EXISTS ${LINUXDEPLOYQT})
+    endif(CMAKE_VERSION VERSION_LESS 3.19)
     message("AppImage> Found APPIMAGETOOL Variable: ${APPIMAGETOOL}")
 
     # do add_custome_target
     make_directory(${APPIMAGE_OUTPUT})
-    target_linuxdeploy()
+    target_linuxdeploy(${_target})
     target_appimage()
 
     # 重设目标输出的目录
-    set_target_properties(${PROJECT_NAME}
+    set_target_properties(${_target}
         PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY "${APPIMAGE_OUTPUT}")
 
     # 为解决在不使用 -unsupported-allow-new-glibc 参数时，
     # 可能不会生成 AppRun 软链接的问题
     if(NOT USE_APPIMAGE_NEW_GLIBC)
-        set_target_properties(${PROJECT_NAME}
+        set_target_properties(${_target}
             PROPERTIES
                 RUNTIME_OUTPUT_NAME "AppRun")
     endif(NOT USE_APPIMAGE_NEW_GLIBC)    
@@ -175,3 +185,8 @@ endfunction(add_appimage_target _target)
 # genrate-appimage:
 # 	cd build && cmake .. -DLINUXDEPLOYQT=$(LINUXDEPLOYQT) -DAPPIMAGETOOL=$(APPIMAGETOOL)
 # 	cd build && make appimage
+
+
+
+# NOTE:
+#  如果使用的库不存在于系统路径，则需要配置 export LD_LIBRARY_PATH=<路径> 以便 linuxdeployqt 可搜索到库的位置

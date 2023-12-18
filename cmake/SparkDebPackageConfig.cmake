@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0)
 
 # function(add_deb_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_MAINTAINER PACKAGE_EMAIL PACKAGE_SHORT_DESCRIPTION PACKAGE_LONG_DESCRIPTION)
-
+    
 # endfunction(add_deb_package PACKAGE_NAME PACKAGE_VERSION PACKAGE_MAINTAINER PACKAGE_EMAIL PACKAGE_SHORT_DESCRIPTION PACKAGE_LONG_DESCRIPTION)
 
 # if(add_deb_package    VALUE) set(Package    ${VALUE} PARENT_SCOPE) endif(add_deb_package    VALUE)
@@ -119,7 +119,7 @@ function(set_package_vars _IN_KEY _IN_VAL)
         else()
             set(CPACK_DEBIAN_PACKAGE_VERSION "${_IN_VAL}" PARENT_SCOPE)
         endif(_IN_VAL STREQUAL "auto")
-
+        
         message("--> 软件版本: ${_IN_VAL}")
     endif(_Version EQUAL "0")
 
@@ -137,7 +137,7 @@ function(set_package_vars _IN_KEY _IN_VAL)
 
     find_str("${_IN_KEY}" "Architecture" _Architecture)
     if(_Architecture EQUAL "0")
-        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_IN_VAL}" PARENT_SCOPE)
+        set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "${_IN_VAL}" PARENT_SCOPE)    
         if(_IN_VAL STREQUAL "auto")
             execute_process(
                 COMMAND dpkg --print-architecture
@@ -148,7 +148,7 @@ function(set_package_vars _IN_KEY _IN_VAL)
         endif(_IN_VAL STREQUAL "auto")
         message("--> 软件架构: ${_IN_VAL}")
     endif(_Architecture EQUAL "0")
-
+    
     find_str("${_IN_KEY}" "Priority" _Priority)
     if(_Priority EQUAL "0")
         set(CPACK_DEBIAN_PACKAGE_PRIORITY "${_IN_VAL}" PARENT_SCOPE)
@@ -179,6 +179,12 @@ function(set_package_vars _IN_KEY _IN_VAL)
         message("--> 软件建议: ${_IN_VAL}")
     endif(_Recommends EQUAL "0")
 
+    find_str("${_IN_KEY}" "Conflicts" _Conflicts)
+    if(_Conflicts EQUAL "0")
+        set(CPACK_DEBIAN_PACKAGE_CONFLICTS "${_IN_VAL}" PARENT_SCOPE)
+        message("--> 软件冲突: ${_IN_VAL}")
+    endif(_Conflicts EQUAL "0")
+    
 endfunction(set_package_vars _IN_KEY _IN_VAL)
 
 # 定义一个自定义(add_package_descript)函数
@@ -194,7 +200,7 @@ function(add_package_descript IN_DES)
         message(FATAL_ERROR "!! Not Found Path: ${PACKAGE_DES_PATH}")
         return()
     endif(EXISTS ${IN_DES})
-
+    
     file(READ ${PACKAGE_DES_PATH} DES_CONTENT)
     trim_str("${DES_CONTENT}" DES_CONTENT)
 
@@ -244,7 +250,12 @@ function(add_package_descript IN_DES)
         set(PREV_DES_LINE "")
         while(NOT PREV_DES_LINE STREQUAL DES_LINE)
             if(NOT PREV_DES_LINE STREQUAL "")
-                set(Descrition "${Descrition}\n${DES_LINE}")
+                if ("${CMAKE_VERSION}" VERSION_LESS "3.15")
+                    set(Descrition "${Descrition}\n${DES_LINE}")
+                else()
+                    string(STRIP "${DES_LINE}" STRIP_DES_LINE)
+                    set(Descrition "${Descrition}\n${STRIP_DES_LINE}")
+                endif("${CMAKE_VERSION}" VERSION_LESS "3.15")
             endif(NOT PREV_DES_LINE STREQUAL "")
             set(PREV_DES_LINE "${DES_LINE}")
             sub_next(${DES_CONTENT} NEXT_INDEX DES_LINE DES_CONTENT)
@@ -284,16 +295,28 @@ function(add_package_descript IN_DES)
     endif("${OSDVer}" STREQUAL "true")
     
 
+
     ##################### deb file name #####################
     set(_Package      "${CPACK_DEBIAN_PACKAGE_NAME}")
     set(_Version      "${CPACK_DEBIAN_PACKAGE_VERSION}")
     set(_Architecture "${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 
-    set(_DebFileName
+    set(_DebFileName 
         "${_Package}_${_Version}_${_Architecture}${PACKAGE_SUFFIX}.deb"
     )
     set(CPACK_DEBIAN_FILE_NAME            ${_DebFileName})
 
+    # 标识: spark-deb-package
+    if(NOT "${PACKAGE_SUFFIX}" STREQUAL "")
+        # eg: remove '_' of '_Debian' 
+        string(SUBSTRING "${PACKAGE_SUFFIX}" 1 -1 DISTRIBUTION)
+        if ("${CMAKE_VERSION}" VERSION_LESS "3.15")
+            set(CPACK_DEBIAN_PACKAGE_DESCRIPTION "${Descrition}\n .\n Build for ${DISTRIBUTION} through spark-deb-build.")
+        else()
+            set(CPACK_DEBIAN_PACKAGE_DESCRIPTION ${Descrition} "\n.\nBuild for ${DISTRIBUTION} through spark-deb-build.")
+        endif("${CMAKE_VERSION}" VERSION_LESS "3.15")
+        
+    endif(NOT "${PACKAGE_SUFFIX}" STREQUAL "")
 
     # set(CPACK_DEBIAN_PACKAGE_NAME         "${Package}")
     # set(CPACK_DEBIAN_PACKAGE_VERSION      "${Version}")
@@ -326,7 +349,7 @@ endfunction(add_package_descript IN_DES)
 # CPACK_DEBIAN_FILE_NAME                - n
 # CPACK_DEBIAN_PACKAGE_NAME             - y
 # CPACK_DEBIAN_PACKAGE_VERSION          - y
-# CPACK_DEBIAN_PACKAGE_ARCHITECTURE     - y(auto)
+# CPACK_DEBIAN_PACKAGE_ARCHITECTURE     - y(auto) -> dpkg --print-architecture
 # CPACK_DEBIAN_PACKAGE_DEPENDS          - y
 # CPACK_DEBIAN_PACKAGE_PRIORITY         - y
 # CPACK_DEBIAN_PACKAGE_MAINTAINER       - y
@@ -338,5 +361,6 @@ endfunction(add_package_descript IN_DES)
 # elseif(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "aarch64")
 #     set(ARCHITECTURE "arm64")
 # endif()
+
 
 # string(TIMESTAMP BUILD_TIME "%Y%m%d")
