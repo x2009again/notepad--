@@ -1,4 +1,4 @@
-ï»¿#include <stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -33,9 +33,9 @@ using namespace Scintilla;
 
 //const char styleSubable[] = { SCE_P_IDENTIFIER, 0 };
 
-//Default = 0,//ä¸­æ–‡
-//Ascii = 1,//è‹±æ–‡
-//Keyword = 2, //å…³é”®å­—ï¼Œåªæœ‰ä»¥TXTä¸ºæ¯ç‰ˆçš„
+//Default = 0,//ÖĞÎÄ
+//Ascii = 1,//Ó¢ÎÄ
+//Keyword = 2, //¹Ø¼ü×Ö£¬Ö»ÓĞÒÔTXTÎªÄ¸°æµÄ
 
 LexicalClass lexicalClasses[] = {
 	// Lexer Python SCLEX_PYTHON SCE_P_:
@@ -50,10 +50,12 @@ enum literalsAllowed { litNone = 0, litU = 1, litB = 2, litF = 4 };
 struct OptionsTxt {
 	bool ascii;
 	bool utf8;
+	bool keyword;
 
 	OptionsTxt() {
 		ascii = true;
 		utf8 = true;
+		keyword = true;
 	}
 
 };
@@ -66,6 +68,9 @@ struct OptionSetTxt : public OptionSet<OptionsTxt> {
 
 		DefineProperty("lexer.txt.asciistring", &OptionsTxt::ascii,
 			"text literals ascii string");
+
+		DefineProperty("lexer.txt.keyword", &OptionsTxt::keyword,
+			"text keyword");
 	}
 };
 
@@ -75,9 +80,10 @@ class LexTXT :public DefaultLexer
 	//SubStyles subStyles;
 	OptionsTxt options;
 	OptionSetTxt osTxt;
+	bool isUserDefMode;
 public:
 	explicit LexTXT() :
-		DefaultLexer(lexicalClasses, ELEMENTS(lexicalClasses))/*,
+		DefaultLexer(lexicalClasses, ELEMENTS(lexicalClasses)), isUserDefMode(false)/*,
 		subStyles(styleSubable, 0x80, 0x40, 0)*/ {
 	}
 	virtual ~LexTXT() {}
@@ -161,7 +167,7 @@ Sci_Position SCI_METHOD LexTXT::WordListSet(int n, const char *wl) {
 	case 0:
 		wordListN = &keywords;
 		break;
-}
+	}
 	Sci_Position firstModification = -1;
 	if (wordListN) {
 		WordList wlNew;
@@ -170,6 +176,7 @@ Sci_Position SCI_METHOD LexTXT::WordListSet(int n, const char *wl) {
 			wordListN->Set(wl);
 			firstModification = 0;
 		}
+		isUserDefMode = (wordListN->Length() > 0);
 	}
 	return firstModification;
 }
@@ -202,108 +209,104 @@ inline bool IsAWordStart(int ch, bool unicodeIdentifiers) {
 	return IsXidStart(ch);
 }
 
-//åªè¯†åˆ«ä¸­æ–‡å’Œè‹±æ–‡ä¸¤ç§å•è¯çš„çŠ¶æ€
+//ÊÇ·ñÊÇµ¥´Ê·Ö¸î·ûºÅ£¬¶ÔÓÚasciiÖĞµÄÊı×ÖºÍ×ÖÄ¸ÒÔÍâµÄ×Ö·û£¬±ÈÈç . @ \t µÈ£¬¶¼×÷ÎªÒ»¸öµ¥´ÊµÄ·Ö¸î·ûºÅ¡£
+inline bool IsWordSplitChar(int ch) noexcept {
+	//return ch == ' ' || ch == '\t';
+	return (ch < 0x80) && !isalnum(ch);
+}
+
+inline bool IsLineEol(int ch) noexcept {
+	return ch == '\n' || ch == '\r';
+}
+
+//Ö»Ê¶±ğÖĞÎÄºÍÓ¢ÎÄÁ½ÖÖµ¥´ÊµÄ×´Ì¬
 void SCI_METHOD LexTXT::Lex(Sci_PositionU startPos, Sci_Position length, int initStyle, IDocument *pAccess) {
 	Accessor styler(pAccess, NULL);
 
 	const Sci_Position endPos = startPos + length;
 
-	//// Backtrack to previous line in case need to fix its tab whinging
-	//Sci_Position lineCurrent = styler.GetLine(startPos);
-	//if (startPos > 0) {
-	//	if (lineCurrent > 0) {
-	//		lineCurrent--;
-	//		// Look for backslash-continued lines
-	//		while (lineCurrent > 0) {
-	//			Sci_Position eolPos = styler.LineStart(lineCurrent) - 1;
-	//			const int eolStyle = styler.StyleAt(eolPos);
-	//			if (eolStyle == SCE_P_STRING
-	//				|| eolStyle == SCE_P_CHARACTER
-	//				|| eolStyle == SCE_P_STRINGEOL) {
-	//				lineCurrent -= 1;
-	//			}
-	//			else {
-	//				break;
-	//			}
-	//		}
-	//		startPos = styler.LineStart(lineCurrent);
-	//	}
-	//	initStyle = (startPos == 0 ? SCE_P_DEFAULT : styler.StyleAt(startPos - 1));
-	//}
-
-	//initStyle = initStyle & 31;
-	//if (initStyle == SCE_P_STRINGEOL) {
-	//	initStyle = SCE_P_DEFAULT;
-	//}
+	//const WordClassifier& classifierIdentifiers = subStyles.Classifier(SCE_TXT_IDENTIFIER);
 
 	StyleContext sc(startPos, endPos - startPos, initStyle, styler);
 
 	Sci_Position startIndicator = sc.currentPos;
 
-
-	for (; sc.More();) {
-
-		// Check for a new state starting character
-		if (sc.state == SCE_TXT_DEFAULT)
-		{
-			//é‡åˆ°ä¸‹ä¸€ä¸ªASCIIå­—ç¬¦çš„æ—¶å€™ï¼Œè¿›å…¥è¯†åˆ«çŠ¶æ€
-			if (IsAAsciiChar(sc.ch))
-			{
-				sc.SetState(SCE_TXT_IDENTIFIER);
-				}
-				}
-		else if (sc.state == SCE_TXT_ASCII)
-		{
-			//é‡åˆ°ä¸‹ä¸€ä¸ªéASCIIå­—ç¬¦çš„æ—¶å€™ï¼Œè¿›å…¥è¯†åˆ«çŠ¶æ€
-			if (!IsAAsciiChar(sc.ch))
-			{
-				sc.SetState(SCE_TXT_IDENTIFIER);
-			}
-		}
-
-		if (sc.state == SCE_TXT_IDENTIFIER) {
-
-			//txtå°±ä¸‰ç§çŠ¶æ€ã€è‹±æ–‡ã€ä¸­æ–‡ã€è‡ªå®šä¹‰å…³é”®å­—ã€‚é»˜è®¤æ˜¯ä¸­æ–‡ã€‚
-			//é‡åˆ°éå­—ç¬¦å’Œéæ•°å­—ï¼Œå¼€å§‹æ£€æµ‹å•è¯,æ˜¯å…³é”®å­—åˆ™è¯†åˆ«ä¸ºå…³é”®å­—;è‹¥ä¸æ˜¯å…³é”®å­—ï¼Œåˆ™è‚¯å®šæ˜¯è‹±æ–‡å­—ç¬¦
-	
-			//å¦‚æœé‡åˆ°éASCIIå­—ç¬¦ï¼Œåˆ™å¼€å§‹æ£€æŸ¥
-			if (!IsAAsciiChar(sc.ch)) {
-				char s[1000];
-				sc.GetCurrent(s, sizeof(s));
-				int style = SCE_TXT_IDENTIFIER;
-				if (keywords.InList(s)) 
-		{
-					style = SCE_TXT_KEYWORD;
-		}
-				else
-		{
-					//ä¸æ˜¯å…³é”®å­—ï¼Œå°±æ˜¯æ™®é€šçš„è‹±æ–‡å•è¯
-					style = SCE_TXT_ASCII;
-				}
-				sc.ChangeState(style);
-
-				//ä¸‹é¢å‡½æ•°è¿è¡Œå°±å·²ç»æŠŠå…³é”®å­—æˆ–è‹±æ–‡ç»™å•ç‹¬è®¾ç½®é£æ ¼äº†ã€‚æ­¤æ—¶é»˜è®¤è¿›å…¥ä¸­æ–‡é£æ ¼çŠ¶æ€
-			sc.SetState(SCE_TXT_DEFAULT);
-
-		}
-	}
-
-		sc.Forward();
-	}
-	
-	//æœ€åä¸€æ®µä¸èƒ½é—æ¼ï¼Œä¹Ÿéœ€è¦è¯†åˆ«
-	if (sc.state == SCE_TXT_IDENTIFIER)
+	if (!isUserDefMode)
 	{
-		if (IsAAsciiChar(sc.chPrev))
-		{
-		sc.ChangeState(SCE_TXT_ASCII);
+		for (; sc.More();) {
+			// Check for a new state starting character
+			if (sc.state == SCE_TXT_DEFAULT)
+			{
+				if (IsAAsciiChar(sc.ch))
+				{
+					sc.SetState(SCE_TXT_ASCII);
+				}
+			}
+			else if (sc.state == SCE_TXT_ASCII)
+			{
+				if (!IsAAsciiChar(sc.ch))
+				{
+					sc.SetState(SCE_TXT_DEFAULT);
+				}
+			}
+			sc.Forward();
+		}
 	}
 	else
 	{
-		sc.ChangeState(SCE_TXT_DEFAULT);
-	}
-	}
+		for (; sc.More();) {
+			// Check for a new state starting character
+			if (sc.state == SCE_TXT_DEFAULT)
+			{
+				if (IsAAsciiChar(sc.ch))
+				{
+					//Èç¹ûÒªÊ¶±ğ¹Ø¼ü×Ö£¬±ØĞëÒªÌø¹ıµ±Ç°¿Õ°××Ö·û¡£·ñÔò ÖĞÎÄ¿Õ¸ñºóÃæµÚÒ»¸ö¹Ø¼ü×ÖÎŞ·¨¸ßÁÁ
+					if (IsWordSplitChar(sc.ch) && IsAWordStart(sc.chNext, false))
+					{
+						//ÕâÀïÇĞ»»µÄÊ±ºò£¬ForwardSetStateÌø¹ıµ±Ç°¿Õ°××Ö·û
+						sc.ForwardSetState(SCE_TXT_ASCII);
+						continue;
+					}
+					sc.SetState(SCE_TXT_ASCII);
+				}
+			}
+			else if (sc.state == SCE_TXT_ASCII)
+			{
+				if (!IsAAsciiChar(sc.ch))
+				{
+					sc.SetState(SCE_TXT_DEFAULT);
+				}
+				else //´æÔÚ×Ô¶¨Òå¹Ø¼ü×Ö£¬ËµÃ÷ÊÇÓÃ»§×Ô¶¨ÒåÓï·¨¡£
+				{
+					//ÏÂÃæÊÇÊ¶±ğ¹Ø¼ü×ÖµÄÂß¼­¡£ÔÚÓ¢ÎÄÂß¼­ÏÂ£¬¶Ôµ¥´Ê½øĞĞÊ¶±ğ¡£
+					//ËùÎ½µ¥´Ê£¬Ò»¶¨ÊÇ°üÎ§ÔÚÇ°ºó¿Õ¸ñ»ò\tÖĞµÄÓ¢ÎÄµ¥´Ê
+					if ((IsWordSplitChar(sc.ch) /*|| IsLineEol(sc.ch)*/) && isalpha(sc.chPrev))
+					{
+						char s[512];
+						sc.GetCurrent(s, sizeof(s));
+						if (keywords.InList(s))
+						{
+							sc.ChangeState(SCE_TXT_KEYWORD);
+						}
+						sc.SetState(SCE_TXT_ASCII);
+					}
 
+
+					if (IsWordSplitChar(sc.ch) && IsAWordStart(sc.chNext, false))
+					{
+						//ÕâÀïÇĞ»»µÄÊ±ºò£¬ForwardSetStateÌø¹ıµ±Ç°¿Õ°××Ö·û
+						sc.ForwardSetState(SCE_TXT_ASCII);
+						continue;
+						//sc.SetState(SCE_TXT_ASCII);
+					}
+
+				}
+			}
+			sc.Forward();
+		}
+	}
+	
+	//×îºóÒ»¶Î²»ÄÜÒÅÂ©£¬Ò²ĞèÒªÊ¶±ğ
 	sc.SetState(SCE_TXT_DEFAULT);
 
 	styler.IndicatorFill(startIndicator, sc.currentPos, indicatorWhitespace, 0);
@@ -330,7 +333,7 @@ static bool IsQuoteLine(Sci_Position line, const Accessor &styler) {
 }
 
 
-//ä¸å¤„ç†ä»»ä½•æŠ˜å 
+//²»´¦ÀíÈÎºÎÕÛµş
 void SCI_METHOD LexTXT::Fold(Sci_PositionU startPos, Sci_Position length, int /*initStyle - unused*/, IDocument *pAccess) {
 	return;
 }

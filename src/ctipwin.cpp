@@ -35,8 +35,9 @@ void CTipWin::slot_delayClose()
 }
 
 
-void CTipWin::showTips(QWidget* parent, QString text, int sec)
+void CTipWin::showTips(QWidget* parent, QString text, int sec, bool isMousePos)
 {
+
 	if (parent != nullptr)
 	{
 		CTipWin* pWin = new CTipWin();
@@ -44,10 +45,18 @@ void CTipWin::showTips(QWidget* parent, QString text, int sec)
 		pWin->setAttribute(Qt::WA_DeleteOnClose);
 		pWin->showMsg(sec);
 
+		if (!isMousePos)
+		{
 		QPoint pos = parent->pos();
 		QSize size = parent->size();
 
 		QPoint newPos(pos.x() + 10, pos.y() + size.height() - 20);
 		pWin->move(newPos);
+	}
+		else
+		{
+			pWin->move(parent->cursor().pos());
+}
+
 	}
 }

@@ -23,6 +23,7 @@
 #include "findwin.h"
 #include "pluginGl.h"
 
+
 //class ScintillaEditView;
 class ScintillaHexEditView;
 class FindRecords;
@@ -33,7 +34,6 @@ class CompareWin;
 struct HexFileMgr;
 struct TextFileMgr;
 struct BigTextEditFileMgr;
-class QtLangSet;
 
 static const char* Tail_Thread = "tailthread";
 
@@ -87,6 +87,7 @@ enum NddDocType {
 //打开模式。1 文本 2 二进制 3 大文本只读 4 文本只读
 //const char* Open_Attr = "openid";
 class FileListView;
+class QtLangSet;
 
 class CCNotePad : public QMainWindow
 {
@@ -102,7 +103,7 @@ public:
 	void setLineEndBarLabel(RC_LINE_FORM lineEnd);
 
     void initLexerNameToIndex();
-	
+
 	static LexerInfo getLangLexerIdByFileExt(QString filePath);
 
 	bool openFile(QString filePath, int lineNum=-1);
@@ -147,19 +148,24 @@ public:
 
 	void changeMarkColor(int sytleId);
 	void setUserDefShortcutKey(int shortcutId);
-	
+
 	QtLangSet* getLangSet();
+	void setEditLangs(ScintillaEditView* pEdit,LangType langs);
+#ifdef NO_PLUGIN
+	//插件中调用主程序的功能。
+	bool pluginInvoke(int cmdId, void* data);
+#endif
 signals:
 	void signSendRegisterKey(QString key);
 	void signRegisterReplay(int code);
 	void signLinkNetServer();
 #ifdef Q_OS_WIN
-	void tailFileChange(ScintillaEditView*);
+	void tailFileChange(ScintillaEditView*,qint64 lastSize, qint64 curSize);
 #endif 
 public slots:
 	void slot_changeChinese();
 	void slot_changeEnglish();
-	
+
 	void slot_actionNewFile_toggle(bool checked);
 	void slot_actionOpenFile_toggle(bool checked);
 	void slot_actionSaveFile_toggle(bool checked);
@@ -197,6 +203,7 @@ protected:
 	void closeEvent(QCloseEvent *event) override;
 	void dragEnterEvent(QDragEnterEvent* event) override;
 	void dropEvent(QDropEvent* e) override;
+	void dragLeaveEvent(QDragLeaveEvent* event);
 	bool eventFilter(QObject *watched, QEvent *event)override;
 #ifdef Q_OS_WIN
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
@@ -236,10 +243,12 @@ private slots:
 
 	void slot_replace();
 	void slot_markHighlight();
-	
+
 	void slot_findResultPosChangeed(Qt::DockWidgetArea area);
 	void slot_findResultItemDoubleClick(const QModelIndex & index);
+#if 0
 	void slot_showFindAllInCurDocResult(FindRecords * record);
+#endif
 	void slot_showfindAllInOpenDocResult(QVector<FindRecords*>* record, int hits, QString whatFind);
 	void slot_clearFindResult();
 	void slot_convertWinLineEnd(bool);
@@ -312,7 +321,7 @@ private slots:
 	void slot_spaceToTabAll();
 	void slot_spaceToTabLeading();
 
-	
+
 	void slot_dupCurLine();
 	void slot_removeDupLine();
 	void slot_splitLines();
@@ -321,7 +330,7 @@ private slots:
 	void slot_moveDownCurLine();
 	void slot_insertBlankAbvCur();
 	void slot_insertBlankBelCur();
-	
+
 	void slot_reverseLineOrder();
 	void slot_sortLexAsc();
 	void slot_sortLexAscIgnCase();
@@ -358,7 +367,7 @@ private slots:
 	void on_lineEndChange(int index);
 	void on_tailfile(bool isOn);
 #ifdef Q_OS_WIN
-	void on_roladFile(ScintillaEditView* pEdit);
+	void on_roladFile(ScintillaEditView* pEdit,quint64 lastSize, qint64 curSize);
 #endif
 	void on_md5hash();
 
@@ -376,7 +385,7 @@ private:
 	void saveReceneOpenFile();
 	void updateSaveAllToolBarStatus();
 	void initReceneOpenFileMenu();
-	
+
 	int findFileIsOpenAtPad(QString filePath);
 	bool isNewFileNameExist(QString& fileName);
 	void updateCurTabSaveStatus();
@@ -400,11 +409,15 @@ private:
 	void addWatchFilePath(QString filePath);
 	void removeWatchFilePath(QString filePath);
 
-	bool checkRoladFile(ScintillaEditView * pEdit);
-	void reloadEditFile(ScintillaEditView * pEidt, bool isTailfOn = false);
+	void doReloadTxtFile(ScintillaEditView* pEdit, bool isOnTail, qint64 startReadSize);
+	void firstTimeIntoTail(ScintillaEditView* pEdit, int remainLineNums=100);
+	bool checkRoladFile(ScintillaEditView * pEdit, qint64 startReadSize=-1);
+	void reloadEditFile(ScintillaEditView * pEidt, bool isTailfOn = false, qint64 startReadSize=-1);
 	int initFindWindow(FindTabIndex type= FIND_TAB);
 
 	void setToFileRightMenu();
+	void initReceneCmp();
+	void saveReceneCmp();
 
 	QString getShortName(const QString& name);
 
@@ -418,7 +431,7 @@ private:
 
 	bool openTextFile(QString filePath, bool isCheckHex = true, CODE_ID code=CODE_ID::UNKOWN);
 	bool openHexFile(QString filePath);
-	
+
 	bool showHexFile(ScintillaHexEditView * pEdit, HexFileMgr * hexFile);
 
 	bool showBigTextFile(ScintillaEditView * pEdit, TextFileMgr * hexFile);
@@ -436,7 +449,7 @@ private:
 	void restoreCleanExistFile(QString & filePath);
 	void restoreDirtyNewFile(QString & fileName, QString & tempFilePath, int lexid=L_TXT);
 	bool restoreDirtyExistFile(QString & fileName, QString & tempFilePath);
-	
+
 	ScintillaEditView* newTxtFile(QString Name, int index, QString contentPath="");
 	void setLangsDescLable(QString &langDesc);
 	void transCurUpperOrLower(TextCaseType type);
@@ -465,6 +478,7 @@ private:
 	void loadPluginLib();
 	void loadPluginProcs(QString strLibDir, QMenu* pMenu);
 	void onPlugFound(NDD_PROC_DATA& procData, QMenu* pUserData);
+	void destroyAllPluginModule();
 #endif
 
 	void setUserDefShortcutKey();
@@ -475,6 +489,7 @@ private:
 	void doFold(int type, bool mode);
 	void doComment(int type);
 	void tailfile(bool isOn, ScintillaEditView* pEdit);
+	void on_findResultlineDoubleClick(QString* pFilePath, int pos, int end);
 private:
 	Ui::CCNotePad ui;
 
@@ -512,7 +527,7 @@ private:
     QMap<QString, LexerNode> m_lexerNameToIndex;
 
 	//监控文件被修改的对象
-	QFileSystemWatcher* m_fileWatch;
+	static QFileSystemWatcher* m_fileWatch;
 
 	QString m_cmpLeftFilePath;
 	QString m_cmpRightFilePath;
@@ -521,10 +536,14 @@ private:
 	QPointer<QWidget> m_columnEditWin;
 	QPointer<QMainWindow> m_langSetWin;
 	QPointer<QWidget> m_optionsView;
-	
+
 
 	QSharedMemory* m_shareMem;
 
+
+
+	QList<CompareDirs*> m_cmpDirMgr;
+	QList<CompareWin*> m_cmpFileMgr;
 
 	//最近打开的对比文件和目录列表。做一个环形区
 //保存在数据库中
@@ -546,15 +565,13 @@ private:
 	QAction* m_selectRightCmp;
 
 
-	//所有打开的notebook均保存起来。关闭时切换share里面保存的地址
-	static QList<CCNotePad*> *s_padInstances;
-
 	//当前打开的二进制文件，保存在这里
 	QMap<QString, HexFileMgr*> m_hexFileMgr;
 
 	QPointer<QWidget> m_pHexGotoWin;
 
 	static QStringList s_findHistroy;
+	static QStringList s_replaceHistroy;
 	static int s_padTimes;
 
 	int m_curSoftLangs; //当前语言0:自动 1 中文 2 英语
@@ -563,8 +580,8 @@ private:
 	static int s_indent; //自动缩进
 	static int s_showblank; //显示空白
 	static int s_zoomValue;
-	
-	
+
+
 	QTranslator* m_translator;
 	QTimer * m_timerAutoSave;
 
@@ -619,6 +636,9 @@ private:
 	QList<NDD_PROC_DATA> m_pluginList;
 
 public:
+	//所有打开的notebook均保存起来。关闭时切换share里面保存的地址
+	static QList<CCNotePad*>* s_padInstances;
+
 		static QString s_lastOpenDirPath;
 	static int s_restoreLastFile; //自动恢复上次打开的文件
 	static int s_curStyleId;

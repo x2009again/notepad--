@@ -509,6 +509,8 @@ Sci::Line Document::LineFromPositionIndex(Sci::Position pos, int lineCharacterIn
 }
 
 int SCI_METHOD Document::SetLevel(Sci_Position line, int level) {
+	//20230306 这个标记如果不去掉，那么fold的尾部会包含下面新增的空行，定位一天才定位到此。
+	level &= ~SC_FOLDLEVELWHITEFLAG;
 	const int prev = Levels()->SetLevel(static_cast<Sci::Line>(line), level, LinesTotal());
 	if (prev != level) {
 		DocModification mh(SC_MOD_CHANGEFOLD | SC_MOD_CHANGEMARKER,

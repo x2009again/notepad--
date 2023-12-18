@@ -2,7 +2,7 @@
 
 #ifdef WIN32
 
-DectFileChanges::DectFileChanges()
+DectFileChanges::DectFileChanges():m_lastFileSize(0), m_curFileSize(0)
 {
 	_szFile = NULL;
 	_dwNotifyFilter = 0;
@@ -28,7 +28,16 @@ BOOL DectFileChanges::DetectChanges() {
 		rValue = TRUE;
 	}
 
+	if (rValue)
+	{
+		m_lastFileSize = getFileSize(_lastFileInfo);
+	}
 	_lastFileInfo = fInfo;
+
+	if (rValue)
+	{
+		m_curFileSize = getFileSize(_lastFileInfo);
+	}
 	return rValue;
 }
 
@@ -45,4 +54,19 @@ void DectFileChanges::Terminate()
 	_szFile = NULL;
 	_dwNotifyFilter = 0;
 }
+quint64 DectFileChanges::getFileSize(WIN32_FILE_ATTRIBUTE_DATA& data)
+{
+	quint64 fileSize = data.nFileSizeHigh;
+	fileSize = (fileSize << 32);
+	fileSize += data.nFileSizeLow;
+
+	return fileSize;
+}
+
+void DectFileChanges::getDiffFileSize(quint64& lastSize, quint64& curSize)
+{
+	lastSize = m_lastFileSize;
+	curSize = m_curFileSize;
+}
+
 #endif

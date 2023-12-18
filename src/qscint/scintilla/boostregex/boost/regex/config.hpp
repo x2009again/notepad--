@@ -72,6 +72,10 @@
 
 #  include BOOST_REGEX_USER_CONFIG
 
+#ifdef Q_OS_UNIX
+#define BOOST_REGEX_STANDALONE
+#endif
+
 #ifndef BOOST_REGEX_STANDALONE
 #  include <boost/config.hpp>
 #  include <boost/predef.h>

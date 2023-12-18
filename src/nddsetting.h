@@ -27,6 +27,8 @@ static QString FIND_RESULT_FONT_SIZE = "frfs";//查找结果的默认字体大�
 static QString LAST_ACTION_TAB_INDEX = "lati";//上次关闭时，当前激活的tab标签页序号
 
 static QString RECENT_OPEN_FILE = "recentopenfile";
+static QString LAST_OPEN_DIR = "lastdir";
+static QString CLEAR_OPENFILE_ON_CLOSE = "clearopenfile"; //关闭时清空历史文件
 
 
 //下面这个是winpos.ini中的key，避免单个文件太大，拖慢启动速度
@@ -64,6 +66,10 @@ public:
 	static QString getKeyValueFromDelaySets(QString key);
 
 	static bool updataKeyValueFromDelaySets(QString key, QString  value);
+
+	static int getKeyValueFromDelayNumSets(QString key);
+
+	static bool updataKeyValueFromDelayNumSets(QString key, int value);
 
 	static bool isDbExist()
 	{

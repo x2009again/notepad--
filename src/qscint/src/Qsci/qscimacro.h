@@ -1,6 +1,6 @@
-ï»¿// This defines the interface to the QsciMacro class.
+// This defines the interface to the QsciMacro class.
 //
-// Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2023 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -30,6 +30,12 @@
 
 class QsciScintilla;
 
+enum USER_DEFINE_MACRO {
+    MACRO_FIND_NEXT = 5000,//²éÕÒÏÂÒ»¸ö
+    MACRO_REPLACE_ALL,//È«²¿Ìæ»»
+    MACRO_REPLACE_ONE,//Ìæ»»Ò»Ìõ
+    MACRO_EXE_MENU_FUN,//Ö´ĞĞ²Ëµ¥À¸ÉÏÃæµÄÃüÁî
+};
 
 //! \brief The QsciMacro class represents a sequence of recordable editor
 //! commands.
@@ -67,6 +73,10 @@ public:
     //!
     //! \sa load()
     QString save() const;
+
+//signals:
+//    //´ÓÍâ²¿µ÷ÓÃ¼ÇÂ¼ºê£¬·ÇqscintillaÄÚ²¿ºê
+//    void s_record(unsigned int msg, unsigned long wParam, void* lParam);
 
 public slots:
     //! Play the macro.

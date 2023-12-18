@@ -121,12 +121,27 @@ class MyApplication : public QApplication
 
 int main(int argc, char *argv[])
 {
-	//可以防止某些屏幕下的字体拥挤重叠问题
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
+	QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+#elif (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+	#ifdef Q_OS_WIN
+		HDC hdc = CreateDC(L"display", NULL, NULL, NULL);
+		int ndpi = GetDeviceCaps(hdc, LOGPIXELSY);
+		qputenv("QT_SCALE_FACTOR", QString::number(ndpi / 96.0).toUtf8());
+	#endif // Q_OS_WIN
+#endif
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
 	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
 #ifdef Q_OS_MAC
     MyApplication a(argc, argv);
 #else
 	QApplication a(argc, argv);
+#endif
+
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+	a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
 
 	//不能开启，开启后相对路径打开文件失败

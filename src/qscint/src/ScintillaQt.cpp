@@ -1,6 +1,6 @@
 ﻿// The implementation of the Qt specific subclass of ScintillaBase.
 //
-// Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2023 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -386,7 +386,7 @@ void QsciScintillaQt::NotifyParent(SCNotification scn)
         emit qsb->SCN_INDICATORRELEASE(scn.position, scn.modifiers);
         break;
 
-    case SCN_MACRORECORD:
+    case SCN_MACRORECORD_ID:
         emit qsb->SCN_MACRORECORD(scn.message, scn.wParam,
                 reinterpret_cast<void *>(scn.lParam));
         break;

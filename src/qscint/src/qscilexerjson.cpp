@@ -1,6 +1,6 @@
 ﻿// This module implements the QsciLexerJSON class.
 //
-// Copyright (c) 2021 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2023 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -60,7 +60,7 @@ QColor QsciLexerJSON::defaultColor(int style) const
     {
     case UnclosedString:
     case Error:
-        return QColor(0xff, 0xff, 0xff);
+        return QColor(0x0, 0x0, 0x0);
 
     case Number:
         return QColor(0x00, 0x7f, 0x7f);

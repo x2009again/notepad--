@@ -9,7 +9,7 @@ class QtTestClass : public QWidget
 	Q_OBJECT
 
 public:
-	QtTestClass(QWidget *parent, QsciScintilla* pEdit);
+	QtTestClass(QWidget *parent);
 	~QtTestClass();
 
 private slots:
@@ -17,5 +17,6 @@ private slots:
 	void on_lower();
 private:
 	Ui::QtTestClassClass ui;
-	QsciScintilla* m_pEdit;
+
+	QWidget* m_pNotepad;
 };

@@ -4,11 +4,9 @@
 
 ## 项目简介
 
-这是一个使用C++编写的文本编辑器Notepad--,可以支持Win/Linux/Mac平台。
+Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持Window/Mac/Linux操作系统平台。
 
-我们的目标是要进行文本编辑类软件的国产可替代，重点在国产Uos/Linux系统、Mac 系统上发展。
-
-一个支持windows/linux/mac的文本编辑器，目标是要国产替换同类软件，来自中国。
+我们的目标：完成文本编辑类软件的国产可替代，重点在国产Uos/Linux系统、Mac 系统上发展。
 
 对比其它竞品Notepad类软件而言，我们的优势是可以跨平台，支持linux mac操作系统。
 
@@ -18,12 +16,9 @@
 
 您可以在这个项目提交bug或反馈问题。
 
-最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.22
+最新版本下载地址：https://gitee.com/cxasm/notepad--/releases/latest
 
-最新内测版本下载地址：https://gitee.com/cxasm/notepad--/releases/tag/v1.23
-
-NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我们，插件功能均可以留上您的大名和捐赠渠道，希望
-开发者参与插件功能开发。
+NDD 具备插件编写功能，如果您愿意开发插件，还请提交给我们。
 
 做国人自己的免费编辑器，离不开您的支持，请通过微信捐赠我们。
 
@@ -32,6 +27,42 @@ NDD已初步推出插件编写功能，希望广大的CPP/QT开发者加入我�
 ## 编译
 
 **CMake工具链编译说明:**
+
+- Windows 系统通用构建 - 基于 Batch 脚本进行构建
+    
+    ```batch
+    ;; 将 Batch 脚本复制到项目目录
+    copy cmake/make-batch-powershell/windows-msvc-ninja.bat .
+
+    ;; 使用脚本进行构建，它将会询问如何进行构建
+    windows-msvc-ninja.bat
+    ```
+
+- Windows 系统 VSCode 构建 - 基于 VSCode 配置模板进行调整构建
+
+    ```batch
+    ;; 拷贝一份 cmake/vscode/windows-vs-2022-cmake-ninja.json 作为你的 .vscode/settings.json
+    ;; 修改配置中的 -DCMAKE_PREFIX_PATH 部分为你的 Qt 路径，或你自行编译的 Qt 路径，
+    ;; 例如：
+    ;;    "-DCMAKE_PREFIX_PATH=C:\\Qt\\Qt5.14.2\\5.14.2\\msvc2017_64",
+    ```
+
+- MacOSX 平台构建方案
+
+    ```shell
+    Build with the following configuration:
+    1. make macosx-universal 
+            通用 MacOSX 平台构建(Debug).
+    2. make macosx-universal-release 
+            通用 MacOSX 平台构建(Release).
+    3. make package 
+            通用 MacOSX 平台构建 CPack 打包.
+
+    # 由 CPack 驱动的打包：
+    # 将在 build/macosx-universal 目录中产生 dmg 文件
+    # 可在 CPack 的生成目录尝试进行手动 macdeployqt 处理
+    # 注：目前M1平台使用原生Qt执行此操作会损坏此包，将需要开发者签证
+    ```
 
 - 当前的 Linux 平台构建方案
 
@@ -153,16 +184,46 @@ yay -S notepad---git
 ```
 ## 联络方式
 
-QQ群：372613546 959439826(已满） 用户群，做NDD的问题反馈、功能建议等。
+QQ群：372613546(已满） 959439826(已满）728578708（空闲） 用户群，做NDD的问题反馈、功能建议等。
 
 QQ群 616606091 开发群，建议懂CPP/QT、愿意参与NDD项目代码贡献的开发人士加入。
 
+## 编译或使用手册
+见build目录下文档 linux开源编译及下载说明.txt
+见本仓库文档 Ndd使用说明.CHM
+
 ## 效果预览
 
-![输入图片说明](png/20221107_160824.png)
+ **windows效果图：** 
+![输入图片说明](png/0828.png)
 
-![输入图片说明](png/6.png)
+![深色模式主题](png/2.8win.png)
 
-![Mac系统运行图](png/%E6%88%AA%E5%B1%8F2023-02-26%2011.41.20.png)
+![编辑修改二进制](png/08282.png)
+
+![文件对比](png/6.png)
+
+ **MacOS 效果图：** 
+
+![输入图片说明](png/100602.png)
+
+![输入图片说明](png/100601.png)
 
 ![Mac系统文件对比图](png/%E6%88%AA%E5%B1%8F2023-02-26%2011.45.48.png)
+
+![输入图片说明](png/092601.png)
+
+
+ **Redhat7.x 效果图：** 
+
+![输入图片说明](png/10.png.png)
+
+ **UOS 深度 效果图：** 
+![输入图片说明](png/0809.png)
+
+ **银河麒麟 开源openkylin amd x64 效果图：** 
+![输入图片说明](png/kinly01.png)
+
+![输入图片说明](png/kinly02.png)
+
+![输入图片说明](png/kinly03.png)
