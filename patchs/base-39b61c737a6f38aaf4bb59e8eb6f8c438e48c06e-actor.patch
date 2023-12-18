@@ -1,0 +1,2881 @@
+From 39b61c737a6f38aaf4bb59e8eb6f8c438e48c06e Mon Sep 17 00:00:00 2001
+From: matheuter <210880040@qq.com>
+Date: Thu, 20 Apr 2023 16:39:20 +0800
+Subject: [PATCH 1/4] add actor to plugin_v2
+
+---
+ src/actor.h                                   | 129 +++++
+ src/actorprocessor.cpp                        |  67 +++
+ src/actorprocessor.h                          |  67 +++
+ src/cceditor/ccnotepad.cpp                    |  73 ++-
+ src/cceditor/ccnotepad.h                      |   9 +-
+ src/functiontraits.h                          |  81 +++
+ src/plugin.h                                  |   2 +
+ src/plugin/CMakeLists.txt                     |  16 +-
+ src/plugin/filetreeview/CMakeLists.txt        |  74 +++
+ src/plugin/filetreeview/abstractfile.cpp      |   6 +
+ src/plugin/filetreeview/abstractfile.h        |  11 +
+ src/plugin/filetreeview/actor.h               | 120 ++++
+ src/plugin/filetreeview/actorprocessor.cpp    |  67 +++
+ src/plugin/filetreeview/actorprocessor.h      |  66 +++
+ src/plugin/filetreeview/filesystemmodel.cpp   | 526 ++++++++++++++++++
+ src/plugin/filetreeview/filesystemmodel.h     | 193 +++++++
+ src/plugin/filetreeview/filetreeview.cpp      | 195 +++++++
+ src/plugin/filetreeview/filetreeview.h        |  73 +++
+ .../filetreeview/filetreeviewexport.cpp       |  77 +++
+ .../filetreeview/filetreeviewplugin.cpp       | 121 ++++
+ src/plugin/filetreeview/filetreeviewplugin.h  |  40 ++
+ 21 files changed, 2001 insertions(+), 12 deletions(-)
+ create mode 100644 src/actor.h
+ create mode 100644 src/actorprocessor.cpp
+ create mode 100644 src/actorprocessor.h
+ create mode 100644 src/functiontraits.h
+ create mode 100644 src/plugin/filetreeview/CMakeLists.txt
+ create mode 100644 src/plugin/filetreeview/abstractfile.cpp
+ create mode 100644 src/plugin/filetreeview/abstractfile.h
+ create mode 100644 src/plugin/filetreeview/actor.h
+ create mode 100644 src/plugin/filetreeview/actorprocessor.cpp
+ create mode 100644 src/plugin/filetreeview/actorprocessor.h
+ create mode 100644 src/plugin/filetreeview/filesystemmodel.cpp
+ create mode 100644 src/plugin/filetreeview/filesystemmodel.h
+ create mode 100644 src/plugin/filetreeview/filetreeview.cpp
+ create mode 100644 src/plugin/filetreeview/filetreeview.h
+ create mode 100644 src/plugin/filetreeview/filetreeviewexport.cpp
+ create mode 100644 src/plugin/filetreeview/filetreeviewplugin.cpp
+ create mode 100644 src/plugin/filetreeview/filetreeviewplugin.h
+
+diff --git a/src/actor.h b/src/actor.h
+new file mode 100644
+index 0000000..86378d0
+--- /dev/null
++++ b/src/actor.h
+@@ -0,0 +1,129 @@
++#pragma once
++#include <cstdint>
++#include <string>
++#include <memory>
++#include <tuple>
++#include <functional>
++
++#include "functiontraits.h"
++
++/**
++ * @brief Actor class, which encapsulates the event model
++ * @note enable_shared_from_this allows us to get safe Pointers internally
++ */
++class Actor : public std::enable_shared_from_this<Actor>
++{
++public:
++    using Ptr = std::shared_ptr<Actor>;
++    using FunctionWapper = std::function<void(void*, void*)>;
++
++public:
++    Actor(){}
++    ~Actor(){}
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename Function>
++    void operator+=(Function&& function_any) noexcept
++    {
++        m_invokeFunctionWapper =  { std::bind(&invoker<Function>::apply, function_any,  std::placeholders::_1, std::placeholders::_2) };
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename Function>
++    void registerFunction(Function&& function_any) noexcept
++    {
++        m_invokeFunctionWapper =  { std::bind(&invoker<Function>::apply, function_any,  std::placeholders::_1, std::placeholders::_2) };
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename ... Args>
++    void invoke(Args&& ... args) const noexcept
++    {
++        auto args_tuple = std::make_tuple(std::forward<Args>(args)...);
++        m_invokeFunctionWapper(&args_tuple, nullptr);
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename R, typename ... Args>
++    R invoke(Args&& ...args) const
++    {
++        using tuple_args_type = std::tuple<Args...>;
++        char data[sizeof(tuple_args_type)];
++        std::tuple<Args...>* tuples_pointer = new (data) tuple_args_type;
++
++        *tuples_pointer = std::make_tuple(std::forward<Args>(args)...);
++
++        R return_value;
++        m_invokeFunctionWapper(tuples_pointer, &return_value);
++        return return_value;
++    }
++
++    Ptr getSharedPtr()
++    {
++        return shared_from_this();
++    }
++
++public:
++    /**
++    * @brief This struct encapsulates a function,
++    * essentially storing the return value and parameters in two variables
++    * which can unify the way the function is stored.
++    */
++    template<typename Function>
++    struct invoker
++    {
++        /**
++         * @brief
++         */
++        static inline void apply(const Function& func, void* bl, void* result)
++        {
++            using tuple_type = typename function_traits<Function>::tuple_type;
++            const tuple_type* tp = static_cast<tuple_type*>(bl);
++            call(func, *tp, result);
++        }
++
++        /**
++         * @brief
++         */
++        template<typename F, typename ... Args>
++        static typename std::enable_if<std::is_void<typename std::result_of<F(Args...)>::type>::value>::type
++        call(const F& f, const std::tuple<Args...>& tp, void*)
++        {
++            call_helper(f, std::make_index_sequence<sizeof... (Args)>{}, tp);
++        }
++
++        /**
++         * @brief
++         */
++        template<typename F, typename ... Args>
++        static typename std::enable_if<!std::is_void<typename std::result_of<F(Args...)>::type>::value>::type
++        call(const F& f, const std::tuple<Args...>& tp, void* result)
++        {
++            auto r = call_helper(f, std::make_index_sequence<sizeof... (Args)>{}, tp);
++            *(decltype(r)*)result = r;
++        }
++
++        /**
++        * @brief
++        */
++        template<typename F, size_t... I, typename ... Args>
++        static auto call_helper(const F& f, const std::index_sequence<I...>& h, const std::tuple<Args...>& tup)
++        {
++            return f(std::get<I>(tup)...);
++        }
++    };
++private:
++    /**
++    * @note m_invokeFunctions is an anonymous lamba expression that encapsulates a function
++    * Functions include Lamba expressions, member functions, funtor, ordinary functions, and function Pointers
++    */
++    FunctionWapper m_invokeFunctionWapper;
++};
+diff --git a/src/actorprocessor.cpp b/src/actorprocessor.cpp
+new file mode 100644
+index 0000000..099d1f6
+--- /dev/null
++++ b/src/actorprocessor.cpp
+@@ -0,0 +1,67 @@
++#include "actorprocessor.h"
++ActorProcessor::ActorProcessor():
++    m_actorMap(new std::unordered_map<std::string, Actor*>)
++{}
++
++/**
++ * @brief
++ */
++ActorProcessor::~ActorProcessor()
++{
++    for (auto& item : (*m_actorMap))
++    {
++        if(item.second != nullptr)
++            delete item.second;
++    }
++    if (m_actorMap)
++        delete m_actorMap;
++}
++
++/**
++ * @brief
++ */
++void ActorProcessor::registerActor(const std::string &route, Actor *actor)
++{
++    m_actorMap->insert(std::make_pair(route,actor));
++}
++
++/**
++ * @brief
++ */
++void ActorProcessor::removeActor(const std::string &route)
++{
++    auto iter = (*m_actorMap).find(route);
++    if(iter != m_actorMap->end())
++    {
++        m_actorMap->erase(route);
++        delete iter->second;
++    }
++}
++
++/**
++ * @brief
++ */
++Actor *ActorProcessor::findActor(const std::string &route)
++{
++    auto iter = (*m_actorMap).find(route);
++    if(iter != m_actorMap->end())
++    {
++        return (*m_actorMap)[route];
++    }
++    return nullptr;
++}
++
++/**
++ * @brief
++ */
++bool ActorProcessor::resetActor(const std::string &route, Actor *actor)
++{
++    auto iter = (*m_actorMap).find(route);
++    if(iter != m_actorMap->end())
++    {
++        m_actorMap->erase(route);
++        delete iter->second;
++        return true;
++    }
++    return false;
++}
+diff --git a/src/actorprocessor.h b/src/actorprocessor.h
+new file mode 100644
+index 0000000..9026909
+--- /dev/null
++++ b/src/actorprocessor.h
+@@ -0,0 +1,67 @@
++#ifndef EVENTPROCESSOR_H
++#define EVENTPROCESSOR_H
++
++#include <string>
++#include <functional>
++#include <map>
++#include <iostream>
++#include <unordered_map>
++#include "actor.h"
++
++class  ActorProcessor
++{
++public:
++    ActorProcessor();
++    ~ActorProcessor();
++public:
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename ... Args>
++    void invoke(const std::string& route,Args&& ... args) const noexcept
++    {
++        if (m_actorMap->find(route) != m_actorMap->end())
++            (*m_actorMap)[route]->invoke(std::forward<Args>(args)...);
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename R, typename ... Args>
++    R invoke(const std::string& route,Args&& ...args) const
++    {
++        if (m_actorMap->find(route) != m_actorMap->end())
++            return (*m_actorMap)[route]->invoke(std::forward<Args>(args)...);
++        return nullptr;
++    }
++
++    /**
++    * @brief 注册一个actor，其中route是唯一的
++    */
++    void registerActor(const std::string& route, Actor*actor);
++
++    /**
++    * @brief 删除一个actor
++    */
++    void removeActor(const std::string& route);
++
++    /**
++    * @brief 查找一个actor， 返回其指针
++    */
++    Actor* findActor(const std::string& route);
++
++    /**
++    * @brief 重置一个actor，注意原有的actor会被删除
++    */
++    bool resetActor(const std::string& route,Actor*actor);
++
++private:
++    std::unordered_map<std::string, Actor*>* m_actorMap;
++private:
++    // not allow copy constroct
++    ActorProcessor(ActorProcessor&&)=delete;
++    ActorProcessor& operator=(const ActorProcessor&)=delete;
++};
++
++#endif // EVENTPROCESSOR_H
+diff --git a/src/cceditor/ccnotepad.cpp b/src/cceditor/ccnotepad.cpp
+index eb3ad4f..b74f1ca 100755
+--- a/src/cceditor/ccnotepad.cpp
++++ b/src/cceditor/ccnotepad.cpp
+@@ -32,6 +32,8 @@
+ #include "pluginmgr.h"
+ #include "plugin.h"
+ #include "pluginGl.h"
++#include "actor.h"
++#include "actorprocessor.h"
+ #endif
+ 
+ #ifdef Q_OS_WIN
+@@ -1211,6 +1213,10 @@ CCNotePad::CCNotePad(bool isMainWindows, QWidget *parent)
+ 		restoreGeometry(lastGeo);
+ 	}
+ #endif
++
++#ifdef NO_PLUGIN
++    processor = new ActorProcessor();
++#endif
+ 	}
+ 
+ CCNotePad::~CCNotePad()
+@@ -1748,9 +1754,10 @@ void CCNotePad::onPlugFound(NDD_PROC_DATA& procData, QMenu* pUserData)
+ 	{
+ 		QAction* pAction = new QAction(procData.m_strPlugName, pMenu);
+ 		pMenu->addAction(pAction);
+-	pAction->setText(procData.m_strPlugName);
+-	pAction->setData(procData.m_strFilePath);
+-	connect(pAction, &QAction::triggered, this, &CCNotePad::onPlugWork);
++        pAction->setText(procData.m_strPlugName);
++        pAction->setData(procData.m_strFilePath);
++        connect(pAction, &QAction::triggered, this, &CCNotePad::onPlugWork);
++        connect(pAction, &QAction::triggered, this, &CCNotePad::onPlugWorkV2);
+ 	}
+ 	else if (procData.m_menuType == 1)
+ 	{
+@@ -1761,6 +1768,7 @@ void CCNotePad::onPlugFound(NDD_PROC_DATA& procData, QMenu* pUserData)
+ 		//菜单句柄通过procData传递到插件中
+ 		procData.m_rootMenu = pluginMenu;
+ 		sendParaToPlugin(procData);
++        sendParaToPluginV2(procData);
+ 	}
+ 	else
+ 	{
+@@ -1796,6 +1804,39 @@ void CCNotePad::onPlugWork(bool check)
+ 	}
+ }
+ 
++//真正执行插件的工作
++void CCNotePad::onPlugWorkV2(bool check)
++{
++
++    qDebug() << "test1";
++    QAction* pAct = dynamic_cast<QAction*>(sender());
++    if (pAct != nullptr)
++    {
++        QString plugPath = pAct->data().toString();
++
++        QLibrary* pLib = new QLibrary(plugPath);
++
++        NDD_PROC_MAIN_V2_CALLBACK pMainCallBack;
++        pMainCallBack = (NDD_PROC_MAIN_V2_CALLBACK)pLib->resolve("NDD_PROC_MAIN_V2");
++
++        if (pMainCallBack != NULL)
++        {
++            std::function<QsciScintilla* ()> foundCallBack = std::bind(&CCNotePad::getCurEditView, this);
++            Actor* actor = new Actor;
++
++            actor->registerFunction([this](QString name, int num){openFile(name,num);});
++
++            processor->registerActor("openFile",actor);
++            pMainCallBack(this, plugPath, processor, nullptr);
++        }
++        else
++        {
++            ui.statusBar->showMessage(tr("plugin %1 load failed !").arg(plugPath), 10000);
++        }
++
++    }
++}
++
+ //把插件需要的参数，传递到插件中去
+ void CCNotePad::sendParaToPlugin(NDD_PROC_DATA& procData)
+ {
+@@ -1818,6 +1859,32 @@ void CCNotePad::sendParaToPlugin(NDD_PROC_DATA& procData)
+ 		}
+ }
+ 
++
++void CCNotePad::sendParaToPluginV2(NDD_PROC_DATA& procData)
++{
++        qDebug() <<"test5";
++        QString plugPath = procData.m_strFilePath;
++
++        QLibrary* pLib = new QLibrary(plugPath);
++
++        NDD_PROC_MAIN_V2_CALLBACK pMainCallBack;
++        pMainCallBack = (NDD_PROC_MAIN_V2_CALLBACK)pLib->resolve("NDD_PROC_MAIN_V2");
++
++        if (pMainCallBack != NULL)
++        {
++            Actor* actor = new Actor;
++
++            actor->registerFunction([this](QString name, int num){openFile(name,num);});
++
++            processor->registerActor("openFile",actor);
++            pMainCallBack(this, plugPath, processor, &procData);
++        }
++        else
++        {
++            ui.statusBar->showMessage(tr("plugin %1 load failed !").arg(plugPath), 10000);
++        }
++}
++
+ void CCNotePad::loadPluginProcs(QString strLibDir, QMenu* pMenu)
+ {
+ 	std::function<void(NDD_PROC_DATA&, QMenu*)> foundCallBack = std::bind(&CCNotePad::onPlugFound, this, std::placeholders::_1, std::placeholders::_2);
+diff --git a/src/cceditor/ccnotepad.h b/src/cceditor/ccnotepad.h
+index 58e5eec..d2939ad 100755
+--- a/src/cceditor/ccnotepad.h
++++ b/src/cceditor/ccnotepad.h
+@@ -34,6 +34,7 @@ struct HexFileMgr;
+ struct TextFileMgr;
+ struct BigTextEditFileMgr;
+ class QtLangSet;
++class ActorProcessor;
+ 
+ static const char* Tail_Thread = "tailthread";
+ 
+@@ -349,8 +350,10 @@ private slots:
+ 	void on_loadReceneFile();
+ 	void slot_pluginMgr();
+ #ifdef NO_PLUGIN
++    void onPlugWorkV2(bool check);
+ 	void onPlugWork(bool check);
+-	void sendParaToPlugin(NDD_PROC_DATA& procData);
++    void sendParaToPlugin(NDD_PROC_DATA& procData);
++    void sendParaToPluginV2(NDD_PROC_DATA& procData);
+ #endif
+ 	void slot_showWebAddr(bool check);
+ 	void slot_langFileSuffix();
+@@ -524,6 +527,10 @@ private:
+ 	
+ 
+ 	QSharedMemory* m_shareMem;
++#ifdef NO_PLUGIN
++    //actor执行与存储单元
++    ActorProcessor* processor;
++#endif
+ 
+ 
+ 	//最近打开的对比文件和目录列表。做一个环形区
+diff --git a/src/functiontraits.h b/src/functiontraits.h
+new file mode 100644
+index 0000000..314b58b
+--- /dev/null
++++ b/src/functiontraits.h
+@@ -0,0 +1,81 @@
++#ifndef FUNCTIONTRAITS_H
++#define FUNCTIONTRAITS_H
++
++#include <utility>
++#include <functional>
++#include <algorithm>
++#include <tuple>
++
++template<typename T>
++struct function_traits;
++
++template<typename ReturnType, typename... Args>
++struct function_traits<ReturnType(Args...)>
++{
++public:
++    enum {
++        value = sizeof...(Args)
++    };
++    using function_type         = ReturnType(*)(Args...);
++    using return_type           = ReturnType;
++    using stl_function_type     = std::function<function_type>;
++    using function_pointer_type = ReturnType(*)(Args...);
++    using lambda_function_type  = ReturnType(*)(Args...);
++
++    using tuple_type = std::tuple<std::remove_cv_t<std::remove_reference_t<Args>>...> ;
++    using bare_tuple_type =  std::tuple<std::remove_const_t<std::remove_reference_t<Args>>...>;
++
++    template<std::size_t N, typename = typename std::enable_if<(N < value)>::type>
++    using args = typename std::tuple_element<N, std::tuple<Args...>>;
++
++    template <std::size_t N>
++    struct arguments
++    {
++        static_assert(N < value, "[error]:invalid parameter index.");
++        using type = typename std::tuple_element<N, std::tuple<Args...>>::type;
++    };
++};
++
++template<typename ReturnType, typename... Args>
++struct function_traits<ReturnType(*)(Args...)> : function_traits<ReturnType(Args...)> {};
++
++template<typename ReturnType, typename... Args>
++struct function_traits<std::function<ReturnType(Args...)>> : function_traits<ReturnType(Args...)> {};
++
++template <typename ReturnType, typename ClassType, typename... Args>
++struct function_traits<ReturnType(ClassType::*)(Args...)> : function_traits<ReturnType(Args...)>{};
++
++template <typename ReturnType, typename ClassType, typename... Args>
++struct function_traits<ReturnType(ClassType::*)(Args...) const> : function_traits<ReturnType(Args...)> {};
++
++template <typename ReturnType, typename ClassType, typename... Args>
++struct function_traits<ReturnType(ClassType::*)(Args...) volatile> : function_traits<ReturnType(Args...)> {};
++
++template <typename ReturnType, typename ClassType, typename... Args>
++struct function_traits<ReturnType(ClassType::*)(Args...) const volatile> : function_traits<ReturnType(Args...)> {};
++
++template<typename Callable>
++struct function_traits : function_traits<decltype(&Callable::operator())> {};
++
++template<typename Function>
++typename function_traits<Function>::stl_function_type
++function_cast(const Function& lambda)
++{
++    return static_cast<typename function_traits<Function>::stl_function_type>(std::forward<Function>(lambda));
++}
++
++template<typename Function>
++typename function_traits<Function>::stl_function_type
++function_cast(Function&& lambda)
++{
++    return static_cast<typename function_traits<Function>::stl_function_type>(lambda);
++}
++
++template<typename Function>
++typename function_traits<Function>::function_pointer_type
++function_cast(const Function& lambda)
++{
++    return static_cast<typename function_traits<Function>::pointer>(lambda);
++}
++
++#endif // FUNCTIONTRAITS_H
+diff --git a/src/plugin.h b/src/plugin.h
+index c2731be..0f417a9 100755
+--- a/src/plugin.h
++++ b/src/plugin.h
+@@ -4,7 +4,9 @@
+ class QMenu;
+ class QsciScintilla;
+ class QWidget;
++class ActorProcessor;
+ 
+ typedef int (*NDD_PROC_MAIN_CALLBACK)(QWidget* parent, const QString& strFileName, std::function<QsciScintilla*()>getCurEdit, NDD_PROC_DATA* procData);
++typedef int (*NDD_PROC_MAIN_V2_CALLBACK)(QWidget* parent, const QString& strFileName,ActorProcessor*processor, NDD_PROC_DATA* procData);
+ 
+ int loadProc(const QString& strDirOut, std::function<void(NDD_PROC_DATA&, QMenu*)> funcallback, QMenu* pUserData);
+diff --git a/src/plugin/CMakeLists.txt b/src/plugin/CMakeLists.txt
+index c9b8d26..8e1db46 100644
+--- a/src/plugin/CMakeLists.txt
++++ b/src/plugin/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-
++﻿
+ option(USE_NOTEPAD_PLUGIN "构建 Notepad-- 内部插件" ON)
+ option(USE_NOTEPAD_PLUGIN_BASE "构建 Notepad-- 内部的插件基础模板" OFF)
+ 
+@@ -19,12 +19,12 @@ if(USE_NOTEPAD_PLUGIN)
+         add_subdirectory(template-plugins/base-secondary-menu-ui-plugin-v1)
+     endif(USE_NOTEPAD_PLUGIN_BASE)
+ 
+-    # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
+-    add_subdirectory(opencc-demo-plugin)
+-    # 一个简单的版本更新检查的插件
+-    add_subdirectory(versionUpdate)
+-    # 一个简单的可二次扩展的插件
+-    add_subdirectory(external-plugin)
++#    # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
++#    add_subdirectory(opencc-demo-plugin)
++#    # 一个简单的版本更新检查的插件
++#    add_subdirectory(versionUpdate)
++#    # 一个简单的可二次扩展的插件
++#    add_subdirectory(external-plugin)
+ 
+     # Linux 可构建的插件
+     if(UNIX AND NOT APPLE)
+@@ -33,6 +33,6 @@ if(USE_NOTEPAD_PLUGIN)
+     endif(UNIX AND NOT APPLE)
+     
+     # TTS 语音合成
+-    add_subdirectory(TTS-plugin)
++    add_subdirectory(filetreeview)
+ 
+ endif(USE_NOTEPAD_PLUGIN)
+diff --git a/src/plugin/filetreeview/CMakeLists.txt b/src/plugin/filetreeview/CMakeLists.txt
+new file mode 100644
+index 0000000..d74905a
+--- /dev/null
++++ b/src/plugin/filetreeview/CMakeLists.txt
+@@ -0,0 +1,74 @@
++set(LOCAL_PLUGIN_NAME "filetreeview")
++
++# TTS-plugin 核心构建
++# 在模块化构建中，这个部分代表着构建 TTS-plugin 插件
++# 1. 默认构建时产出的目标为 TTS-plugin
++# 2. 在此处可对 TTS-plugin 目标进行详细的构建计划
++
++if(TRUE)
++    # 准备构建 TTS-plugin 主程序扩展
++    spark_file_glob(LocalSources
++        ./*.h ./*.cpp ./*.ui
++    )
++    spark_add_library(${LOCAL_PLUGIN_NAME} SHARED ${LocalSources})
++    target_include_directories(${LOCAL_PLUGIN_NAME} PRIVATE
++        ${PROJECT_SOURCE_DIR}/src
++        ${PROJECT_SOURCE_DIR}/src/cceditor
++
++        ${PROJECT_SOURCE_DIR}/src/qscint/src
++        ${PROJECT_SOURCE_DIR}/src/qscint/src/Qsci
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/include
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
++        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
++    )
++    # target_link_libraries(${LOCAL_PLUGIN_NAME} QSci)
++    target_link_QSci(${LOCAL_PLUGIN_NAME})
++    if(USE_QT6)
++        # target_link_qt6_Core5Compat(${LOCAL_PLUGIN_NAME})   # 兼容性: Qt6 可使用 Core5Compat 少量更改 Qt5 部分
++        # target_link_qt6_PrintSupport(${LOCAL_PLUGIN_NAME})
++        # target_link_qt6_XmlPatterns(${LOCAL_PLUGIN_NAME}) # Bug 初期配置时无此依赖要求
++    else()
++        # target_link_qt5_PrintSupport(${LOCAL_PLUGIN_NAME})
++        # target_link_qt5_XmlPatterns(${LOCAL_PLUGIN_NAME})
++    endif(USE_QT6)
++
++    # 确保生成到 Notepad-- 的相对 plugin 目录下
++    set_target_properties(${LOCAL_PLUGIN_NAME}
++        PROPERTIES
++            RUNTIME_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin
++            LIBRARY_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin
++            ARCHIVE_OUTPUT_DIRECTORY $<TARGET_FILE_DIR:${PROJECT_NAME}>/plugin)
++
++    # 控制是否安装到 bin/plugin 而各种配方之下，每个位置或许都不一样(特别是 Linux)
++    # install(TARGETS ${LOCAL_PLUGIN_NAME} DESTINATION bin/plugin)
++endif(TRUE)
++
++
++# ----------------- TTS-plugin 构建宏支持相关  ----------------- #
++
++if(WIN32 AND NOTEPAD_BUILD_BY_SHARED)
++    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
++    target_compile_definitions(${LOCAL_PLUGIN_NAME}
++        PRIVATE
++            NOTEPAD_PLUGIN_MANAGER
++            QSCINTILLA_DLL  # 目前在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
++                            # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
++    )
++else()
++    # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
++    target_compile_definitions(${LOCAL_PLUGIN_NAME}
++    PRIVATE
++        NOTEPAD_PLUGIN_MANAGER
++        # QSCINTILLA_DLL # 目前在 Windows 中使用 QSci 库时应该采用 Q_DECL_IMPORT
++                         # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
++    )
++endif(WIN32 AND NOTEPAD_BUILD_BY_SHARED)
++
++if(UNIX)
++    # 默认在 Unix/Linux 中仅需要定义一个内部插件宏管理器
++    target_compile_definitions(${LOCAL_PLUGIN_NAME}
++        PRIVATE
++            NOTEPAD_PLUGIN_MANAGER
++    )
++endif(UNIX)
+diff --git a/src/plugin/filetreeview/abstractfile.cpp b/src/plugin/filetreeview/abstractfile.cpp
+new file mode 100644
+index 0000000..9b8673f
+--- /dev/null
++++ b/src/plugin/filetreeview/abstractfile.cpp
+@@ -0,0 +1,6 @@
++#include "abstractfile.h"
++
++AbstractFile::AbstractFile()
++{
++
++}
+diff --git a/src/plugin/filetreeview/abstractfile.h b/src/plugin/filetreeview/abstractfile.h
+new file mode 100644
+index 0000000..94ae7dc
+--- /dev/null
++++ b/src/plugin/filetreeview/abstractfile.h
+@@ -0,0 +1,11 @@
++#ifndef ABSTRACTFILE_H
++#define ABSTRACTFILE_H
++
++
++class AbstractFile
++{
++public:
++    AbstractFile();
++};
++
++#endif // ABSTRACTFILE_H
+diff --git a/src/plugin/filetreeview/actor.h b/src/plugin/filetreeview/actor.h
+new file mode 100644
+index 0000000..d3901a2
+--- /dev/null
++++ b/src/plugin/filetreeview/actor.h
+@@ -0,0 +1,120 @@
++#pragma once
++#include <cstdint>
++#include <string>
++#include <memory>
++#include <tuple>
++#include <functional>
++
++#include "functiontraits.h"
++
++/**
++ * @brief Actor class, which encapsulates the event model
++ * @note enable_shared_from_this allows us to get safe Pointers internally
++ */
++class Actor : public std::enable_shared_from_this<Actor>
++{
++public:
++    using Ptr = std::shared_ptr<Actor>;
++    using FunctionWapper = std::function<void(void*, void*)>;
++
++public:
++    Actor(){}
++    ~Actor(){}
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename Function>
++    void registerFunction(Function&& function_any) noexcept
++    {
++        m_invokeFunctionWapper =  { std::bind(&invoker<Function>::apply, function_any,  std::placeholders::_1, std::placeholders::_2) };
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename ... Args>
++    void invoke(Args&& ... args) const noexcept
++    {
++        auto args_tuple = std::make_tuple(std::forward<Args>(args)...);
++        m_invokeFunctionWapper(&args_tuple, nullptr);
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename R, typename ... Args>
++    R invoke(Args&& ...args) const
++    {
++        using tuple_args_type = std::tuple<Args...>;
++        char data[sizeof(tuple_args_type)];
++        std::tuple<Args...>* tuples_pointer = new (data) tuple_args_type;
++
++        *tuples_pointer = std::make_tuple(std::forward<Args>(args)...);
++
++        R return_value;
++        m_invokeFunctionWapper(tuples_pointer, &return_value);
++        return return_value;
++    }
++
++    Ptr getSharedPtr()
++    {
++        return shared_from_this();
++    }
++
++public:
++    /**
++    * @brief This struct encapsulates a function,
++    * essentially storing the return value and parameters in two variables
++    * which can unify the way the function is stored.
++    */
++    template<typename Function>
++    struct invoker
++    {
++        /**
++         * @brief
++         */
++        static inline void apply(const Function& func, void* bl, void* result)
++        {
++            using tuple_type = typename function_traits<Function>::tuple_type;
++            const tuple_type* tp = static_cast<tuple_type*>(bl);
++            call(func, *tp, result);
++        }
++
++        /**
++         * @brief
++         */
++        template<typename F, typename ... Args>
++        static typename std::enable_if<std::is_void<typename std::result_of<F(Args...)>::type>::value>::type
++        call(const F& f, const std::tuple<Args...>& tp, void*)
++        {
++            call_helper(f, std::make_index_sequence<sizeof... (Args)>{}, tp);
++        }
++
++        /**
++         * @brief
++         */
++        template<typename F, typename ... Args>
++        static typename std::enable_if<!std::is_void<typename std::result_of<F(Args...)>::type>::value>::type
++        call(const F& f, const std::tuple<Args...>& tp, void* result)
++        {
++            auto r = call_helper(f, std::make_index_sequence<sizeof... (Args)>{}, tp);
++            *(decltype(r)*)result = r;
++        }
++
++        /**
++        * @brief
++        */
++        template<typename F, size_t... I, typename ... Args>
++        static auto call_helper(const F& f, const std::index_sequence<I...>& h, const std::tuple<Args...>& tup)
++        {
++            return f(std::get<I>(tup)...);
++        }
++    };
++private:
++    /**
++    * @note m_invokeFunctions is an anonymous lamba expression that encapsulates a function
++    * Functions include Lamba expressions, member functions, funtor, ordinary functions, and function Pointers
++    */
++    FunctionWapper m_invokeFunctionWapper;
++};
+diff --git a/src/plugin/filetreeview/actorprocessor.cpp b/src/plugin/filetreeview/actorprocessor.cpp
+new file mode 100644
+index 0000000..099d1f6
+--- /dev/null
++++ b/src/plugin/filetreeview/actorprocessor.cpp
+@@ -0,0 +1,67 @@
++#include "actorprocessor.h"
++ActorProcessor::ActorProcessor():
++    m_actorMap(new std::unordered_map<std::string, Actor*>)
++{}
++
++/**
++ * @brief
++ */
++ActorProcessor::~ActorProcessor()
++{
++    for (auto& item : (*m_actorMap))
++    {
++        if(item.second != nullptr)
++            delete item.second;
++    }
++    if (m_actorMap)
++        delete m_actorMap;
++}
++
++/**
++ * @brief
++ */
++void ActorProcessor::registerActor(const std::string &route, Actor *actor)
++{
++    m_actorMap->insert(std::make_pair(route,actor));
++}
++
++/**
++ * @brief
++ */
++void ActorProcessor::removeActor(const std::string &route)
++{
++    auto iter = (*m_actorMap).find(route);
++    if(iter != m_actorMap->end())
++    {
++        m_actorMap->erase(route);
++        delete iter->second;
++    }
++}
++
++/**
++ * @brief
++ */
++Actor *ActorProcessor::findActor(const std::string &route)
++{
++    auto iter = (*m_actorMap).find(route);
++    if(iter != m_actorMap->end())
++    {
++        return (*m_actorMap)[route];
++    }
++    return nullptr;
++}
++
++/**
++ * @brief
++ */
++bool ActorProcessor::resetActor(const std::string &route, Actor *actor)
++{
++    auto iter = (*m_actorMap).find(route);
++    if(iter != m_actorMap->end())
++    {
++        m_actorMap->erase(route);
++        delete iter->second;
++        return true;
++    }
++    return false;
++}
+diff --git a/src/plugin/filetreeview/actorprocessor.h b/src/plugin/filetreeview/actorprocessor.h
+new file mode 100644
+index 0000000..d057e6d
+--- /dev/null
++++ b/src/plugin/filetreeview/actorprocessor.h
+@@ -0,0 +1,66 @@
++#ifndef EVENTPROCESSOR_H
++#define EVENTPROCESSOR_H
++
++#include <string>
++#include <functional>
++#include <map>
++#include <iostream>
++#include <unordered_map>
++#include "actor.h"
++
++class  ActorProcessor
++{
++public:
++    ActorProcessor();
++    ~ActorProcessor();
++public:
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename ... Args>
++    void invoke(const std::string& route,Args&& ... args) const noexcept
++    {
++        if (m_actorMap->find(route) != m_actorMap->end())
++            (*m_actorMap)[route]->invoke(std::forward<Args>(args)...);
++    }
++
++    /**
++    * @brief Register the callback function and construct the anonymous function with std::bind
++    */
++    template<typename R, typename ... Args>
++    R invoke(const std::string& route,Args&& ...args) const
++    {
++        if (m_actorMap->find(route) != m_actorMap->end())
++            return (*m_actorMap)[route]->invoke(std::forward<Args>(args)...);
++        return nullptr;
++    }
++
++    /**
++    * @brief 注册一个actor，其中route是唯一的
++    */
++    void registerActor(const std::string& route, Actor*actor);
++
++    /**
++    * @brief 删除一个actor
++    */
++    void removeActor(const std::string& route);
++
++    /**
++    * @brief 查找一个actor， 返回其指针
++    */
++    Actor* findActor(const std::string& route);
++
++    /**
++    * @brief 重置一个actor，注意原有的actor会被删除
++    */
++    bool resetActor(const std::string& route,Actor*actor);
++
++private:
++    std::unordered_map<std::string, Actor*>* m_actorMap;
++private:
++    ActorProcessor(ActorProcessor&&)=delete;
++    ActorProcessor& operator=(const ActorProcessor&)=delete;
++};
++
++#endif // EVENTPROCESSOR_H
+diff --git a/src/plugin/filetreeview/filesystemmodel.cpp b/src/plugin/filetreeview/filesystemmodel.cpp
+new file mode 100644
+index 0000000..5b825b5
+--- /dev/null
++++ b/src/plugin/filetreeview/filesystemmodel.cpp
+@@ -0,0 +1,526 @@
++﻿#include "filesystemmodel.h"
++
++#include <QFileInfo>
++#include <QDir>
++#include <QIcon>
++#include <QFont>
++#include <QFileIconProvider>
++#include <QFileSystemWatcher>
++#include <QMutexLocker>
++#include <QDebug>
++
++FileNode::FileNode(FileSystemModel *model) :
++    m_model(model),
++    m_parent(0),
++    m_children(0),
++    m_bWatcher(false)
++{
++
++}
++
++FileNode::FileNode(FileSystemModel *model, const QString &path, FileNode *parent) :
++    m_model(model),
++    m_parent(parent),
++    m_children(0),
++    m_path(path),
++    m_bWatcher(false)
++{
++    QFileInfo info(path);
++    if (m_model->isRootPathNodeFillPath() && parent && parent->getNodeParent() == 0) {
++        m_text = QDir::toNativeSeparators(info.filePath());
++    } else {
++        m_text = info.fileName();
++    }
++}
++
++FileNode::~FileNode()
++{
++    clear();
++    if (m_children) {
++        delete m_children;
++    }
++    if (m_bWatcher)  {
++        m_model->removeWatcher(m_path);
++    }
++}
++
++QList<FileNode*>* FileNode::getChildrenList()
++{
++    if (m_children == 0) {
++        m_children = new QList<FileNode*>();
++        if (!m_path.isEmpty()) {
++            QFileInfo info(m_path);
++            if (info.isDir()) {
++                QDir dir(m_path);
++                foreach(QFileInfo childInfo, dir.entryInfoList(this->m_model->filter(),this->m_model->dirSort())) {
++                    if (!this->m_model->isShowHideFiles() && childInfo.isDir() && childInfo.fileName().startsWith(".")) {
++                       continue;
++                    }
++                    m_children->append(new FileNode(this->m_model,childInfo.filePath(),this));
++                }
++            }
++       }
++       if (!m_children->isEmpty() && !m_bWatcher) {
++           m_bWatcher = true;
++           m_model->addWatcher(m_path);
++       }
++    }
++    return m_children;
++}
++
++FileNode* FileNode::getNodeParent()
++{
++    return m_parent;
++}
++
++FileNode* FileNode::getChild(int row)
++{
++    return getChildrenList()->at(row);
++}
++
++int FileNode::childCount()
++{
++    return getChildrenList()->count();
++}
++
++int FileNode::row() const
++{
++    if (m_parent) {
++       return m_parent->getChildrenList()->indexOf(const_cast<FileNode*>(this));
++    }
++    return 0;
++}
++
++QString FileNode::getNodePath() const
++{
++    return m_path;
++}
++
++QString FileNode::text() const
++{
++    return m_text;
++}
++
++bool FileNode::isDir() const
++{
++    return QFileInfo(m_path).isDir();
++}
++
++bool FileNode::isFile() const
++{
++    return QFileInfo(m_path).isFile();
++}
++
++QFileInfo FileNode::getFileInformation() const
++{
++    return QFileInfo(m_path);
++}
++
++bool FileNode::isExist() const
++{
++    return QFileInfo(m_path).exists();
++}
++
++void FileNode::clear()
++{
++    if (m_children) {
++        qDeleteAll(m_children->begin(),m_children->end());
++        m_children->clear();
++    }
++}
++
++void FileNode::reload()
++{
++    clear();
++    if (m_children == 0) {
++        m_children = new QList<FileNode*>();
++    }
++    if (!m_path.isEmpty()) {
++        QFileInfo info(m_path);
++        if (info.isDir()) {
++            QDir dir(m_path);
++            foreach(QFileInfo childInfo, dir.entryInfoList(this->m_model->filter(),this->m_model->dirSort())) {
++                if (!this->m_model->isShowHideFiles() && childInfo.isDir() && childInfo.fileName().startsWith(".")) {
++                   continue;
++                }
++                m_children->append(new FileNode(this->m_model,childInfo.filePath(),this));
++            }
++        }
++    }
++    if (!m_children->isEmpty() && !m_bWatcher) {
++        m_bWatcher = true;
++        m_model->addWatcher(m_path);
++    }
++}
++
++FileNode *FileNode::findPath(const QString &path)
++{
++    if (!path.startsWith(m_path)) {
++        return 0;
++    }
++    if (path == m_path) {
++        return this;
++    }
++    QStringList nameList = path.right(path.length()-m_path.length()).split("/",QString::SkipEmptyParts);
++    FileNode *parent = this;
++    bool find = false;
++    foreach (QString name,nameList) {
++        find = false;
++        QList<FileNode*>* chilren = parent->getChildrenList();
++        for (int i = 0; i < chilren->count(); i++) {
++            FileNode *node = chilren->at(i);
++            if (!node->isDir()) {
++                continue;
++            }
++            if (node->m_text == name) {
++                parent = node;
++                find = true;
++                break;
++            }
++        }
++        if (!find) {
++            return 0;
++        }
++    }
++    return parent;
++}
++
++FileSystemModel::FileSystemModel(QObject *parent) :
++    QAbstractItemModel(parent),
++    m_rootNode(new FileNode(this)),
++    m_iconProvider(new QFileIconProvider),
++    m_fileWatcher(0)
++{
++    m_dirFilter = QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot;
++    m_sorts = QDir::DirsFirst | QDir::Name | QDir::IgnoreCase;// | QDir::Type;
++   // connect(m_fileWatcher,SIGNAL(directoryChanged(QString)),this,SLOT(directoryChanged(QString)));
++}
++
++FileSystemModel::~FileSystemModel()
++{
++    delete m_rootNode;
++    delete m_iconProvider;
++    if (m_fileWatcher) {
++        delete m_fileWatcher;
++    }
++}
++
++void FileSystemModel::reloadDirectory(const QString &path)
++{
++    this->beginResetModel();
++    QDir dir(path);
++    bool b = dir.exists();
++    if (!b) {
++        m_fileWatcher->removePath(path);
++    }
++    foreach(QModelIndex index,this->findPaths(path)) {
++        FileNode *node = nodeFromIndex(index);
++        if (b) {
++            node->reload();
++        } else {
++            FileNode *parent = node->getNodeParent();
++            if (parent) {
++                parent->reload();
++            }
++        }
++    }
++    this->endResetModel();
++}
++
++FileNode *FileSystemModel::nodeFromIndex(const QModelIndex &index) const
++{
++    if (index.isValid()) {
++        return static_cast<FileNode*>(index.internalPointer());
++    }
++    return m_rootNode;
++}
++
++void FileSystemModel::setStartIndex(const QModelIndex &index)
++{
++    m_startPath = filePath(index);
++}
++
++void FileSystemModel::setStartPath(const QString &path)
++{
++    m_startPath = path;
++}
++
++QModelIndex FileSystemModel::startIndex() const
++{
++    return findPath(m_startPath);
++}
++
++QString FileSystemModel::startPath() const
++{
++    return m_startPath;
++}
++
++QString FileSystemModel::filePath(const QModelIndex &index) const
++{
++    return nodeFromIndex(index)->getNodePath();
++}
++
++void FileSystemModel::setFilter(QDir::Filters filters)
++{
++    if (m_dirFilter != filters) {
++        m_dirFilter = filters;
++        this->reload();
++    }
++}
++
++void FileSystemModel::setDirSort(QDir::SortFlags flags)
++{
++    if (m_sorts != flags) {
++        m_sorts = flags;
++        this->reload();
++    }
++}
++
++QDir::Filters FileSystemModel::filter() const
++{
++    return m_dirFilter;
++}
++
++bool FileSystemModel::isShowHideFiles() const
++{
++    return m_dirFilter & QDir::Hidden;
++}
++
++QDir::SortFlags FileSystemModel::dirSort() const
++{
++    return m_sorts;
++}
++
++void FileSystemModel::clear()
++{
++    this->beginResetModel();
++    m_rootNode->clear();
++    m_pathList.clear();
++    m_startPath.clear();
++    this->endResetModel();
++}
++
++void FileSystemModel::reload()
++{
++    this->setRootPathList(this->rootPathList());
++}
++
++void FileSystemModel::setRootPath(const QString &path)
++{
++    this->setRootPathList(QStringList() << path);
++}
++
++bool FileSystemModel::removeRootPath(const QString &path)
++{
++    QString pathName = QDir::fromNativeSeparators(path);
++    FileNode *node = 0;
++    int index = -1;
++    for (int i = 0; i < m_rootNode->childCount(); i++) {
++        node = m_rootNode->getChildrenList()->at(i);
++        if (node && (node->getNodePath() == pathName)) {
++            index = i;
++            break;
++        }
++    }
++    if (index == -1) {
++        return false;
++    }
++    if (!m_pathList.removeAll(pathName)) {
++        return false;
++    }
++    this->beginRemoveRows(QModelIndex(),index,index);
++    m_rootNode->getChildrenList()->removeAt(index);
++    delete node;
++    this->endRemoveRows();
++    return true;
++}
++
++
++bool FileSystemModel::addRootPath(const QString &path)
++{
++    QString pathName = QDir::fromNativeSeparators(QDir::cleanPath(path));
++    if (m_pathList.contains(pathName)) {
++        return false;
++    }
++    this->beginInsertRows(QModelIndex(),m_rootNode->childCount(),m_rootNode->childCount());
++    m_pathList.append(pathName);
++    m_rootNode->getChildrenList()->append(new FileNode(this,pathName,m_rootNode));
++    this->endInsertRows();
++    return true;
++}
++
++void FileSystemModel::setRootPathList(const QStringList &pathList)
++{
++    this->beginResetModel();
++    m_rootNode->clear();
++    m_fileWatcherMap.clear();
++    m_pathList.clear();
++    if (m_fileWatcher) {
++        disconnect(m_fileWatcher,0);
++        delete m_fileWatcher;
++    }
++    m_fileWatcher = new QFileSystemWatcher;
++    connect(m_fileWatcher,SIGNAL(directoryChanged(QString)),this,SIGNAL(direcotryChanged(QString)));
++
++    foreach (QString path, pathList) {
++        m_pathList.append(QDir::fromNativeSeparators(QDir::cleanPath(path)));
++    }
++    m_pathList.removeDuplicates();
++
++    foreach(QString path, m_pathList) {
++        m_rootNode->getChildrenList()->append(new FileNode(this,path,m_rootNode));
++    }
++
++    if (m_startPath.isEmpty() && !pathList.isEmpty()) {
++        m_startPath = pathList.first();
++    }
++
++    this->endResetModel();
++}
++
++QStringList FileSystemModel::rootPathList() const
++{
++    return m_pathList;
++}
++
++QModelIndex FileSystemModel::findPathHelper(const QString &path, const QModelIndex &parentIndex) const
++{
++    FileNode *node = nodeFromIndex(parentIndex);
++    if (!path.startsWith(node->getNodePath())) {
++        return QModelIndex();
++    }
++    if (path == node->getNodePath()) {
++        return parentIndex;
++    }
++    QStringList nameList = path.right(path.length()-node->getNodePath().length()).split("/",QString::SkipEmptyParts);
++    QModelIndex parent = parentIndex;
++    bool find = false;
++    int count = nameList.count();
++    for (int i = 0; i < count; i++) {
++        find = false;
++        for (int j = 0; j < this->rowCount(parent); j++) {
++            QModelIndex index = this->index(j,0,parent);
++            FileNode *node = nodeFromIndex(index);
++            if ( ( (i == count-1) || node->isDir()) && node->text() == nameList.at(i)) {
++                parent = index;
++                find = true;
++                break;
++            }
++        }
++        if (!find) {
++            return QModelIndex();
++        }
++    }
++    return parent;
++}
++
++QList<QModelIndex> FileSystemModel::findPaths(const QString &path) const
++{
++    QList<QModelIndex> list;
++    QString cpath = QDir::fromNativeSeparators(QDir::cleanPath(path));
++    for (int i = 0; i < this->rowCount(); i++) {
++        QModelIndex find = findPathHelper(cpath,this->index(i,0));
++        if (find.isValid()) {
++            list.append(find);
++        }
++     }
++    return list;
++}
++
++QModelIndex FileSystemModel::findPath(const QString &path) const
++{
++    QList<QModelIndex> list = this->findPaths(path);
++    if (!list.isEmpty()) {
++        return list.last();
++    }
++    return QModelIndex();
++}
++
++int FileSystemModel::rowCount(const QModelIndex &parent) const
++{
++    FileNode *node = nodeFromIndex(parent);
++    return node->childCount();
++}
++
++int FileSystemModel::columnCount(const QModelIndex&) const
++{
++    return 1;
++}
++
++QModelIndex FileSystemModel::parent(const QModelIndex &child) const
++{
++    FileNode *node = nodeFromIndex(child);
++    FileNode *parent = node->getNodeParent();
++    if (parent == m_rootNode) {
++        return QModelIndex();
++    }
++    return createIndex(parent->row(),0,parent);
++}
++
++QModelIndex FileSystemModel::index(int row, int column,const QModelIndex &parent) const
++{
++    if (!hasIndex(row,column,parent))
++        return QModelIndex();
++    FileNode *node = nodeFromIndex(parent);
++    return createIndex(row,column,node->getChild(row));
++}
++
++QVariant FileSystemModel::data(const QModelIndex &index, int role) const
++{
++    FileNode *node = nodeFromIndex(index);
++    if (!node) {
++        return QVariant();
++    }
++    switch(role) {
++    case Qt::DisplayRole:
++        return node->text();
++    case Qt::ToolTipRole:
++        return QDir::toNativeSeparators(node->getNodePath());
++    case Qt::DecorationRole:
++        return m_iconProvider->icon(node->getFileInformation());
++/*
++    case Qt::FontRole: {
++        QFont font;
++        if (node->path() == m_startPath) {
++            font.setBold(true);
++        }
++        return font;
++    }
++*/
++    }
++    return QVariant();
++}
++
++bool FileSystemModel::isRootPathNode(FileNode *node) const
++{
++    return node->getNodeParent() == m_rootNode;
++}
++
++bool FileSystemModel::isRootPathNodeFillPath() const
++{
++    return false;
++}
++
++void FileSystemModel::addWatcher(const QString &path)
++{
++    QMutexLocker _(&m_mutex);
++    QString cpath = QDir::fromNativeSeparators(QDir::cleanPath(path));
++    int value = m_fileWatcherMap[cpath];
++    value++;
++    m_fileWatcherMap[cpath] = value;
++    if (value > 1) {
++        return;
++    }
++    m_fileWatcher->addPath(path);
++}
++void FileSystemModel::removeWatcher(const QString &path)
++{
++    QMutexLocker _(&m_mutex);
++    QString cpath = QDir::fromNativeSeparators(QDir::cleanPath(path));
++    int value = m_fileWatcherMap[cpath];
++    value--;
++    m_fileWatcherMap[cpath] = value;
++    if (value == 0) {
++        m_fileWatcher->removePath(cpath);
++    }
++}
+diff --git a/src/plugin/filetreeview/filesystemmodel.h b/src/plugin/filetreeview/filesystemmodel.h
+new file mode 100644
+index 0000000..f8816f8
+--- /dev/null
++++ b/src/plugin/filetreeview/filesystemmodel.h
+@@ -0,0 +1,193 @@
++﻿#ifndef FILESYSTEMMODEL_H
++#define FILESYSTEMMODEL_H
++
++#include <QAbstractItemModel>
++#include <QStringList>
++#include <QIcon>
++#include <QFileInfo>
++#include <QDir>
++#include <QMutex>
++
++class FileSystemModel;
++class QFileSystemWatcher;
++
++class QFileIconProvider;
++class QFileSystemWatcher;
++class QTreeView;
++
++class FileNode
++{
++public:
++
++    FileNode(FileSystemModel *model);
++    FileNode(FileSystemModel *model,const QString &path, FileNode *parent);
++    virtual ~FileNode();
++
++    // 返回父节点
++    FileNode* getNodeParent(); 	
++
++    // 按照index返回
++    FileNode* getChild(int row);    
++
++    //! returns the number of children this node has.
++    int childCount();   
++
++    //! returns the row number of this node.
++    int row() const;    			
++
++    //! returns a list of all the children of this node. The list will be empty if this node has no children.
++    QList<FileNode*>* getChildrenList();  
++
++    //! returns the path of this node.
++    QString getNodePath() const;   
++
++    //! returns the text of this node.
++    QString text() const;   		
++
++    //! returns the QFileInfo for this node.
++    QFileInfo getFileInformation() const;  
++
++    //! returns true if this node exists on the file system.
++    bool isExist() const;   	
++
++    //! returns true if this node is a directory.
++    bool isDir() const; 
++
++    //! returns true if this node is a file.
++    bool isFile() const;  
++
++    //! clears this node.
++    void clear();   			
++
++    //! recreates the node from the file system.
++    void reload();  		
++
++    //! returns the node for the path specified.
++    FileNode *findPath(const QString &path);    
++
++protected:
++
++    //! The FileSystemModel is a QAbstractItemModel that provides a hierarchical view of the file system.
++    FileSystemModel *m_model;
++
++    //! The FileNode is a node in the tree of FileNodes.
++    FileNode *m_parent;
++
++    //! The list of FileNodes.
++    QList<FileNode*> *m_children;
++
++    //! The path of the FileNode.
++    QString m_path;
++
++    //! The text of the FileNode.
++    QString m_text;
++
++    //!< true if this node is being watched.  If so, the model will watch the node and will need to be manually updated.
++    bool    m_bWatcher;
++};
++
++class FileSystemModel : public QAbstractItemModel
++{
++    Q_OBJECT
++public:
++    explicit FileSystemModel(QObject *parent = 0);
++
++    ~FileSystemModel();
++
++    void clear();
++
++    void reload();
++
++    void setFilter(QDir::Filters filters);
++
++    void setDirSort(QDir::SortFlags flags);
++
++    QDir::Filters filter() const;
++
++    bool isShowHideFiles() const;
++
++    QDir::SortFlags dirSort() const;
++
++    bool removeRootPath(const QString &path);
++
++    bool addRootPath(const QString &path);
++
++    void setRootPathList(const QStringList &pathList);
++
++    void setRootPath(const QString &path);
++
++    QStringList rootPathList() const;
++
++    QList<QModelIndex> findPaths(const QString &path) const;
++
++    QModelIndex findPath(const QString &path) const;
++
++    QString filePath(const QModelIndex &index) const;
++
++    FileNode *nodeFromIndex(const QModelIndex &index) const;
++
++    void setStartIndex(const QModelIndex &index);
++
++    void setStartPath(const QString &path);
++
++    QModelIndex startIndex() const;
++
++    QString startPath() const;
++
++    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
++
++    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
++
++    virtual QModelIndex parent(const QModelIndex &child) const;
++
++    virtual QModelIndex index(int row, int column,const QModelIndex &parent = QModelIndex()) const;
++
++    virtual QVariant data(const QModelIndex &index, int role) const;
++
++    bool isRootPathNode(FileNode *node) const;
++
++    bool isRootPathNodeFillPath() const;
++
++    void addWatcher(const QString &path);
++
++    void removeWatcher(const QString &path);
++signals:
++    void direcotryChanged(QString);
++public slots:
++    void reloadDirectory(const QString &path);
++protected:
++    //! Finds the node at the given \a path in the model.
++    QModelIndex findPathHelper(const QString &path, const QModelIndex &parentIndex) const;
++
++    //! The list of paths that are currently being watched.
++    QStringList m_pathList;
++
++    //! The root node of the model.
++    FileNode  *m_rootNode;
++
++    //! The path to the directory to watch.
++    QString   m_startPath;
++
++    //! The file icon provider.
++    QFileIconProvider *m_iconProvider;
++
++    //! The file system watcher.
++    QFileSystemWatcher *m_fileWatcher;
++
++    //! A map of watched files and their watcher indices.
++    QMap<QString,int> m_fileWatcherMap;
++
++    //! The tree view.
++    QTreeView *m_treeView;
++
++    //! The filters to apply to the directory.
++    QDir::Filters m_dirFilter;
++
++    //! The sort order to apply to the directory.
++    QDir::SortFlags m_sorts;
++
++    //! The mutex to protect the model.
++    QMutex m_mutex;
++};
++
++#endif // FILESYSTEMMODEL_H
+diff --git a/src/plugin/filetreeview/filetreeview.cpp b/src/plugin/filetreeview/filetreeview.cpp
+new file mode 100644
+index 0000000..a1afb12
+--- /dev/null
++++ b/src/plugin/filetreeview/filetreeview.cpp
+@@ -0,0 +1,195 @@
++﻿/**
++ ** This file is part of the NoteBook project.
++ ** Copyright 2022 ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
++#include "filetreeview.h"
++
++#include <QTreeView>
++#include <QJsonObject>
++#include <QFileDialog>
++#include <QMenu>
++#include <QApplication>
++#include <QMessageBox>
++#include <QProcess>
++
++#include"actorprocessor.h"
++#include "filesystemmodel.h"
++
++class FileTreeViewPrivate
++{
++public:
++    FileTreeViewPrivate(FileTreeView *parent):
++        q_ptr(parent)
++    {}
++
++public:
++    ActorProcessor* m_processor;
++    QMenu*  m_fileMenu;
++    QMenu*  m_dirMenu;
++    QWidget* m_notepadWidget;
++
++private:
++    FileTreeView * const q_ptr;
++    Q_DECLARE_PUBLIC(FileTreeView);
++};
++
++FileTreeView::FileTreeView(QWidget *parent):
++    d_ptr(new FileTreeViewPrivate(this)),
++    QTreeView(parent)
++{
++    bindAction();
++    setContextMenuPolicy(Qt::CustomContextMenu);
++    connect(this, SIGNAL(doubleClicked(QModelIndex)),this, SLOT(slotDoubleCliecked(QModelIndex)));
++    connect(this,SIGNAL(customContextMenuRequested(const QPoint &)),this, SLOT(slotCustomContextMenu(const QPoint &)));
++}
++
++FileTreeView::~FileTreeView()
++{}
++
++void FileTreeView::onNewWorkspaceItem(bool)
++{
++    QString srcDirPath = QFileDialog::getExistingDirectory(
++                   this, "choose src Directory",
++                    "/");
++    if (srcDirPath.isEmpty()){
++        return;
++    }
++    FileSystemModel* model = static_cast<FileSystemModel*> (this->model());
++    model->addRootPath(srcDirPath);
++    model->reload();
++    this->update();
++}
++
++void FileTreeView::slotCustomContextMenu(const QPoint & pos)
++{
++    Q_D(FileTreeView);
++    auto model = static_cast<FileSystemModel*>(this->model());
++    auto index= this->indexAt(pos);
++    if (model->nodeFromIndex(index)->isDir()){
++        d->m_dirMenu->exec(QCursor::pos());
++    }
++    else {
++        d->m_fileMenu->exec(QCursor::pos());
++    }
++}
++
++void FileTreeView::slotTerminal(bool)
++{
++}
++
++void FileTreeView::slotNewFile(bool)
++{
++    
++}
++
++void FileTreeView::slotRemoveFile(bool)
++{
++}
++
++void FileTreeView::slotAddDir(bool)
++{
++    
++}
++
++void FileTreeView::slotRemoveDir(bool)
++{
++    Q_D(FileTreeView);
++    auto model = static_cast<FileSystemModel*>(this->model());
++    auto index= this->currentIndex();
++    if (model->nodeFromIndex(index)->isDir()){
++        (d->m_dirMenu)->exec(QCursor::pos());
++    }
++    else {
++        (d->m_fileMenu)->exec(QCursor::pos());
++    }
++}
++
++void FileTreeView::slotupdateDir(bool)
++{
++    auto model = static_cast<FileSystemModel*>(this->model());
++    auto index= this->currentIndex();
++    if (model->nodeFromIndex(index)->isDir()){
++        model->reloadDirectory(model->nodeFromIndex(index)->getNodePath());
++    }
++}
++
++void FileTreeView::initMenuFile(QMenu *menu)
++{
++    Q_D(FileTreeView);
++    d->m_fileMenu = menu;
++}
++
++void FileTreeView::initDirMenu(QMenu *menu)
++{
++    Q_D(FileTreeView);
++    d->m_dirMenu = menu;
++}
++
++void FileTreeView::bindAction()
++{
++    Q_D(FileTreeView);
++    QMenu* fileTreeMenu  = new QMenu("menu",this);
++    QMenu* dirTreeMenu  = new QMenu("file",this);
++
++    QAction *fileRename =           new QAction(tr("Rename"),fileTreeMenu);
++    QAction *fileDelete =           new QAction(tr("Delete"),fileTreeMenu);
++    QAction *fileOpenInExporter =   new QAction(tr("OpenInExporter"),fileTreeMenu);
++
++    QAction *removeDir =            new QAction(tr("Remove Dir"),dirTreeMenu);
++    QAction *update =               new QAction(tr("Update"),dirTreeMenu);
++    QAction *fold =                 new QAction(tr("Fold Dir"),dirTreeMenu);
++    QAction *unfold =               new QAction(tr("Unfold Dir"),dirTreeMenu);
++    QAction *terminal =             new QAction(tr("terminal"));
++
++    d->m_dirMenu = dirTreeMenu;
++    d->m_dirMenu->addActions({removeDir,update,fold,unfold,terminal});
++    d->m_fileMenu = fileTreeMenu;
++    d->m_fileMenu->addActions({fileRename,fileDelete,fileOpenInExporter,terminal});
++}
++
++void FileTreeView::setActorProcessor(ActorProcessor *processor)
++{
++    Q_D(FileTreeView);
++    d->m_processor = processor;
++}
++
++void FileTreeView::setMainWindow(QWidget *notepadWidget)
++{
++    Q_D(FileTreeView);
++    d->m_notepadWidget = notepadWidget;
++}
++
++
++
++void FileTreeView::slotCliecked(const QModelIndex &index)
++{
++}
++
++void FileTreeView::slotDoubleCliecked(const QModelIndex &index)
++{
++    Q_D(FileTreeView);
++    auto model = static_cast<FileSystemModel*>(this->model());
++    if (model->nodeFromIndex(index)->isDir()){
++    }
++    else {
++        d->m_processor->invoke("openFile",model->nodeFromIndex(index)->getNodePath(),-1);
++    }
++}
++
++
++
++
+diff --git a/src/plugin/filetreeview/filetreeview.h b/src/plugin/filetreeview/filetreeview.h
+new file mode 100644
+index 0000000..0a0e5e1
+--- /dev/null
++++ b/src/plugin/filetreeview/filetreeview.h
+@@ -0,0 +1,73 @@
++﻿/**
++ ** This file is part of the NoteBook project.
++ ** Copyright 2022 ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
++
++#ifndef WORKSPACE_H
++#define WORKSPACE_H
++
++#include <QObject>
++#include <QTreeView>
++
++class QModelIndex;
++class QWidget;
++class QMenu;
++class ActorProcessor;
++
++class FileTreeViewPrivate;
++
++class  FileTreeView : public QTreeView
++{
++    Q_OBJECT
++public:
++    FileTreeView(QWidget* parent = nullptr);
++
++    ~FileTreeView();
++
++    void initMenuFile(QMenu*);
++    void initDirMenu(QMenu*);
++
++    void bindAction();
++    void setActorProcessor(ActorProcessor*processor);
++
++    void setMainWindow(QWidget* notepadWidget);
++
++public slots:
++    void onNewWorkspaceItem(bool);
++    void slotCliecked(const QModelIndex &);
++    void slotDoubleCliecked(const QModelIndex &);
++    void slotCustomContextMenu(const QPoint &);
++    void slotTerminal(bool);
++    void slotNewFile(bool);
++    void slotRemoveFile(bool);
++    void slotAddDir(bool);
++    void slotRemoveDir(bool);
++    void slotupdateDir(bool);
++signals:
++    void signalNewFile();
++    void signalRemoveFile();
++    void signalAddDir();
++
++private:
++    FileTreeViewPrivate * const d_ptr;
++    Q_DECLARE_PRIVATE(FileTreeView);
++
++    FileTreeView(const FileTreeView &) = delete;
++    FileTreeView &operator=(const FileTreeView &) = delete;
++};
++
++#endif // WORKSPACE_H
+diff --git a/src/plugin/filetreeview/filetreeviewexport.cpp b/src/plugin/filetreeview/filetreeviewexport.cpp
+new file mode 100644
+index 0000000..4c43c84
+--- /dev/null
++++ b/src/plugin/filetreeview/filetreeviewexport.cpp
+@@ -0,0 +1,77 @@
++﻿#include <qobject.h>
++#include <qstring.h>
++#include <pluginGl.h>
++#include <functional>
++#include <qsciscintilla.h>
++#include <QAction>
++#include <QDebug>
++
++#include "filetreeviewplugin.h"
++#include "actorprocessor.h"
++#define NDD_EXPORTDLL
++
++#if defined(Q_OS_WIN)
++#if defined(NDD_EXPORTDLL)
++#define NDD_EXPORT __declspec(dllexport)
++#else
++#define NDD_EXPORT __declspec(dllimport)
++#endif
++#else
++#define NDD_EXPORT __attribute__((visibility("default")))
++#endif
++
++#ifdef __cplusplus
++extern "C" {
++#endif
++
++NDD_EXPORT bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData);
++//NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* ()>getCurEdit, NDD_PROC_DATA* procData);
++NDD_EXPORT int NDD_PROC_MAIN_V2(QWidget* pNotepad, const QString& strFileName,ActorProcessor* processor, NDD_PROC_DATA* procData);
++
++#ifdef __cplusplus
++}
++#endif
++
++static NDD_PROC_DATA s_procData;
++static QWidget* s_pMainNotepad = nullptr;
++std::function<QsciScintilla* ()> s_getCurEdit;
++
++bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData)
++{
++    if(pProcData == NULL)
++    {
++        return false;
++    }
++    pProcData->m_strPlugName = QObject::tr("File Tree");
++    pProcData->m_strComment = QObject::tr("file tree plugin");
++
++    pProcData->m_version = QString("1.0");
++    pProcData->m_auther = QString("matheuter@gmail.com");
++
++    pProcData->m_menuType = 1;
++    return true;
++}
++
++int NDD_PROC_MAIN_V2(QWidget* pNotepad, const QString& strFileName,ActorProcessor* processor,NDD_PROC_DATA* pProcData)
++{
++    qDebug() << "test plugin";
++    //务必拷贝一份pProcData，在外面会释放。
++    if (pProcData != nullptr)
++    {
++        s_procData = *pProcData;
++    }
++    else
++    {
++        return -1;
++    }
++
++    s_pMainNotepad = pNotepad;
++    FileTreeViewPlugin* plugin = new FileTreeViewPlugin();
++    plugin->setPluginModulePath(strFileName);
++    plugin->setActorProcessor(processor);
++    plugin->setTopMenu(pProcData->m_rootMenu);
++    plugin->setMenuActions(s_procData.m_rootMenu);
++    plugin->setNotepad(s_pMainNotepad);
++
++    return 0;
++}
+diff --git a/src/plugin/filetreeview/filetreeviewplugin.cpp b/src/plugin/filetreeview/filetreeviewplugin.cpp
+new file mode 100644
+index 0000000..97eda35
+--- /dev/null
++++ b/src/plugin/filetreeview/filetreeviewplugin.cpp
+@@ -0,0 +1,121 @@
++﻿#include "filetreeviewplugin.h"
++
++#include <QDockWidget>
++#include <QObject>
++#include <QAction>
++#include <QFileInfo>
++#include <QMainWindow>
++#include <QDir>
++#include <QTreeView>
++#include <QDebug>
++
++#include <qsciscintilla.h>
++
++#include "filetreeview.h"
++#include "filesystemmodel.h"
++#include "qheaderview.h"
++#include "actorprocessor.h"
++
++class FileTreeViewPluginPrivate
++{
++public:
++    FileTreeViewPluginPrivate(FileTreeViewPlugin *parent):
++        q_ptr(parent)
++    {}
++
++public:
++    ActorProcessor* m_processor;
++    QWidget* m_notepadWidget;
++    QMenu* m_topMenu;
++    QString m_pluginModulePath;
++    QDockWidget* m_dockWidget;
++    FileTreeView*m_treeview;
++    FileSystemModel * m_model;
++
++    std::function<QsciScintilla* ()> getCurrentEditFunc;
++
++private:
++    FileTreeViewPlugin * const q_ptr;
++    Q_DECLARE_PUBLIC(FileTreeViewPlugin);
++};
++
++FileTreeViewPlugin::FileTreeViewPlugin(QObject *parent):
++    d_ptr(new FileTreeViewPluginPrivate(this))
++{}
++
++FileTreeViewPlugin::~FileTreeViewPlugin()
++{
++}
++
++void FileTreeViewPlugin::setActorProcessor(ActorProcessor *processor)
++{
++    Q_D(FileTreeViewPlugin);
++    d->m_processor = processor;
++}
++
++void FileTreeViewPlugin::setPluginModulePath(const QString &newPluginModulePath)
++{
++    Q_D(FileTreeViewPlugin);
++    d->m_pluginModulePath = newPluginModulePath;
++}
++
++void FileTreeViewPlugin::bindAction()
++{
++}
++
++void FileTreeViewPlugin::setTopMenu(QMenu *newTopMenu)
++{
++    Q_D(FileTreeViewPlugin);
++    d->m_topMenu = newTopMenu;
++}
++
++void FileTreeViewPlugin::setNotepad(QWidget *newNotepad)
++{
++    Q_D(FileTreeViewPlugin);
++    d->m_notepadWidget = newNotepad;
++}
++
++void FileTreeViewPlugin::setMenuActions(QMenu *menu)
++{
++    Q_D(FileTreeViewPlugin);
++    QAction* pAction = new QAction("File Tree", menu);
++    menu->addAction(pAction);
++    connect(pAction, SIGNAL(triggered()),this,SLOT(slotMenuItemClick()));
++}
++
++void FileTreeViewPlugin::setCurrentEditFunc(std::function<QsciScintilla *()> func)
++{
++    Q_D(FileTreeViewPlugin);
++    d->getCurrentEditFunc = func;
++}
++
++void FileTreeViewPlugin::slotMenuItemClick()
++{
++    Q_D(FileTreeViewPlugin);
++
++    auto action = qobject_cast<QAction*>(sender());
++    auto mainWindow = dynamic_cast<QMainWindow*>(d->m_notepadWidget);
++    if (!mainWindow)
++        return;
++
++    if (!d->m_dockWidget) {
++        d->m_dockWidget = new QDockWidget(mainWindow);
++        mainWindow->addDockWidget(Qt::LeftDockWidgetArea, d->m_dockWidget);
++
++        d->m_treeview = new FileTreeView();
++        d->m_treeview->setActorProcessor(d->m_processor);
++        d->m_treeview->setMainWindow(d->m_notepadWidget);
++        d->m_treeview->header()->setVisible(false);
++        d->m_model = new FileSystemModel(d->m_treeview);
++        d->m_model->setRootPath("C:");
++
++        QAction* pAction = new QAction("Open Fold", d->m_topMenu);
++        d->m_topMenu->addAction(pAction);
++        connect(pAction, SIGNAL(triggered(bool)),d->m_treeview,SLOT(onNewWorkspaceItem(bool)));
++        d->m_treeview->setModel(d->m_model);
++        d->m_dockWidget->setWidget(d->m_treeview);
++    }
++
++    if (!d->m_dockWidget->isVisible())
++        d->m_dockWidget->show();
++}
+diff --git a/src/plugin/filetreeview/filetreeviewplugin.h b/src/plugin/filetreeview/filetreeviewplugin.h
+new file mode 100644
+index 0000000..fd35186
+--- /dev/null
++++ b/src/plugin/filetreeview/filetreeviewplugin.h
+@@ -0,0 +1,40 @@
++﻿#ifndef FILETREEWIDGET_H
++#define FILETREEWIDGET_H
++
++#include <QWidget>
++#include <QMenu>
++#include <QString>
++
++class QsciScintilla;
++class FileTreeViewPluginPrivate;
++class ActorProcessor;
++
++class FileTreeViewPlugin :public QObject
++{
++    Q_OBJECT
++public:
++    FileTreeViewPlugin(QObject *parent = nullptr);
++    ~FileTreeViewPlugin();
++
++public:
++    void setActorProcessor(ActorProcessor*processor);
++    void setMenuActions(QMenu *menu);
++    void setCurrentEditFunc(std::function<QsciScintilla* ()> func);
++    void setNotepad(QWidget *newNotepad);
++    void setTopMenu(QMenu *newTopMenu);
++    void setPluginModulePath(const QString &newPluginModulePath);
++private:
++    void bindAction();
++
++public slots:
++    void slotMenuItemClick();
++
++private:
++    FileTreeViewPluginPrivate * const d_ptr;
++    Q_DECLARE_PRIVATE(FileTreeViewPlugin);
++
++    FileTreeViewPlugin(const FileTreeViewPlugin &) = delete;
++    FileTreeViewPlugin &operator=(const FileTreeViewPlugin &) = delete;
++};
++
++#endif // FILETREEWIDGET_H
+-- 
+2.33.1
+
+
+From 527db1baa78809845ce4589841d4e327ae6b5c1b Mon Sep 17 00:00:00 2001
+From: matheuter <210880040@qq.com>
+Date: Thu, 20 Apr 2023 17:01:50 +0800
+Subject: [PATCH 2/4] add actor to plugin_v2
+
+---
+ src/plugin/filetreeview/actor.h | 35 +++++++++++++++++----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
+
+diff --git a/src/plugin/filetreeview/actor.h b/src/plugin/filetreeview/actor.h
+index d3901a2..70cd9ff 100644
+--- a/src/plugin/filetreeview/actor.h
++++ b/src/plugin/filetreeview/actor.h
+@@ -1,3 +1,21 @@
++﻿/**
++ ** This file is part of ndd file tree view plugin
++ ** Copyright 2022-2023 ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
+ #pragma once
+ #include <cstdint>
+ #include <string>
+@@ -57,11 +75,6 @@ public:
+         return return_value;
+     }
+ 
+-    Ptr getSharedPtr()
+-    {
+-        return shared_from_this();
+-    }
+-
+ public:
+     /**
+     * @brief This struct encapsulates a function,
+@@ -71,9 +84,6 @@ public:
+     template<typename Function>
+     struct invoker
+     {
+-        /**
+-         * @brief
+-         */
+         static inline void apply(const Function& func, void* bl, void* result)
+         {
+             using tuple_type = typename function_traits<Function>::tuple_type;
+@@ -81,9 +91,6 @@ public:
+             call(func, *tp, result);
+         }
+ 
+-        /**
+-         * @brief
+-         */
+         template<typename F, typename ... Args>
+         static typename std::enable_if<std::is_void<typename std::result_of<F(Args...)>::type>::value>::type
+         call(const F& f, const std::tuple<Args...>& tp, void*)
+@@ -91,9 +98,6 @@ public:
+             call_helper(f, std::make_index_sequence<sizeof... (Args)>{}, tp);
+         }
+ 
+-        /**
+-         * @brief
+-         */
+         template<typename F, typename ... Args>
+         static typename std::enable_if<!std::is_void<typename std::result_of<F(Args...)>::type>::value>::type
+         call(const F& f, const std::tuple<Args...>& tp, void* result)
+@@ -102,9 +106,6 @@ public:
+             *(decltype(r)*)result = r;
+         }
+ 
+-        /**
+-        * @brief
+-        */
+         template<typename F, size_t... I, typename ... Args>
+         static auto call_helper(const F& f, const std::index_sequence<I...>& h, const std::tuple<Args...>& tup)
+         {
+-- 
+2.33.1
+
+
+From 4ab86338f19fcd2e4d4b8565ba34af189174eb82 Mon Sep 17 00:00:00 2001
+From: matheuter <210880040@qq.com>
+Date: Thu, 20 Apr 2023 17:19:00 +0800
+Subject: [PATCH 3/4] update command
+
+---
+ src/actor.h                                   | 24 +----------
+ src/actorprocessor.cpp                        | 19 ++-------
+ src/actorprocessor.h                          | 23 ++---------
+ src/plugin/filetreeview/abstractfile.cpp      |  6 ---
+ src/plugin/filetreeview/abstractfile.h        | 11 -----
+ src/plugin/filetreeview/actor.h               |  5 ++-
+ src/plugin/filetreeview/actorprocessor.cpp    | 19 +++++++++
+ src/plugin/filetreeview/actorprocessor.h      | 41 ++++++++++---------
+ src/plugin/filetreeview/filetreeview.cpp      |  4 +-
+ src/plugin/filetreeview/filetreeview.h        |  5 +--
+ .../filetreeview/filetreeviewplugin.cpp       | 18 ++++++++
+ src/plugin/filetreeview/filetreeviewplugin.h  | 21 +++++++++-
+ 12 files changed, 93 insertions(+), 103 deletions(-)
+ delete mode 100644 src/plugin/filetreeview/abstractfile.cpp
+ delete mode 100644 src/plugin/filetreeview/abstractfile.h
+
+diff --git a/src/actor.h b/src/actor.h
+index 86378d0..0fb51c3 100644
+--- a/src/actor.h
++++ b/src/actor.h
+@@ -1,4 +1,4 @@
+-#pragma once
++﻿
+ #include <cstdint>
+ #include <string>
+ #include <memory>
+@@ -7,10 +7,6 @@
+ 
+ #include "functiontraits.h"
+ 
+-/**
+- * @brief Actor class, which encapsulates the event model
+- * @note enable_shared_from_this allows us to get safe Pointers internally
+- */
+ class Actor : public std::enable_shared_from_this<Actor>
+ {
+ public:
+@@ -21,27 +17,18 @@ public:
+     Actor(){}
+     ~Actor(){}
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename Function>
+     void operator+=(Function&& function_any) noexcept
+     {
+         m_invokeFunctionWapper =  { std::bind(&invoker<Function>::apply, function_any,  std::placeholders::_1, std::placeholders::_2) };
+     }
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename Function>
+     void registerFunction(Function&& function_any) noexcept
+     {
+         m_invokeFunctionWapper =  { std::bind(&invoker<Function>::apply, function_any,  std::placeholders::_1, std::placeholders::_2) };
+     }
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename ... Args>
+     void invoke(Args&& ... args) const noexcept
+     {
+@@ -49,9 +36,6 @@ public:
+         m_invokeFunctionWapper(&args_tuple, nullptr);
+     }
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename R, typename ... Args>
+     R invoke(Args&& ...args) const
+     {
+@@ -66,12 +50,8 @@ public:
+         return return_value;
+     }
+ 
+-    Ptr getSharedPtr()
+-    {
+-        return shared_from_this();
+-    }
+-
+ public:
++
+     /**
+     * @brief This struct encapsulates a function,
+     * essentially storing the return value and parameters in two variables
+diff --git a/src/actorprocessor.cpp b/src/actorprocessor.cpp
+index 099d1f6..6dfd1f4 100644
+--- a/src/actorprocessor.cpp
++++ b/src/actorprocessor.cpp
+@@ -1,11 +1,9 @@
+-#include "actorprocessor.h"
++﻿#include "actorprocessor.h"
++
+ ActorProcessor::ActorProcessor():
+     m_actorMap(new std::unordered_map<std::string, Actor*>)
+ {}
+ 
+-/**
+- * @brief
+- */
+ ActorProcessor::~ActorProcessor()
+ {
+     for (auto& item : (*m_actorMap))
+@@ -17,17 +15,11 @@ ActorProcessor::~ActorProcessor()
+         delete m_actorMap;
+ }
+ 
+-/**
+- * @brief
+- */
+ void ActorProcessor::registerActor(const std::string &route, Actor *actor)
+ {
+     m_actorMap->insert(std::make_pair(route,actor));
+ }
+ 
+-/**
+- * @brief
+- */
+ void ActorProcessor::removeActor(const std::string &route)
+ {
+     auto iter = (*m_actorMap).find(route);
+@@ -38,9 +30,6 @@ void ActorProcessor::removeActor(const std::string &route)
+     }
+ }
+ 
+-/**
+- * @brief
+- */
+ Actor *ActorProcessor::findActor(const std::string &route)
+ {
+     auto iter = (*m_actorMap).find(route);
+@@ -51,9 +40,7 @@ Actor *ActorProcessor::findActor(const std::string &route)
+     return nullptr;
+ }
+ 
+-/**
+- * @brief
+- */
++
+ bool ActorProcessor::resetActor(const std::string &route, Actor *actor)
+ {
+     auto iter = (*m_actorMap).find(route);
+diff --git a/src/actorprocessor.h b/src/actorprocessor.h
+index 9026909..def5b06 100644
+--- a/src/actorprocessor.h
++++ b/src/actorprocessor.h
+@@ -1,5 +1,5 @@
+-#ifndef EVENTPROCESSOR_H
+-#define EVENTPROCESSOR_H
++﻿#ifndef _PROCESSOR_H
++#define _PROCESSOR_H
+ 
+ #include <string>
+ #include <functional>
+@@ -25,9 +25,6 @@ public:
+             (*m_actorMap)[route]->invoke(std::forward<Args>(args)...);
+     }
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename R, typename ... Args>
+     R invoke(const std::string& route,Args&& ...args) const
+     {
+@@ -36,30 +33,16 @@ public:
+         return nullptr;
+     }
+ 
+-    /**
+-    * @brief 注册一个actor，其中route是唯一的
+-    */
+     void registerActor(const std::string& route, Actor*actor);
+ 
+-    /**
+-    * @brief 删除一个actor
+-    */
+     void removeActor(const std::string& route);
+-
+-    /**
+-    * @brief 查找一个actor， 返回其指针
+-    */
+     Actor* findActor(const std::string& route);
+-
+-    /**
+-    * @brief 重置一个actor，注意原有的actor会被删除
+-    */
+     bool resetActor(const std::string& route,Actor*actor);
+ 
+ private:
+     std::unordered_map<std::string, Actor*>* m_actorMap;
++
+ private:
+-    // not allow copy constroct
+     ActorProcessor(ActorProcessor&&)=delete;
+     ActorProcessor& operator=(const ActorProcessor&)=delete;
+ };
+diff --git a/src/plugin/filetreeview/abstractfile.cpp b/src/plugin/filetreeview/abstractfile.cpp
+deleted file mode 100644
+index 9b8673f..0000000
+--- a/src/plugin/filetreeview/abstractfile.cpp
++++ /dev/null
+@@ -1,6 +0,0 @@
+-#include "abstractfile.h"
+-
+-AbstractFile::AbstractFile()
+-{
+-
+-}
+diff --git a/src/plugin/filetreeview/abstractfile.h b/src/plugin/filetreeview/abstractfile.h
+deleted file mode 100644
+index 94ae7dc..0000000
+--- a/src/plugin/filetreeview/abstractfile.h
++++ /dev/null
+@@ -1,11 +0,0 @@
+-#ifndef ABSTRACTFILE_H
+-#define ABSTRACTFILE_H
+-
+-
+-class AbstractFile
+-{
+-public:
+-    AbstractFile();
+-};
+-
+-#endif // ABSTRACTFILE_H
+diff --git a/src/plugin/filetreeview/actor.h b/src/plugin/filetreeview/actor.h
+index 70cd9ff..30b6f00 100644
+--- a/src/plugin/filetreeview/actor.h
++++ b/src/plugin/filetreeview/actor.h
+@@ -1,6 +1,6 @@
+ ﻿/**
+- ** This file is part of ndd file tree view plugin
+- ** Copyright 2022-2023 ji wang <matheuter@gmail.com>.
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
+  **
+  ** This program is free software: you can redistribute it and/or modify
+  ** it under the terms of the GNU Lesser General Public License as
+@@ -16,6 +16,7 @@
+  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  **/
+ 
++
+ #pragma once
+ #include <cstdint>
+ #include <string>
+diff --git a/src/plugin/filetreeview/actorprocessor.cpp b/src/plugin/filetreeview/actorprocessor.cpp
+index 099d1f6..96af367 100644
+--- a/src/plugin/filetreeview/actorprocessor.cpp
++++ b/src/plugin/filetreeview/actorprocessor.cpp
+@@ -1,3 +1,22 @@
++﻿/**
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
++
+ #include "actorprocessor.h"
+ ActorProcessor::ActorProcessor():
+     m_actorMap(new std::unordered_map<std::string, Actor*>)
+diff --git a/src/plugin/filetreeview/actorprocessor.h b/src/plugin/filetreeview/actorprocessor.h
+index d057e6d..76c6035 100644
+--- a/src/plugin/filetreeview/actorprocessor.h
++++ b/src/plugin/filetreeview/actorprocessor.h
+@@ -1,5 +1,24 @@
+-#ifndef EVENTPROCESSOR_H
+-#define EVENTPROCESSOR_H
++﻿/**
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
++
++#ifndef _PROCESSOR_H
++#define _PROCESSOR_H
+ 
+ #include <string>
+ #include <functional>
+@@ -15,9 +34,6 @@ public:
+     ~ActorProcessor();
+ public:
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename ... Args>
+     void invoke(const std::string& route,Args&& ... args) const noexcept
+     {
+@@ -25,9 +41,6 @@ public:
+             (*m_actorMap)[route]->invoke(std::forward<Args>(args)...);
+     }
+ 
+-    /**
+-    * @brief Register the callback function and construct the anonymous function with std::bind
+-    */
+     template<typename R, typename ... Args>
+     R invoke(const std::string& route,Args&& ...args) const
+     {
+@@ -36,24 +49,12 @@ public:
+         return nullptr;
+     }
+ 
+-    /**
+-    * @brief 注册一个actor，其中route是唯一的
+-    */
+     void registerActor(const std::string& route, Actor*actor);
+ 
+-    /**
+-    * @brief 删除一个actor
+-    */
+     void removeActor(const std::string& route);
+ 
+-    /**
+-    * @brief 查找一个actor， 返回其指针
+-    */
+     Actor* findActor(const std::string& route);
+ 
+-    /**
+-    * @brief 重置一个actor，注意原有的actor会被删除
+-    */
+     bool resetActor(const std::string& route,Actor*actor);
+ 
+ private:
+diff --git a/src/plugin/filetreeview/filetreeview.cpp b/src/plugin/filetreeview/filetreeview.cpp
+index a1afb12..1259296 100644
+--- a/src/plugin/filetreeview/filetreeview.cpp
++++ b/src/plugin/filetreeview/filetreeview.cpp
+@@ -1,6 +1,6 @@
+ ﻿/**
+- ** This file is part of the NoteBook project.
+- ** Copyright 2022 ji wang <matheuter@gmail.com>.
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
+  **
+  ** This program is free software: you can redistribute it and/or modify
+  ** it under the terms of the GNU Lesser General Public License as
+diff --git a/src/plugin/filetreeview/filetreeview.h b/src/plugin/filetreeview/filetreeview.h
+index 0a0e5e1..9a1eda2 100644
+--- a/src/plugin/filetreeview/filetreeview.h
++++ b/src/plugin/filetreeview/filetreeview.h
+@@ -1,6 +1,6 @@
+ ﻿/**
+- ** This file is part of the NoteBook project.
+- ** Copyright 2022 ji wang <matheuter@gmail.com>.
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
+  **
+  ** This program is free software: you can redistribute it and/or modify
+  ** it under the terms of the GNU Lesser General Public License as
+@@ -16,7 +16,6 @@
+  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  **/
+ 
+-
+ #ifndef WORKSPACE_H
+ #define WORKSPACE_H
+ 
+diff --git a/src/plugin/filetreeview/filetreeviewplugin.cpp b/src/plugin/filetreeview/filetreeviewplugin.cpp
+index 97eda35..83efcec 100644
+--- a/src/plugin/filetreeview/filetreeviewplugin.cpp
++++ b/src/plugin/filetreeview/filetreeviewplugin.cpp
+@@ -8,6 +8,24 @@
+ #include <QDir>
+ #include <QTreeView>
+ #include <QDebug>
++/**
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
+ 
+ #include <qsciscintilla.h>
+ 
+diff --git a/src/plugin/filetreeview/filetreeviewplugin.h b/src/plugin/filetreeview/filetreeviewplugin.h
+index fd35186..336bbc6 100644
+--- a/src/plugin/filetreeview/filetreeviewplugin.h
++++ b/src/plugin/filetreeview/filetreeviewplugin.h
+@@ -1,4 +1,23 @@
+-﻿#ifndef FILETREEWIDGET_H
++﻿/**
++ ** This file is part of ndd plugin file tree view
++ ** Copyright ji wang <matheuter@gmail.com>.
++ **
++ ** This program is free software: you can redistribute it and/or modify
++ ** it under the terms of the GNU Lesser General Public License as
++ ** published by the Free Software Foundation, either version 3 of the
++ ** License, or (at your option) any later version.
++ **
++ ** This program is distributed in the hope that it will be useful,
++ ** but WITHOUT ANY WARRANTY; without even the implied warranty of
++ ** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ ** GNU Lesser General Public License for more details.
++ **
++ ** You should have received a copy of the GNU Lesser General Public License
++ ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ **/
++
++
++#ifndef FILETREEWIDGET_H
+ #define FILETREEWIDGET_H
+ 
+ #include <QWidget>
+-- 
+2.33.1
+
+
+From 2ad291e9753690727cf92ae18c0bcaa87d5ac169 Mon Sep 17 00:00:00 2001
+From: matheuter <210880040@qq.com>
+Date: Thu, 20 Apr 2023 17:31:42 +0800
+Subject: [PATCH 4/4] fix actor error
+
+---
+ src/actor.h                                | 6 +++++-
+ src/plugin/filetreeview/actor.h            | 5 ++++-
+ src/plugin/filetreeview/actorprocessor.cpp | 1 -
+ 3 files changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/src/actor.h b/src/actor.h
+index 0fb51c3..17f1f16 100644
+--- a/src/actor.h
++++ b/src/actor.h
+@@ -1,4 +1,6 @@
+-﻿
++﻿#ifndef _ACTOR_H_
++#define _ACTOR_H_
++
+ #include <cstdint>
+ #include <string>
+ #include <memory>
+@@ -107,3 +109,5 @@ private:
+     */
+     FunctionWapper m_invokeFunctionWapper;
+ };
++
++#endif
+diff --git a/src/plugin/filetreeview/actor.h b/src/plugin/filetreeview/actor.h
+index 30b6f00..4de5752 100644
+--- a/src/plugin/filetreeview/actor.h
++++ b/src/plugin/filetreeview/actor.h
+@@ -16,8 +16,9 @@
+  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  **/
+ 
++#ifndef _ACTOR_H_
++#define _ACTOR_H_
+ 
+-#pragma once
+ #include <cstdint>
+ #include <string>
+ #include <memory>
+@@ -120,3 +121,5 @@ private:
+     */
+     FunctionWapper m_invokeFunctionWapper;
+ };
++
++#endif
+diff --git a/src/plugin/filetreeview/actorprocessor.cpp b/src/plugin/filetreeview/actorprocessor.cpp
+index 96af367..972af41 100644
+--- a/src/plugin/filetreeview/actorprocessor.cpp
++++ b/src/plugin/filetreeview/actorprocessor.cpp
+@@ -16,7 +16,6 @@
+  ** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  **/
+ 
+-
+ #include "actorprocessor.h"
+ ActorProcessor::ActorProcessor():
+     m_actorMap(new std::unordered_map<std::string, Actor*>)
+-- 
+2.33.1
+
