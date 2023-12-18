@@ -1,6 +1,6 @@
 # 注释行(使用方式)
-# find_package(DebPackage PATHS ${CMAKE_SOURCE_DIR})
-# add_package_descript(cmake/package-deb.descript)
+# find_package(SparkDebPackage PATHS ${CMAKE_SOURCE_DIR})
+# add_package_descript(cmake/spark-deb-package.descript)
 
 # 打包后的文件名称
 # FileName: 待定
@@ -40,7 +40,9 @@ Maintainer: Ndd开源组织 <757210198@qq.com>
 # 软件包主页
 Homepage: https://gitee.com/cxasm/notepad--
 # 软件包建议
-Recommends:
+Recommends: 
+# 软件冲突
+Conflicts: 
 # 软件包描述信息
 Descrition: Notepad--是一个国产跨平台、简单的文本编辑器。
  Notepad--是一个国产跨平台、简单的文本编辑器，是替换notepad++的一种选择。
