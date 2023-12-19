@@ -15,6 +15,7 @@ if(TRUE)
     spark_add_executable_path(${PROJECT_NAME}
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/src/cceditor
+        ${PROJECT_SOURCE_DIR}/src/utils
         ${QRC_SOURCES})
 
     target_include_directories(${PROJECT_NAME} PRIVATE
