@@ -12,11 +12,11 @@ configure_file(cmake/modules/config.h.in
 if(TRUE)
     # 准备构建 Notepad-- 主程序
     set(QRC_SOURCES src/RealCompare.qrc)
-    spark_aux_source_paths(CCEditorSources
-        src
-        src/cceditor
-    )
-    spark_add_executable(${PROJECT_NAME} ${CCEditorSources} ${QRC_SOURCES})
+    spark_add_executable_path(${PROJECT_NAME}
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/src/cceditor
+        ${QRC_SOURCES})
+
     target_include_directories(${PROJECT_NAME} PRIVATE
         ${PROJECT_SOURCE_DIR}/src
         ${PROJECT_SOURCE_DIR}/src/cceditor
