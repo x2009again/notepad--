@@ -1,0 +1,701 @@
+build/linux-uos/_CPack_Packages/Linux/DEB/Notepad---2.0.0-Linux/
+├── control
+├── control.tar.gz
+├── data.tar.gz
+├── debian-binary
+├── md5sums
+├── opt
+│   └── apps
+│       └── com.hmja.notepad
+│           ├── entries
+│           │   ├── applications
+│           │   │   └── io.gitee.cxasm.notepad--.desktop
+│           │   ├── icons
+│           │   │   └── hicolor
+│           │   │       └── scalable
+│           │   │           └── apps
+│           │   │               └── ndd.svg
+│           │   ├── licenses
+│           │   │   └── notepad--
+│           │   │       └── LICENSE
+│           │   └── metainfo
+│           │       └── io.gitee.cxasm.notepad--.metainfo.xml
+│           ├── files
+│           │   ├── Notepad--
+│           │   └── themes
+│           │       ├── Bespin
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Black board
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Blue light
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── avs.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── coffeescript.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── flash.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── go.ini
+│           │       │   ├── html.ini
+│           │       │   ├── idl.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── jsp.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── rust.ini
+│           │       │   ├── spice.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── typescript.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── Choco
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── DansLeRuSH-Dark
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── coffeescript.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── Deep Black
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── HotFudgeSundae
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── coffeescript.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── lavender
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── avs.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── coffeescript.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── flash.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── go.ini
+│           │       │   ├── html.ini
+│           │       │   ├── idl.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── jsp.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── rust.ini
+│           │       │   ├── spice.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── typescript.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── misty rose
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── avs.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── coffeescript.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── flash.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── go.ini
+│           │       │   ├── html.ini
+│           │       │   ├── idl.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── jsp.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── rust.ini
+│           │       │   ├── spice.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── typescript.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── Mono Industrial
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Monokai
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Obsidian
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   ├── xml.ini
+│           │       │   └── yaml.ini
+│           │       ├── Plastic Code Wrap
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Ruby Blue
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Twilight
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       ├── Vibrant Ink
+│           │       │   ├── AllGlobal.ini
+│           │       │   ├── asp.ini
+│           │       │   ├── bash.ini
+│           │       │   ├── batch.ini
+│           │       │   ├── c.ini
+│           │       │   ├── cmake.ini
+│           │       │   ├── cpp.ini
+│           │       │   ├── csharp.ini
+│           │       │   ├── css.ini
+│           │       │   ├── diff.ini
+│           │       │   ├── fortran77.ini
+│           │       │   ├── fortran.ini
+│           │       │   ├── html.ini
+│           │       │   ├── ini.ini
+│           │       │   ├── java.ini
+│           │       │   ├── javascript.ini
+│           │       │   ├── json.ini
+│           │       │   ├── lua.ini
+│           │       │   ├── makefile.ini
+│           │       │   ├── matlab.ini
+│           │       │   ├── nsis.ini
+│           │       │   ├── objc.ini
+│           │       │   ├── pascal.ini
+│           │       │   ├── perl.ini
+│           │       │   ├── php.ini
+│           │       │   ├── props.ini
+│           │       │   ├── python.ini
+│           │       │   ├── rc.ini
+│           │       │   ├── ruby.ini
+│           │       │   ├── sql.ini
+│           │       │   ├── tcl.ini
+│           │       │   ├── txt.ini
+│           │       │   ├── vb.ini
+│           │       │   ├── verilog.ini
+│           │       │   ├── vhdl.ini
+│           │       │   └── xml.ini
+│           │       └── yellow rice
+│           │           ├── AllGlobal.ini
+│           │           ├── asp.ini
+│           │           ├── avs.ini
+│           │           ├── bash.ini
+│           │           ├── batch.ini
+│           │           ├── c.ini
+│           │           ├── cmake.ini
+│           │           ├── coffeescript.ini
+│           │           ├── cpp.ini
+│           │           ├── csharp.ini
+│           │           ├── css.ini
+│           │           ├── diff.ini
+│           │           ├── flash.ini
+│           │           ├── fortran77.ini
+│           │           ├── fortran.ini
+│           │           ├── go.ini
+│           │           ├── html.ini
+│           │           ├── idl.ini
+│           │           ├── ini.ini
+│           │           ├── java.ini
+│           │           ├── javascript.ini
+│           │           ├── json.ini
+│           │           ├── jsp.ini
+│           │           ├── lua.ini
+│           │           ├── makefile.ini
+│           │           ├── matlab.ini
+│           │           ├── nsis.ini
+│           │           ├── objc.ini
+│           │           ├── pascal.ini
+│           │           ├── perl.ini
+│           │           ├── php.ini
+│           │           ├── props.ini
+│           │           ├── python.ini
+│           │           ├── rc.ini
+│           │           ├── ruby.ini
+│           │           ├── rust.ini
+│           │           ├── spice.ini
+│           │           ├── sql.ini
+│           │           ├── tcl.ini
+│           │           ├── txt.ini
+│           │           ├── typescript.ini
+│           │           ├── vb.ini
+│           │           ├── verilog.ini
+│           │           ├── vhdl.ini
+│           │           ├── xml.ini
+│           │           └── yaml.ini
+│           └── info
+└── usr
+
+32 directories, 666 files

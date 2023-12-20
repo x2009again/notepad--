@@ -19,20 +19,30 @@ if(USE_NOTEPAD_PLUGIN)
         add_subdirectory(template-plugins/base-secondary-menu-ui-plugin-v1)
     endif(USE_NOTEPAD_PLUGIN_BASE)
 
-    # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
-    add_subdirectory(opencc-demo-plugin)
-    # 一个简单的版本更新检查的插件
-    add_subdirectory(versionUpdate)
-    # 一个简单的可二次扩展的插件
-    add_subdirectory(external-plugin)
+    # 构建一个简单的基于 framwork 的 framework-helloworld 插件
 
-    # Linux 可构建的插件
-    if(UNIX AND NOT APPLE)
-        # 一个简单的 Linux 终端插件，但依赖于外部的 lxqt-qterminal
-        add_subdirectory(linux-terminal-plugin)
-    endif(UNIX AND NOT APPLE)
+    include(framework/framework.cmake)
+    # add_framework_plugin [<dir>...] [<file>...]
+    # 构建一个基于 framework 的插件
+        # 基于提供的包含源代码文件的的路径，或指定的要构建的源代码
+    add_framework_plugin(framework-helloworld
+        framework-plugins/helloworld
+    )
+
+    # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
+    # add_subdirectory(opencc-demo-plugin)
+    # # 一个简单的版本更新检查的插件
+    # add_subdirectory(versionUpdate)
+    # # 一个简单的可二次扩展的插件
+    # add_subdirectory(external-plugin)
+
+    # # Linux 可构建的插件
+    # if(UNIX AND NOT APPLE)
+    #     # 一个简单的 Linux 终端插件，但依赖于外部的 lxqt-qterminal
+    #     add_subdirectory(linux-terminal-plugin)
+    # endif(UNIX AND NOT APPLE)
     
-    # TTS 语音合成
-    add_subdirectory(TTS-plugin)
+    # # TTS 语音合成
+    # add_subdirectory(TTS-plugin)
 
 endif(USE_NOTEPAD_PLUGIN)
