@@ -29,6 +29,25 @@ if(USE_NOTEPAD_PLUGIN)
         framework-plugins/helloworld
     )
 
+    # 一个简单的 plantuml 预览插件
+    add_framework_plugin(framework-plantuml-preview
+        framework-plugins/plantuml-preview
+        framework-plugins/plantuml-preview/nplugin.qrc
+    )
+    if(framework-plantuml-preview_ENABLE)
+        find_package(Qt5Svg)
+        target_link_libraries(framework-plantuml-preview Qt5::Svg)
+    endif(framework-plantuml-preview_ENABLE)
+
+    # 一个简单的 svg 预览插件
+    add_framework_plugin(framework-svg-preview
+        framework-plugins/svg-preview
+    )
+    if(framework-svg-preview_ENABLE)
+        find_package(Qt5Svg)
+        target_link_libraries(framework-svg-preview Qt5::Svg)
+    endif(framework-svg-preview_ENABLE)
+
     # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
     # add_subdirectory(opencc-demo-plugin)
     # # 一个简单的版本更新检查的插件
