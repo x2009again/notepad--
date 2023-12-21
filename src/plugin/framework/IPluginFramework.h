@@ -13,7 +13,10 @@
 class IPluginFramework
 {
 public:
-    // 
+    /**
+     * @brief 提供给编辑器的菜单类型
+     * @note None 为单功能菜单，SecondaryMenu 为二级菜单
+     */
     enum MenuType {
         None = 0,
         SecondaryMenu = 1,
@@ -24,8 +27,17 @@ public:
      * @note 目前编辑器支持由插件发出两种指令
      */
     enum Do {
-        NewEdit,
-        ChangeSyntax,
+        NewEdit = 1,
+        ChangeSyntax = 2,
+    };
+
+    /**
+     * @brief 当指定编辑器做改变语法的时候提供以下实现
+     */
+    enum SyntaxType {
+        Js = 0,
+        Json,
+        Html,
     };
 
     /********************************************* 插件基本信息/
@@ -59,7 +71,18 @@ public:
 
     /********************************************* 插件的主程序 Notepad 注册*/
 
+    /**
+     * @brief registerNotepad
+     * @param notepad
+     */
     virtual void registerNotepad(QWidget *notepad) = 0;
+
+    /********************************************* 插件路径注册*/
+    /**
+     * @brief registerStrFileName
+     * @param str_file_name
+     */
+    virtual void registerStrFileName(QString str_file_name) = 0;
 
     /********************************************* 插件的一级(MenuType=None)或二级(MenuType=SecondaryMenu)菜单触发与注册接口/
 
@@ -69,15 +92,6 @@ public:
      */
     virtual void PluginTrigger() = 0;
 
-
-    /**
-     * @brief 由插件实现的一级菜单注册动作(当 MenuType 为 None 时有效)
-     * @param action
-     * @note 由于框架在 C 风格函数入口处使用 lambda 完成事件注册连接到 PluginTrigger，则不需要插件实现此接口
-     */
-    // virtual void registerTrigger(QAction *action) = 0;
-
-
     /**
      * @brief 由插件实现的二级菜单触发动作集合(默认提供的动作)
      * @param menu
@@ -85,7 +99,7 @@ public:
      */
     virtual void registerPluginActions(QMenu *rootMenu) = 0;
 
-    /********************************************* 插件当前编辑器函数回调注册*/
+    /********************************************* 当前编辑器函数回调注册*/
 
     /**
      * @brief 由框架提供的获取当前编辑器的回调函数注册
@@ -94,11 +108,24 @@ public:
      */
     virtual void registerCurrentEditCallback(std::function<QsciScintilla*(QWidget*)> get_cur_edit_callback) = 0;
 
-//protected:
+    /********************************************* 编辑器功能函数回调注册*/
     /**
-     * @brief s_getCurEdit 为回调函数，用于获取当前编辑器
+     * @brief 由框架提供的对 Notepad 进行的执行动作
+     * @param plugin_callBack
+     * @让编辑器做指定的事，目前编辑器支持由插件发出两种指令(Do::NewEdit, Do::)
      */
-//    std::function<QsciScintilla*(QWidget*)> s_getCurEdit;
+    virtual void registerPluginCallBack(std::function<bool(QWidget*, int, void*)> plugin_callback) = 0;
+
+protected:
+    /** s_notepad 为 CCNotepad，当前主程序 */
+    /** s_strFileName 为当前路径 */
+    /** s_get_cur_edit_callback 为回调函数，用于获取当前编辑器 */
+    /** s_plugin_callBack 为回调函数，用于使当前主程序做某些事 */
+
+//    QWidget *s_notepad;
+//    QString s_str_file_name;
+//    std::function<QsciScintilla*(QWidget*)> s_get_cur_edit_callback
+//    std::function<bool(QWidget*, int, void*)> s_plugin_callback
 };
 
 Q_DECLARE_INTERFACE(IPluginFramework, IPluginFramework_IID)

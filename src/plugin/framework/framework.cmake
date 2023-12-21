@@ -4,7 +4,11 @@
 # 构建一个基于 framework 的插件
     # 基于提供的包含源代码文件的的路径，或指定的要构建的源代码
 macro(add_framework_plugin _target)
-    
+
+    option(${_target}_ENABLE "是否确认构建 ${_target} 插件" OFF)
+
+if(${${_target}_ENABLE})
+
     set(${_target}_ARGN ${ARGN})
     # set(${_target}_DIR_OR_SOURCES)
     foreach(arg IN LISTS ${_target}_ARGN)
@@ -60,4 +64,7 @@ macro(add_framework_plugin _target)
                             # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
         )
     endif(WIN32 AND NOTEPAD_BUILD_BY_SHARED)
+
+endif(${${_target}_ENABLE})
+
 endmacro(add_framework_plugin _target)

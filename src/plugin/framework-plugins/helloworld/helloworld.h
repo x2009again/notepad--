@@ -23,27 +23,18 @@ public:
     QString PluginComment();
     MenuType PluginMenuType();
 
-    // IPluginFramework interface
-public:
-    void registerNotepad(QWidget *notepad);
-
-    // IPluginFramework interface
-public:
-    void registerCurrentEditCallback(std::function<QsciScintilla *(QWidget *)> get_cur_edit_callback);
-
-    // IPluginFramework interface
-public:
     void PluginTrigger();
-
-    // IPluginFramework interface
-public:
-//    void registerTrigger(QAction *action);
+    void registerNotepad(QWidget *notepad);
+    void registerStrFileName(QString str_file_name) override;
+    void registerCurrentEditCallback(std::function<QsciScintilla *(QWidget *)> get_cur_edit_callback);
+    void registerPluginCallBack(std::function<bool (QWidget *, int, void *)> plugin_callback) override;
     void registerPluginActions(QMenu *rootMenu);
 
 private:
     QWidget *s_notepad;
+    QString s_str_file_name;
     std::function<QsciScintilla *(QWidget *)> s_get_cur_edit_callback;
-
+    std::function<bool(QWidget*, int, void*)> s_plugin_callback;
 };
 
 #endif // HELLOWORLD_H

@@ -42,6 +42,7 @@ NDD_EXPORT bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData) {
     pProcData->m_version = plugin.PluginVersion();
     pProcData->m_auther = plugin.PluginAuthor();
     pProcData->m_menuType = plugin.PluginMenuType();
+
     return true;
 }
 
@@ -49,10 +50,11 @@ NDD_EXPORT bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData) {
 NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* (QWidget*)>getCurEdit, std::function<bool(QWidget*, int, void*)> pluginCallBack, NDD_PROC_DATA* procData){
 
     plugin.registerNotepad(pNotepad);
+    plugin.registerStrFileName(strFileName);
     plugin.registerCurrentEditCallback(getCurEdit);
+    plugin.registerPluginCallBack(pluginCallBack);
 
     if (plugin.PluginMenuType() == IPluginFramework::None) {
-        // plugin.registerTrigger(procData->m_pAction); // 已使用 lambda 完成 PluginTrigger
         procData->m_pAction->connect(procData->m_pAction, &QAction::triggered, [](){
             plugin.PluginTrigger();
         });
