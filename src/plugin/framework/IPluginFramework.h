@@ -116,18 +116,90 @@ public:
      */
     virtual void registerPluginCallBack(std::function<bool(QWidget*, int, void*)> plugin_callback) = 0;
 
-protected:
+
+    /********************************************* 为插件拷贝以下信息 */
     /** s_notepad 为 CCNotepad，当前主程序 */
     /** s_strFileName 为当前路径 */
     /** s_get_cur_edit_callback 为回调函数，用于获取当前编辑器 */
     /** s_plugin_callBack 为回调函数，用于使当前主程序做某些事 */
-
+//private:
 //    QWidget *s_notepad;
 //    QString s_str_file_name;
-//    std::function<QsciScintilla*(QWidget*)> s_get_cur_edit_callback
-//    std::function<bool(QWidget*, int, void*)> s_plugin_callback
+//    std::function<QsciScintilla*(QWidget*)> s_get_cur_edit_callback;
+//    std::function<bool(QWidget*, int, void*)> s_plugin_callback;
 };
 
 Q_DECLARE_INTERFACE(IPluginFramework, IPluginFramework_IID)
 
 #endif  //!__IPLUGINFRAMEWORK__H__
+
+#ifdef  NOTEPAD_PLUGIN_MANAGER
+
+#include "qdebug.h"
+#include <pluginGl.h>
+#include <functional>
+#include <qsciscintilla.h>
+
+#if defined(Q_OS_WIN)
+	#if defined(NDD_EXPORTDLL)
+		#define NDD_EXPORT __declspec(dllexport)
+	#else
+		#define NDD_EXPORT __declspec(dllimport)
+	#endif
+#else
+	#define NDD_EXPORT __attribute__((visibility("default")))
+#endif
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+	NDD_EXPORT bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData);
+	NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad, const QString& strFileName, std::function<QsciScintilla* (QWidget*)>getCurEdit, std::function<bool(QWidget*, int, void*)> pluginCallBack, NDD_PROC_DATA* procData);
+
+#ifdef __cplusplus
+	}
+#endif
+
+#define NDD_DECLARE_PLUGIN(plugin)                                     \
+    NDD_EXPORT  bool NDD_PROC_IDENTIFY(NDD_PROC_DATA* pProcData) {     \
+        qDebug() << (pProcData == NULL);                               \
+        if(pProcData == NULL)                                          \
+        {                                                              \
+            return false;                                              \
+        }                                                              \
+        pProcData->m_strPlugName = plugin.PluginName();                \
+        pProcData->m_strComment = plugin.PluginComment();              \
+        pProcData->m_version = plugin.PluginVersion();                 \
+        pProcData->m_auther = plugin.PluginAuthor();                   \
+        pProcData->m_menuType = plugin.PluginMenuType();               \
+                                                                       \
+        return true;                                                   \
+    }                                                                  \
+    NDD_EXPORT int NDD_PROC_MAIN(QWidget* pNotepad,                                          \
+                            const QString& strFileName,                                      \
+                            std::function<QsciScintilla* (QWidget*)>getCurEdit,              \
+                            std::function<bool(QWidget*, int, void*)> pluginCallBack,        \
+                            NDD_PROC_DATA* procData){                                        \
+                                                                                             \
+        plugin.registerNotepad(pNotepad);                                                    \
+        plugin.registerStrFileName(strFileName);                                             \
+        plugin.registerCurrentEditCallback(getCurEdit);                                      \
+        plugin.registerPluginCallBack(pluginCallBack);                                       \
+                                                                                             \
+        if (plugin.PluginMenuType() == IPluginFramework::None) {                             \
+            procData->m_pAction->connect(procData->m_pAction, &QAction::triggered, [](){     \
+                plugin.PluginTrigger();                                                      \
+            });                                                                              \
+        } else {                                                                             \
+            plugin.registerPluginActions(procData->m_rootMenu);                              \
+        }                                                                                    \
+                                                                                             \
+        qDebug() << strFileName;                                                             \
+    }                                                                                        \
+
+#else
+
+    #error Missing definition NOTEPAD_PLUGIN_MANAGER
+
+#endif  //NOTEPAD_PLUGIN_MANAGER

@@ -29,6 +29,9 @@ if(USE_NOTEPAD_PLUGIN)
         framework-plugins/helloworld
     )
 
+    # 一个最为简单的 framework-hello 插件
+    add_framework_plugin(framework-hello-simple framework-plugins/hello-simple)
+
     # 一个简单的 plantuml 预览插件
     add_framework_plugin(framework-plantuml-preview
         framework-plugins/plantuml-preview
