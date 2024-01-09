@@ -140,6 +140,8 @@ Q_DECLARE_INTERFACE(IPluginFramework, IPluginFramework_IID)
 #include <functional>
 #include <qsciscintilla.h>
 
+#define NDD_EXPORTDLL
+
 #if defined(Q_OS_WIN)
 	#if defined(NDD_EXPORTDLL)
 		#define NDD_EXPORT __declspec(dllexport)
@@ -196,6 +198,7 @@ Q_DECLARE_INTERFACE(IPluginFramework, IPluginFramework_IID)
         }                                                                                    \
                                                                                              \
         qDebug() << strFileName;                                                             \
+        return 0;                                                                            \
     }                                                                                        \
 
 #else
