@@ -1,7 +1,13 @@
 #include "hello.h"
 #include "pluginframeworkhelper.h"
+#include "view/createnewplugincodedialog.h"
 
-#include <qmessagebox.h>
+#include <QFile>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QTextCodec>
+
+#include <utils/pathutil.h>
 
 Hello::Hello(QObject *parent)
     : QObject{parent}
@@ -72,6 +78,129 @@ void Hello::registerPluginActions(QMenu *rootMenu)
 
         QVariant editName = PluginFrameworkHelper::DoNewEdit(s_notepad, s_plugin_callback);
         QMessageBox::information(nullptr, "New Edit", editName.toString());
+    });
+
+    rootMenu->addAction("Create New Plugin Code Template", this, [this](){
+        // 1. Dialog to PluginName and ClassName
+        CreateNewPluginCodeDialog dialog;
+
+        if (dialog.exec() == QDialog::Accepted) {
+
+            /**  H  **/
+            QFile file_h("://template/plugintemplate.h");
+            file_h.open(QIODevice::ReadOnly);
+            QString h = file_h.readAll();
+            file_h.close();
+
+            // ifdef/class
+            h.replace("PLUGINTEMPLATE", dialog.getClassName().toUpper());
+            h.replace("PluginTemplate", dialog.getClassName());
+
+            /**  CPP  **/
+            QFile file_cpp("://template/plugintemplate.cpp");
+            file_cpp.open(QIODevice::ReadOnly);
+            QString cpp = file_cpp.readAll();
+            file_cpp.close();
+
+            // include/class
+            cpp.replace("plugintemplate", dialog.getClassName().toLower());
+            cpp.replace("PluginTemplate", dialog.getClassName());
+
+            // 1. 处理插件名称、版本、作者、简介说明
+#if _MSC_VER
+    QTextCodec *codec = QTextCodec::codecForName("GBK");
+#else
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+#endif
+            // QTextCodec::setCodecForLocale(codec);
+
+            cpp.replace("//Name", dialog.getName());
+            cpp.replace("//Version", dialog.getVersion());
+            cpp.replace("//Author", dialog.getAuthor());
+            cpp.replace("//Comment", dialog.getComment());
+
+            // 2. 处理插件预期触发操作
+            if (dialog.getMenuType() == true) {
+                cpp.replace("//Trigger", "QMessageBox::information(nullptr, \"tip\", \"This is default tip message.\");");
+                cpp.replace("//Actions", "//Actions: Will never enter here.");
+            } else {
+                cpp.replace("MenuType::None", "MenuType::SecondaryMenu");
+                cpp.replace("//Trigger", "//Trigger: Will never enter here.");
+
+                cpp.replace("//Actions","rootMenu->addAction(\"Default\", this, [this](){\n"
+                                    "        QMessageBox::information(nullptr, \"tip\", \"This is default tip message.\");\n"
+                                    "    });");
+            }
+            // 3. 解锁 NDD_DECLARE_PLUGIN 宏注释
+            cpp.replace("//NDD_DECLARE_PLUGIN", "NDD_DECLARE_PLUGIN");
+
+
+            /** CMake **/
+            QFile file_txt("://template/plugintemplate.txt");
+            file_txt.open(QIODevice::ReadOnly);
+            QString txt = file_txt.readAll();
+            file_txt.close();
+
+            // 1. 处理对 CMakeLists.txt 的构建解释, 目标名称
+            txt.replace("plugintemplate", dialog.getClassName().toLower());
+            // 2. 这是在模板中的一个路径占位，但原始内容被构建解释改变了
+            QString txtPlacePath = QString("#framework-plugins/%1").arg(dialog.getClassName().toLower());
+
+            /** -------------------------------- */
+
+            // 1. 创建编辑器
+            QVariant editName = PluginFrameworkHelper::DoNewEdit(s_notepad, s_plugin_callback);
+            // 2. 获取刚才创建的编辑器
+            QsciScintilla *curEdit = s_get_cur_edit_callback(s_notepad);
+
+            // 3. 将代码设置到内部，或打开对话框保存到目录
+            if (dialog.getSaveType() == true) {
+                curEdit->setText(h + "\n\n\n" + cpp + "\n\n\n" + txt);
+            } else {
+                // 获取保存目录路径
+                QString existDir = QFileDialog::getExistingDirectory(nullptr, "Open Save Dir", PathUtil::execDir());
+                if (existDir.isEmpty() == false) {
+                    QMessageBox::information(nullptr, "Note", QString("已保存到目录:\n%1").arg(existDir));
+                    QString header = QString("%1/%2.h").arg(existDir);
+                    QString source = QString("%1/%2.cpp").arg(existDir);
+
+                    QFile fh(header.arg(dialog.getClassName().toLower()));
+                    QFile fcpp(source.arg(dialog.getClassName().toLower()));
+
+                    fh.open(QIODevice::WriteOnly);
+                    // fh.write(h.toLocal8Bit()); // 存在乱码情况，使用 QTextStream
+                    QTextStream fhout(&fh);
+                    fhout.setCodec("utf-8");
+                    fhout.setGenerateByteOrderMark(true); // with Bom
+                    fhout << h;
+                    fh.close();
+
+                    fcpp.open(QIODevice::WriteOnly);
+                    // fcpp.write(cpp.toLocal8Bit()); // 存在乱码情况，使用 QTextStream
+                    QTextStream fcppout(&fcpp);
+                    fcppout.setCodec("utf-8");
+                    fcppout.setGenerateByteOrderMark(true); // with Bom
+                    fcppout << cpp;
+                    fcpp.close();
+
+                    // 可能逻辑: 如果存放在源代码目录树中，则处理掉路径前缀部分(替换占位)/或直接使用存储目录(替换占位)
+                    QString posiblePath = QString("plugin/framework-plugins");
+                    if (existDir.contains(posiblePath) == true) {
+                        int posibleIndex = existDir.indexOf("framework-plugins");
+                        if (posibleIndex > 0) {
+                            txt.replace(txtPlacePath, existDir.mid(posibleIndex));
+                        }
+                    } else {
+                        txt.replace(txtPlacePath, existDir);
+                    }
+                    curEdit->setText(txt);
+                } else {
+                    QMessageBox::information(nullptr, "Note", "未选中存储目录，本次操作被忽略");
+                    QString content = QString("未选中存储目录，本次操作被忽略，但保留了本次内容\n\n\n") + h + "\n\n\n" + cpp;
+                    curEdit->setText(content);
+                }
+            }
+        }
     });
 }
 

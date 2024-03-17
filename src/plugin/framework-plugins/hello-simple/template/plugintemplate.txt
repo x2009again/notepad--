@@ -1,0 +1,18 @@
+现在：将以下内容复制到源代码目录的 plugin/CMakeLists.txt 中。
+     并在项目配置中启用该构建：framework-plugintemplate_ENABLE
+     或在命令行中启用该构建：-Dframework-plugintemplate_ENABLE:BOOL=ON
+
+注意：在以下 if 中，是对此目标的扩展构建，使用 if 是在确保项目中启用该构建时才进行构建。
+     可以注意的是，在没有明确构建何种插件时，任何由 add_framework_plugin 添加的插件构建均不会起效。
+     这样可以最大程度在默认情况下确保主程序的可构建性。
+
+# 一个简单的 plugintemplate 插件
+add_framework_plugin(framework-plugintemplate
+    # 这里可以进行编写包含源代码的目录、文件路径、其它需要构建的资源路径
+    #framework-plugins/plugintemplate
+)
+if(framework-plugintemplate_ENABLE)
+    # 这里可以进行扩展构建，
+    # find_package(Qt5Svg)
+    # target_link_libraries(framework-plugintemplate Qt5::Svg)
+endif(framework-plugintemplate_ENABLE)

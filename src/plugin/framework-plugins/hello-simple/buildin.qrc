@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>template/plugintemplate.cpp</file>
+        <file>template/plugintemplate.h</file>
+        <file>template/plugintemplate.txt</file>
+    </qresource>
+</RCC>

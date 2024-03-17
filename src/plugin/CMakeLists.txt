@@ -30,7 +30,12 @@ if(USE_NOTEPAD_PLUGIN)
     )
 
     # 一个最为简单的 framework-hello 插件
-    add_framework_plugin(framework-hello-simple framework-plugins/hello-simple)
+    add_framework_plugin(framework-hello-simple
+        ${PROJECT_SOURCE_DIR}/src/utils
+        framework-plugins/hello-simple
+        framework-plugins/hello-simple/view
+        framework-plugins/hello-simple/template
+        framework-plugins/hello-simple/buildin.qrc)
 
     # 一个简单的 plantuml 预览插件
     add_framework_plugin(framework-plantuml-preview
