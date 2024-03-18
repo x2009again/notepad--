@@ -13,30 +13,53 @@
     5. 最后，它为你直接准备好了基础插件结构，并生成最终说明到 Notepad-- 的新编辑器中。
     */
     ```
+
 #### 新插件诞生流程
 
 1. 使用源码树中的 hello-simple 插件提供的功能
+    
     ![图片](doc/image.png)
+
 2. 在对话框中填写你的插件名称与类名(纯英文不带空格可以直接使用插件名)
+    
     ![图片](doc/image-1.png)
+
 3. 保存(生成)到源码树目录的某个子目录下
+    
     ![图片](doc/image-2.png)
+
 4. 在编辑器中将出现一段cmake的构建说明，粘贴到 src/plugin/CMakeLists.txt 中
+    
     ![图片](doc/image-3.png)
+
 5. 在 Qt Creator 中准备构建这个插件 - 勾选
+    
     ![图片](doc/image-4.png)
+
 6. 在 Qt Creator 中选中这个目标单独构建它
+    
     ![图片](doc/image-5.png)
+
 7. 构建完成直接启动已编译过的 Notepad-- 程序
+    
     ![图片](doc/image-6.png)
+
 8. 在打开的 Notepad-- 中可以发现插件已经加载了
+    
     ![图片](doc/image-7.png)
+
 9. 在插件源码中可以发现一级菜单直接触发时执行的内容
+    
     ![图片](doc/image-8.png)
+
 10. 插件：一级菜单和二级菜单的区别
+    
     ![图片](doc/image-9.png)
+
 11. 插件二级菜单的入口与逻辑说明
+    
     ![图片](doc/image-10.png)
+
     
 
 - 来自 Notepad-- 新插件诞生流程缩略预览
