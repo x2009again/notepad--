@@ -71,6 +71,7 @@
 
 #include <stdexcept>
 #include <mutex>
+#include <thread>
 
 
 
@@ -4314,7 +4315,7 @@ void ScintillaEditView::deleteTailFileThread()
 
 		qlonglong threadAddr = this->property(Tail_Thread).toLongLong();
 
-		std::thread* pListenThread = (std::thread*)(threadAddr);
+        std::thread* pListenThread = (std::thread*)(threadAddr);
 
 		if (pListenThread->joinable())
 		{
