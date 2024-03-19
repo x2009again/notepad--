@@ -60,18 +60,40 @@ endif(TRUE)
 
 if(WIN32)
     # 在 Windows 中构建时，需要关注此库的构建形式，QScintilla 应该以何种方式编译
-    target_compile_definitions(QSci 
-        PRIVATE 
-            SCINTILLA_QT                # 
-            SCI_LEXER                   # 
-            INCLUDE_DEPRECATED_FEATURES # 
+    if(NOTEPAD_BUILD_BY_SHARED)
+        # 在 Windows 中构建时动态化的 QSci 库时，对于不同的编译器进行处理
+        if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+            # 在 Windows 中使用 MSVC 构建时
+            target_compile_definitions(QSci
+                PRIVATE
+                    SCINTILLA_QT                #
+                    SCI_LEXER                   #
+                    INCLUDE_DEPRECATED_FEATURES #
 
-        # 控制 QSCINTILLA_EXPORT 符号应为：
-                                        # 构建时(导出)，由外部使用时(导入)
-            QSCINTILLA_MAKE_DLL         # 在 Windows 中构建此库时应该采用 Q_DECL_EXPORT
-        INTERFACE
-            QSCINTILLA_DLL              # 在 Windows 中使用此库时应该采用 Q_DECL_IMPORT
-    )
+                # 控制 QSCINTILLA_EXPORT 符号应为：
+                                                # 构建时(导出)，由外部使用时(导入)
+                    QSCINTILLA_MAKE_DLL         # 在 Windows 中构建此库时应该采用 Q_DECL_EXPORT
+                INTERFACE
+                    QSCINTILLA_DLL              # 在 Windows 中使用此库时应该采用 Q_DECL_IMPORT
+            )
+        else()
+            # 在 Windows 中使用 MinGW 构建时
+            target_compile_definitions(QSci
+                PRIVATE
+                    SCINTILLA_QT                #
+                    SCI_LEXER                   #
+                    INCLUDE_DEPRECATED_FEATURES #
+            )
+        endif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    else()
+        # 在 Windows 中构建静态化的 QSci 库时，不同的编译器基本无区别
+        target_compile_definitions(QSci
+            PRIVATE
+                SCINTILLA_QT                #
+                SCI_LEXER                   #
+                INCLUDE_DEPRECATED_FEATURES #
+        )
+    endif(NOTEPAD_BUILD_BY_SHARED)
 endif(WIN32)
 
 if(UNIX)
