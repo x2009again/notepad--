@@ -79,6 +79,11 @@ void Hello::registerPluginActions(QMenu *rootMenu)
         QVariant editName = PluginFrameworkHelper::DoNewEdit(s_notepad, s_plugin_callback);
         QMessageBox::information(nullptr, "New Edit", editName.toString());
     });
+    rootMenu->addAction("Monitor textChanged", this, [=](){
+        connect(s_get_cur_edit_callback(s_notepad), &QsciScintilla::textChanged, this, [](){
+            QMessageBox::information(nullptr, "Tip", "textChanged!");
+        });
+    });
 
     rootMenu->addAction("Create New Plugin Code Template", this, [this](){
         // 1. Dialog to PluginName and ClassName
