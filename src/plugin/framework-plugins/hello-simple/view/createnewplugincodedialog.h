@@ -24,6 +24,11 @@ public:
     bool getMenuType();
 
     bool getSaveType();
+    bool getQuoteCmake();
+
+private slots:
+    void on_r_save_edit_clicked();
+    void on_r_save_dir_clicked();
 
 private:
     Ui::CreateNewPluginCodeDialog *ui;

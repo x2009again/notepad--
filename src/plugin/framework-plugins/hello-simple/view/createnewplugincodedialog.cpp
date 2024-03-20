@@ -51,3 +51,19 @@ bool CreateNewPluginCodeDialog::getSaveType()
 {
     return ui->r_save_edit->isChecked();
 }
+
+bool CreateNewPluginCodeDialog::getQuoteCmake()
+{
+    return ui->r_cmake_quote->isChecked();
+}
+
+void CreateNewPluginCodeDialog::on_r_save_edit_clicked()
+{
+    return ui->groupBox_4->setEnabled(false);
+}
+
+void CreateNewPluginCodeDialog::on_r_save_dir_clicked()
+{
+    return ui->groupBox_4->setEnabled(true);
+}
+

@@ -150,6 +150,8 @@ void Hello::registerPluginActions(QMenu *rootMenu)
             txt.replace("plugintemplate", dialog.getClassName().toLower());
             // 2. 这是在模板中的一个路径占位，但原始内容被构建解释改变了
             QString txtPlacePath = QString("#framework-plugins/%1").arg(dialog.getClassName().toLower());
+            // 3. 这是在模板中的一个路径占位，使用引用的方式才会替换
+            QString txtIncludePath = QString("path/to/plugin.cmake");
 
             /** -------------------------------- */
 
@@ -168,9 +170,11 @@ void Hello::registerPluginActions(QMenu *rootMenu)
                     QMessageBox::information(nullptr, "Note", QString("已保存到目录:\n%1").arg(existDir));
                     QString header = QString("%1/%2.h").arg(existDir);
                     QString source = QString("%1/%2.cpp").arg(existDir);
+                    QString plugincmake = QString("%1/plugin.cmake").arg(existDir);
 
                     QFile fh(header.arg(dialog.getClassName().toLower()));
                     QFile fcpp(source.arg(dialog.getClassName().toLower()));
+                    QFile fcmake(plugincmake);
 
                     fh.open(QIODevice::WriteOnly);
                     // fh.write(h.toLocal8Bit()); // 存在乱码情况，使用 QTextStream
@@ -188,17 +192,31 @@ void Hello::registerPluginActions(QMenu *rootMenu)
                     fcppout << cpp;
                     fcpp.close();
 
+
                     // 可能逻辑: 如果存放在源代码目录树中，则处理掉路径前缀部分(替换占位)/或直接使用存储目录(替换占位)
                     QString posiblePath = QString("plugin/framework-plugins");
                     if (existDir.contains(posiblePath) == true) {
                         int posibleIndex = existDir.indexOf("framework-plugins");
                         if (posibleIndex > 0) {
                             txt.replace(txtPlacePath, existDir.mid(posibleIndex));
+                            txt.replace(txtIncludePath, existDir.mid(posibleIndex) + "/plugin.cmake");
                         }
                     } else {
                         txt.replace(txtPlacePath, existDir);
+                        txt.replace(txtIncludePath, existDir + "/plugin.cmake");
                     }
                     curEdit->setText(txt);
+
+                    // 引用逻辑: 如果使用引用 plugin.cmake 的方式，那么将自动从 txt 模板中取8-18行的内容
+                    if (dialog.getQuoteCmake()) {
+                        fcmake.open(QIODevice::WriteOnly);
+                        // fcpp.write(cpp.toLocal8Bit()); // 存在乱码情况，使用 QTextStream
+                        QTextStream fcmakeout(&fcmake);
+                        fcmakeout.setCodec("utf-8");
+                        fcmakeout.setGenerateByteOrderMark(true); // with Bom
+                        fcmakeout << txt.split("\n").mid(8,10).join("\n").replace(existDir, "${CMAKE_CURRENT_LIST_DIR}");
+                        fcmake.close();
+                    }
                 } else {
                     QMessageBox::information(nullptr, "Note", "未选中存储目录，本次操作被忽略");
                     QString content = QString("未选中存储目录，本次操作被忽略，但保留了本次内容\n\n\n") + h + "\n\n\n" + cpp;

@@ -16,3 +16,11 @@ if(framework-plugintemplate_ENABLE)
     # find_package(Qt5Svg)
     # target_link_libraries(framework-plugintemplate Qt5::Svg)
 endif(framework-plugintemplate_ENABLE)
+
+
+引用：在对话框中如果使用引用的方式，引用型声明式构建，直接在存储位置开始部署你的插件构建
+    那么它应该生成 plugin.cmake 直接提供外部引用并自动将以上内容自动填充
+    另外，它的构建路径以 plugin.cmake 文件所在目录为起始点
+
+    # 一个使用引用构建的 plugintemplate 插件
+    include(path/to/plugin.cmake)
