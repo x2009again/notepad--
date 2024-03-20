@@ -14,10 +14,16 @@ if(${${_target}_ENABLE})
     foreach(arg IN LISTS ${_target}_ARGN)
         list(APPEND ${_target}_DIR_OR_SOURCES ${arg})
     endforeach(arg IN LISTS ${_target}_ARGN)
-    
+
+    # 相对于使用宏 add_framework_plugin 的位置约定
+    set(FRAMEWORK_DIR ${CMAKE_CURRENT_LIST_DIR}/framework)
+    if(NOT EXISTS FRAMEWORK_DIR)
+        # 相对于真实 CMakeLists.txt 节点的位置
+        set(FRAMEWORK_DIR ${CMAKE_CURRENT_SOURCE_DIR}/framework)
+    endif(NOT EXISTS FRAMEWORK_DIR)
 
     spark_add_library_path(${_target} SHARED
-        ${CMAKE_CURRENT_LIST_DIR}/framework
+        ${FRAMEWORK_DIR}
         ${${_target}_DIR_OR_SOURCES}
     )
     target_include_directories(${_target} PRIVATE
@@ -66,6 +72,17 @@ if(${${_target}_ENABLE})
                             # 控制 QSCINTILLA_EXPORT 符号应为 Q_DECL_IMPORT
         )
     endif(WIN32 AND NOTEPAD_BUILD_BY_SHARED)
+
+
+    spark_cmake_debug(
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>> ${_target} CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
+        "${_target} LINK_LIBRARIES:        $<TARGET_PROPERTY:${_target},LINK_LIBRARIES>"
+        "${_target} COMPILE_DEFINITIONS:   $<TARGET_PROPERTY:${_target},COMPILE_DEFINITIONS>"
+        "${_target} INTERFACE:             $<TARGET_PROPERTY:${_target},INTERFACE>"
+        "${_target} TARGET_FILE_BASE_NAME: $<TARGET_FILE_BASE_NAME:${_target}>"
+        "${_target} TARGET_FILE_NAME:      $<TARGET_FILE_NAME:${_target}>"
+        ">>>>>>>>>>>>>>>>>>>>>>>>>>> ${_target} CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
+    )
 
 endif(${${_target}_ENABLE})
 

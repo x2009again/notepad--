@@ -37,6 +37,9 @@ if(USE_NOTEPAD_PLUGIN)
         framework-plugins/hello-simple/template
         framework-plugins/hello-simple/buildin.qrc)
 
+    # 一个使用引用构建的插件
+    # include(path/to/plugin.cmake)
+
     # 一个简单的 plantuml 预览插件
     add_framework_plugin(framework-plantuml-preview
         framework-plugins/plantuml-preview
