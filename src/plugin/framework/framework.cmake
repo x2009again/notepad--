@@ -87,3 +87,59 @@ if(${${_target}_ENABLE})
 endif(${${_target}_ENABLE})
 
 endmacro(add_framework_plugin _target)
+
+
+# support git plugin
+# add_framework_plugin_with_git <git_repo_url> [git_args...]
+# 该宏定义了从指定的 git 仓库中获取插件源代码，并进行简单的构建
+macro(add_framework_plugin_with_git GIT_REPO_URL)
+#    string(REGEX MATCHALL "(?<=:\/\/)[^\/]+\/([^\/]+)\/([^\/]+)(?=\/)" GIT_VAR "${GIT_REPO_URL}")
+
+    set(GIT_ARGS ${ARGN})
+
+    # 1. 匹配前缀
+    string(REGEX MATCHALL "^http://"  HTTP_VAR  "${GIT_REPO_URL}")
+    string(REGEX MATCHALL "^https://" HTTPS_VAR "${GIT_REPO_URL}")
+
+    # 2. 移除前缀
+    if(HTTP_VAR STREQUAL "http://")
+        string(REPLACE "${HTTP_VAR}"  "" REPO_URL "${GIT_REPO_URL}")
+    elseif(HTTPS_VAR STREQUAL "https://")
+        string(REPLACE "${HTTPS_VAR}" "" REPO_URL "${GIT_REPO_URL}")
+    else()
+        return()
+    endif(HTTP_VAR STREQUAL "http://")
+
+    # 3. 分割字符串为 cmake LIST 格式
+    string(REPLACE "/" ";" URLSEGS ${REPO_URL})
+    list(LENGTH URLSEGS URLSEGS_LENGTH)
+    # 4. 判断长度是否符合要求
+    if(URLSEGS_LENGTH GREATER_EQUAL 3)
+        list(GET URLSEGS 1 URL_USER)
+        list(GET URLSEGS 2 URL_REPO)
+    else()
+        return()
+    endif(URLSEGS_LENGTH GREATER_EQUAL 3)
+
+    message("HTTP_VAR: ${HTTP_VAR}")
+    message("HTTPS_VAR: ${HTTPS_VAR}")
+    message("URL_USER: ${URL_USER}")
+    message("URL_REPO: ${URL_REPO}")
+
+    # 4. 处理自动化 git clone
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git)
+        execute_process(COMMAND git clone ${GIT_REPO_URL} ${URL_USER}_${URL_REPO}_git ${GIT_ARGS}
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    endif(NOT EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git)
+
+    # 6. 处理加入构建，如果这个仓库里有 plugin.cmake 的话
+    if(EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
+        message("-- [GIT_PLUGIN] Found new plugin with git: ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
+        include(${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
+    else()
+        return()
+    endif(EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
+
+endmacro(add_framework_plugin_with_git GIT_REPO_URL)
+
+# add_framework_plugin_with_git(https://gitee.com/ndd-community/notepad--plugin.plantuml-preview --branch=cmake-plugins-dev)

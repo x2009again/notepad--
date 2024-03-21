@@ -41,14 +41,8 @@ if(USE_NOTEPAD_PLUGIN)
     # include(path/to/plugin.cmake)
 
     # # 一个简单的 plantuml 预览插件
-    # add_framework_plugin(framework-plantuml-preview
-    #     framework-plugins/plantuml-preview
-    #     framework-plugins/plantuml-preview/nplugin.qrc
-    # )
-    # if(framework-plantuml-preview_ENABLE)
-    #     find_package(Qt5Svg)
-    #     target_link_libraries(framework-plantuml-preview Qt5::Svg)
-    # endif(framework-plantuml-preview_ENABLE)
+    # add_framework_plugin_with_git(https://gitee.com/ndd-community/notepad--plugin.plantuml-preview --branch=cmake-plugins-dev)
+
 
     # # 一个简单的 svg 预览插件
     # add_framework_plugin(framework-svg-preview
