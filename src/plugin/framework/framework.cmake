@@ -5,10 +5,16 @@
     # 基于提供的包含源代码文件的的路径，或指定的要构建的源代码
 macro(add_framework_plugin _target)
 
-    option(${_target}_ENABLE "是否确认构建 ${_target} 插件" OFF)
+    set(${_target}_ALIAS ${_target})
+    if(WITH_GIT)
+        set(${_target}_ALIAS online-${_target})
+        unset(WITH_GIT)
+    endif(WITH_GIT)
 
-if(${${_target}_ENABLE})
+    option(${${_target}_ALIAS}_ENABLE "是否确认构建 ${_target} 插件" OFF)
 
+if(${${${_target}_ALIAS}_ENABLE})
+    set(${_target}_ENABLE ON)
     set(${_target}_ARGN ${ARGN})
     # set(${_target}_DIR_OR_SOURCES)
     foreach(arg IN LISTS ${_target}_ARGN)
@@ -84,7 +90,7 @@ if(${${_target}_ENABLE})
         ">>>>>>>>>>>>>>>>>>>>>>>>>>> ${_target} CMake Debug <<<<<<<<<<<<<<<<<<<<<<<<<<<"
     )
 
-endif(${${_target}_ENABLE})
+endif(${${${_target}_ALIAS}_ENABLE})
 
 endmacro(add_framework_plugin _target)
 
@@ -135,6 +141,7 @@ macro(add_framework_plugin_with_git GIT_REPO_URL)
     # 6. 处理加入构建，如果这个仓库里有 plugin.cmake 的话
     if(EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
         message("-- [GIT_PLUGIN] Found new plugin with git: ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
+        set(WITH_GIT ON)
         include(${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
     else()
         return()

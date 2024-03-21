@@ -40,7 +40,7 @@ if(USE_NOTEPAD_PLUGIN)
     # 一个使用引用构建的插件
     # include(path/to/plugin.cmake)
 
-    # # 一个简单的 plantuml 预览插件
+    # 一个 plantuml 预览插件(使用 with_git 引用的在线构建)
     # add_framework_plugin_with_git(https://gitee.com/ndd-community/notepad--plugin.plantuml-preview --branch=cmake-plugins-dev)
 
 
