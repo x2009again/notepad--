@@ -44,14 +44,8 @@ if(USE_NOTEPAD_PLUGIN)
     # add_framework_plugin_with_git(https://gitee.com/ndd-community/notepad--plugin.plantuml-preview --branch=cmake-plugins-dev)
 
 
-    # # 一个简单的 svg 预览插件
-    # add_framework_plugin(framework-svg-preview
-    #     framework-plugins/svg-preview
-    # )
-    # if(framework-svg-preview_ENABLE)
-    #     find_package(Qt5Svg)
-    #     target_link_libraries(framework-svg-preview Qt5::Svg)
-    # endif(framework-svg-preview_ENABLE)
+    # 一个简单的 svg 预览插件(使用 with_git 引用的在线构建，它使用了 plantuml 共享的资源定义)
+    # add_framework_plugin_with_git(https://gitee.com/ndd-community/notepad--plugin.svg-preview --branch=cmake-plugins-dev)
 
     # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
     # add_subdirectory(opencc-demo-plugin)
