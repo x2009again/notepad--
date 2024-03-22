@@ -104,8 +104,6 @@ endmacro(add_framework_plugin _target)
 # add_framework_plugin_with_git <git_repo_url> [git_args...]
 # 该宏定义了从指定的 git 仓库中获取插件源代码，并进行简单的构建
 macro(add_framework_plugin_with_git GIT_REPO_URL)
-#    string(REGEX MATCHALL "(?<=:\/\/)[^\/]+\/([^\/]+)\/([^\/]+)(?=\/)" GIT_VAR "${GIT_REPO_URL}")
-
     set(GIT_ARGS ${ARGN})
 
     # 1. 匹配前缀
@@ -145,7 +143,8 @@ macro(add_framework_plugin_with_git GIT_REPO_URL)
 
     # 6. 处理加入构建，如果这个仓库里有 plugin.cmake 的话
     if(EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
-        message("-- [GIT_PLUGIN] Found new plugin with git: ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
+        message("-- [GIT_PLUGIN] Found new plugin with git: ")
+        message("                ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
         set(WITH_GIT ON)
         include(${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
     else()
@@ -169,8 +168,10 @@ macro(framework_plugin_include _target _plug_cmake)
         set(FRAMEWORK_SOURCES_EXPORTS)
             include(${_plug_cmake})
             spark_file_glob(_want_files ${FRAMEWORK_SOURCES_EXPORTS})
-            message("-- [FRAMEWORK ANALYZE]: ${_target} Want Dirs:  ${FRAMEWORK_INCLUDE_EXPORTS}")
-            message("-- [FRAMEWORK ANALYZE]: ${_target} Want Files: ${_want_files}")
+            message("-- [FRAMEWORK ANALYZE]: ${_target} Want Dirs:  ")
+            message("                        ${FRAMEWORK_INCLUDE_EXPORTS}")
+            message("-- [FRAMEWORK ANALYZE]: ${_target} Want Files: ")
+            message("                        ${_want_files}")
             target_include_directories(${_target} PUBLIC ${FRAMEWORK_INCLUDE_EXPORTS})
             target_sources(${_target} PUBLIC ${_want_files})
         set(FRAMEWORK_WANT_INCLUDE FALSE)
@@ -215,10 +216,15 @@ macro(framework_plugin_include_with_git _target GIT_REPO_URL)
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git)
         execute_process(COMMAND git clone ${GIT_REPO_URL} ${URL_USER}_${URL_REPO}_git ${GIT_ARGS}
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+    # else()
+    #     execute_process(COMMAND git pull
+    #         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git)
     endif(NOT EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git)
 
     if(EXISTS ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
-        message("-- [WANT_GIT_PLUGIN] Found new plugin with git: ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
+        # message("-- [WANT_GIT_PLUGIN] Found new plugin with git: ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
+        message("-- [WANT_GIT_PLUGIN] Found new plugin with git: ")
+        message("                ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake")
         # set(WITH_GIT ON) 这个不需要继续标记，直接进入资源引用逻辑
         framework_plugin_include(${_target} 
             ${CMAKE_BINARY_DIR}/${URL_USER}_${URL_REPO}_git/plugin.cmake)
