@@ -5,7 +5,7 @@ option(USE_NOTEPAD_PLUGIN_BASE "构建 Notepad-- 内部的插件基础模板" OF
 
 if(USE_NOTEPAD_PLUGIN)
 
-    if(USE_NOTEPAD_PLUGIN_BASE)
+    if(USE_NOTEPAD_PLUGIN_BASE) # 早期构建，准备废弃
         # 默认的测试插件
         add_subdirectory(test)
         # 被 cmake-plugins-dev 构建的 helloworld 插件
@@ -19,17 +19,25 @@ if(USE_NOTEPAD_PLUGIN)
         add_subdirectory(template-plugins/base-secondary-menu-ui-plugin-v1)
     endif(USE_NOTEPAD_PLUGIN_BASE)
 
-    # 构建一个简单的基于 framwork 的 framework-helloworld 插件
-
+    # [核心]：[引入插件框架核心模块]
     include(framework/framework.cmake)
-    # add_framework_plugin [<dir>...] [<file>...]
-    # 构建一个基于 framework 的插件
+    include(framework/framework-include.cmake)
+    
+    # [开发者计划]：不改变本 CMakeLists.txt 的情况下开发自己的插件
+    # 非冲突化开发方式，在 dev.cmake 中建立自己的本地引用或在线引用来构建自己的插件。
+    # 并将其作为开发者计划的关注位置点，以此保证本 CMakeLists.txt 可以直接随项目更新
+    include(dev.cmake)
+    
+    ## [框架：插件目标直接构建]
+    # add_framework_plugin <target> [<dir>...] [<file>...]
+    # 1. 构建一个基于 framework 的插件
         # 基于提供的包含源代码文件的的路径，或指定的要构建的源代码
     add_framework_plugin(framework-helloworld
         framework-plugins/helloworld
     )
 
-    # 一个最为简单的 framework-hello 插件
+    # 2. 简单的 framework-hello 插件
+        # 基于提供的包含源代码文件的的路径，或指定的要构建的源代码
     add_framework_plugin(framework-hello-simple
         ${PROJECT_SOURCE_DIR}/src/utils
         framework-plugins/hello-simple
@@ -37,19 +45,46 @@ if(USE_NOTEPAD_PLUGIN)
         framework-plugins/hello-simple/template
         framework-plugins/hello-simple/buildin.qrc)
 
-    # 一个使用引用构建的插件
+    
+    ## [框架：插件描述引用构建]
     # include(path/to/plugin.cmake)
+    # 1. 使用本地 plugin.cmake 引用构建(示例)
 
-    # 一个 plantuml 预览插件(使用 with_git 引用的在线构建)
+
+    ## [框架：插件 with_git 的引用构建 - 与在线]
+    # add_framework_plugin_with_git <git> [args...]
+        # [框架引用：插件扩展处的资源引用构建]
+            # framework_plugin_include <target> <git>
+            # framework_plugin_include_with_git <target> <git> [args...]
+
+    # 1. 基于 git 仓库在线构建 helloworld 插件
+    # add_framework_plugin_with_git(
+    #     https://gitee.com/zinface/notepad--plugin.helloworld
+    #     --branch=cmake-plugins-dev)
+
+    # 2. 一个 plantuml 预览插件
+        # (使用 with_git 引用的在线构建)
     # add_framework_plugin_with_git(
     #     https://gitee.com/ndd-community/notepad--plugin.plantuml-preview
     #     --branch=cmake-plugins-dev)
         
-    # 一个简单的 svg 预览插件(使用 with_git 引用的在线构建，它使用了 plantuml 共享的资源定义)
+    # 3. 一个简单的 svg 预览插件
+        # (使用 with_git 引用的在线构建)
+        # (使用了 plantuml 预览插件的共享的资源定义)
     # add_framework_plugin_with_git(
     #     https://gitee.com/ndd-community/notepad--plugin.svg-preview
     #     --branch=cmake-plugins-dev)
 
+    # 4. 一个使用引用构建的 plantumlexamples 插件
+        # (使用 with_git 引用的在线构建)
+        # (使用了 plantuml 预览插件的共享的资源定义)
+        # (使用了 framework-plugin-component-library 提供的共享的资源定义)
+    # add_framework_plugin_with_git(
+    #     https://gitee.com/zinface/notepad--plugin.plantuml-examples
+    #     --branch=cmake-plugins-dev)
+
+
+    ## 例外：早期的构建模式，即将准备废弃
     # 一个简单的插件示例，但依赖于外部的 opencc 项目(基于 git)
     # add_subdirectory(opencc-demo-plugin)
     # # 一个简单的版本更新检查的插件

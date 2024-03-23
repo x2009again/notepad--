@@ -527,3 +527,4 @@ _deps
 
 # Windows cmd or powershell supported files..
 /windows-msvc-ninja.bat
+/3rd_plugins_cache
