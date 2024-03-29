@@ -81,7 +81,7 @@ void HelloWorld::registerPluginCallBack(std::function<bool (QWidget *, int, void
 
 void HelloWorld::registerPluginActions(QMenu *rootMenu)
 {
-    QMessageBox::information(nullptr, "提示信息", "您的 MenuType 类型为 1 需要注册 QAction 集合");
+    // QMessageBox::information(nullptr, "提示信息", "您的 MenuType 类型为 1 需要注册 QAction 集合");
     rootMenu->addAction("第一个 QAction", [](){
         QMessageBox::information(nullptr, "提示信息", "您已 trigger 触发插件的第一个 QAction");
     });
