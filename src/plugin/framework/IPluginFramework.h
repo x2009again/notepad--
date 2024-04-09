@@ -75,14 +75,20 @@ public:
      * @brief registerNotepad
      * @param notepad
      */
-    virtual void registerNotepad(QWidget *notepad) = 0;
+    virtual void registerNotepad(QWidget *notepad)
+    {
+        s_notepad = notepad;
+    }
 
     /********************************************* 插件路径注册*/
     /**
      * @brief registerStrFileName
      * @param str_file_name
      */
-    virtual void registerStrFileName(QString str_file_name) = 0;
+    virtual void registerStrFileName(QString str_file_name)
+    {
+        s_str_file_name = str_file_name;
+    }
 
     /********************************************* 插件的一级(MenuType=None)或二级(MenuType=SecondaryMenu)菜单触发与注册接口/
 
@@ -106,7 +112,10 @@ public:
      * @param curEdit
      * @note 由于框架无法在 C 风格函数入口处完成回调函数注册，则由插件提供者自行在 registerCurrentEditCallback 中连接信号到此处
      */
-    virtual void registerCurrentEditCallback(std::function<QsciScintilla*(QWidget*)> get_cur_edit_callback) = 0;
+    virtual void registerCurrentEditCallback(std::function<QsciScintilla*(QWidget*)> get_cur_edit_callback)
+    {
+        s_get_cur_edit_callback = get_cur_edit_callback;
+    }
 
     /********************************************* 编辑器功能函数回调注册*/
     /**
@@ -114,7 +123,10 @@ public:
      * @param plugin_callBack
      * @让编辑器做指定的事，目前编辑器支持由插件发出两种指令(Do::NewEdit, Do::)
      */
-    virtual void registerPluginCallBack(std::function<bool(QWidget*, int, void*)> plugin_callback) = 0;
+    virtual void registerPluginCallBack(std::function<bool(QWidget*, int, void*)> plugin_callback)
+    {
+        s_plugin_callback = plugin_callback;
+    }
 
 
     /********************************************* 为插件拷贝以下信息 */
@@ -122,11 +134,11 @@ public:
     /** s_strFileName 为当前路径 */
     /** s_get_cur_edit_callback 为回调函数，用于获取当前编辑器 */
     /** s_plugin_callBack 为回调函数，用于使当前主程序做某些事 */
-//private:
-//    QWidget *s_notepad;
-//    QString s_str_file_name;
-//    std::function<QsciScintilla*(QWidget*)> s_get_cur_edit_callback;
-//    std::function<bool(QWidget*, int, void*)> s_plugin_callback;
+protected:
+    QWidget *s_notepad;
+    QString s_str_file_name;
+    std::function<QsciScintilla*(QWidget*)> s_get_cur_edit_callback;
+    std::function<bool(QWidget*, int, void*)> s_plugin_callback;
 };
 
 Q_DECLARE_INTERFACE(IPluginFramework, IPluginFramework_IID)
