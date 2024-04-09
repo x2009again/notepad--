@@ -15,8 +15,10 @@ macro(framework_plugin_include _target _plug_cmake)
     if(EXISTS ${_plug_cmake})
         message("-- [FRAMEWORK WANT]: ${_target}")
         set(FRAMEWORK_WANT_INCLUDE TRUE)
+        set(FRAMEWORK_PLUGIN ${_target})  # 预期在间接引用上使用
         set(FRAMEWORK_INCLUDE_EXPORTS)
         set(FRAMEWORK_SOURCES_EXPORTS)
+        set(FRAMEWORK_WITHGIT_EXPORTS)    # 预期在间接引用上使用
             include(${_plug_cmake})
             spark_file_glob(_want_files ${FRAMEWORK_SOURCES_EXPORTS})
             message("-- [FRAMEWORK ANALYZE]: ${_target} Want Dirs:  ")
@@ -25,13 +27,17 @@ macro(framework_plugin_include _target _plug_cmake)
             message("                        ${_want_files}")
             target_include_directories(${_target} PUBLIC ${FRAMEWORK_INCLUDE_EXPORTS})
             target_sources(${_target} PUBLIC ${_want_files})
+            foreach(shared_export IN LISTS FRAMEWORK_WITHGIT_EXPORTS)
+                string(REPLACE "," ";" shared_export "${shared_export}")
+                framework_plugin_include_with_git(${_target} ${shared_export})
+            endforeach()
         set(FRAMEWORK_WANT_INCLUDE FALSE)
     endif(EXISTS ${_plug_cmake})
 endmacro(framework_plugin_include _target _plug_cmake)
 
 # framework_plugin_include_with_git <target> <git_repo_url> [git_args...]
 # 该宏定义了从指定的 git 仓库中获取插件源代码，并检查是否有 plugin.cmake，再转到引用资源构建
-macro(framework_plugin_include_with_git _target GIT_REPO_URL)
+function(framework_plugin_include_with_git _target GIT_REPO_URL)
     set(GIT_ARGS ${ARGN})
 
     # 1. 匹配前缀
@@ -84,6 +90,6 @@ macro(framework_plugin_include_with_git _target GIT_REPO_URL)
         return()
     endif(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git/plugin.cmake)
 
-endmacro(framework_plugin_include_with_git _target GIT_REPO_URL)
+endfunction(framework_plugin_include_with_git _target GIT_REPO_URL)
 
 # add_framework_plugin_with_git(https://gitee.com/ndd-community/notepad--plugin.plantuml-preview --branch=cmake-plugins-dev)
