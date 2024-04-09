@@ -10,12 +10,19 @@
 
 #define IPluginFramework_IID "com.gitee.ndd.pluginframework"
 
+/** 
+    在使用 IPluginFramework 时，请使用 : public IPluginFramework 并实现必要的代码
+    另外：使用生成器生成适用于基于 IPluginFramework 的代码
+
+    基于 IPluginFramework 开发的ndd插件，主要为了更标准化生产一个插件
+*/
 class IPluginFramework
 {
 public:
     /**
      * @brief 提供给编辑器的菜单类型
      * @note None 为单功能菜单，SecondaryMenu 为二级菜单
+     * @since v1.0
      */
     enum MenuType {
         None = 0,
@@ -25,6 +32,7 @@ public:
     /**
      * @brief 让编辑器做指定的事
      * @note 目前编辑器支持由插件发出两种指令
+     * @since v2.0
      */
     enum Do {
         NewEdit = 1,
@@ -33,6 +41,7 @@ public:
 
     /**
      * @brief 当指定编辑器做改变语法的时候提供以下实现
+     * @since v2.0
      */
     enum SyntaxType {
         Js = 0,
@@ -83,7 +92,7 @@ public:
     /********************************************* 插件路径注册*/
     /**
      * @brief registerStrFileName
-     * @param str_file_name
+     * @param str_file_name 主程序加载插件时提供 .dll/so 路径(也就是最终本插件被加载时的 .dll/so 文件位置)
      */
     virtual void registerStrFileName(QString str_file_name)
     {
@@ -102,6 +111,7 @@ public:
      * @brief 由插件实现的二级菜单触发动作集合(默认提供的动作)
      * @param menu
      * @note 由框架在 C 风格函数入口处代为转交，则由插件提供者自行实现来完成提供内部的 QAction 集合
+     * @since v1.0
      */
     virtual void registerPluginActions(QMenu *rootMenu) = 0;
 
@@ -111,6 +121,7 @@ public:
      * @brief 由框架提供的获取当前编辑器的回调函数注册
      * @param curEdit
      * @note 由于框架无法在 C 风格函数入口处完成回调函数注册，则由插件提供者自行在 registerCurrentEditCallback 中连接信号到此处
+     * @since v2.0
      */
     virtual void registerCurrentEditCallback(std::function<QsciScintilla*(QWidget*)> get_cur_edit_callback)
     {
@@ -121,7 +132,8 @@ public:
     /**
      * @brief 由框架提供的对 Notepad 进行的执行动作
      * @param plugin_callBack
-     * @让编辑器做指定的事，目前编辑器支持由插件发出两种指令(Do::NewEdit, Do::)
+     * @note 让编辑器做指定的事，目前编辑器支持由插件发出两种指令(Do::NewEdit, Do::)
+     * @since v2.0
      */
     virtual void registerPluginCallBack(std::function<bool(QWidget*, int, void*)> plugin_callback)
     {
