@@ -128,6 +128,7 @@ macro(add_framework_plugin_with_git GIT_REPO_URL)
     list(LENGTH URLSEGS URLSEGS_LENGTH)
     # 4. 判断长度是否符合要求
     if(URLSEGS_LENGTH GREATER_EQUAL 3)
+        list(GET URLSEGS 0 URL_DOMAIN)
         list(GET URLSEGS 1 URL_USER)
         list(GET URLSEGS 2 URL_REPO)
     else()
@@ -136,26 +137,32 @@ macro(add_framework_plugin_with_git GIT_REPO_URL)
 
     message("HTTP_VAR: ${HTTP_VAR}")
     message("HTTPS_VAR: ${HTTPS_VAR}")
-    message("URL_USER: ${URL_USER}")
-    message("URL_REPO: ${URL_REPO}")
+    message("URL_DOMAIN: ${URL_DOMAIN}")
+    message("URL_USER:   ${URL_USER}")
+    message("URL_REPO:   ${URL_REPO}")
 
     # 4. 处理自动化 git clone
-    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git)
-        execute_process(COMMAND git clone ${GIT_REPO_URL} ${URL_USER}_${URL_REPO}_git ${GIT_ARGS}
+    # domain
+      # user
+        # repo
+    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${URL_DOMAIN}/${URL_USER}"
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache)
+        execute_process(COMMAND git clone ${GIT_REPO_URL} ${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git ${GIT_ARGS}
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache)
     else()
         execute_process(COMMAND git pull
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git)    
-    endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git)
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git)
+    endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git)
 
     # 6. 处理加入构建，如果这个仓库里有 plugin.cmake 的话
-    if(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git/plugin.cmake)
+    if(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake)
         message("-- [GIT_PLUGIN] Found new plugin with git: ")
-        message("                ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git/plugin.cmake")
+        message("                ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake")
         set(WITH_GIT ON)
-        include(${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git/plugin.cmake)
+        include(${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake)
     else()
         return()
-    endif(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_USER}_${URL_REPO}_git/plugin.cmake)
+    endif(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake)
 
 endmacro(add_framework_plugin_with_git GIT_REPO_URL)
