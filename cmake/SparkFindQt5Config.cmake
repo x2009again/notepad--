@@ -21,6 +21,7 @@ spark_add_link(qt5 Qt5::Core Qt5::Widgets Qt5::Network)
     # 同等于 spark_add_link(qt_<name> ${ARGN})
 macro(spark_add_link_qt5 _IN_NAME)
     spark_add_link(qt5_${_IN_NAME} ${ARGN})
+    spark_add_link(qt_${_IN_NAME} ${ARGN})
 endmacro(spark_add_link_qt5 _IN_NAME)
 
 # 使用 spark_add_link_qt5 生成 target_link_qt5_<name> 的宏

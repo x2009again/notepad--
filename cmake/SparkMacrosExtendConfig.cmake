@@ -107,19 +107,13 @@ endmacro(spark_add_library_source target)
 
 # 冗余的 target_link_qt5 或 qt6 的处理逻辑
 macro(_handle_spark_target_link_qt_macro _target)
-    if(SPARK_FIND_QT5)
-        target_link_qt5(${_target})
-    endif(SPARK_FIND_QT5)
-
-    if(SPARK_FIND_QT6)
-        target_link_qt6(${_target})
-    endif(SPARK_FIND_QT6)
+    target_link_qt(${_target})
 endmacro(_handle_spark_target_link_qt_macro _target)
 
-# spark_add_library_realpaths
+# spark_add_library_realpaths [dirs ...]
 # 基于传入的项进行构建
-# 可接受的值为: 路径列表
-# 可接受的值为: 路径列表+依赖库A+依赖库B
+    # 可接受的值为: 路径列表
+    # 可接受的值为: 路径列表+依赖库A+依赖库B
 macro(spark_add_library_realpaths)
 
     set(REALPATHS ${ARGN})
@@ -167,7 +161,57 @@ macro(spark_add_library_realpaths)
 endmacro(spark_add_library_realpaths)
 
 
-# spark_aux_source_paths <var> [paths]...
+# spark_add_shared_library_realpaths [dirs ...]
+# 基于传入的项进行构建
+    # 可接受的值为: 路径列表
+    # 可接受的值为: 路径列表+依赖库A+依赖库B
+macro(spark_add_shared_library_realpaths)
+
+    set(REALPATHS ${ARGN})
+    foreach(REALPATH IN LISTS REALPATHS)
+
+        # # 找 : 号下标，这是找:号的函数
+        # find_colon(${REALPATH} COLON_INDEX)
+        # 找 / 号下标，这是找/号的函数
+        find_dir_v(REALPATH SLASH_INDEX REVERSE)
+        # 找 + 号下标，这是找+号的函数
+        find_plus_v(REALPATH PLUS_INDEX)
+
+        # +
+        if(PLUS_INDEX LESS 0)
+            # 完全没有 + 的情况下，它就是一个基于目录的构建
+            set(dir ${REALPATH})
+            str_right_v(REALPATH SLASH_INDEX target)
+
+            spark_add_library_path(${target} SHARED
+                ${dir}
+                ${${target}_ADD_SOURCE}
+            )
+            # 使用 spark_add_library_realpaths 构建的依赖将允许直接引用库头文件
+            target_include_directories(${target} PUBLIC ${dir})
+            _handle_spark_target_link_qt_macro(${target})
+        else()
+            # 有 + 的情况下，获取 + 号下标右侧所有内容为 target_depends_str 并转为列表
+            str_right_v(REALPATH PLUS_INDEX target_depends_str)
+            string(REPLACE "+" ";" target_depends "${target_depends_str}")
+            
+            find_dir_plus_v(REALPATH target)
+            str_left_v(REALPATH PLUS_INDEX dir)
+
+            spark_add_library_path(${target} SHARED
+                ${dir}
+                ${${target}_ADD_SOURCE}
+            )
+            spark_debug_message("  [INCLUDE_DIRS]: ${dir} ${dir}/.. \n")
+            target_include_directories(${target} PUBLIC ${dir} ${dir}/..)
+            target_link_libraries(${target} ${target_depends})
+        endif(PLUS_INDEX LESS 0)
+
+    endforeach(REALPATH IN LISTS REALPATHS)
+
+endmacro(spark_add_shared_library_realpaths)
+
+# spark_aux_source_paths
 # 将指定路径中的文件变成可用的AUX源文件列表
     # 并提供 <var>_PATHS 记录源文件列表来源
 macro(spark_aux_source_paths AUX_VAR)
@@ -341,3 +385,55 @@ endmacro(spark_add_executable_realpaths)
 # 2.构建一个可执行目标，基于指定的文件路径进行构建(也许可以)
 # 3.构建一个可执行目标，基于指定的文件名称进行构建()
 # 4.构建一个可执行目标，基于指定命名规则(target:dir:dir+depend+depend...)
+
+
+# 一行一目标概念：集成(一行一库 + 一行一可执行目标)
+# 1.构建一个目标，基于指定的目录进行构建(适用于library与executable)
+# 3.构建一个目标，命名规则与集成相同，类型只需要写一个前缀标识
+#   s[hared],d[yamic],t[可执行]
+#     静态库  s:dir+depend+depend...
+#     动态库  d:dir+depend+depend...
+#     可执行  t:<target>:dir+depend+depend...
+#                ^ 可执行目标名称
+
+# 一行一目标
+# spark_add_target_realpaths <tag> [realpaths]
+# realpaths:
+    # s: static (s:src/libs/hello)
+    # d: shared (d:src/libs/say)
+    # t: target (t:<target>:src+hello+say)
+# 参考
+    # spark_add_executable_realpaths 
+    # spark_add_shared_library_realpaths 
+    # spark_add_library_realpaths 
+macro(spark_add_target_realpaths tag)
+    set(${tag}_ARGN ${ARGN})
+
+    foreach(item IN LISTS ${tag}_ARGN)
+        str_left(${item}  1 item_type)
+        str_right(${item} 1 item_val)
+
+        if("${item_type}" STREQUAL "t")
+            set(item_message "可执行文件")
+        elseif("${item_type}" STREQUAL "d")
+            set(item_message "动态库")
+        elseif("${item_type}" STREQUAL "s")
+            set(item_message "静态库")
+        endif("${item_type}" STREQUAL "t")
+
+        spark_debug_message("代号: [${tag}] 构建 ${item_val}, 类型: ${item_message}")
+        spark_debug_message("     * ${item_val}")
+
+        if("${item_type}" STREQUAL "t")
+            spark_add_executable_realpaths(${item_val})
+        elseif("${item_type}" STREQUAL "d")
+            spark_add_shared_library_realpaths(${item_val})
+        elseif("${item_type}" STREQUAL "s")
+            spark_add_library_realpaths(${item_val})
+        endif("${item_type}" STREQUAL "t")
+
+        spark_debug_message("")
+
+    endforeach(item IN LISTS  ${tag}_ARGN)
+
+endmacro(spark_add_target_realpaths tag)

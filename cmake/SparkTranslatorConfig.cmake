@@ -9,12 +9,19 @@ macro(translator_qt5 _qmvar)
     
     set(${_qmvar}_ARNG ${ARGN})
     file(GLOB ${_qmvar}_TS_FILES ${${_qmvar}_ARNG})
+    
     find_package(Qt5LinguistTools)
-
     qt5_add_translation(${_qmvar}
         ${${_qmvar}_TS_FILES})
 
     set(SPARK_QM_TRANSLATIONS ${_qmvar})
+
+    spark_debug_message("> QT Translation: ${_qmvar}")
+    file(WRITE ${CMAKE_BINARY_DIR}/${_qmvar} "")
+    foreach(item IN LISTS ${_qmvar})
+        file(APPEND ${CMAKE_BINARY_DIR}/${_qmvar} "${item}\n")
+        spark_debug_message("      ${item}")
+    endforeach(item IN LISTS ${_qmvar})
     
     # 注意，必须将 SPARK_QM_TRANSLATIONS 或 ${_qmvar} 加入到 add_executable 参数中才能在编译时生成只有原文的ts文件
     

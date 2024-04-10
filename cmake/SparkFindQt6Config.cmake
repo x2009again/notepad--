@@ -21,6 +21,7 @@ spark_add_link(qt6 Qt6::Core Qt6::Widgets Qt6::Network)
     # 同等于 spark_add_link(qt_<name> ${ARGN})
 macro(spark_add_link_qt6 _IN_NAME)
     spark_add_link(qt6_${_IN_NAME} ${ARGN})
+    spark_add_link(qt_${_IN_NAME} ${ARGN})
 endmacro(spark_add_link_qt6 _IN_NAME)
 
 # 使用 spark_add_link_qt6 生成 target_link_qt6_<name> 的宏

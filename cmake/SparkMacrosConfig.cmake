@@ -9,7 +9,7 @@ macro(spark_aux_source_directory OUTVAR INVAR)
     set(iv_args ${ARGN})
     list(LENGTH iv_args iv_arglen)
     
-    file(GLOB iv_SOURCE_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${INVAR}/*.c ${INVAR}/*.cpp)
+    file(GLOB iv_SOURCE_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${INVAR}/*.c ${INVAR}/*.cpp ${INVAR}/*.cc)
     file(GLOB iv_HEADER_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${INVAR}/*.h ${INVAR}/*.hpp)
     file(GLOB iv_QT_UI_LIST RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${INVAR}/*.ui ${INVAR}/*.qrc)
 
@@ -142,10 +142,26 @@ macro(spark_add_library_path _lib_name _lib_path)
         endforeach(item_file IN LISTS item_files)
     endforeach(item IN LISTS ${_lib_name}_ARGN_APPEND_PATHS)
 
+    # 3.1 转化 Qt5/6 的 ui 文件
+    set(${_lib_name}_SOURCE_UIS)
+    set(ui_wrap_files)
+    foreach(item IN LISTS ${_lib_name}_ARGN_SOURCES any_files)
+        get_filename_component(ex "${item}" LAST_EXT)
+        if("${ex}" STREQUAL ".ui")
+            list(APPEND ${_lib_name}_SOURCE_UIS ${item})
+        endif("${ex}" STREQUAL ".ui")
+    endforeach(item IN LISTS ${_lib_name}_ARGN_SOURCES any_files)
+    
+    if(SPARK_FIND_QT6)
+        qt_wrap_ui(ui_wrap_files ${${_lib_name}_SOURCE_UIS})
+    elseif(SPARK_FIND_QT5)
+        qt5_wrap_ui(ui_wrap_files ${${_lib_name}_SOURCE_UIS})
+    endif(SPARK_FIND_QT6)
+
     # 4. 构建目标库
     add_library(${_lib_name} ${${_lib_name}_TYPE} 
         ${${_lib_name}_ARGN_SOURCES}
-        ${any_files})
+        ${any_files} ${ui_wrap_files})
 
     # 5. 建立引用点 
         # target_link_<_lib_name> 函数
@@ -204,6 +220,20 @@ macro(spark_add_library_path _lib_name _lib_path)
     # )
 
 endmacro(spark_add_library_path _lib_name _lib_path)
+
+# spark_add_shared_library <target> [files ...]
+# 构建一个共享库，基于指定的源代码
+    # 并根据库名生成 target_link_<lib_name> 函数
+macro(spark_add_shared_library _lib_name)
+    spark_add_library(${_lib_name} SHARED ${ARGN})
+endmacro(spark_add_shared_library _lib_name)
+
+# spark_add_shared_library_path <target> [files ... paths]
+# 构建一个共享库，基于指定的路径
+    # 并根据库名生成 target_link_<lib_name> 函数
+macro(spark_add_shared_library_path _lib_name)
+    spark_add_library_path(${_lib_name} SHARED ${ARGN})
+endmacro(spark_add_shared_library_path _lib_name)
 
 # spark_add_executable <exec_name> [files]...
 # 构建一个可执行文件，基于指定的源文件
@@ -282,6 +312,22 @@ macro(spark_add_executable_path _exec_name _exec_path)
             spark_debug_message("       ${item_file}")
         endforeach(item_file IN LISTS item_files)
     endforeach(item IN LISTS ${_exec_name}_ARGN_APPEND_PATHS)
+
+    # 3.1 转化 Qt5/6 的 ui 文件
+    set(${_exec_name}_SOURCE_UIS)
+    set(ui_wrap_files)
+    foreach(item IN LISTS ${_exec_name}_ARGN_SOURCES any_files)
+        get_filename_component(ex "${item}" LAST_EXT)
+        if("${ex}" STREQUAL ".ui")
+            list(APPEND ${_exec_name}_SOURCE_UIS ${item})
+        endif("${ex}" STREQUAL ".ui")
+    endforeach(item IN LISTS ${_exec_name}_ARGN_SOURCES any_files)
+    
+    if(SPARK_FIND_QT6)
+        qt_wrap_ui(ui_wrap_files ${${_exec_name}_SOURCE_UIS})
+    elseif(SPARK_FIND_QT5)
+        qt5_wrap_ui(ui_wrap_files ${${_exec_name}_SOURCE_UIS})
+    endif(SPARK_FIND_QT6)
  
     # 3. 构建可执行目标所需要的文件
     # add_executable(${_exec_name} 
@@ -290,7 +336,7 @@ macro(spark_add_executable_path _exec_name _exec_path)
 
     target_sources(${_exec_name} PRIVATE
         ${${_exec_name}_ARGN_SOURCES}
-        ${any_files})
+        ${any_files} ${ui_wrap_files})
 
      # 4. 建立引用点 
         # target_<_exec_name>_include 函数
@@ -328,6 +374,15 @@ macro(spark_find_library _prefix)
 
 endmacro(spark_find_library _prefix)
 
+macro(target_link_qt)
+    
+    if(SPARK_FIND_QT6)
+        target_link_qt6(${ARGN})
+    elseif(SPARK_FIND_QT5)
+        target_link_qt5(${ARGN})
+    endif(SPARK_FIND_QT6)
+
+endmacro(target_link_qt)
 
 # spark_add_executable_paths
 # 自定义构建宏，基于指定的前缀名称，处理后续参数为子目录
@@ -339,8 +394,9 @@ macro(spark_add_executable_paths _prefix_path)
     foreach(item IN LISTS PATHS)
         file(GLOB QRCS "${item}/*.qrc")
         spark_debug_message(">>> add_executable: " "${_prefix_path}-${item} ${item} + ${QRCS}")
-        spark_add_executable_path(${_prefix_path}-${item} ${item} ${QRCS})
-        target_link_qt5(${_prefix_path}-${item})
+        string(REPLACE "/" "-" new_item "${item}")
+        spark_add_executable_path(${_prefix_path}-${new_item} ${item} ${QRCS})
+        target_link_qt(${_prefix_path}-${item})
     endforeach(item IN LISTS PATHS)
 endmacro(spark_add_executable_paths _prefix_path)
 
