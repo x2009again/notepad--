@@ -24,3 +24,23 @@ endif(framework-plugintemplate_ENABLE)
 
     # 一个使用引用构建的 plugintemplate 插件
     include(path/to/plugin.cmake)
+
+
+
+# 提供给其它插件项目引用的共享资源(如果其它插件想通过框架构建引用的话）
+if(FRAMEWORK_WANT_INCLUDE)
+    message("-- [PLUGIN EXPORT]: FRAMEWORK_WANT_INCLUDE?")
+    set(FRAMEWORK_INCLUDE_EXPORTS      # 共享的引用目录
+        ${CMAKE_CURRENT_LIST_DIR}/src
+    )
+    set(FRAMEWORK_SOURCES_EXPORTS      # 共享的资源文件
+        # ${CMAKE_CURRENT_LIST_DIR}/src/config.h         # 通用的 qDebug 配置定义
+        # ${CMAKE_CURRENT_LIST_DIR}/src/utils/qrcutil.*  # 简化读取 qrc 资源文件内容
+    )
+    set(FRAMEWORK_WITHGIT_EXPORTS      # 引用的共享资源构建
+        # 1. 引用了公共存储库
+        # https://gitee.com/ndd-community/framework-plugin-component-library
+    )
+    return()
+endif(FRAMEWORK_WANT_INCLUDE)
+
