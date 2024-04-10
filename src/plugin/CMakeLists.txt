@@ -5,24 +5,34 @@ option(USE_NOTEPAD_PLUGIN_BASE "构建 Notepad-- 内部的插件基础模板" OF
 
 if(USE_NOTEPAD_PLUGIN)
 
-    if(USE_NOTEPAD_PLUGIN_BASE) # 早期构建，准备废弃
-        # 默认的测试插件
-        add_subdirectory(test)
-        # 被 cmake-plugins-dev 构建的 helloworld 插件
-        add_subdirectory(helloworld-next)
-        # 基于源代码构建的系列插件模板
-        add_subdirectory(template-plugins/base-plugin)
-        add_subdirectory(template-plugins/base-widget-plugin)
-        add_subdirectory(template-plugins/base-widget-ui-plugin)
-        add_subdirectory(template-plugins/base-secondary-menu-plugin)
-        add_subdirectory(template-plugins/base-secondary-menu-plugin-v1)
-        add_subdirectory(template-plugins/base-secondary-menu-ui-plugin-v1)
-    endif(USE_NOTEPAD_PLUGIN_BASE)
-
     # [核心]：[引入插件框架核心模块]
     include(framework/framework.cmake)
     include(framework/framework-include.cmake)
-    
+
+    if(USE_NOTEPAD_PLUGIN_BASE) # 早期构建，准备废弃
+        # 默认的测试插件
+        add_subdirectory(test)
+        
+        # 被 cmake-plugins-dev 构建的
+        # 基于源代码构建的系列插件模板
+        set(base-plugin_ENABLE ON)
+        add_framework_plugin(base-plugin
+            template-plugins/base-plugin)
+        set(base-secondary-plugin_ENABLE ON)
+        add_framework_plugin(base-secondary-plugin
+            template-plugins/base-secondary-plugin
+        )
+        set(base-secondary-widget-plugin_ENABLE ON)
+        add_framework_plugin(base-secondary-widget-plugin
+            template-plugins/base-secondary-widget-plugin
+        )
+        # add_subdirectory(template-plugins/base-widget-plugin)
+        # add_subdirectory(template-plugins/base-widget-ui-plugin)
+        # add_subdirectory(template-plugins/base-secondary-menu-plugin)
+        # add_subdirectory(template-plugins/base-secondary-menu-plugin-v1)
+        # add_subdirectory(template-plugins/base-secondary-menu-ui-plugin-v1)
+    endif(USE_NOTEPAD_PLUGIN_BASE)
+
     # [开发者计划]：不改变本 CMakeLists.txt 的情况下开发自己的插件
     # 非冲突化开发方式，在 dev.cmake 中建立自己的本地引用或在线引用来构建自己的插件。
     # 并将其作为开发者计划的关注位置点，以此保证本 CMakeLists.txt 可以直接随项目更新
