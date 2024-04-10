@@ -10,8 +10,8 @@
 class PluginFrameworkHelper
 {
 public:
-    static QVariant DoNewEdit(QWidget *notepad, std::function<bool(QWidget*, int, void*)> plugin_callback);
-    static bool DoChangeSyntax(QWidget *notepad, std::function<bool(QWidget*, int, void*)> plugin_callback, IPluginFramework::SyntaxType syntax);
+    static QVariant DoNewEdit(QWidget *notepad, PluginWantDo plugin_callback);
+    static bool DoChangeSyntax(QWidget *notepad, PluginWantDo plugin_callback, IPluginFramework::SyntaxType syntax);
 };
 
 #endif // PLUGINFRAMEWORKHELPER_H
