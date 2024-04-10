@@ -10,6 +10,9 @@
 
 #define IPluginFramework_IID "com.gitee.ndd.pluginframework"
 
+typedef std::function<QsciScintilla*(QWidget*)>   PluginWantEditor;
+typedef std::function<bool(QWidget*, int, void*)> PluginWantDo;
+
 /** 
     在使用 IPluginFramework 时，请使用 : public IPluginFramework 并实现必要的代码
     另外：使用生成器生成适用于基于 IPluginFramework 的代码
