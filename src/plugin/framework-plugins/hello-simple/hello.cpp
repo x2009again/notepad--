@@ -214,7 +214,7 @@ void Hello::registerPluginActions(QMenu *rootMenu)
                         QTextStream fcmakeout(&fcmake);
                         fcmakeout.setCodec("utf-8");
                         fcmakeout.setGenerateByteOrderMark(true); // with Bom
-                        fcmakeout << txt.split("\n").mid(29,29).join("\n").replace(existDir, "${CMAKE_CURRENT_LIST_DIR}");
+                        fcmakeout << txt.split("\n").mid(29,28).join("\n").replace(existDir, "${CMAKE_CURRENT_LIST_DIR}");
                         fcmakeout << txt.split("\n").mid(8,10).join("\n").replace(existDir, "${CMAKE_CURRENT_LIST_DIR}");
                         fcmake.close();
                     }
