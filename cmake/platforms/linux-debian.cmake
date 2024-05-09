@@ -9,7 +9,7 @@ option(USE_LINUX_DEBIAN "为 Linux 生成 deb 软件包" OFF)
 
 if(USE_LINUX_DEBIAN)
     
-    find_package(SparkDebPackage PATHS ${CMAKE_SOURCE_DIR})
+    spark_include(SparkDebPackageConfig.cmake)
     add_package_descript(cmake/spark-deb-package.descript)
 
 endif(USE_LINUX_DEBIAN)

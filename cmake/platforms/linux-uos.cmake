@@ -66,7 +66,7 @@ if(USE_LINUX_UOS)
     # set(PACKAGE_SUFFIX "_onlyUos") 
 
     # 2. 使用同样来自 debian 系列的 deb 构建能力
-    find_package(SparkDebPackage PATHS ${CMAKE_SOURCE_DIR})
+    spark_include(SparkDebPackageConfig.cmake)
     add_package_descript(cmake/spark-deb-package.descript)
 
 endif(USE_LINUX_UOS)

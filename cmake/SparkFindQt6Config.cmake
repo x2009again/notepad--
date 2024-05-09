@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.5.1)
 
 set(SPARK_FIND_QT6 TRUE)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt6 COMPONENTS Core Widgets Network REQUIRED)
 

@@ -108,61 +108,6 @@ endmacro(add_framework_plugin _target)
 # add_framework_plugin_with_git <git_repo_url> [git_args...]
 # 该宏定义了从指定的 git 仓库中获取插件源代码，并进行简单的构建
 macro(add_framework_plugin_with_git GIT_REPO_URL)
-    set(GIT_ARGS ${ARGN})
-
-    # 1. 匹配前缀
-    string(REGEX MATCHALL "^http://"  HTTP_VAR  "${GIT_REPO_URL}")
-    string(REGEX MATCHALL "^https://" HTTPS_VAR "${GIT_REPO_URL}")
-
-    # 2. 移除前缀
-    if(HTTP_VAR STREQUAL "http://")
-        string(REPLACE "${HTTP_VAR}"  "" REPO_URL "${GIT_REPO_URL}")
-    elseif(HTTPS_VAR STREQUAL "https://")
-        string(REPLACE "${HTTPS_VAR}" "" REPO_URL "${GIT_REPO_URL}")
-    else()
-        return()
-    endif(HTTP_VAR STREQUAL "http://")
-
-    # 3. 分割字符串为 cmake LIST 格式
-    string(REPLACE "/" ";" URLSEGS ${REPO_URL})
-    list(LENGTH URLSEGS URLSEGS_LENGTH)
-    # 4. 判断长度是否符合要求
-    if(URLSEGS_LENGTH GREATER_EQUAL 3)
-        list(GET URLSEGS 0 URL_DOMAIN)
-        list(GET URLSEGS 1 URL_USER)
-        list(GET URLSEGS 2 URL_REPO)
-    else()
-        return()
-    endif(URLSEGS_LENGTH GREATER_EQUAL 3)
-
-    message("HTTP_VAR: ${HTTP_VAR}")
-    message("HTTPS_VAR: ${HTTPS_VAR}")
-    message("URL_DOMAIN: ${URL_DOMAIN}")
-    message("URL_USER:   ${URL_USER}")
-    message("URL_REPO:   ${URL_REPO}")
-
-    # 4. 处理自动化 git clone
-    # domain
-      # user
-        # repo
-    if(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git)
-        execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory "${URL_DOMAIN}/${URL_USER}"
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache)
-        execute_process(COMMAND git clone ${GIT_REPO_URL} ${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git ${GIT_ARGS}
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache)
-    else()
-        execute_process(COMMAND git pull
-            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git)
-    endif(NOT EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git)
-
-    # 6. 处理加入构建，如果这个仓库里有 plugin.cmake 的话
-    if(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake)
-        message("-- [GIT_PLUGIN] Found new plugin with git: ")
-        message("                ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake")
-        set(WITH_GIT ON)
-        include(${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake)
-    else()
-        return()
-    endif(EXISTS ${CMAKE_SOURCE_DIR}/3rd_plugins_cache/${URL_DOMAIN}/${URL_USER}/${URL_REPO}_git/plugin.cmake)
-
+    set(WITH_GIT ON)
+    spark_framework_include_with_git(_ ${GIT_REPO_URL} ${ARGN})
 endmacro(add_framework_plugin_with_git GIT_REPO_URL)

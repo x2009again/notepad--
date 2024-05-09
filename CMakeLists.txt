@@ -1,22 +1,27 @@
 cmake_minimum_required(VERSION 3.20)
 
-include(cmake/SparkCMakeInfoBeforeConfig.cmake)
+include(cmake/SparkWithGit.cmake)
+
+spark_include(SparkCMakeInfoBeforeConfig.cmake)
 project(Notepad-- VERSION 2.0.0)
-include(cmake/SparkCMakeInfoAfterConfig.cmake)
+spark_include(SparkCMakeInfoAfterConfig.cmake)
 
 # -------------- Notepad -- 全局构建配置 ------------- #
 option(USE_QT6 "使用 Qt6 进行编译本项目与随带所有内容" OFF)
 
-include(cmake/SparkEnvConfig.cmake)
-include(cmake/SparkMacrosConfig.cmake)
+spark_include(cmake/SparkEnvConfig.cmake)
+spark_include(cmake/SparkMacrosConfig.cmake)
 if(USE_QT6)
     include(cmake/SparkFindQt6Config.cmake)
 else()
     include(cmake/SparkFindQt5Config.cmake)
 endif(USE_QT6)
-include(cmake/SparkMacrosExtendConfig.cmake)
+spark_include(SparkMacrosExtendConfig.cmake)
 include(cmake/SparkCMakeDebugConfig.cmake)
 
+# 引用构建起始
+set(SPARK_FRAMEWORK_STORE "${CMAKE_SOURCE_DIR}/3rd_plugins_cache")
+spark_include(SparkFramework.cmake)
 
 # ----------------- 构建之前 全局定义 ----------------- #
 # 在 Windows 中开启 UNICODE 以支持 TCHAR 功能

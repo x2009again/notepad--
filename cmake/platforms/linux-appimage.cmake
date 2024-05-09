@@ -19,7 +19,7 @@ option(USE_LINUX_APPIMAGE "为 Linux 生成 Appimage 可执行程序" OFF)
 
 if(USE_LINUX_APPIMAGE)
 
-    include(cmake/SparkDesktopMacros.cmake)
+    spark_include(cmake/SparkDesktopMacros.cmake)
     # 内容默认应用名称: Name= 应与项目名称相同
     spark_desktop_macros(
         # 应用名称: Name=
@@ -40,7 +40,7 @@ if(USE_LINUX_APPIMAGE)
     )
 
     # 1. 在顶层构建中导入 Appimage 的构建
-    include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
+    spark_include(cmake/SparkAppimageConfig.cmake)  # 导入来自 Spark 构建的 Appimage 构建
     add_appimage_icon(assets/spark.png)       # 添加到 Appimage 中的默认的图标
     add_appimage_desktop()                    # 添加到 Appimage 中的默认desktop(使用来自 Spark 构建的 Desktop 构建中配置的信息(必须要求 spark-desktop))
     add_appimage_target(${PROJECT_NAME})      # 添加到 Appimage 中的默认目标，应用对 Appimage 的构建
