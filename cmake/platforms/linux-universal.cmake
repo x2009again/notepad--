@@ -28,7 +28,7 @@
 # 可能需要变更为 CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux" ??
 # 并使用 Linux.cmake 维护?
 if(CMAKE_HOST_UNIX)
-    include(cmake/SparkInstallMacrosConfig.cmake)
+    spark_include(cmake/SparkInstallMacrosConfig.cmake)
 
     # 当使用 Linux 构建应用时，可执行程序的资源文件应该存放在此处
     set(LINUX_APPLICATION_DIR /usr/share/${PROJECT_NAME})

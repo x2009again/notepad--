@@ -24,7 +24,7 @@
 
 
 if(CMAKE_HOST_WIN32)
-    include(cmake/SparkInstallMacrosConfig.cmake)
+    spark_include(cmake/SparkInstallMacrosConfig.cmake)
     # ------------------ INSTALL PLUGIN CONFIG ------------------ #
     # ------------------ INSTALL PLUGIN CONFIG ------------------ #
     # ------------------ INSTALL PLUGIN CONFIG ------------------ #

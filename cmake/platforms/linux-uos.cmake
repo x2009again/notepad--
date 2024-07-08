@@ -43,7 +43,7 @@ if(USE_LINUX_UOS)
     # 当使用 Linux 构建应用时，可执行程序的资源文件应该存放在此处
     set(LINUX_UOS_APP_HOME_DIR ${UOS_APP_HOME_DIR})
     
-    include(cmake/SparkInstallMacrosConfig.cmake)
+    spark_include(cmake/SparkInstallMacrosConfig.cmake)
 
     # ------------------ 部署应用目录结构 ------------------ #
     # 1. 将项目内准备的 Uos 应用目录安装到 /opt/apps/ 中
