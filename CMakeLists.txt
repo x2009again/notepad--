@@ -27,6 +27,11 @@ spark_include(SparkFramework.cmake)
 # 在 Windows 中开启 UNICODE 以支持 TCHAR 功能
 if(WIN32)
     add_compile_definitions(_UNICODE= UNICODE=)
+    # TODO： move to cmake/platforms/windows-msvc.cmake
+    if(MSVC)
+        # MSVC 编译器处理方案，支持 utf-8 编码的项目，同时为扩展的插件提供能力
+        add_compile_options(/utf-8)
+    endif(MSVC)
 endif()
 # 符合 2.0.0 代码预期的版本处理, 核心编辑器组件 2.11
 add_compile_definitions(TEST_PRE)
