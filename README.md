@@ -22,6 +22,11 @@ Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持
 
 ## 编译
 
+**分支说明：cmake-dev 与 cmake-plugins-dev（已合并）**
+
+cmake-plugins-dev 已合并到 cmake-dev，所有插件构建相关问题基本修复完成。  
+基于引用构建，扩展代码将会以引用形式依赖或提供构建能力。
+
 **CMake工具链编译说明:**
 
 - Windows 系统通用构建 - 基于 Batch 脚本进行构建
