@@ -33,6 +33,14 @@ Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持
     ;; 使用脚本进行构建，它将会询问如何进行构建
     windows-msvc-ninja.bat
     ```
+- Windows 系统 QtCreator 构建 - MSVC/MinGW
+
+    ```batch
+    ;; 支持 MSVC 与 MinGW 两种编译器与依赖库方案
+    ;; 1. 将 CMakeLists.txt 拖入 QtCreator 并选择编译方案
+    ;;      MSVC 编译速度快，MinGW 编译较慢
+    ;; 2. 扩展开发需要与当前主程序使用的编译器相同
+    ```
 
 - Windows 系统 VSCode 构建 - 基于 VSCode 配置模板进行调整构建
 
