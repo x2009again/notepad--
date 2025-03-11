@@ -226,6 +226,12 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
 }
 #endif
 
+    // 此部分一般由插件异常导致程序崩溃引发
+    // 在 linux / unix 中程序异常结束共享内存不会回收
+    // 参考 https://gitee.com/zinface/infomation-tips/blob/master/src/main.cpp
+    shared.attach();
+    shared.detach();
+
 	//attach成功表示已经存在该内存了，表示当前存在实例
 	if (shared.attach())//共享内存被占用则直接返回
 	{
