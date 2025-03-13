@@ -47,12 +47,12 @@ TRANSLATIONS += realcompare_zh.ts
    }
 unix{
 if(CONFIG(debug, Debug|Release)){
-          LIBS += -L/home/yzw/build/CCNotePad/x64/Debug -lqmyedit_qt5
+          LIBS += -L/home/psh/build/CCNotePad/x64/Debug -lqmyedit_qt5
 
 QMAKE_CXXFLAGS += -fopenmp
 LIBS += -lgomp -lpthread
     }else{
-          LIBS += -L/home/yzw/build/CCNotePad/x64/Release -lqmyedit_qt5
+          LIBS += -L/home/psh/build/CCNotePad/x64/Release -lqmyedit_qt5
         DESTDIR = x64/Release
 
         QMAKE_CXXFLAGS += -fopenmp -O2
