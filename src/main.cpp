@@ -121,123 +121,136 @@ class MyApplication : public QApplication
 
 int main(int argc, char *argv[])
 {
+    // 设置高DPI缩放策略
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 14, 0))
-	QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
+    // Qt 5.14及以上版本使用PassThrough策略,不对DPI进行舍入处理
+    QApplication::setHighDpiScaleFactorRoundingPolicy(Qt::HighDpiScaleFactorRoundingPolicy::PassThrough);
 #elif (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
-	#ifdef Q_OS_WIN
-		HDC hdc = CreateDC(L"display", NULL, NULL, NULL);
-		int ndpi = GetDeviceCaps(hdc, LOGPIXELSY);
-		qputenv("QT_SCALE_FACTOR", QString::number(ndpi / 96.0).toUtf8());
-	#endif // Q_OS_WIN
-#endif
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    #ifdef Q_OS_WIN
+        // Qt 5.6-5.14版本在Windows下手动计算DPI缩放
+        HDC hdc = CreateDC(L"display", NULL, NULL, NULL);
+        int ndpi = GetDeviceCaps(hdc, LOGPIXELSY);
+        qputenv("QT_SCALE_FACTOR", QString::number(ndpi / 96.0).toUtf8());
+    #endif // Q_OS_WIN
 #endif
 
+    // Qt 6.0以下版本启用高DPI缩放
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
+
+    // 创建QApplication实例
 #ifdef Q_OS_MAC
+    // Mac平台使用自定义的MyApplication类来处理文件打开事件
     MyApplication a(argc, argv);
 #else
-	QApplication a(argc, argv);
+    QApplication a(argc, argv);
 #endif
 
+    // Qt 6.0以下版本启用高DPI图标
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-	a.setAttribute(Qt::AA_UseHighDpiPixmaps);
+    a.setAttribute(Qt::AA_UseHighDpiPixmaps);
 #endif
 
 	//不能开启，开启后相对路径打开文件失败
 	//QDir::setCurrent(QCoreApplication::applicationDirPath());
 
+
+    // Unix平台使用fusion风格
 #if defined(Q_OS_UNIX)
     QApplication::setStyle(QStyleFactory::create("fusion"));
 #endif
-	a.setApplicationDisplayName(c_strTitle);
-	a.setApplicationName(c_strTitle);
 
+    // 设置应用程序名称和显示名称
+    a.setApplicationDisplayName(c_strTitle);
+    a.setApplicationName(c_strTitle);
+
+    // 设置版本号(如果定义了NOTEPAD_VERSION)
 #include <config.h>
 #ifdef  NOTEPAD_VERSION
-	a.setApplicationVersion(NOTEPAD_VERSION);
-#endif  //NOTEPAD_VERSION
+    a.setApplicationVersion(NOTEPAD_VERSION);
+#endif
 
-	QStringList arguments = QCoreApplication::arguments();
+    // 获取命令行参数
+    QStringList arguments = QCoreApplication::arguments();
 
-	//目前就三种
-	//1) ndd filepath
-	//2) ndd filepath -n linenum
-	//3) ndd -multi filepath
-	//只有 1  2 需要处理短路径
-	if ((arguments.size() == 2) || (arguments.size() == 4))
-	{
-		QFileInfo fi(arguments[1]);
-		if (fi.isRelative())
-		{
-			QString absDir = QDir::currentPath();
-			//获取绝对路径
-			arguments[1] = QString("%1/%2").arg(absDir).arg(arguments.at(1));
-		}
-	}
+    // 处理命令行参数中的相对路径(只有 1、2 需要处理短路径)
+    // 支持三种命令行格式:
+    // 1) ndd filepath
+    // 2) ndd filepath -n linenum
+    // 3) ndd -multi filepath
+    if ((arguments.size() == 2) || (arguments.size() == 4))
+    {
+        QFileInfo fi(arguments[1]);
+        if (fi.isRelative())
+        {
+            QString absDir = QDir::currentPath();
+            arguments[1] = QString("%1/%2").arg(absDir).arg(arguments.at(1));
+        }
+    }
 
+    // UOS系统设置默认字体
 #ifdef uos
-	QFont font("Noto Sans CJK SC,9,-1,5,50,0,0,0,0,0,Regular", 9);
-	QApplication::setFont(font);
+    QFont font("Noto Sans CJK SC,9,-1,5,50,0,0,0,0,0,Regular", 9);
+    QApplication::setFont(font);
 #endif
+
+    // Mac系统设置默认字体
 #ifdef Q_OS_MAC
-	//这里的字体大小，务必要和查找结果框的高度匹配，否则会结构字体拥挤
-	QFont font("Courier New,11,-1,5,50,0,0,0,0,0,Regular", 11);
-	// qDebug() << "font name mac";
-	QApplication::setFont(font);
-	// qDebug() << QApplication::font().toString();
+	// 这里的字体大小，务必要和查找结果框的高度匹配，否则会结构字体拥挤
+    QFont font("Courier New,11,-1,5,50,0,0,0,0,0,Regular", 11);
+    QApplication::setFont(font);
 #endif
 
-bool isGotoLine = false;
+    bool isGotoLine = false;
 
+    // Windows平台特有的单实例和进程间通信处理
 #ifdef Q_OS_WIN
-	QSharedMemory shared("ccnotepad");
+    QSharedMemory shared("ccnotepad");
 
-	if (arguments.size() > 2)
-	{
-		//如果是多开请求，这种是从管理员权限申请后重开过来的
-		if (arguments[1] == QString("-muti"))
-		{
-			s_isAdminAuth = true;
-
-			QString title = QString(u8"%1 管理员").arg(c_strTitle);
-			a.setApplicationDisplayName(title);
+    if (arguments.size() > 2)
+    {
+        // 处理管理员权限多开
+        if (arguments[1] == QString("-muti"))
+        {
+            s_isAdminAuth = true;
+            QString title = QString(u8"%1 管理员").arg(c_strTitle);
+            a.setApplicationDisplayName(title);
 			//删除-muti这个参数
-			arguments.removeAt(1);
-			
+            arguments.removeAt(1);
 			//管理员不占用共享标志。这样的目的是，当管理员窗口存在时
 			//打开原来的文件，原来的文件可以占用共享标志，作为主窗口打开。
 			//管理员窗口永远不做主窗口打开
-			goto authAdmin;
-			
-		}
-		else if ((arguments.size() == 4) && arguments[2] == QString("-n"))
-		{
-			//使用的是 file -n lineNums 方式。目前只有windows下支持 xxxfile -n linenum的格式
-			isGotoLine = true;
-	}
-		
-	}
+            goto authAdmin;
+        }
+        // 处理跳转到指定行
+        else if ((arguments.size() == 4) && arguments[2] == QString("-n"))
+        {
+            isGotoLine = true;
+        }
+    }
 #else
-if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
-{
-      //使用的是 file -n lineNums 方式。目前只有windows下支持 xxxfile -n linenum的格式
-      isGotoLine = true;
-}
+    // 非Windows平台处理跳转到指定行
+    if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
+    {
+		//使用的是 file -n lineNums 方式。目前只有windows下支持 xxxfile -n linenum的格式
+        isGotoLine = true;
+    }
 #endif
 
-    // 此部分一般由插件异常导致程序崩溃引发
-    // 在 linux / unix 中程序异常结束共享内存不会回收
+    // 处理共享内存,用于实现单实例
+	// 在 linux / unix 中程序异常结束共享内存不会回收
     // 参考 https://gitee.com/zinface/infomation-tips/blob/master/src/main.cpp
     shared.attach();
     shared.detach();
 
-	//attach成功表示已经存在该内存了，表示当前存在实例
-	if (shared.attach())//共享内存被占用则直接返回
-	{
-		//发现在文件中如果存在空格时，参数不止1个，所以不能单纯用2个参数表示
-		if (arguments.size() > 1)
-		{
+    // 如果已经有实例在运行
+    if (shared.attach())
+    {
+        // 处理命令行参数,将文件打开请求发送给现有实例
+        if (arguments.size() > 1)
+        {
+            // 平台特定的进程间通信实现
         #if defined(Q_OS_WIN)
 			int tryTimes = 0;
 			do {
@@ -371,27 +384,26 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
                 goto unix_goon;
             }
 #endif
-		}
-		return 0;
-	}
-#if defined(Q_OS_WIN)
-	shared.create(32);
-#elif defined (Q_OS_MAC)
-{
-       //mac下面不需要，有他自身的机制保证。当程序已经在线时，再打开程序，系统会自动调用已经存在的程序出现
-        //不需要使用类似linux下面的机制。
-     shared.create(32);
-     nppShared.create(32);
-}
-#else
+        }
+        return 0;
+    }
 
+    // 创建共享内存,标记为第一个实例
+#if defined(Q_OS_WIN)
+    shared.create(32);
+#elif defined (Q_OS_MAC)
+	//mac下面不需要，有他自身的机制保证。当程序已经在线时，再打开程序，系统会自动调用已经存在的程序出现
+	//不需要使用类似linux下面的机制。
+    shared.create(32);
+    nppShared.create(32);
+#else
 unix_goon:
     shared.create(32);
     nppShared.create(2048);
-
+    // 注册SIGUSR1信号处理
     if(signal(SIGUSR1,sig_usr) == SIG_ERR)
     {
-       qDebug()<<"linux create sign failed";
+        qDebug()<<"linux create sign failed";
     }
 #endif
 
@@ -400,95 +412,108 @@ authAdmin:
 drop_old:
 #endif
 
+    // 确保最后一个窗口关闭时退出应用
 	//20221009发现有小概率出现窗口没有，但是进程还在的诡异问题，加个保护一下
-	QApplication::setQuitOnLastWindowClosed(true);
+    QApplication::setQuitOnLastWindowClosed(true);
 
-	NddSetting::init();
+    // 初始化设置
+    NddSetting::init();
 
-	int id = NddSetting::getKeyValueFromNumSets(SKIN_KEY);
-	StyleSet::setSkin(id);
+    // 设置皮肤
+    int id = NddSetting::getKeyValueFromNumSets(SKIN_KEY);
+    StyleSet::setSkin(id);
 
-	CCNotePad *pMainNotepad = new CCNotePad(true);
-	pMainNotepad->setAttribute(Qt::WA_DeleteOnClose);
-	pMainNotepad->setShareMem(&shared);
-	pMainNotepad->quickshow();
+    // 创建主窗口
+    CCNotePad *pMainNotepad = new CCNotePad(true);
+    pMainNotepad->setAttribute(Qt::WA_DeleteOnClose);
+    pMainNotepad->setShareMem(&shared);
+    pMainNotepad->quickshow();
+    pMainNotepad->syncCurSkinToMenu(id);
 
-	pMainNotepad->syncCurSkinToMenu(id);
-
-
+    // 存储窗口ID到共享内存
 #ifdef Q_OS_WIN
 	//HWND hwnd = ::FindWindowA("Qt5QWindowIcon", "CCNotebook");
 	//发现hwnd就是和effectiveWinId相等的，不需要查询了
 	//管理员可以多开，暂时不把管理员的权限作为主窗口，因为其他用户没有权限右键菜单发送消息给管理员窗口去打开文件
-	if (!s_isAdminAuth)
-	{
-	qlonglong winId = (qlonglong)pMainNotepad->effectiveWinId();
-	shared.lock();
-	memcpy(shared.data(), &winId, sizeof(qlonglong));
-	shared.unlock();
-	}
+    if (!s_isAdminAuth)
+    {
+        qlonglong winId = (qlonglong)pMainNotepad->effectiveWinId();
+        shared.lock();
+        memcpy(shared.data(), &winId, sizeof(qlonglong));
+        shared.unlock();
+    }
 #else
     qlonglong winId = (qlonglong)pMainNotepad->effectiveWinId();
     shared.lock();
     memcpy(shared.data(), &winId, sizeof(qlonglong));
     shared.unlock();
+    // 存储进程ID
     nppShared.attach();
     //get proceess id to share memory
     pid_t pid = getpid();
     nppShared.lock();
     memcpy(nppShared.data(), &pid, sizeof(pid_t));
     nppShared.unlock();
-#endif // Q_OS_WIN
-	//恢复上次关闭时的文件
+#endif
+
+    // 恢复上次会话的文件
+    // 如果没有要恢复的文件且没有命令行参数,则新建文件
 #ifdef Q_OS_WIN
-	if (!s_isAdminAuth)
-	{
-		if (0 == pMainNotepad->restoreLastFiles() && (arguments.size() == 1))
-		{
-		pMainNotepad->initTabNewOne();
-	}
-	}
+    if (!s_isAdminAuth)
+    {
+        if (0 == pMainNotepad->restoreLastFiles() && (arguments.size() == 1))
+        {
+            pMainNotepad->initTabNewOne();
+        }
+    }
 #else
     if (0 == pMainNotepad->restoreLastFiles())
     {
-    pMainNotepad->initTabNewOne();
+        pMainNotepad->initTabNewOne();
     }
 #endif
-	if (arguments.size() == 2)
-	{
+
+    // 处理命令行指定的文件
+    if (arguments.size() == 2)
+    {
 #ifdef Q_OS_WIN
-		if (!s_isAdminAuth)
-		{
-			pMainNotepad->openFile(arguments[1]);
-		}
-		else
-		{
+        if (!s_isAdminAuth)
+        {
+            pMainNotepad->openFile(arguments[1]);
+        }
+        else
+        {
 			//如果是管理员，还不能直接打开文件，需要恢复之前文件的修改内容
 			//恢复不了，再直接打开
 			pMainNotepad->tryRestoreFile(arguments[1]);
-		}
+        }
 #else
-		pMainNotepad->openFile(arguments[1]);
+        pMainNotepad->openFile(arguments[1]);
 #endif
-	}
-	else if (isGotoLine)
-	{
+    }
+    // 处理跳转到指定行
+    else if (isGotoLine)
+    {
 		//是filepath -n xxx 格式。
-		bool ok = true;
-		int lineNum = arguments[3].toInt(&ok);
-		if (!ok)
-		{
-			lineNum = -1;
-		}
-		pMainNotepad->openFile(arguments[1], lineNum);
-	}
+        bool ok = true;
+        int lineNum = arguments[3].toInt(&ok);
+        if (!ok)
+        {
+            lineNum = -1;
+        }
+        pMainNotepad->openFile(arguments[1], lineNum);
+    }
+
+    // Windows平台检查应用字体
 #ifdef Q_OS_WIN
-	pMainNotepad->checkAppFont();
+    pMainNotepad->checkAppFont();
 #endif
 
-	a.exec();
+    // 启动事件循环
+    a.exec();
 
-	NddSetting::close();
+    // 清理设置
+    NddSetting::close();
 
-	return 0;
+    return 0;
 }
