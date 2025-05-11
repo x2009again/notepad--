@@ -11,20 +11,20 @@ if(TRUE)
     # file(GLOB MOC_HEADER src/qscint/src/Qsci/*.h)
     spark_file_glob(MOC_HEADER "src/qscint/src/Qsci/*.h")
 
-    spark_add_source_paths(QSciSources
-        src/qscint/src
-        src/qscint/scintilla/lexers
-        src/qscint/scintilla/lexlib
-        src/qscint/scintilla/src
-        src/qscint/scintilla/boostregex
+    set(QSciSources
+        ${PROJECT_SOURCE_DIR}/src/qscint/src
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexers
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/lexlib
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/src
+        ${PROJECT_SOURCE_DIR}/src/qscint/scintilla/boostregex
 
         # src/qscint/src/Qsci
         # FAIL: only *.ui will spark_file_glob(MOC_HEADER ...)
     )
     if(NOTEPAD_BUILD_BY_SHARED)
-        spark_add_library(QSci SHARED ${QSciSources} ${MOC_HEADER})
+        spark_add_library_path(QSci SHARED ${QSciSources} ${MOC_HEADER})
     else()
-        spark_add_library(QSci STATIC ${QSciSources} ${MOC_HEADER})
+        spark_add_library_path(QSci STATIC ${QSciSources} ${MOC_HEADER})
     endif(NOTEPAD_BUILD_BY_SHARED)
     target_include_directories(QSci PRIVATE
         src/qscint/scintilla/boostregex
