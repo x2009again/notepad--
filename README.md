@@ -41,8 +41,6 @@ Macos QQ用户群 1007890239 (非MAC 电脑用户请不要添加）。
 ![输入图片说明](png/qrcode_for_gh_e64d7035b02d_258.jpg)
 
 
-![输入图片说明](png/image.png)
-
 ## 编译或使用手册
 见build目录下文档 linux开源编译及下载说明.txt
 见本仓库文档 Ndd使用说明.CHM
