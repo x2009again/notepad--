@@ -27,8 +27,9 @@ Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持
 [https://pay.ldxp.cn/item/mfgcrh](https://pay.ldxp.cn/item/mfgcrh)
 
 手机支付宝或微信扫码购买，24小时自动发货：
+![](png/153.png)]
 
-![输入图片说明](png/image.png)
+电脑访问 https://pay.ldxp.cn/shop/ZSYEBF1I
 
 ## 联络方式
 
