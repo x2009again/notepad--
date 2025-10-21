@@ -22,14 +22,14 @@ Notepad-- 是使用C++编写的轻量级文本编辑器, 简称ndd, 可以支持
 
  **购买小额注册码** 
 
-条件允许的用户，还请购买小额注册码支持开发者，支持国产正版ndd 软件。24小时自动发货，请点击：
+条件允许的用户，还请购买小额注册码支持开发者，支持国产正版ndd 软件。24小时自动发货。
 
-[https://pay.ldxp.cn/item/mfgcrh](https://pay.ldxp.cn/item/mfgcrh)
+请点击：[https://pay.ldxp.cn/shop/ZSYEBF1I](https://pay.ldxp.cn/shop/ZSYEBF1I)
 
-手机支付宝或微信扫码购买，24小时自动发货：
+或手机支付宝或微信扫码购买，24小时自动发货：
+
 ![](png/153.png)]
 
-电脑访问 https://pay.ldxp.cn/shop/ZSYEBF1I
 
 ## 联络方式
 
