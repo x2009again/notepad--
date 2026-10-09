@@ -155,6 +155,25 @@
         <translation type="unfinished">批量查找替换</translation>
     </message>
     <message>
+        <location filename="cceditor/ccnotepad.cpp" line="1711"/>
+        <source>Markdown Preview</source>
+        <translation type="unfinished">Markdown 预览</translation>
+    </message>
+    <message>
+        <location filename="cceditor/ccnotepad.cpp" line="1947"/>
+        <source>Markdown Preview - %1</source>
+        <translation type="unfinished">Markdown 预览 - %1</translation>
+    </message>
+    <message>
+        <location filename="cceditor/ccnotepad.cpp" line="1915"/>
+        <source>No document is open.
+
+Open a file first, then try again.</source>
+        <translation type="unfinished">当前没有打开文档。
+
+请先打开一个文件再试。</translation>
+    </message>
+    <message>
         <location filename="batchfindreplace.ui" line="37"/>
         <location filename="ui_batchfindreplace.h" line="196"/>
         <source>Enter multiple find keywords, separated by blank characters</source>
@@ -6081,7 +6100,7 @@ Double-click a column item to modify the syntax association file.</source>
         <location filename="markdownview.ui" line="14"/>
         <location filename="ui_markdownview.h" line="71"/>
         <source>MarkdownView</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Markdown 预览</translation>
     </message>
 </context>
 <context>

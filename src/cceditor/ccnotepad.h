@@ -22,6 +22,7 @@
 #include "scintillaeditview.h"
 #include "findwin.h"
 #include "pluginGl.h"
+#include "markdownview.h"
 
 
 //class ScintillaEditView;
@@ -351,6 +352,7 @@ private slots:
 	void slot_showToolBar(bool);
 	void slot_dynamicLoadToolMenu();
 	void slot_batchFind();
+	void slot_markdownPreview();
 	void on_loadReceneFile();
 	void slot_pluginMgr();
 #ifdef NO_PLUGIN
@@ -616,6 +618,7 @@ private:
 
 
 	QPointer<QMainWindow> m_batchFindWin;
+	QPointer<MarkdownView> m_mdPreviewWin;
 
 	int m_curIconSize;
 	int m_curColorIndex;
