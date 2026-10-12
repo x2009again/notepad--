@@ -1059,11 +1059,21 @@ void renderBlocks(const QStringList& linesIn, int baseIndent, QString& out)
 		}
 
 		// 段落：连续非空行，遇到块级起始则结束
+		//
+		// ⚠ prev 检查只在「续行」时做（i > paraStart），段落首行绝不做。
+		// 否则首行会因 prev 属于上一个块而被 break，i 不推进，
+		// 外层 while 在同一行无限循环（UI 卡死）。
+		// 2026-10-12 用 mdtest 实测复现（用例 bisect_2/8/9）：
+		//   "> y\n<p>"  → HANG
+		// 根因：renderQuote 消费完引用后返回的 i 指向引用后一行，
+		// 该行的 prev 恰是 ">" 开头 → 首行被 break → 死循环。
+		// 同理可触发："# h\ntext"、"---\ntext"、"```\nc\n```\ntext"。
+		const int paraStart = i;
 		QString para;
 		while (i < lines.size()) {
 			const QString& l = lines.at(i);
 			if (isBlank(l)) break;
-			if (i > 0) {
+			if (i > paraStart) {
 				const QString& prev = lines.at(i - 1);
 				const int pfl = fenceLength(prev);
 				if (pfl > 0) break;
@@ -1094,7 +1104,15 @@ void renderBlocks(const QStringList& linesIn, int baseIndent, QString& out)
 			// 硬换行：先用一个renderInline 会原样透传的私用区字符
 			// 占位，待renderInline 完成后再换回真正的换行标签。
 			// （不能直接塞 HTML 标签：escapeHtml 会把它转义掉。）
-			static const QChar kBrMark(0xE001);
+			//
+			// ⚠ 占位字符绝不能用 0xE000-0xF8FF 区段——那是行内
+			// 占位符池的范围（renderInline 内 stashHtml 从 0xE000
+			// 起分配）。旧值 0xE001 会在「硬换行 + 两个行内代码」
+			// 时与 stash 槽位冲突：br 标记被当作 slotPool[1] 还原
+			// 成错误内容，真正的换行丢失（输出错乱，非卡死）。
+			// 改用 U+0001：escapeHtml 原样透传、行内规则不消费、
+			// 不在占位符区段，且在 setHtml 之前就已被换回 <br />。
+			static const QChar kBrMark(0x0001);
 			QString body = para;
 			body.replace(QLatin1String("<br />"), QString(kBrMark));
 			body = renderInline(body);
