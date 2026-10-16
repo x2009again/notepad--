@@ -44,7 +44,7 @@ QSharedMemory shared("CCNotebook123");;//mac下面后面带一个版本号，避
 #else
 QSharedMemory shared("CCNotebook");
 #endif
-QSharedMemory nppShared("notepad--");
+QSharedMemory nddShared("notepad--");
 
 static void sig_usr(int signo)
 {
@@ -59,7 +59,7 @@ static void sig_usr(int signo)
          CCNotePad* pNotePad = dynamic_cast<CCNotePad*>(pMain);
          if(pNotePad != nullptr)
          {
-             QString filePath((char*)nppShared.data()+4);
+             QString filePath((char*)nddShared.data()+4);
              if(!filePath.isEmpty())
              {
              pNotePad->openFile(filePath);
@@ -72,6 +72,9 @@ static void sig_usr(int signo)
 }
 
 #if !defined(Q_OS_MAC)
+//下面就是单纯的linux 系统。
+
+//https://gitee.com/cxasm/notepad--/pulls/110/files
 //共享内存可能是上次异常退出残留的，其中的 pid 可能为 0 或已被其他进程复用。
 //kill(0, SIGUSR1) 会把信号发给整个进程组（SIGUSR1 默认动作是终止），
 //从桌面启动时会连同会话进程一起杀掉，导致用户被注销。发信号前必须校验。
@@ -81,6 +84,14 @@ static bool isRunningNddProcess(pid_t pid)
     {
         return false;
     }
+
+	// 比较 exe 路径（最可靠）
+	QFileInfo selfExe("/proc/self/exe");
+	QFileInfo otherExe(QString("/proc/%1/exe").arg(pid));
+
+	if (selfExe.exists() && otherExe.exists()) {
+		return selfExe.symLinkTarget() == otherExe.symLinkTarget();
+	}
 
     QFile selfComm("/proc/self/comm");
     if (!selfComm.open(QIODevice::ReadOnly))
@@ -94,7 +105,7 @@ static bool isRunningNddProcess(pid_t pid)
     {
         return false;
     }
-    return selfComm.readAll() == otherComm.readAll();
+	return selfComm.readAll().trimmed() == otherComm.readAll().trimmed();
 }
 #endif
 #endif
@@ -188,6 +199,10 @@ int main(int argc, char *argv[])
 	//只有 1  2 需要处理短路径
 	if ((arguments.size() == 2) || (arguments.size() == 4))
 	{
+		//鸿蒙/linux 下，currentPath 可能为根目录 "/"，空参数拼接会得到 "//"，
+		//导致把目录当文件打开。空参数本身无意义，直接跳过不处理。
+		if (!arguments[1].isEmpty())
+		{
 		QFileInfo fi(arguments[1]);
 		if (fi.isRelative())
 		{
@@ -195,6 +210,7 @@ int main(int argc, char *argv[])
 			//获取绝对路径
 			arguments[1] = QString("%1/%2").arg(absDir).arg(arguments.at(1));
 		}
+	}
 	}
 
 #ifdef uos
@@ -225,19 +241,19 @@ bool isGotoLine = false;
 			a.setApplicationDisplayName(title);
 			//删除-muti这个参数
 			arguments.removeAt(1);
-			
+
 			//管理员不占用共享标志。这样的目的是，当管理员窗口存在时
 			//打开原来的文件，原来的文件可以占用共享标志，作为主窗口打开。
 			//管理员窗口永远不做主窗口打开
 			goto authAdmin;
-			
+
 		}
 		else if ((arguments.size() == 4) && arguments[2] == QString("-n"))
 		{
 			//使用的是 file -n lineNums 方式。目前只有windows下支持 xxxfile -n linenum的格式
 			isGotoLine = true;
 	}
-		
+
 	}
 #else
 if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
@@ -284,7 +300,7 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
 			else
 			{
 						//是 filepath -n linenums 方式。不考虑filepath含有空格的情况，因为前面做了严格判断
-						
+
 						QString para = QString("%1|%2").arg(arguments[1]).arg(arguments[3]);
 						QByteArray data = para.toUtf8();
 
@@ -300,7 +316,7 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
 				}
 				else
 				{
-					
+
 					//20230304 右键多个文件同时打开，比如3个。此时只有第1个可获取锁，其余2个均走这里。
 					//因为第个还没有来的及写入hwnd。此时不要goto drop_old。等一下再重试
 					QThread::sleep(1); 
@@ -327,24 +343,30 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
             QString filename = arguments.join("");
             QByteArray data = filename.toUtf8();
 
-            if (!nppShared.attach())
+            if (!nddShared.attach())
             {
+				shared.detach();
                 goto unix_goon;
             }
-            nppShared.lock();
-            memcpy(&pid, nppShared.data(), sizeof(pid_t));
+            nddShared.lock();
+            memcpy(&pid, nddShared.data(), sizeof(pid_t));
             if (!isRunningNddProcess(pid))
             {
-                nppShared.unlock();
+                nddShared.unlock();
+				nddShared.detach();//必须detach一下，让之前崩溃的被释放掉。后面会重新create内存。
+				shared.detach();
                 goto unix_goon;
             }
-            memset((char*)nppShared.data()+sizeof(pid_t),0, 1024-sizeof(pid_t));
-            memcpy((char*)nppShared.data()+sizeof(pid_t),data.data(),data.size());
-            nppShared.unlock();
+            memset((char*)nddShared.data()+sizeof(pid_t),0, 1024-sizeof(pid_t));
+            memcpy((char*)nddShared.data()+sizeof(pid_t),data.data(),data.size());
+            nddShared.unlock();
 
             //if kill failed, then open a new process
             if(0 != kill(pid,SIGUSR1))
             {
+				//之前的进程很可能已经崩溃掉了。但是共享内存不会被系统释放。
+				nddShared.detach();//必须detach一下，让之前崩溃的被释放掉。后面会重新create内存。
+				shared.detach();
                 goto unix_goon;
             }
         #endif
@@ -382,27 +404,33 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
 }
 #else
             pid_t pid;
-            if (!nppShared.attach())
+            if (!nddShared.attach())
             {
+				shared.detach();
                 goto unix_goon;
             }
-            nppShared.lock();
-            memcpy(&pid, nppShared.data(), sizeof(pid_t));
+            nddShared.lock();
+            memcpy(&pid, nddShared.data(), sizeof(pid_t));
             if (!isRunningNddProcess(pid))
             {
-                nppShared.unlock();
+                nddShared.unlock();
+				nddShared.detach();//必须detach一下，让之前崩溃的被释放掉。后面会重新create内存。
+				shared.detach();
                 goto unix_goon;
             }
-            memset((char*)nppShared.data()+sizeof(pid_t),0, 1024-sizeof(pid_t));
-            nppShared.unlock();
+            memset((char*)nddShared.data()+sizeof(pid_t),0, 1024-sizeof(pid_t));
+            nddShared.unlock();
             qDebug()<<"empty file send";
 
             if(0 != kill(pid,SIGUSR1))
             {
+				nddShared.detach();//必须detach一下，让之前崩溃的被释放掉。后面会重新create内存。
+				shared.detach();
                 goto unix_goon;
             }
 #endif
 		}
+        NddSetting::close();
 		return 0;
 	}
 #if defined(Q_OS_WIN)
@@ -412,13 +440,13 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
        //mac下面不需要，有他自身的机制保证。当程序已经在线时，再打开程序，系统会自动调用已经存在的程序出现
         //不需要使用类似linux下面的机制。
      shared.create(32);
-     nppShared.create(32);
+     nddShared.create(32);
 }
 #else
 
 unix_goon:
     shared.create(32);
-    nppShared.create(2048);
+    nddShared.create(2048);
 
     if(signal(SIGUSR1,sig_usr) == SIG_ERR)
     {
@@ -463,12 +491,12 @@ drop_old:
     shared.lock();
     memcpy(shared.data(), &winId, sizeof(qlonglong));
     shared.unlock();
-    nppShared.attach();
+    nddShared.attach();
     //get proceess id to share memory
     pid_t pid = getpid();
-    nppShared.lock();
-    memcpy(nppShared.data(), &pid, sizeof(pid_t));
-    nppShared.unlock();
+    nddShared.lock();
+    memcpy(nddShared.data(), &pid, sizeof(pid_t));
+    nddShared.unlock();
 #endif // Q_OS_WIN
 	//恢复上次关闭时的文件
 #ifdef Q_OS_WIN

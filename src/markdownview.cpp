@@ -34,37 +34,53 @@ static QString buildPreviewCss(const QWidget* w)
 			dark = (bg.lightness() < 128);
 	}
 
-	const QString fg     = dark ? QStringLiteral("#dcdcdc") : QStringLiteral("#1e1e1e");
-	const QString muted  = dark ? QStringLiteral("#9a9a9a") : QStringLiteral("#6a6a6a");
-	const QString codeBg = dark ? QStringLiteral("#252526") : QStringLiteral("#f5f5f5");
+	//深色配色以工具窗底色 #2D2D2D 为锚点（见 styleset.cpp 的 toolWinDeepStyle），
+	//代码块/表头在其之上稍微提亮、边框用 #555555，层次才拉得开；
+	//原来代码块用 #252526、引用用 #2a2a2b，都比页面底色更暗，看着像"凹坑"。
+	const QString fg      = dark ? QStringLiteral("#e0e0e0") : QStringLiteral("#1e1e1e");
+	const QString headFg  = dark ? QStringLiteral("#ffffff") : QStringLiteral("#1e1e1e");
+	const QString muted   = dark ? QStringLiteral("#a0a0a0") : QStringLiteral("#6a6a6a");
+	const QString pageBg  = dark ? QStringLiteral("#2d2d2d") : QStringLiteral("#ffffff");
+	const QString codeBg  = dark ? QStringLiteral("#3a3a3a") : QStringLiteral("#f5f5f5");
 	const QString codeFg = dark ? QStringLiteral("#e6e6e6") : QStringLiteral("#2b2b2b");
-	const QString border = dark ? QStringLiteral("#454545") : QStringLiteral("#d8d8d8");
+	const QString border  = dark ? QStringLiteral("#555555") : QStringLiteral("#d8d8d8");
 	const QString accent = dark ? QStringLiteral("#4fc1ff") : QStringLiteral("#0a66c2");
-	const QString quoteBg = dark ? QStringLiteral("#2a2a2b") : QStringLiteral("#f7f7f7");
+	const QString quoteBg = dark ? QStringLiteral("#343434") : QStringLiteral("#f7f7f7");
+
+	//深色下再补几处层次：标题下划线、代码块描边、引用左侧色条。浅色下都为空串，保持原有观感。
+	const QString hDeco     = dark ? QStringLiteral(" padding-bottom: 4px; border-bottom: 1px solid %1;").arg(border) : QString();
+	const QString preDeco   = dark ? QStringLiteral(" border: 1px solid %1; padding: 6px 8px;").arg(border) : QString();
+	const QString quoteDeco = dark ? QStringLiteral(" border-left: 3px solid %1; padding: 2px 0 2px 10px;").arg(accent) : QString();
 
 	QStringList c;
-	c << QStringLiteral("body { color: %1; font-size: 11pt; }").arg(fg);
+	//深色下显式给出页面底色，避免宿主窗口没套深色样式表时预览区留白。
+	c << (dark
+	      ? QStringLiteral("body { color: %1; background-color: %2; font-size: 11pt; }").arg(fg, pageBg)
+	      : QStringLiteral("body { color: %1; font-size: 11pt; }").arg(fg));
 	c << QStringLiteral("p { margin: 8px 0; }");
-	c << QStringLiteral("h1 { font-size: 21pt; font-weight: bold; margin: 16px 0 8px 0; }");
-	c << QStringLiteral("h2 { font-size: 17pt; font-weight: bold; margin: 14px 0 7px 0; }");
-	c << QStringLiteral("h3 { font-size: 14pt; font-weight: bold; margin: 12px 0 6px 0; }");
-	c << QStringLiteral("h4 { font-size: 12pt; font-weight: bold; margin: 10px 0 5px 0; }");
-	c << QStringLiteral("h5 { font-size: 11pt; font-weight: bold; margin: 9px 0 4px 0; }");
-	c << QStringLiteral("h6 { font-size: 11pt; font-weight: bold; color: %1; margin: 9px 0 4px 0; }").arg(muted);
+	c << QStringLiteral("h1 { color: %1; font-size: 21pt; font-weight: bold; margin: 16px 0 8px 0;%2 }").arg(headFg, hDeco);
+	c << QStringLiteral("h2 { color: %1; font-size: 17pt; font-weight: bold; margin: 14px 0 7px 0;%2 }").arg(headFg, hDeco);
+	c << QStringLiteral("h3 { color: %1; font-size: 14pt; font-weight: bold; margin: 12px 0 6px 0; }").arg(headFg);
+	c << QStringLiteral("h4 { color: %1; font-size: 12pt; font-weight: bold; margin: 10px 0 5px 0; }").arg(headFg);
+	c << QStringLiteral("h5 { color: %1; font-size: 11pt; font-weight: bold; margin: 9px 0 4px 0; }").arg(headFg);
+	c << QStringLiteral("h6 { color: %1; font-size: 11pt; font-weight: bold; margin: 9px 0 4px 0; }").arg(muted);
 	c << QStringLiteral("code { font-family: 'Consolas', monospace; font-size: 10pt;"
 	                    " background-color: %1; color: %2; }").arg(codeBg, codeFg);
 	c << QStringLiteral("pre { font-family: 'Consolas', monospace; font-size: 10pt;"
-	                    " background-color: %1; color: %2; margin: 10px 0; }").arg(codeBg, codeFg);
-	c << QStringLiteral("blockquote { color: %1; background-color: %2; margin: 10px 0 10px 12px; }")
-	        .arg(muted, quoteBg);
+	                    " background-color: %1; color: %2;%3 margin: 10px 0; }").arg(codeBg, codeFg, preDeco);
+	c << QStringLiteral("blockquote { color: %1; background-color: %2;%3 margin: 10px 0 10px 12px; }")
+	        .arg(muted, quoteBg, quoteDeco);
 	c << QStringLiteral("ul { margin: 6px 0 6px 22px; }");
 	c << QStringLiteral("ol { margin: 6px 0 6px 22px; }");
 	c << QStringLiteral("li { margin: 3px 0; }");
 	c << QStringLiteral("a { color: %1; text-decoration: none; }").arg(accent);
-	c << QStringLiteral("hr { color: %1; }").arg(border);
+	//hr 用 color 在 Qt 富文本里基本不生效，改用上边框。
+	c << (dark
+	      ? QStringLiteral("hr { border: none; border-top: 1px solid %1; margin: 14px 0; }").arg(border)
+	      : QStringLiteral("hr { color: %1; }").arg(border));
 	c << QStringLiteral("table { border-collapse: collapse; margin: 10px 0; }");
-	c << QStringLiteral("th { border: 1px solid %1; padding: 5px 9px; background-color: %2;"
-	                    " font-weight: bold; }").arg(border, codeBg);
+	c << QStringLiteral("th { color: %1; border: 1px solid %2; padding: 5px 9px; background-color: %3;"
+	                    " font-weight: bold; }").arg(headFg, border, codeBg);
 	c << QStringLiteral("td { border: 1px solid %1; padding: 5px 9px; }").arg(border);
 	c << QStringLiteral("img { }");
 	c << QStringLiteral(".ndd-empty { color: %1; }").arg(muted);
