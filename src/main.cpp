@@ -70,6 +70,33 @@ static void sig_usr(int signo)
          }
     }
 }
+
+#if !defined(Q_OS_MAC)
+//共享内存可能是上次异常退出残留的，其中的 pid 可能为 0 或已被其他进程复用。
+//kill(0, SIGUSR1) 会把信号发给整个进程组（SIGUSR1 默认动作是终止），
+//从桌面启动时会连同会话进程一起杀掉，导致用户被注销。发信号前必须校验。
+static bool isRunningNddProcess(pid_t pid)
+{
+    if (pid <= 1)
+    {
+        return false;
+    }
+
+    QFile selfComm("/proc/self/comm");
+    if (!selfComm.open(QIODevice::ReadOnly))
+    {
+        //没有 /proc 时无法进一步校验，只依赖 pid 的合法性判断
+        return true;
+    }
+
+    QFile otherComm(QString("/proc/%1/comm").arg(pid));
+    if (!otherComm.open(QIODevice::ReadOnly))
+    {
+        return false;
+    }
+    return selfComm.readAll() == otherComm.readAll();
+}
+#endif
 #endif
 
 #ifdef Q_OS_MAC
@@ -300,9 +327,17 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
             QString filename = arguments.join("");
             QByteArray data = filename.toUtf8();
 
-            nppShared.attach();
+            if (!nppShared.attach())
+            {
+                goto unix_goon;
+            }
             nppShared.lock();
             memcpy(&pid, nppShared.data(), sizeof(pid_t));
+            if (!isRunningNddProcess(pid))
+            {
+                nppShared.unlock();
+                goto unix_goon;
+            }
             memset((char*)nppShared.data()+sizeof(pid_t),0, 1024-sizeof(pid_t));
             memcpy((char*)nppShared.data()+sizeof(pid_t),data.data(),data.size());
             nppShared.unlock();
@@ -347,9 +382,17 @@ if ((arguments.size() == 4) && (arguments[2] == QString("-n")))
 }
 #else
             pid_t pid;
-            nppShared.attach();
+            if (!nppShared.attach())
+            {
+                goto unix_goon;
+            }
             nppShared.lock();
             memcpy(&pid, nppShared.data(), sizeof(pid_t));
+            if (!isRunningNddProcess(pid))
+            {
+                nppShared.unlock();
+                goto unix_goon;
+            }
             memset((char*)nppShared.data()+sizeof(pid_t),0, 1024-sizeof(pid_t));
             nppShared.unlock();
             qDebug()<<"empty file send";
