@@ -18,6 +18,7 @@
 #include "qtlangset.h"
 #include "columnedit.h"
 #include "langstyledefine.h"
+#include "mdrenderer.h"
 #include "extlexermanager.h"
 #include "aboutndd.h"
 #include "filelistview.h"
@@ -1701,6 +1702,14 @@ void CCNotePad::slot_dynamicLoadToolMenu()
 		pAct = ui.menuTools->addAction(tr("Batch Find"), this, &CCNotePad::slot_batchFind);
 		pAct->setData(BATCH_FIND);
 
+		// Markdown 预览：把当前编辑区内容渲染为 HTML 后单独开窗显示。
+		// 为什么放在主程序里而不是插件：
+		//   编辑控件类 ScintillaEditView 定义在本模块（scintillaeditview.h），
+		//   插件与本程序是两个模块，跨模块的 RTTI / dynamic_cast 不可靠，
+		//   插件无法安全取得 ui.editTabWidget 里的当前编辑区。
+		//   在源码内实现则是一行 dynamic_cast，稳定可靠。
+		ui.menuTools->addAction(tr("Markdown Preview"), this, &CCNotePad::slot_markdownPreview);
+
 #ifdef NO_PLUGIN
 		//动态加载插件
 		m_pluginList.clear();
@@ -1884,6 +1893,65 @@ void CCNotePad::loadPluginProcs(QString strLibDir, QMenu* pMenu)
 	}
 }
 #endif
+
+// Markdown 预览：取当前编辑区内容，渲染为 HTML 后单独开窗显示。
+//
+// 为什么写在主程序内而不是做成插件：
+//   编辑控件类 ScintillaEditView 定义在本模块（scintillaeditview.h），
+//   而插件与主程序分属两个模块，跨模块的 C++ RTTI（dynamic_cast /
+//   qobject_cast）不可靠：插件既拿不到 ui.editTabWidget，
+//   也无法安全地把标签页控件识别成编辑区。
+//   在源码内实现则只需一行 dynamic_cast，稳定可靠。
+void CCNotePad::slot_markdownPreview()
+{
+	// 1) 取当前编辑区。
+	//    与 getCurEditView() 相同的取法，但**不做只读拦截**：
+	//    只读文档同样应该允许预览内容。
+	QWidget* pw = ui.editTabWidget->currentWidget();
+	ScintillaEditView* pEditView = dynamic_cast<ScintillaEditView*>(pw);
+	if (pEditView == nullptr)
+	{
+		QMessageBox::information(this, tr("Markdown Preview"),
+			tr("No document is open.\n\nOpen a file first, then try again."));
+		return;
+	}
+
+	// 2) 取全文并渲染为 HTML（自研渲染器，支持 GFM 表格等）
+	const QString markdown = pEditView->text();
+	const QString html = MdRenderer::renderToHtml(markdown);
+
+	// 3) 复用同一个预览窗口，避免重复开窗。
+	//    窗口设了 WA_DeleteOnClose，用户关掉后 QPointer 自动置空，
+	//    下次点击会新建。
+	if (m_mdPreviewWin.isNull())
+	{
+		MarkdownView* pNew = new MarkdownView(this);
+		pNew->setAttribute(Qt::WA_DeleteOnClose);
+		m_mdPreviewWin = pNew;
+	}
+
+	MarkdownView* pView = m_mdPreviewWin.data();
+	if (pView == nullptr)
+		return;
+
+	// 4) 文件名：ndd 把路径存在控件的 "filePath" property 里
+	QString filePath = getFilePathProperty(pEditView);
+	QString shortName = filePath;
+	const int slash = qMax(shortName.lastIndexOf('/'), shortName.lastIndexOf('\\'));
+	if (slash >= 0)
+		shortName = shortName.mid(slash + 1);
+
+	// 5) 窗口标题（带文件名）。用 tr() 以便跟随界面语言切换。
+	const QString title = shortName.isEmpty()
+		? tr("Markdown Preview")
+		: tr("Markdown Preview - %1").arg(shortName);
+	pView->setWindowTitle(title);
+
+	pView->viewHtml(html);
+	pView->show();
+	pView->raise();
+	pView->activateWindow();
+}
 
 //批量查找替换
 void CCNotePad::slot_batchFind()
