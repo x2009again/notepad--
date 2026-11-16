@@ -66,6 +66,7 @@ int findLineEndPos(const char* buf, int size, CODE_ID code = UNKOWN)
 	//如果没有找到，怀疑是mac格式，按照\r结尾解析
 	if (!isfound)
 	{
+		ret = 0;
 		for (int i = size - 1; i >= 0; --i)
 		{
 			if (buf[i] == '\r')
@@ -132,6 +133,7 @@ int findLineStartPos(const char* buf, int size, CODE_ID code = UNKOWN)
 	//如果没有找到，怀疑是mac格式，按照\r结尾解析
 	if (!isfound)
 	{
+		ret = 0;
 		for (int i = size - 1; i >= 0; --i)
 		{
 			++ret;
